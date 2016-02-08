@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+
+
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="[%d{yy-MM-dd HH:mm:ss,SSS}] %t %c %m%n"/>
+        </layout>
+    </appender>
+
+
+    <logger name="org.hrodberaht.inject" additivity="true">
+        <level value="INFO"/>
+        <appender-ref ref="CONSOLE"/>
+    </logger>
+    <!--<logger name="com.tieto.wfe.core" additivity="true">
+        <level value="DEBUG"/>
+        <appender-ref ref="CONSOLE" />
+    </logger>  -->
+
+
+    <root>
+        <priority value="ERROR"/>
+        <!--default match-->
+        <appender-ref ref="CONSOLE"/>
+    </root>
+</log4j:configuration>

@@ -1,0 +1,39 @@
+<project name="MyProject" basedir=".">
+    <description>
+        simple example build file
+    </description>
+    <!-- set global properties for this build -->
+    <property name="resource" value="target\test-classes\META-INF\persistence.xml"/>
+
+    <target name="init">
+        <!-- Create the time stamp -->
+        <tstamp/>
+    </target>
+
+    <target name="hibernate_properties" depends="init"
+            description="activate toplink">
+        <copy tofile="${resource}" file="src\test\resources\META-INF\persistence.xml"
+              overwrite="true"/>
+    </target>
+
+    <target name="toplink_properties" depends="init"
+            description="activate toplink">
+        <copy tofile="${resource}" file="src\test\eclipselinkresources\META-INF\persistence.xml"
+              overwrite="true"/>
+    </target>
+
+
+    <target name="openjpa_properties" depends="init"
+            description="activate openjpa">
+        <copy tofile="${resource}" file="src\test\openjparesources\META-INF\persistence.xml"
+              overwrite="true"/>
+    </target>
+
+    <target name="datanuclues_properties" depends="init"
+            description="activate datanucleus">
+        <copy tofile="${resource}" file="src\test\datanucleusresources\META-INF\persistence.xml"
+              overwrite="true"/>
+    </target>
+
+
+</project>

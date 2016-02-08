@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Simple Utils">
+    <bannerLeft>
+        <name>Simple Utils Inject</name>
+        <src>http://1.bp.blogspot.com/_DpEQInQwvDI/ScP9o7fkN6I/AAAAAAAAAH0/AYpCMzYL4UM/S1600-R/brain.png</src>
+        <href>./index.html</href>
+    </bannerLeft>
+    <skin>
+        <groupId>org.apache.maven.skins</groupId>
+        <artifactId>maven-stylus-skin</artifactId>
+        <version>1.0</version>
+    </skin>
+    <body>
+        <links>
+            <item name="${project.name}" href="index.html"/>
+        </links>
+
+        <menu name="Links">
+            <item name="Parent page" href="../index.html"/>
+        </menu>
+
+        <menu ref="parent"/>
+        <menu ref="modules"/>
+        <menu ref="reports"/>
+        <!--
+        <menu name="Links">
+            <item name="Wiki page" href="http://en.wikipedia.org/wiki/My_Science_Project"/>
+        </menu>
+        // -->
+    </body>
+</project>

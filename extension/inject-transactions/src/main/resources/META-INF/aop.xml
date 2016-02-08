@@ -1,0 +1,13 @@
+<aspectj>
+
+    <aspects options="-verbose">
+        <!-- declare two existing aspects to the weaver -->
+        <aspect name="com.hrodberaht.inject.extension.transaction.manager.internal.AspectJTransactionHandler"/>
+
+
+    </aspects>
+    <weaver options="-verbose -Xset:weaveJavaxPackages=true">
+        <include within="test.com.hrodberaht.inject.extension.transaction.example.*"/>
+    </weaver>
+
+</aspectj>

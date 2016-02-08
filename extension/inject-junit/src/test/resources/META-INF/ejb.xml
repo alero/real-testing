@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ejb-jar xmlns="http://java.sun.com/xml/ns/j2ee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/ejb-jar_2_1.xsd"
+         version="2.1">
+
+    <description>ejb-jar.xml for ejb 2.1 Local tutorial</description>
+    <display-name>ejb-jar.xml</display-name>
+
+    <enterprise-beans>
+        <!-- Session Beans -->
+        <session>
+            <description>Session Bean</description>
+            <display-name>Session Bean</display-name>
+            <ejb-name>EJB2ServiceBean</ejb-name>
+            <home>test.org.hrodberaht.inject.extension.ejbunit.ejb2.service.EJB2ServiceHome</home>
+            <remote>test.org.hrodberaht.inject.extension.ejbunit.ejb2.service.EJB2ServiceRemote</remote>
+            <local-home>test.org.hrodberaht.inject.extension.ejbunit.ejb2.service.EJB2ServiceLocalHome</local-home>
+            <local>test.org.hrodberaht.inject.extension.ejbunit.ejb2.service.EJB2ServiceLocal</local>
+            <ejb-class>test.org.hrodberaht.inject.extension.ejbunit.ejb2.service.EJB2ServiceBean</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+        </session>
+
+        <session>
+            <description>Session Bean</description>
+            <display-name>Session Bean</display-name>
+            <ejb-name>EJB2InnerServiceBean</ejb-name>
+            <local-home>test.org.hrodberaht.inject.extension.ejbunit.ejb2.service.EJB2InnerServiceLocalHome</local-home>
+            <local>test.org.hrodberaht.inject.extension.ejbunit.ejb2.service.EJB2InnerServiceLocal</local>
+            <ejb-class>test.org.hrodberaht.inject.extension.ejbunit.ejb2.service.EJB2InnerServiceBean</ejb-class>
+            <session-type>Stateless</session-type>
+            <transaction-type>Container</transaction-type>
+        </session>
+    </enterprise-beans>
+
+</ejb-jar>
