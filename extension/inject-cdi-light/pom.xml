@@ -23,6 +23,9 @@
                     <include>**/*.sql</include>
                 </includes>
             </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
         </testResources>
     </build>
 
@@ -132,13 +135,11 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>${springframework-version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-jdbc</artifactId>
-            <version>${springframework-version}</version>
             <scope>test</scope>
         </dependency>
 
