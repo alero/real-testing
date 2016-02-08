@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.hrodberaht.inject.extension</groupId>
+        <artifactId>extensions-parent-pom</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>inject-cdi-junittest-service</artifactId>
+    <packaging>jar</packaging>
+    <name>Example classes for CDI to scan and discover</name>
+    <url>http://code.google.com/p/injection-extensions/</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+
+    <developers>
+        <developer>
+            <id>robert.alexandersson</id>
+            <name>Robert Alexandersson</name>
+            <email>robert.alexandersson@gmail.com</email>
+            <roles>
+                <role>Code monkey</role>
+            </roles>
+        </developer>
+    </developers>
+
+
+
+    <dependencies>
+
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+    </dependencies>
+
+
+</project>
