@@ -1,5 +1,5 @@
 
 create table theTable(
  id integer,
- name varchar
+ name nvarchar(200)
 )

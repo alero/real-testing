@@ -1,4 +1,4 @@
 create table user(
-    username varchar(150),
-    password varchar(50)
+    username nvarchar(150),
+    password nvarchar(50)
 );

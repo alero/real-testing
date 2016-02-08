@@ -1,4 +1,4 @@
 create table the_table(
  id integer,
- name varchar(150)
+ name nvarchar(150)
 );
