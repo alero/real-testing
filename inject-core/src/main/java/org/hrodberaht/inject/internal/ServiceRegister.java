@@ -14,7 +14,7 @@
 
 package org.hrodberaht.inject.internal;
 
-import org.hrodberaht.inject.SimpleInjection;
+import org.hrodberaht.inject.InjectionContainerManager;
 import org.hrodberaht.inject.register.RegistrationModule;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,14 +25,14 @@ public class ServiceRegister {
 
     private Class service;
     private Object singleton;
-    private SimpleInjection.Scope scope;
-    private SimpleInjection.RegisterType registerType = SimpleInjection.RegisterType.WEAK;
+    private InjectionContainerManager.Scope scope;
+    private InjectionContainerManager.RegisterType registerType = InjectionContainerManager.RegisterType.WEAK;
     private ServiceRegister overriddenService = null;
 
     private RegistrationModule module;
 
     public ServiceRegister(
-            Class aService, Object singleton, SimpleInjection.Scope scope, SimpleInjection.RegisterType registerType) {
+            Class aService, Object singleton, InjectionContainerManager.Scope scope, InjectionContainerManager.RegisterType registerType) {
         this.service = aService;
         this.singleton = singleton;
         this.scope = scope;
@@ -60,11 +60,11 @@ public class ServiceRegister {
         return singleton;
     }
 
-    public SimpleInjection.Scope getScope() {
+    public InjectionContainerManager.Scope getScope() {
         return scope;
     }
 
-    public SimpleInjection.RegisterType getRegisterType() {
+    public InjectionContainerManager.RegisterType getRegisterType() {
         return registerType;
     }
 

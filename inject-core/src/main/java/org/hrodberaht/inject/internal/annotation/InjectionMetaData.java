@@ -14,7 +14,7 @@
 
 package org.hrodberaht.inject.internal.annotation;
 
-import org.hrodberaht.inject.SimpleInjection;
+import org.hrodberaht.inject.InjectionContainerManager;
 import org.hrodberaht.inject.internal.InjectionKey;
 import org.hrodberaht.inject.internal.annotation.creator.InstanceCreator;
 import org.hrodberaht.inject.internal.annotation.scope.ObjectAndScope;
@@ -99,7 +99,7 @@ public class InjectionMetaData {
         return this.serviceClass;
     }
 
-    public SimpleInjection.Scope getScope() {
+    public InjectionContainerManager.Scope getScope() {
         return this.scopeHandler.getScope();
     }
 
@@ -121,7 +121,27 @@ public class InjectionMetaData {
 
     }
 
-    public ObjectAndScope createInstance(Object... parameters) {
+    public ObjectAndScope createNewInstance(Object[] parameters) {
+        if (accessible == null) {
+            final boolean originalAccessible = constructor != null && constructor.isAccessible();
+            if (!originalAccessible && constructor != null) {
+                constructor.setAccessible(true);
+            }
+            accessible = true;
+        }
+        try {
+            Object newInstance = instanceCreator.createInstance(constructor, parameters);
+            scopeHandler.addInstance(newInstance);
+            return new ObjectAndScope(newInstance, true);
+        } finally {
+            // Not thread safe, do not reset the accessor
+            /*if (!originalAccessible) {
+                constructor.setAccessible(originalAccessible);
+            }*/
+        }
+    }
+
+    public ObjectAndScope createInstance(Object[] parameters) {
         Object scopedInstance = scopeHandler.getInstance();
         if (scopedInstance != null) {
             if (scopeHandler.isInstanceCreated()) {
@@ -142,10 +162,10 @@ public class InjectionMetaData {
 
 
             Object newInstance = instanceCreator.createInstance(constructor, parameters);
-            scopeHandler.addScope(newInstance);
+            scopeHandler.addInstance(newInstance);
             return new ObjectAndScope(newInstance, true);
         } finally {
-            // Not thread safe
+            // Not thread safe, do not reset the accessor
             /*if (!originalAccessible) {
                 constructor.setAccessible(originalAccessible);
             }*/

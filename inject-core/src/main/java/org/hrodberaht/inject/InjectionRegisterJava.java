@@ -31,7 +31,7 @@ public class InjectionRegisterJava extends InjectionRegisterBase<InjectionRegist
     }
 
     public InjectionRegisterJava(Container container) {
-        this.container = (SimpleInjection) container;
+        this.container = (InjectionContainerManager) container;
     }
 
     public InjectionRegisterJava(InjectionRegister register) {
@@ -39,32 +39,32 @@ public class InjectionRegisterJava extends InjectionRegisterBase<InjectionRegist
     }
 
     public InjectionRegisterJava register(
-            String namedService, Class serviceDefinition, Class service, SimpleInjection.Scope scope) {
+            String namedService, Class serviceDefinition, Class service, InjectionContainerManager.Scope scope) {
         container.register(
                 new InjectionKey(namedService, serviceDefinition, false)
-                , service, scope, SimpleInjection.RegisterType.NORMAL
+                , service, scope, InjectionContainerManager.RegisterType.NORMAL
         );
         return this;
     }
 
-    public InjectionRegisterJava registerDefault(Class serviceDefinition, Class service, SimpleInjection.Scope scope) {
-        container.register(serviceDefinition, service, scope, SimpleInjection.RegisterType.WEAK);
+    public InjectionRegisterJava registerDefault(Class serviceDefinition, Class service, InjectionContainerManager.Scope scope) {
+        container.register(serviceDefinition, service, scope, InjectionContainerManager.RegisterType.WEAK);
         return this;
     }
 
-    public InjectionRegister register(Class serviceDefinition, Class service, SimpleInjection.Scope scope) {
+    public InjectionRegister register(Class serviceDefinition, Class service, InjectionContainerManager.Scope scope) {
         return super.register(serviceDefinition, service, scope);
     }
 
 
     public InjectionRegisterJava register(String namedService, Class serviceDefinition, Class service) {
-        register(namedService, serviceDefinition, service, SimpleInjection.Scope.NEW);
+        register(namedService, serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
 
 
     public InjectionRegisterJava registerDefault(Class serviceDefinition, Class service) {
-        registerDefault(serviceDefinition, service, SimpleInjection.Scope.NEW);
+        registerDefault(serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
 

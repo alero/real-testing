@@ -2,7 +2,7 @@ package org.hrodberaht.inject.register;
 
 import org.hrodberaht.inject.ClassScanner;
 import org.hrodberaht.inject.InjectContainer;
-import org.hrodberaht.inject.SimpleInjection;
+import org.hrodberaht.inject.InjectionContainerManager;
 
 /**
  * Simple Java Utils - Container
@@ -15,14 +15,14 @@ import org.hrodberaht.inject.SimpleInjection;
 public abstract class RegistrationModuleAnnotationScanner extends RegistrationModuleAnnotation {
 
 
-    private SimpleInjection simpleInjection = null;
+    private InjectionContainerManager injectionContainerManager = null;
 
     public RegistrationModuleAnnotationScanner scanAndRegister(String... packages) {
         ClassScanner classScanner = new ClassScanner();
         for (String packagename : packages) {
             Class[] clazzs = classScanner.getClasses(packagename);
             for (Class aClazz : clazzs) {
-                classScanner.createRegistration(aClazz, getSimpleInjection());
+                classScanner.createRegistration(aClazz, getInjectionContainerManager());
             }
         }
         return this;
@@ -39,11 +39,11 @@ public abstract class RegistrationModuleAnnotationScanner extends RegistrationMo
     public void registrations() {
     }
 
-    public void setSimpleInjection(SimpleInjection simpleInjection) {
-        this.simpleInjection = simpleInjection;
+    public void setInjectionContainerManager(InjectionContainerManager injectionContainerManager) {
+        this.injectionContainerManager = injectionContainerManager;
     }
 
-    private SimpleInjection getSimpleInjection() {
-        return simpleInjection;
+    private InjectionContainerManager getInjectionContainerManager() {
+        return injectionContainerManager;
     }
 }

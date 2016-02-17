@@ -1,9 +1,9 @@
 package org.hrodberaht.inject.extension.tdd.internal;
 
 import org.hrodberaht.inject.InjectContainer;
+import org.hrodberaht.inject.InjectionContainerManager;
 import org.hrodberaht.inject.InjectionRegisterModule;
 import org.hrodberaht.inject.ScopeContainer;
-import org.hrodberaht.inject.SimpleInjection;
 import org.hrodberaht.inject.extension.tdd.util.JarUtil;
 import org.hrodberaht.inject.extension.tdd.util.SimpleLogger;
 import org.hrodberaht.inject.internal.exception.InjectRuntimeException;
@@ -43,7 +43,7 @@ public abstract class InjectionRegisterScanBase extends InjectionRegisterModule 
     public abstract InjectionRegisterScanBase clone();
 
     public void setInjectContainer(InjectContainer injectContainer) {
-        super.container = (SimpleInjection) injectContainer;
+        super.container = (InjectionContainerManager) injectContainer;
     }
 
     public InjectionRegisterScanBase scanPackage(String... packagenames) {

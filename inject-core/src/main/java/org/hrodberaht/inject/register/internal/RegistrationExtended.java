@@ -1,7 +1,7 @@
 package org.hrodberaht.inject.register.internal;
 
+import org.hrodberaht.inject.InjectionContainerManager;
 import org.hrodberaht.inject.ScopeContainer;
-import org.hrodberaht.inject.SimpleInjection;
 
 import java.lang.annotation.Annotation;
 
@@ -18,7 +18,7 @@ public interface RegistrationExtended extends Registration {
 
     RegistrationExtended named(String named);
 
-    RegistrationExtended registerTypeAs(SimpleInjection.RegisterType registerType);
+    RegistrationExtended registerTypeAs(InjectionContainerManager.RegisterType registerType);
 
     RegistrationExtended scopeAs(ScopeContainer.Scope scope);
 

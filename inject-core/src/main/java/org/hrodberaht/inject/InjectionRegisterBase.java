@@ -33,79 +33,64 @@ import java.util.Collection;
  */
 public abstract class InjectionRegisterBase<T extends InjectionRegister> implements InjectionRegister {
 
-    protected SimpleInjection container = null;
+    protected InjectionContainerManager container = null;
 
-    public SimpleInjection getInnerContainer() {
+    public InjectionContainerManager getInnerContainer() {
         return container;
     }
 
     protected InjectionRegisterBase() {
-        this.container = new SimpleInjection();
-        activateContainerDefault();
+        this.container = new InjectionContainerManager();
     }
 
     protected InjectionRegisterBase(InjectionRegister register) {
         this.container = register.getInnerContainer();
     }
 
-    public T activateContainerJavaXInject() {
-        container.setContainerInjectAnnotationCompliantMode();
-        return (T) this;
-    }
-
-    public T activateContainerSimple() {
-        container.setContainerSimpleInjection();
-        return (T) this;
-    }
-
-    public T activateContainerDefault() {
-        container.setContainerInjectAnnotationCompliantMode();
-        return (T) this;
-    }
 
     public InjectionRegister register(Class<? extends Annotation> qualifier, Class serviceDefinition, Class service) {
-        register(qualifier, serviceDefinition, service, SimpleInjection.Scope.NEW);
+        register(qualifier, serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
 
     public InjectionRegister register(Class serviceDefinition, Class service) {
-        register(serviceDefinition, service, SimpleInjection.Scope.NEW);
+        register(serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
 
     public InjectionRegister register(Class service) {
-        register(service, service, SimpleInjection.Scope.NEW);
+        register(service, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
 
     public InjectionRegister overrideRegister(Class<? extends Annotation> qualifier, Class serviceDefinition, Class service) {
-        overrideRegister(qualifier, serviceDefinition, service, SimpleInjection.Scope.NEW);
+        overrideRegister(qualifier, serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
 
     public InjectionRegister overrideRegister(Class serviceDefinition, Class service) {
-        overrideRegister(serviceDefinition, service, SimpleInjection.Scope.NEW);
+        overrideRegister(serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
 
     public InjectionRegister overrideRegister(Class service) {
-        overrideRegister(service, service, SimpleInjection.Scope.NEW);
+        overrideRegister(service, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
 
     public InjectionRegister finalRegister(Class<? extends Annotation> qualifier, Class serviceDefinition, Class service) {
-        finalRegister(qualifier, serviceDefinition, service, SimpleInjection.Scope.NEW);
+        finalRegister(qualifier, serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
 
 
     public InjectionRegister finalRegister(Class serviceDefinition, Class service) {
-        finalRegister(serviceDefinition, service, SimpleInjection.Scope.NEW);
+        finalRegister(serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
 
     public InjectionRegister finalRegister(Class service) {
-        finalRegister(service, service, SimpleInjection.Scope.NEW);
+        finalRegister(service, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
 
@@ -121,28 +106,28 @@ public abstract class InjectionRegisterBase<T extends InjectionRegister> impleme
         return container;
     }
 
-    protected InjectionRegister finalRegister(Class serviceDefinition, Class service, SimpleInjection.Scope scope) {
-        container.register(serviceDefinition, service, scope, SimpleInjection.RegisterType.FINAL);
+    protected InjectionRegister finalRegister(Class serviceDefinition, Class service, InjectionContainerManager.Scope scope) {
+        container.register(serviceDefinition, service, scope, InjectionContainerManager.RegisterType.FINAL);
         return this;
     }
 
-    public InjectionRegister overrideRegister(Class serviceDefinition, Class service, SimpleInjection.Scope scope) {
-        container.register(serviceDefinition, service, scope, SimpleInjection.RegisterType.OVERRIDE_NORMAL);
+    public InjectionRegister overrideRegister(Class serviceDefinition, Class service, InjectionContainerManager.Scope scope) {
+        container.register(serviceDefinition, service, scope, InjectionContainerManager.RegisterType.OVERRIDE_NORMAL);
         return this;
     }
 
-    protected InjectionRegister register(Class serviceDefinition, Class service, SimpleInjection.Scope scope) {
-        container.register(serviceDefinition, service, scope, SimpleInjection.RegisterType.NORMAL);
+    protected InjectionRegister register(Class serviceDefinition, Class service, InjectionContainerManager.Scope scope) {
+        container.register(serviceDefinition, service, scope, InjectionContainerManager.RegisterType.NORMAL);
         return this;
     }
 
     protected InjectionRegister register(
             Class<? extends Annotation> qualifier,
             Class serviceDefinition,
-            Class service, SimpleInjection.Scope scope) {
+            Class service, InjectionContainerManager.Scope scope) {
         container.register(
                 new InjectionKey(qualifier, serviceDefinition, false)
-                , service, scope, SimpleInjection.RegisterType.NORMAL
+                , service, scope, InjectionContainerManager.RegisterType.NORMAL
         );
         return this;
     }
@@ -150,10 +135,10 @@ public abstract class InjectionRegisterBase<T extends InjectionRegister> impleme
     protected InjectionRegister overrideRegister(
             Class<? extends Annotation> qualifier,
             Class serviceDefinition,
-            Class service, SimpleInjection.Scope scope) {
+            Class service, InjectionContainerManager.Scope scope) {
         container.register(
                 new InjectionKey(qualifier, serviceDefinition, false)
-                , service, scope, SimpleInjection.RegisterType.OVERRIDE_NORMAL
+                , service, scope, InjectionContainerManager.RegisterType.OVERRIDE_NORMAL
         );
         return this;
     }
@@ -165,7 +150,7 @@ public abstract class InjectionRegisterBase<T extends InjectionRegister> impleme
             ScopeContainer.Scope scope) {
         container.register(
                 new InjectionKey(qualifier, serviceDefinition, false)
-                , service, scope, SimpleInjection.RegisterType.FINAL
+                , service, scope, InjectionContainerManager.RegisterType.FINAL
         );
         return this;
     }

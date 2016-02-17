@@ -16,9 +16,7 @@ package org.hrodberaht.inject;
 
 import org.hrodberaht.inject.internal.InjectionContainer;
 import org.hrodberaht.inject.internal.InjectionKey;
-import org.hrodberaht.inject.internal.RegistrationInjectionContainer;
 import org.hrodberaht.inject.internal.ServiceRegister;
-import org.hrodberaht.inject.internal.SimpleInjectionContainer;
 import org.hrodberaht.inject.internal.annotation.AnnotationInjectionContainer;
 import org.hrodberaht.inject.register.RegistrationModule;
 
@@ -33,17 +31,16 @@ import java.util.Collection;
  * @version 1.0
  * @since 1.0
  */
-public class SimpleInjection implements Container, ScopeContainer, InjectContainer, ExtendedInjection, ExtendedAnnotationInjection {
+public class InjectionContainerManager implements Container, ScopeContainer, InjectContainer, ExtendedInjection, ExtendedAnnotationInjection {
 
-
-    private InjectionContainer injectionContainer = new AnnotationInjectionContainer(this);
+    private AnnotationInjectionContainer injectionContainer = new AnnotationInjectionContainer(this);
 
     public Collection<ServiceRegister> getServiceRegister() {
         return injectionContainer.getServiceRegister();
     }
 
     public AnnotationInjectionContainer getAnnotatedContainer() {
-        return (AnnotationInjectionContainer) injectionContainer;
+        return injectionContainer;
     }
 
     public enum RegisterType {
@@ -53,7 +50,7 @@ public class SimpleInjection implements Container, ScopeContainer, InjectContain
 
     /**
      * Will retrieve a service as it has been registered,
-     * scope's supported today are {@link SimpleInjection.Scope#SINGLETON} and {@link SimpleInjection.Scope#NEW}
+     * scope's supported today are {@link InjectionContainerManager.Scope#SINGLETON} and {@link InjectionContainerManager.Scope#NEW}
      *
      * @param service the interface service intended for creation
      * @param <T>     the typed service intended for creation
@@ -65,7 +62,7 @@ public class SimpleInjection implements Container, ScopeContainer, InjectContain
 
     /**
      * Will retrieve a service as it has been registered,
-     * scope's supported today are {@link SimpleInjection.Scope#SINGLETON} and {@link SimpleInjection.Scope#NEW}
+     * scope's supported today are {@link InjectionContainerManager.Scope#SINGLETON} and {@link InjectionContainerManager.Scope#NEW}
      *
      * @param service   the interface service intended for creation
      * @param qualifier the named service intended for creation
@@ -80,7 +77,7 @@ public class SimpleInjection implements Container, ScopeContainer, InjectContain
 
     /**
      * Will retrieve a service as it has been registered,
-     * scope's supported today are {@link SimpleInjection.Scope#SINGLETON} and {@link SimpleInjection.Scope#NEW}
+     * scope's supported today are {@link InjectionContainerManager.Scope#SINGLETON} and {@link InjectionContainerManager.Scope#NEW}
      *
      * @param service   the interface service intended for creation
      * @param qualifier the named service intended for creation
@@ -98,7 +95,7 @@ public class SimpleInjection implements Container, ScopeContainer, InjectContain
     }
 
     /**
-     * Will retrieve a service and force the scope to {@link SimpleInjection.Scope#NEW}
+     * Will retrieve a service and force the scope to {@link InjectionContainerManager.Scope#NEW}
      *
      * @param service the interface service intended for creation
      * @param <T>     the typed service intended for creation
@@ -109,7 +106,7 @@ public class SimpleInjection implements Container, ScopeContainer, InjectContain
     }
 
     /**
-     * Will retrieve a service and force the scope to {@link SimpleInjection.Scope#SINGLETON}
+     * Will retrieve a service and force the scope to {@link InjectionContainerManager.Scope#SINGLETON}
      *
      * @param service the interface service intended for creation
      * @param <T>     the typed service intended for creation
@@ -121,32 +118,15 @@ public class SimpleInjection implements Container, ScopeContainer, InjectContain
 
 
     protected synchronized void register(Class serviceDefinition, Class service, Scope scope, RegisterType type) {
-        if (injectionContainer instanceof RegistrationInjectionContainer) {
-            RegistrationInjectionContainer container = (RegistrationInjectionContainer) injectionContainer;
-            container.register(new InjectionKey(serviceDefinition, false), service, scope, type, true);
-        }
+        injectionContainer.register(new InjectionKey(serviceDefinition, false), service, scope, type, true);
     }
 
     protected synchronized void register(InjectionKey key, Class service, Scope scope, RegisterType type) {
-        if (injectionContainer instanceof RegistrationInjectionContainer) {
-            RegistrationInjectionContainer container = (RegistrationInjectionContainer) injectionContainer;
-            container.register(key, service, scope, type, true);
-        }
+        injectionContainer.register(key, service, scope, type, true);
     }
 
     public void register(RegistrationModule... modules) {
-        if (injectionContainer instanceof RegistrationInjectionContainer) {
-            RegistrationInjectionContainer container = (RegistrationInjectionContainer) injectionContainer;
-            container.register(this, modules);
-        }
-    }
-
-    protected synchronized void setContainerInjectAnnotationCompliantMode() {
-        injectionContainer = new AnnotationInjectionContainer(this);
-    }
-
-    protected synchronized void setContainerSimpleInjection() {
-        injectionContainer = new SimpleInjectionContainer();
+        injectionContainer.register(this, modules);
     }
 
     protected synchronized InjectionContainer getContainer() {
@@ -155,30 +135,17 @@ public class SimpleInjection implements Container, ScopeContainer, InjectContain
     }
 
     public void injectDependencies(Object service) {
-        if (injectionContainer instanceof AnnotationInjectionContainer) {
-            AnnotationInjectionContainer annotationContainer = (AnnotationInjectionContainer) injectionContainer;
-            annotationContainer.injectDependencies(service);
-        } else {
-            throw new IllegalAccessError("Method not supported by InjectionContainer typed: "
-                    + injectionContainer.getClass().getName());
-        }
-
+        injectionContainer.injectDependencies(service);
     }
 
     public void injectExtendedDependencies(Object service) {
-        if (injectionContainer instanceof AnnotationInjectionContainer) {
-            AnnotationInjectionContainer annotationContainer = (AnnotationInjectionContainer) injectionContainer;
-            annotationContainer.extendedInjectDependencies(service);
-        } else {
-            throw new IllegalAccessError("Method not supported by InjectionContainer typed: "
-                    + injectionContainer.getClass().getName());
-        }
+        injectionContainer.extendedInjectDependencies(service);
     }
 
     @Override
-    public SimpleInjection clone() throws CloneNotSupportedException {
-        SimpleInjection simpleInjection = new SimpleInjection();
-        simpleInjection.injectionContainer = (InjectionContainer) this.injectionContainer.clone(simpleInjection);
-        return simpleInjection;
+    public InjectionContainerManager clone() throws CloneNotSupportedException {
+        InjectionContainerManager injectionContainerManager = new InjectionContainerManager();
+        injectionContainerManager.injectionContainer = (AnnotationInjectionContainer) this.injectionContainer.clone(injectionContainerManager);
+        return injectionContainerManager;
     }
 }

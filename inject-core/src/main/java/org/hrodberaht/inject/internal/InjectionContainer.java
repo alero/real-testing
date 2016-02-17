@@ -14,7 +14,7 @@
 
 package org.hrodberaht.inject.internal;
 
-import org.hrodberaht.inject.SimpleInjection;
+import org.hrodberaht.inject.InjectionContainerManager;
 
 import java.lang.annotation.Annotation;
 import java.util.Collection;
@@ -29,16 +29,16 @@ import java.util.Collection;
  */
 public interface InjectionContainer {
 
-    <T> T getService(Class<T> service, SimpleInjection.Scope forcedScope, String qualifier);
+    <T> T getService(Class<T> service, InjectionContainerManager.Scope forcedScope, String qualifier);
 
-    <T> T getService(Class<T> service, SimpleInjection.Scope forcedScope, Class<? extends Annotation> qualifier);
+    <T> T getService(Class<T> service, InjectionContainerManager.Scope forcedScope, Class<? extends Annotation> qualifier);
 
-    <T> T getService(Class<T> service, SimpleInjection.Scope forcedScope);
+    <T> T getService(Class<T> service, InjectionContainerManager.Scope forcedScope);
 
     <T, K> T getService(Class<T> service, K variable);
 
     Collection<ServiceRegister> getServiceRegister();
 
-    Object clone(SimpleInjection simpleInjection) throws CloneNotSupportedException;
+    Object clone(InjectionContainerManager injectionContainerManager) throws CloneNotSupportedException;
 
 }

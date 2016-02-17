@@ -1,6 +1,6 @@
 package org.hrodberaht.inject.register.internal;
 
-import org.hrodberaht.inject.SimpleInjection;
+import org.hrodberaht.inject.InjectionContainerManager;
 
 /**
  * Simple Java Utils - Container
@@ -13,20 +13,20 @@ import org.hrodberaht.inject.SimpleInjection;
 public class RegistrationInstanceSimple extends RegistrationInstanceAnnotation<RegistrationExtended>
         implements RegistrationExtended {
 
-    private SimpleInjection.RegisterType registerType = SimpleInjection.RegisterType.NORMAL;
+    private InjectionContainerManager.RegisterType registerType = InjectionContainerManager.RegisterType.NORMAL;
 
 
     public RegistrationInstanceSimple(Class theInterface) {
         super(theInterface);
     }
 
-    public RegistrationExtended registerTypeAs(SimpleInjection.RegisterType registerType) {
+    public RegistrationExtended registerTypeAs(InjectionContainerManager.RegisterType registerType) {
         this.registerType = registerType;
         return this;
     }
 
 
-    public SimpleInjection.RegisterType getRegisterType() {
+    public InjectionContainerManager.RegisterType getRegisterType() {
         return registerType;
     }
 

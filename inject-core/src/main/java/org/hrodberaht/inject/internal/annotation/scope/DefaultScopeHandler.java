@@ -1,6 +1,6 @@
 package org.hrodberaht.inject.internal.annotation.scope;
 
-import org.hrodberaht.inject.SimpleInjection;
+import org.hrodberaht.inject.InjectionContainerManager;
 
 /**
  * Simple Java Utils - Container
@@ -17,12 +17,12 @@ public class DefaultScopeHandler implements ScopeHandler {
         return null;
     }
 
-    public void addScope(Object instance) {
+    public void addInstance(Object instance) {
 
     }
 
-    public SimpleInjection.Scope getScope() {
-        return SimpleInjection.Scope.NEW;
+    public InjectionContainerManager.Scope getScope() {
+        return InjectionContainerManager.Scope.NEW;
     }
 
     public boolean isInstanceCreated() {

@@ -1,7 +1,7 @@
 package org.hrodberaht.inject.register.internal;
 
+import org.hrodberaht.inject.InjectionContainerManager;
 import org.hrodberaht.inject.ScopeContainer;
-import org.hrodberaht.inject.SimpleInjection;
 import org.hrodberaht.inject.internal.InjectionKey;
 import org.hrodberaht.inject.register.InjectionFactory;
 import org.hrodberaht.inject.register.VariableInjectionFactory;
@@ -28,7 +28,7 @@ public class RegistrationInstanceAnnotation<T extends Registration> implements R
 
     protected String name;
     protected Class<? extends Annotation> annotation;
-    protected SimpleInjection.Scope scope = null; // No default scope for registration
+    protected InjectionContainerManager.Scope scope = null; // No default scope for registration
 
 
     public RegistrationInstanceAnnotation(Class theInterface) {

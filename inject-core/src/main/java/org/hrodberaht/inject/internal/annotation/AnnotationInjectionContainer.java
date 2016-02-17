@@ -14,8 +14,8 @@
 
 package org.hrodberaht.inject.internal.annotation;
 
+import org.hrodberaht.inject.InjectionContainerManager;
 import org.hrodberaht.inject.ScopeContainer;
-import org.hrodberaht.inject.SimpleInjection;
 import org.hrodberaht.inject.internal.InjectionContainer;
 import org.hrodberaht.inject.internal.InjectionContainerBase;
 import org.hrodberaht.inject.internal.InjectionKey;
@@ -32,6 +32,8 @@ import org.hrodberaht.inject.register.RegistrationModuleAnnotation;
 import org.hrodberaht.inject.register.RegistrationModuleAnnotationScanner;
 import org.hrodberaht.inject.register.VariableInjectionFactory;
 import org.hrodberaht.inject.register.internal.RegistrationInstanceSimple;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
 import java.util.Map;
@@ -48,12 +50,14 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AnnotationInjectionContainer extends InjectionContainerBase
         implements InjectionContainer, RegistrationInjectionContainer {
 
+    private static final Logger LOG = LoggerFactory.getLogger(AnnotationInjectionContainer.class);
+
     private Map<InjectionKey, InjectionMetaData> injectionMetaDataCache = new ConcurrentHashMap<InjectionKey, InjectionMetaData>();
-    private SimpleInjection container;
+    private InjectionContainerManager container;
     private InjectionFinder injectionFinder;
     private InstanceCreator instanceCreator;
 
-    public AnnotationInjectionContainer(SimpleInjection container) {
+    public AnnotationInjectionContainer(InjectionContainerManager container) {
         this.container = container;
     }
 
@@ -65,7 +69,7 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
         return instanceCreator;
     }
 
-    public <T> T getService(Class<T> service, SimpleInjection.Scope forcedScope, String qualifier) {
+    public <T> T getService(Class<T> service, InjectionContainerManager.Scope forcedScope, String qualifier) {
         assert (qualifier != null);
         InjectionKey key = getNamedKey(qualifier, service);
         return getQualifiedService(service, forcedScope, key);
@@ -73,7 +77,7 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
 
 
     public <T> T getService(
-            Class<T> service, SimpleInjection.Scope forcedScope, Class<? extends Annotation> qualifier) {
+            Class<T> service, InjectionContainerManager.Scope forcedScope, Class<? extends Annotation> qualifier) {
         assert (qualifier != null);
         InjectionKey key = getAnnotatedKey(qualifier, service);
         return getQualifiedService(service, forcedScope, key);
@@ -81,7 +85,7 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
 
 
     @SuppressWarnings(value = "unchecked")
-    public <T> T getService(Class<T> service, SimpleInjection.Scope forcedScope) {
+    public <T> T getService(Class<T> service, InjectionContainerManager.Scope forcedScope) {
         InjectionKey key = getKey(service);
         ServiceRegister serviceRegister = findServiceRegister(service, key);
         return (T) instantiateService(forcedScope, serviceRegister, key);
@@ -108,7 +112,7 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
      * @return the
      */
     public ServiceRegister findServiceRegister(Class service, InjectionKey key) {
-        ServiceRegister serviceRegister = registeredNamedServices.get(key);
+        ServiceRegister serviceRegister = registeredServices.get(key);
         if (serviceRegister == null && !service.isInterface()) {
             serviceRegister = register(key, false);
         } else if (serviceRegister == null && service.isInterface()) {
@@ -117,6 +121,11 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
         return serviceRegister;
     }
 
+    @SuppressWarnings(value = "unchecked")
+    public Object createNewInstance(ServiceRegister serviceRegister, InjectionKey key) {
+        AnnotationInjection annotationInjection = new AnnotationInjection(injectionMetaDataCache, container, this);
+        return annotationInjection.createNewInstance(serviceRegister.getService(), key);
+    }
 
     @SuppressWarnings(value = "unchecked")
     public Object createInstance(ServiceRegister serviceRegister, InjectionKey key) {
@@ -124,23 +133,28 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
         return annotationInjection.createInstance(serviceRegister.getService(), key);
     }
 
-    public synchronized void register(
+    public void register(
             InjectionKey key, Class service,
-            SimpleInjection.Scope scope, SimpleInjection.RegisterType type, boolean throwError) {
-        if (type != SimpleInjection.RegisterType.OVERRIDE_NORMAL && registeredNamedServices.containsKey(key)) {
-            if (throwError) {
-                throw new DuplicateRegistrationException("Can not overwrite an existing service with 'register', use 'overrideRegister'");
-            }
-            return;
+            InjectionContainerManager.Scope scope, InjectionContainerManager.RegisterType type, boolean throwError) {
+        if (registeredServices.containsKey(key)) {
+            reRegisterSupport(key, type, throwError);
         }
-        register(key, service, scope);
+        LOG.debug("Putting service into registry for key={}", key);
+        RegistrationInstanceSimple registrationInstanceSimple =
+                (RegistrationInstanceSimple)
+                new RegistrationInstanceSimple(key.getServiceDefinition())
+                .annotated(key.getAnnotation())
+                .registerTypeAs(type)
+                .scopeAs(scope);
+
+        createAnStoreRegistration(registrationInstanceSimple, key, null);
     }
 
-    public synchronized void register(SimpleInjection simpleInjection, RegistrationModule... modules) {
+    public void register(InjectionContainerManager injectionContainerManager, RegistrationModule... modules) {
         for (RegistrationModule module : modules) {
             RegistrationModuleAnnotation aModule = (RegistrationModuleAnnotation) module;
             if (aModule instanceof RegistrationModuleAnnotationScanner) {
-                ((RegistrationModuleAnnotationScanner) aModule).setSimpleInjection(simpleInjection);
+                ((RegistrationModuleAnnotationScanner) aModule).setInjectionContainerManager(injectionContainerManager);
             }
             if (aModule.getInjectionFinder() != null) {
                 this.injectionFinder = aModule.getInjectionFinder();
@@ -151,6 +165,7 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
             aModule.preRegistration(container);
             for (RegistrationInstanceSimple instance : aModule.getRegistrations()) {
                 InjectionKey key = instance.getInjectionKey();
+                LOG.debug("Putting service into registry for key={}", key.getServiceDefinition());
                 createAnStoreRegistration(instance, key, aModule);
             }
             aModule.postRegistration(container);
@@ -159,7 +174,7 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
 
 
     public Class findService(InjectionKey key) {
-        ServiceRegister serviceRegister = super.registeredNamedServices.get(key);
+        ServiceRegister serviceRegister = super.registeredServices.get(key);
         if (serviceRegister != null) {
             return serviceRegister.getService();
         } else {
@@ -177,17 +192,52 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
         AnnotationInjection annotationInjection = new AnnotationInjection(injectionMetaDataCache, container, this);
         annotationInjection.injectExtendedDependencies(service);
     }
+    private void reRegisterSupport(InjectionKey key, InjectionContainerManager.RegisterType type, boolean throwError) {
+        ServiceRegister serviceRegister = registeredServices.get(key);
+        if (serviceRegister.getRegisterType() == InjectionContainerManager.RegisterType.WEAK) {
+            // registeredServices.remove(key);
+            return;
+        }
 
+        if (serviceRegister.getRegisterType() == InjectionContainerManager.RegisterType.NORMAL) {
+            if (type == InjectionContainerManager.RegisterType.OVERRIDE_NORMAL) {
+                // registeredServices.remove(key);
+                return;
+            }
+            throwRegistrationError("a existing Service",
+                    "to override register please use overrideRegister method", key, throwError);
+        }
+        if (serviceRegister.getRegisterType() == InjectionContainerManager.RegisterType.FINAL) {
+            throwRegistrationError("a existing FINAL Service", "can not perform override registration", key, throwError);
+        }
+
+    }
+
+    private void throwRegistrationError(String message, String help, InjectionKey key, boolean throwError) {
+        String qualifier = key.getQualifier();
+        if (!throwError) {
+            return;
+        }
+        if (qualifier != null) {
+            throw new DuplicateRegistrationException(
+                    message + " for qualifier \"{0}\" and serviceDefinition \"{1}\" " +
+                            "is already registered, " + help, qualifier, key.getServiceDefinition());
+        } else {
+            throw new DuplicateRegistrationException(
+                    message + " for serviceDefinition \"{0}\" " +
+                            "is already registered, " + help, key.getServiceDefinition());
+        }
+    }
 
     @SuppressWarnings(value = "unchecked")
-    private <T> T getQualifiedService(Class<T> service, SimpleInjection.Scope forcedScope, InjectionKey key) {
-        if (!registeredNamedServices.containsKey(key) && service.getClass().isInterface()) {
+    private <T> T getQualifiedService(Class<T> service, InjectionContainerManager.Scope forcedScope, InjectionKey key) {
+        if (!registeredServices.containsKey(key) && service.getClass().isInterface()) {
             throw new InjectRuntimeException(
                     "Service {0} not registered in SimpleInjection and is an interface", service
             );
         }
 
-        ServiceRegister serviceRegister = registeredNamedServices.get(key);
+        ServiceRegister serviceRegister = registeredServices.get(key);
         if (serviceRegister == null && !service.isInterface()) {
             serviceRegister = register(key, service, null);
         }
@@ -202,13 +252,13 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
         InjectionMetaData injectionMetaData = annotationInjection.findInjectionData(service, key);
         if (injectionMetaData != null) {
             register(key, injectionMetaData.getServiceClass(), null, null, false);
-            return registeredNamedServices.get(key);
+            return registeredServices.get(key);
         } else {
             throw new InjectRuntimeException("No Service found for Interface {0}", serviceDefinition);
         }
     }
 
-    private ServiceRegister register(InjectionKey key, Class service, SimpleInjection.Scope scope) {
+    private ServiceRegister register(InjectionKey key, Class service, InjectionContainerManager.Scope scope) {
         RegistrationInstanceSimple instance = new RegistrationInstanceSimple(service);
         instance.scopeAs(scope);
         if (key == null) {
@@ -226,7 +276,7 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
 
     private ServiceRegister register(InjectionKey key, boolean throwError) {
         register(key, key.getServiceDefinition(), null, null, throwError);
-        return registeredNamedServices.get(key);
+        return registeredServices.get(key);
     }
 
 
@@ -235,28 +285,52 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
                                                       RegistrationModuleAnnotation aModule) {
         InjectionMetaData injectionMetaData = createInjectionMetaData(instance, key);
         ServiceRegister register = createServiceRegister(instance, injectionMetaData);
-        register.setModule(aModule);
+        if(aModule != null){
+            register.setModule(aModule);
+        }
         putServiceIntoRegister(key, register);
+        validateRegisters(key, injectionMetaData, register);
         return register;
 
+    }
+
+    private void validateRegisters(InjectionKey key, InjectionMetaData injectionMetaData, ServiceRegister register) {
+
+        // Validate the MetaDataCache
+        AnnotationInjection annotationInjection = new AnnotationInjection(injectionMetaDataCache, container, this);
+        InjectionMetaData injectionMetaDataCache = annotationInjection.getInjectionCacheHandler().find(injectionMetaData);
+        if(injectionMetaDataCache != injectionMetaData){
+            throw new InjectRuntimeException("InjectionMetaData not cached correctly");
+        }
+
+        // Validate the ServiceRegister cache
+        ServiceRegister serviceRegisterCache = registeredServices.get(key);
+        if(serviceRegisterCache != register){
+            throw new InjectRuntimeException("ServiceRegister not cached correctly");
+        }
+
+        // Validate the ServiceRegister cache
+        //if(annotationInjection.getInjectionCacheHandler().size() != registeredServices.size()){
+        //    throw new InjectRuntimeException("ServiceRegisterCache.size != InjectionCacheHandler.size()");
+        //}
     }
 
 
     private ServiceRegister createServiceRegister(
             RegistrationInstanceSimple instance, InjectionMetaData injectionMetaData) {
-        if (instance.getTheInstance() == null) {
+        if (instance.getScope() != ScopeContainer.Scope.SINGLETON) {
             return new ServiceRegister(
                     instance.getService(),
                     null,
                     getAnnotationScope(injectionMetaData),
-                    SimpleInjection.RegisterType.NORMAL
+                    normalizeType(instance.getRegisterType())
             );
         } else {
             return new ServiceRegister(
                     instance.getService(),
-                    instance.getTheInstance(),
-                    SimpleInjection.Scope.SINGLETON,
-                    SimpleInjection.RegisterType.NORMAL
+                    createInstance(new ServiceRegister(instance.getService()), instance.getInjectionKey()),
+                    InjectionContainerManager.Scope.SINGLETON,
+                    normalizeType(instance.getRegisterType())
             );
         }
     }
@@ -265,7 +339,7 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
         InjectionMetaData injectionMetaData = createInjectionMetaData(instance.getService(), key);
         if (instance.getTheInstance() != null) {
             SingletonScopeHandler scopeHandler = new SingletonScopeHandler();
-            scopeHandler.addScope(instance.getTheInstance());
+            scopeHandler.addInstance(instance.getTheInstance());
             injectionMetaData.setScopeHandler(scopeHandler);
         } else if (instance.getTheFactory() != null) {
             FactoryScopeHandler scopeHandler = new FactoryScopeHandler(instance.getTheFactory());
@@ -273,25 +347,25 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
         } else if (instance.getTheVariableFactory() != null) {
             VariableFactoryScopeHandler scopeHandler = new VariableFactoryScopeHandler(instance.getTheVariableFactory());
             injectionMetaData.setScopeHandler(scopeHandler);
-        } else if (instance.getScope() != null) {
+        } else {
             // replaces the injection data scope handler
-            injectionMetaData.setScopeHandler(InjectionUtils.getScopeHandler(instance.getScope()));
+            injectionMetaData.setScopeHandler(InjectionUtils.getScopeHandler(instance.getService(), instance.getScope()));
         }
         return injectionMetaData;
     }
 
     private InjectionMetaData createInjectionMetaData(Class service, InjectionKey key) {
         AnnotationInjection annotationInjection = new AnnotationInjection(injectionMetaDataCache, container, this);
-        return annotationInjection.createInjectionMetaData(service, key);
+        return annotationInjection.createInjectionMetaData(service, key, null);
     }
 
 
-    private SimpleInjection.Scope getAnnotationScope(InjectionMetaData injectionMetaData) {
+    private InjectionContainerManager.Scope getAnnotationScope(InjectionMetaData injectionMetaData) {
         return injectionMetaData.getScope();
     }
 
-    public Object clone(SimpleInjection simpleInjection) throws CloneNotSupportedException {
-        AnnotationInjectionContainer annotationInjectionContainer = new AnnotationInjectionContainer(simpleInjection);
+    public Object clone(InjectionContainerManager injectionContainerManager) throws CloneNotSupportedException {
+        AnnotationInjectionContainer annotationInjectionContainer = new AnnotationInjectionContainer(injectionContainerManager);
 
         annotationInjectionContainer.injectionMetaDataCache.putAll(this.injectionMetaDataCache);
         for (InjectionKey injectionKey : this.injectionMetaDataCache.keySet()) {
@@ -303,12 +377,12 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
             }
         }
 
-        for (InjectionKey injectionKey : this.registeredNamedServices.keySet()) {
-            ServiceRegister serviceRegister = this.registeredNamedServices.get(injectionKey);
+        for (InjectionKey injectionKey : this.registeredServices.keySet()) {
+            ServiceRegister serviceRegister = this.registeredServices.get(injectionKey);
             if (serviceRegister.getScope() == ScopeContainer.Scope.SINGLETON) {
-                annotationInjectionContainer.registeredNamedServices.put(injectionKey, serviceRegister.clone());
+                annotationInjectionContainer.registeredServices.put(injectionKey, serviceRegister.clone());
             } else {
-                annotationInjectionContainer.registeredNamedServices.put(injectionKey, serviceRegister);
+                annotationInjectionContainer.registeredServices.put(injectionKey, serviceRegister);
             }
         }
         return annotationInjectionContainer;

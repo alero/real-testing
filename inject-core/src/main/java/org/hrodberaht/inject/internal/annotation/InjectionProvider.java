@@ -14,7 +14,7 @@
 
 package org.hrodberaht.inject.internal.annotation;
 
-import org.hrodberaht.inject.SimpleInjection;
+import org.hrodberaht.inject.InjectionContainerManager;
 import org.hrodberaht.inject.internal.InjectionKey;
 
 import javax.inject.Provider;
@@ -30,9 +30,9 @@ import javax.inject.Provider;
 public class InjectionProvider implements Provider {
 
     private InjectionKey injectionKey;
-    private SimpleInjection injection;
+    private InjectionContainerManager injection;
 
-    public InjectionProvider(SimpleInjection injection, InjectionKey injectionKey) {
+    public InjectionProvider(InjectionContainerManager injection, InjectionKey injectionKey) {
         this.injectionKey = injectionKey;
         this.injection = injection;
     }

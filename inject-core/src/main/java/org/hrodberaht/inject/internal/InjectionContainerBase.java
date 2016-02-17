@@ -14,7 +14,7 @@
 
 package org.hrodberaht.inject.internal;
 
-import org.hrodberaht.inject.SimpleInjection;
+import org.hrodberaht.inject.InjectionContainerManager;
 import org.hrodberaht.inject.internal.exception.InjectRuntimeException;
 import org.hrodberaht.inject.internal.stats.Statistics;
 
@@ -34,15 +34,14 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class InjectionContainerBase {
 
+    protected Map<InjectionKey, ServiceRegister> registeredServices =
+            new ConcurrentHashMap<InjectionKey, ServiceRegister>();
 
     public Collection<ServiceRegister> getServiceRegister() {
         Collection<ServiceRegister> registry = new ArrayList<ServiceRegister>(50);
         registry.addAll(getNamedRegisteredServices());
         return registry;
     }
-
-    protected Map<InjectionKey, ServiceRegister>
-            registeredNamedServices = new ConcurrentHashMap<InjectionKey, ServiceRegister>();
 
     protected InjectionKey getNamedKey(String qualifier, Class serviceDefinition) {
         return new InjectionKey(qualifier, serviceDefinition, false);
@@ -57,11 +56,11 @@ public abstract class InjectionContainerBase {
     }
 
     protected Object instantiateService(
-            SimpleInjection.Scope forcedScope, ServiceRegister serviceRegister, InjectionKey key) {
-        if (forcedScope == null && serviceRegister.getScope() == SimpleInjection.Scope.NEW) {
+            InjectionContainerManager.Scope forcedScope, ServiceRegister serviceRegister, InjectionKey key) {
+        if (forcedScope == null && serviceRegister.getScope() == InjectionContainerManager.Scope.NEW) {
             return createInstance(serviceRegister, key);
-        } else if (SimpleInjection.Scope.NEW == forcedScope) {
-            return createInstance(serviceRegister, key);
+        } else if (InjectionContainerManager.Scope.NEW == forcedScope) {
+            return createNewInstance(serviceRegister, key);
         }
         if (serviceRegister.getSingleton() == null) {
             serviceRegister.setSingleton(createInstance(serviceRegister, key));
@@ -69,21 +68,24 @@ public abstract class InjectionContainerBase {
         return serviceRegister.getSingleton();
     }
 
-    protected static SimpleInjection.RegisterType normalizeType(SimpleInjection.RegisterType type) {
-        if (type == SimpleInjection.RegisterType.OVERRIDE_NORMAL) {
-            return SimpleInjection.RegisterType.NORMAL;
+
+
+    protected static InjectionContainerManager.RegisterType normalizeType(InjectionContainerManager.RegisterType type) {
+        if (type == InjectionContainerManager.RegisterType.OVERRIDE_NORMAL) {
+            return InjectionContainerManager.RegisterType.NORMAL;
         }
         return type;
     }
 
+    protected abstract Object createNewInstance(ServiceRegister serviceRegister, InjectionKey key);
     protected abstract Object createInstance(ServiceRegister serviceRegister, InjectionKey key);
 
     protected <T> ServiceRegister findServiceImplementation(Class<T> service) {
         InjectionKey key = getKey(service);
-        if (!registeredNamedServices.containsKey(key)) {
+        if (!registeredServices.containsKey(key)) {
             if (service.isInterface()) {
                 ServiceRegister foundServiceRegister = null;
-                for (ServiceRegister serviceRegister : registeredNamedServices.values()) {
+                for (ServiceRegister serviceRegister : registeredServices.values()) {
                     if (service.isAssignableFrom(serviceRegister.getService())) {
                         if (foundServiceRegister == null) {
                             foundServiceRegister = serviceRegister;
@@ -104,21 +106,21 @@ public abstract class InjectionContainerBase {
             }
             throw new InjectRuntimeException("Service {0} not registered in SimpleInjection", service);
         }
-        return registeredNamedServices.get(key);
+        return registeredServices.get(key);
     }
 
     protected void putServiceIntoRegister(InjectionKey key, ServiceRegister register) {
-        ServiceRegister oldRegister = registeredNamedServices.get(key);
+        ServiceRegister oldRegister = registeredServices.get(key);
         register.setOverriddenService(oldRegister);
-        registeredNamedServices.put(key, register);
+        registeredServices.put(key, register);
         Statistics.addRegisterServicesCount();
     }
 
     private Collection<ServiceRegisterNamed> getNamedRegisteredServices() {
         Collection<ServiceRegisterNamed> regulars = new ArrayList<ServiceRegisterNamed>();
-        Collection<InjectionKey> keys = registeredNamedServices.keySet();
+        Collection<InjectionKey> keys = registeredServices.keySet();
         for (InjectionKey registerKey : keys) {
-            ServiceRegister register = registeredNamedServices.get(registerKey);
+            ServiceRegister register = registeredServices.get(registerKey);
             ServiceRegisterNamed registerRegular = new ServiceRegisterNamed(register);
             registerRegular.setKey(registerKey);
             regulars.add(registerRegular);

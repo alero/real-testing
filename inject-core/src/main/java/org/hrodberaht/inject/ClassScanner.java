@@ -54,14 +54,14 @@ public class ClassScanner {
 
     }
 
-    public void createRegistration(Class aClazz, SimpleInjection container) {
+    public void createRegistration(Class aClazz, InjectionContainerManager container) {
         if (
                 !aClazz.isInterface()
                         && !aClazz.isAnnotation()
                         && !Modifier.isAbstract(aClazz.getModifiers())
                 ) {
             try {
-                container.register(aClazz, aClazz, null, SimpleInjection.RegisterType.NORMAL);
+                container.register(aClazz, aClazz, null, InjectionContainerManager.RegisterType.NORMAL);
             } catch (InjectRuntimeException e) {
                 LOG.info("Hrodberaht Injection: Silently failed to register class = " + aClazz);
                 if (detailedScanLogging) {

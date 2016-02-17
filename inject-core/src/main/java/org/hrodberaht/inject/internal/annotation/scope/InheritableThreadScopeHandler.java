@@ -1,6 +1,6 @@
 package org.hrodberaht.inject.internal.annotation.scope;
 
-import org.hrodberaht.inject.SimpleInjection;
+import org.hrodberaht.inject.InjectionContainerManager;
 
 /**
  * Simple Java Utils - Container
@@ -19,12 +19,12 @@ public class InheritableThreadScopeHandler implements ScopeHandler {
         return placeHolder.get();
     }
 
-    public void addScope(Object instance) {
+    public void addInstance(Object instance) {
         placeHolder.set(instance);
     }
 
-    public SimpleInjection.Scope getScope() {
-        return SimpleInjection.Scope.INHERITABLE_THREAD;
+    public InjectionContainerManager.Scope getScope() {
+        return InjectionContainerManager.Scope.INHERITABLE_THREAD;
     }
 
     public boolean isInstanceCreated() {

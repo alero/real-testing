@@ -2,7 +2,7 @@ package org.hrodberaht.inject.extension.cdi.inner;
 
 import org.hrodberaht.inject.ExtendedAnnotationInjection;
 import org.hrodberaht.inject.InjectContainer;
-import org.hrodberaht.inject.SimpleInjection;
+import org.hrodberaht.inject.InjectionContainerManager;
 import org.hrodberaht.inject.extension.cdi.cdiext.CDIExtensions;
 import org.hrodberaht.inject.internal.annotation.InjectionFinder;
 import org.hrodberaht.inject.register.RegistrationModuleAnnotation;
@@ -51,7 +51,7 @@ public abstract class ContainerConfigBase<T extends InjectionRegisterScanBase> i
         InjectionRegisterScanInterface registerScan = getScanner();
         if (moduleAnnotation != null) {
             ((ExtendedAnnotationInjection) registerScan.getInjectContainer()).getAnnotatedContainer().register(
-                    (SimpleInjection) registerScan.getInjectContainer(), moduleAnnotation);
+                    (InjectionContainerManager) registerScan.getInjectContainer(), moduleAnnotation);
         }
         registerScan.scanPackage(packageName);
         originalRegister = registerScan;

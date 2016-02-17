@@ -23,7 +23,7 @@ public class VariableFactoryScopeHandler implements VariableScopeHandler {
         return injectionFactory.getInstanceClass(variable);
     }
 
-    public void addScope(Object instance) {
+    public void addInstance(Object instance) {
         throw new IllegalAccessError("Factory can not have instance set");
     }
 

@@ -14,6 +14,7 @@ import test.org.hrodberaht.inject.testservices.annotated_extra.Saab;
 import java.util.Date;
 
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Injection Extension JUnit
@@ -31,7 +32,7 @@ public class CloneContainerRegistrationUnitT implements PerformanceTests {
         InjectionRegisterModule registerJava = AnnotationContainerUtil.prepareLargeVolvoRegister();
         for (int i = 0; i < 500; i++) {
             InjectionRegisterModule registerJavaClone = registerJava.clone();
-            registerJavaClone.activateContainerJavaXInject();
+            assertNotNull(registerJavaClone);
         }
     }
 

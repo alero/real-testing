@@ -14,7 +14,7 @@
 
 package org.hrodberaht.inject.internal;
 
-import org.hrodberaht.inject.SimpleInjection;
+import org.hrodberaht.inject.InjectionContainerManager;
 import org.hrodberaht.inject.register.RegistrationModule;
 
 /**
@@ -28,9 +28,9 @@ import org.hrodberaht.inject.register.RegistrationModule;
 public interface RegistrationInjectionContainer {
 
     void register(InjectionKey key, Class service,
-                  SimpleInjection.Scope scope, SimpleInjection.RegisterType type, boolean throwError);
+                  InjectionContainerManager.Scope scope, InjectionContainerManager.RegisterType type, boolean throwError);
 
-    void register(SimpleInjection simpleInjection, RegistrationModule... modules);
+    void register(InjectionContainerManager injectionContainerManager, RegistrationModule... modules);
 
 
 }

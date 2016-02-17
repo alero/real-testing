@@ -199,12 +199,28 @@ public class InjectionUtils {
     }
 
     public static ScopeHandler getScopeHandler(Class serviceClass) {
-        if (isSingleton(serviceClass)) {
-            return new SingletonScopeHandler();
-        } else if (isThread(serviceClass)) {
-            return new ThreadScopeHandler();
-        } else if (isInheritedThread(serviceClass)) {
-            return new InheritableThreadScopeHandler();
+        return getScopeHandler(serviceClass, null);
+    }
+
+    public static ScopeHandler getScopeHandler(Class serviceClass, ScopeContainer.Scope scope) {
+
+        if (scope != null) { // first follow the enforced scope control, do not look for annotations
+            if (scope == ScopeContainer.Scope.SINGLETON) {
+                return new SingletonScopeHandler();
+            } else if (scope == ScopeContainer.Scope.THREAD) {
+                return new ThreadScopeHandler();
+            } else if (scope == ScopeContainer.Scope.INHERITABLE_THREAD) {
+                return new InheritableThreadScopeHandler();
+            }
+        }
+        else {
+            if (isSingleton(serviceClass)) {
+                return new SingletonScopeHandler();
+            } else if (isThread(serviceClass)) {
+                return new ThreadScopeHandler();
+            } else if (isInheritedThread(serviceClass)) {
+                return new InheritableThreadScopeHandler();
+            }
         }
         return new DefaultScopeHandler();
     }

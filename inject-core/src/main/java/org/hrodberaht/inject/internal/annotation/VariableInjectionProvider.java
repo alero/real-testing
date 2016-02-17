@@ -14,7 +14,7 @@
 
 package org.hrodberaht.inject.internal.annotation;
 
-import org.hrodberaht.inject.SimpleInjection;
+import org.hrodberaht.inject.InjectionContainerManager;
 import org.hrodberaht.inject.annotation.VariableProvider;
 import org.hrodberaht.inject.internal.InjectionKey;
 
@@ -29,9 +29,9 @@ import org.hrodberaht.inject.internal.InjectionKey;
 public class VariableInjectionProvider implements VariableProvider {
 
     private InjectionKey injectionKey;
-    private SimpleInjection injection;
+    private InjectionContainerManager injection;
 
-    public VariableInjectionProvider(SimpleInjection injection, InjectionKey injectionKey) {
+    public VariableInjectionProvider(InjectionContainerManager injection, InjectionKey injectionKey) {
         this.injectionKey = injectionKey;
         this.injection = injection;
     }

@@ -43,6 +43,13 @@ public class InjectionCacheHandler {
         injectionMetaDataCache.put(injectionMetaData.getKey(), injectionMetaData);
     }
 
+    public void clear(InjectionMetaData injectionMetaData) {
+        if (injectionMetaData.getKey() == null) {
+            throw new InjectRuntimeException("injectionMetaData.getKey() is null");
+        }
+        injectionMetaDataCache.remove(injectionMetaData.getKey());
+    }
+
     public InjectionMetaData find(InjectionMetaData injectionMetaData) {
         if (injectionMetaData.getKey() == null) {
             throw new InjectRuntimeException("injectionMetaData.getKey() is null");
@@ -64,4 +71,7 @@ public class InjectionCacheHandler {
 
     }
 
+    public int size() {
+        return injectionMetaDataCache.size();
+    }
 }

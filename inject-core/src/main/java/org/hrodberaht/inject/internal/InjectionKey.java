@@ -89,7 +89,7 @@ public class InjectionKey {
 
     private void createHashCode() {
         int result = annotation != null ? annotation.hashCode() : 0;
-        result = 31 * result + Boolean.valueOf(provider).hashCode();
+        result = 31 * result + (provider ? 1 : 0);
         result = 31 * result + (name != null ? name.hashCode() : 0);
         result = 31 * result + (serviceDefinition != null ? serviceDefinition.hashCode() : 0);
         hashCode = result;
