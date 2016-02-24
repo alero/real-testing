@@ -15,14 +15,12 @@
 package org.hrodberaht.inject.internal;
 
 import org.hrodberaht.inject.InjectionContainerManager;
+import org.hrodberaht.inject.internal.annotation.ServiceRegistryForInjection;
 import org.hrodberaht.inject.internal.exception.InjectRuntimeException;
 import org.hrodberaht.inject.internal.stats.Statistics;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Simple Java Utils - Container
@@ -34,13 +32,10 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public abstract class InjectionContainerBase {
 
-    protected Map<InjectionKey, ServiceRegister> registeredServices =
-            new ConcurrentHashMap<InjectionKey, ServiceRegister>();
+    protected ServiceRegistryForInjection registeredServices;
 
     public Collection<ServiceRegister> getServiceRegister() {
-        Collection<ServiceRegister> registry = new ArrayList<ServiceRegister>(50);
-        registry.addAll(getNamedRegisteredServices());
-        return registry;
+        return registeredServices.getServiceRegisterCollection();
     }
 
     protected InjectionKey getNamedKey(String qualifier, Class serviceDefinition) {
@@ -85,7 +80,7 @@ public abstract class InjectionContainerBase {
         if (!registeredServices.containsKey(key)) {
             if (service.isInterface()) {
                 ServiceRegister foundServiceRegister = null;
-                for (ServiceRegister serviceRegister : registeredServices.values()) {
+                for (ServiceRegister serviceRegister : registeredServices.getServiceRegisterCollection()) {
                     if (service.isAssignableFrom(serviceRegister.getService())) {
                         if (foundServiceRegister == null) {
                             foundServiceRegister = serviceRegister;
@@ -116,15 +111,5 @@ public abstract class InjectionContainerBase {
         Statistics.addRegisterServicesCount();
     }
 
-    private Collection<ServiceRegisterNamed> getNamedRegisteredServices() {
-        Collection<ServiceRegisterNamed> regulars = new ArrayList<ServiceRegisterNamed>();
-        Collection<InjectionKey> keys = registeredServices.keySet();
-        for (InjectionKey registerKey : keys) {
-            ServiceRegister register = registeredServices.get(registerKey);
-            ServiceRegisterNamed registerRegular = new ServiceRegisterNamed(register);
-            registerRegular.setKey(registerKey);
-            regulars.add(registerRegular);
-        }
-        return regulars;
-    }
+
 }

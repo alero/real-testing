@@ -48,7 +48,7 @@ public class AnnotationInjection {
     private InjectionFinder injectionFinder = InjectionPointFinder.getInjectionFinder();
     private InstanceCreator instanceCreator = InstanceCreatorFactory.getInstance();
 
-    public AnnotationInjection(Map<InjectionKey, InjectionMetaData> injectionMetaDataCache
+    public AnnotationInjection(Map<InjectionKey, InjectionMetaDataBase> injectionMetaDataCache
             , InjectionContainerManager container
             , AnnotationInjectionContainer injectionContainer) {
         injectionCacheHandler = new InjectionCacheHandler(injectionMetaDataCache);

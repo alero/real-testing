@@ -30,9 +30,9 @@ import java.util.Map;
 public class InjectionCacheHandler {
 
 
-    private Map<InjectionKey, InjectionMetaData> injectionMetaDataCache = null;
+    private Map<InjectionKey, InjectionMetaDataBase> injectionMetaDataCache = null;
 
-    public InjectionCacheHandler(Map<InjectionKey, InjectionMetaData> injectionMetaDataCache) {
+    public InjectionCacheHandler(Map<InjectionKey, InjectionMetaDataBase> injectionMetaDataCache) {
         this.injectionMetaDataCache = injectionMetaDataCache;
     }
 
@@ -40,7 +40,7 @@ public class InjectionCacheHandler {
         if (injectionMetaData.getKey() == null) {
             throw new InjectRuntimeException("injectionMetaData.getKey() is null");
         }
-        injectionMetaDataCache.put(injectionMetaData.getKey(), injectionMetaData);
+        injectionMetaDataCache.put(injectionMetaData.getKey(), new InjectionMetaDataBase(injectionMetaData));
     }
 
     public void clear(InjectionMetaData injectionMetaData) {
@@ -54,14 +54,14 @@ public class InjectionCacheHandler {
         if (injectionMetaData.getKey() == null) {
             throw new InjectRuntimeException("injectionMetaData.getKey() is null");
         }
-        InjectionMetaData foundMetaData = injectionMetaDataCache.get(injectionMetaData.getKey());
+        InjectionMetaData foundMetaData = nullSageGetInjectionMetaData(injectionMetaData);
         if (foundMetaData != null) {
             return foundMetaData;
         }
         // Try to find similar Injection's that can handle the injection.
         // Will search with isAssignableFrom as final way
-        for (InjectionMetaData anInjectionMetaDataCache : injectionMetaDataCache.values()) {
-            InjectionMetaData metaData = anInjectionMetaDataCache;
+        for (InjectionMetaDataBase anInjectionMetaDataCache : injectionMetaDataCache.values()) {
+            InjectionMetaData metaData = anInjectionMetaDataCache.getInjectionMetaData();
             if (injectionMetaData.canInject(metaData)) {
                 return metaData;
             }
@@ -69,6 +69,14 @@ public class InjectionCacheHandler {
 
         return null;
 
+    }
+
+    private InjectionMetaData nullSageGetInjectionMetaData(InjectionMetaData injectionMetaData) {
+        InjectionMetaDataBase injectionMetaDataBase = injectionMetaDataCache.get(injectionMetaData.getKey());
+        if(injectionMetaDataBase != null){
+            return injectionMetaDataBase.getInjectionMetaData();
+        }
+        return null;
     }
 
     public int size() {

@@ -51,7 +51,7 @@ public class AnnotationContinerPerformanceUnitT {
     @Before
     public void init() {
         registerVolvo = AnnotationContainerUtil.prepareLargeVolvoRegister();
-        Statistics.setEnabled(true);
+        // Statistics.setEnabled(true);
     }
 
     @After
@@ -60,7 +60,7 @@ public class AnnotationContinerPerformanceUnitT {
         Statistics.setEnabled(false);
     }
 
-    @Test(timeout = 10000)
+    @Test(timeout = 100000)
     public void testPerformance() {
         Container container = TckUtil.prepareRegister().getContainer();
         PerformanceStatistics performanceStatistics = new PerformanceStatistics("testPerformance");

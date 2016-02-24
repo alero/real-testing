@@ -52,13 +52,15 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
 
     private static final Logger LOG = LoggerFactory.getLogger(AnnotationInjectionContainer.class);
 
-    private Map<InjectionKey, InjectionMetaData> injectionMetaDataCache = new ConcurrentHashMap<InjectionKey, InjectionMetaData>();
+    private Map<InjectionKey, InjectionMetaDataBase> injectionMetaDataCache = new ConcurrentHashMap<InjectionKey, InjectionMetaDataBase>();
     private InjectionContainerManager container;
     private InjectionFinder injectionFinder;
     private InstanceCreator instanceCreator;
 
     public AnnotationInjectionContainer(InjectionContainerManager container) {
+        super.registeredServices = new ServiceRegistryForInjection(injectionMetaDataCache);
         this.container = container;
+
     }
 
     public InjectionFinder getInjectionFinder() {
@@ -96,12 +98,6 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
         InjectionKey key = getNamedKey(VariableInjectionFactory.SERVICE_NAME, service);
         ServiceRegister serviceRegister = findServiceRegister(service, key);
         return (T) instantiateService(variable, serviceRegister, key);
-    }
-
-    @SuppressWarnings(value = "unchecked")
-    private Object instantiateService(Object variable, ServiceRegister serviceRegister, InjectionKey key) {
-        AnnotationInjection annotationInjection = new AnnotationInjection(injectionMetaDataCache, container, this);
-        return annotationInjection.createInstance(serviceRegister.getService(), key, variable);
     }
 
     /**
@@ -192,6 +188,14 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
         AnnotationInjection annotationInjection = new AnnotationInjection(injectionMetaDataCache, container, this);
         annotationInjection.injectExtendedDependencies(service);
     }
+
+
+    @SuppressWarnings(value = "unchecked")
+    private Object instantiateService(Object variable, ServiceRegister serviceRegister, InjectionKey key) {
+        AnnotationInjection annotationInjection = new AnnotationInjection(injectionMetaDataCache, container, this);
+        return annotationInjection.createInstance(serviceRegister.getService(), key, variable);
+    }
+
     private void reRegisterSupport(InjectionKey key, InjectionContainerManager.RegisterType type, boolean throwError) {
         ServiceRegister serviceRegister = registeredServices.get(key);
         if (serviceRegister.getRegisterType() == InjectionContainerManager.RegisterType.WEAK) {
@@ -289,7 +293,7 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
             register.setModule(aModule);
         }
         putServiceIntoRegister(key, register);
-        validateRegisters(key, injectionMetaData, register);
+        // validateRegisters(key, injectionMetaData, register);
         return register;
 
     }
@@ -369,8 +373,8 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
 
         annotationInjectionContainer.injectionMetaDataCache.putAll(this.injectionMetaDataCache);
         for (InjectionKey injectionKey : this.injectionMetaDataCache.keySet()) {
-            InjectionMetaData injectionMetaData = this.injectionMetaDataCache.get(injectionKey);
-            if (injectionMetaData.getScope() == ScopeContainer.Scope.SINGLETON) {
+            InjectionMetaDataBase injectionMetaData = this.injectionMetaDataCache.get(injectionKey);
+            if (injectionMetaData.getInjectionMetaData().getScope() == ScopeContainer.Scope.SINGLETON) {
                 annotationInjectionContainer.injectionMetaDataCache.put(injectionKey, injectionMetaData.clone());
             } else {
                 annotationInjectionContainer.injectionMetaDataCache.put(injectionKey, injectionMetaData);
