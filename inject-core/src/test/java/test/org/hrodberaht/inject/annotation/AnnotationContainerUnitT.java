@@ -189,7 +189,7 @@ public class AnnotationContainerUnitT {
                             Constructor constructor, Object... parameters) {
                         try {
                             if (constructor.getDeclaringClass().isAssignableFrom(Tire.class)
-                                    && parameters.length == 0) {
+                                    && (parameters == null || parameters.length == 0)) {
                                 return specialTire;
                             }
                             return constructor.newInstance(parameters);

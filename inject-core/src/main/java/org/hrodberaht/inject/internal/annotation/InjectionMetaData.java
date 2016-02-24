@@ -24,6 +24,7 @@ import org.hrodberaht.inject.internal.exception.InjectRuntimeException;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -44,7 +45,7 @@ public class InjectionMetaData {
 
     private Constructor constructor;
     private List<InjectionMetaData> constructorDependencies;
-    private List<InjectionPoint> injectionPoints;
+    private List<InjectionPoint> injectionPoints = new ArrayList<>();
     private Method postConstruct;
     private InstanceCreator instanceCreator;
 

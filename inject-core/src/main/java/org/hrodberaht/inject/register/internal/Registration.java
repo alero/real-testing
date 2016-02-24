@@ -18,11 +18,11 @@ public interface Registration {
 
     Registration named(String named);
 
-    void with(Class theService);
+    Object with(Class theService);
 
-    void withInstance(Object aSingleton);
+    Object withInstance(Object aSingleton);
 
-    void withFactory(InjectionFactory aFactory);
+    Object withFactory(InjectionFactory aFactory);
 
-    void withVariableFactory(VariableInjectionFactory variableInjectionFactory);
+    Object withVariableFactory(VariableInjectionFactory variableInjectionFactory);
 }

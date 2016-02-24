@@ -139,6 +139,7 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
         RegistrationInstanceSimple registrationInstanceSimple =
                 (RegistrationInstanceSimple)
                 new RegistrationInstanceSimple(key.getServiceDefinition())
+                .with(service)
                 .annotated(key.getAnnotation())
                 .registerTypeAs(type)
                 .scopeAs(scope);

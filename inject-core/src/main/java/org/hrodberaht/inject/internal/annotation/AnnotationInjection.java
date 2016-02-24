@@ -152,6 +152,7 @@ public class AnnotationInjection {
         }
         cachedInjectionMetaData = createInjectionMetaData(service, key, null);
         cachedInjectionMetaData.setPreDefined(false);
+        resolveService(cachedInjectionMetaData);
         return cachedInjectionMetaData;
     }
 
@@ -176,13 +177,20 @@ public class AnnotationInjection {
      */
     private void resolveService(InjectionMetaData injectionMetaData) {
         List<InjectionMetaData> list = findDependencies(injectionMetaData.getConstructor());
-        injectionMetaData.setConstructorDependencies(list.size() == 0 ? null : list);
+        injectionMetaData.setConstructorDependencies(validateListSize(list) ? null : list);
         injectionMetaData.setInjectionPoints(
                 injectionFinder.findInjectionPoints(injectionMetaData.getServiceClass(), this)
         );
         injectionMetaData.setPostConstructMethod(
                 injectionFinder.findPostConstruct(injectionMetaData.getServiceClass())
         );
+    }
+
+    private boolean validateListSize(List<InjectionMetaData> list) {
+        if(list == null){
+            return true;
+        }
+        return list.size() == 0;
     }
 
     /**

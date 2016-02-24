@@ -48,26 +48,30 @@ public class RegistrationInstanceAnnotation<T extends Registration> implements R
         return (T) this;
     }
 
-    public void with(Class theService) {
+    public T with(Class theService) {
         this.theService = theService;
+        return (T) this;
     }
 
-    public void withInstance(Object theInstance) {
+    public T withInstance(Object theInstance) {
         this.theInstance = theInstance;
         this.theService = theInstance.getClass();
         this.scope = ScopeContainer.Scope.SINGLETON;
+        return (T) this;
     }
 
-    public void withFactory(InjectionFactory aFactory) {
+    public T withFactory(InjectionFactory aFactory) {
         this.theFactory = aFactory;
         this.theService = theFactory.getInstanceType();
         this.scope = ScopeContainer.Scope.NEW;
+        return (T) this;
     }
 
-    public void withVariableFactory(VariableInjectionFactory variableInjectionFactory) {
+    public T withVariableFactory(VariableInjectionFactory variableInjectionFactory) {
         this.theVariableFactory = variableInjectionFactory;
         this.name = VariableInjectionFactory.SERVICE_NAME;
         this.scope = ScopeContainer.Scope.NEW;
+        return (T) this;
     }
 
 
