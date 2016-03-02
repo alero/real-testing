@@ -1,8 +1,7 @@
 package org.hrodberaht.inject.extension.tdd;
 
 import org.hrodberaht.inject.extension.tdd.ejb.TDDEJBContainerConfigBase;
-import org.hrodberaht.inject.internal.InjectionContainer;
-import org.hrodberaht.inject.spi.ThreadConfigHolder;
+import org.hrodberaht.inject.spi.ContainerConfig;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;
@@ -21,11 +20,11 @@ import java.util.Collection;
 public class JPATestUtil {
 
     @Inject
-    private InjectionContainer injectionContainer;
+    private ContainerConfig containerConfig;
 
-    public static void flushAndClear() {
+    public void flushAndClear() {
         Collection<EntityManager> entityManagers =
-                ((TDDEJBContainerConfigBase) ThreadConfigHolder.get()).getEntityManagers();
+                ((TDDEJBContainerConfigBase)containerConfig).getEntityManagers();
         for (EntityManager entityManager : entityManagers) {
             entityManager.flush();
             entityManager.clear();

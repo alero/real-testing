@@ -1,8 +1,8 @@
 package org.hrodberaht.inject.register;
 
-import org.hrodberaht.inject.ClassScanner;
 import org.hrodberaht.inject.InjectContainer;
-import org.hrodberaht.inject.InjectionContainerManager;
+import org.hrodberaht.inject.InjectionRegisterScan;
+import org.hrodberaht.inject.internal.annotation.InjectionMetaDataBase;
 
 /**
  * Simple Java Utils - Container
@@ -15,23 +15,11 @@ import org.hrodberaht.inject.InjectionContainerManager;
 public abstract class RegistrationModuleAnnotationScanner extends RegistrationModuleAnnotation {
 
 
-    private InjectionContainerManager injectionContainerManager = null;
-
-    public RegistrationModuleAnnotationScanner scanAndRegister(String... packages) {
-        ClassScanner classScanner = new ClassScanner();
-        for (String packagename : packages) {
-            Class[] clazzs = classScanner.getClasses(packagename);
-            for (Class aClazz : clazzs) {
-                classScanner.createRegistration(aClazz, getInjectionContainerManager());
-            }
-        }
-        return this;
-    }
 
     public abstract void scan();
 
     @Override
-    public void postRegistration(InjectContainer injectContainer) {
+    public void preRegistration(InjectContainer injectContainer) {
         scan();
     }
 
@@ -39,11 +27,19 @@ public abstract class RegistrationModuleAnnotationScanner extends RegistrationMo
     public void registrations() {
     }
 
-    public void setInjectionContainerManager(InjectionContainerManager injectionContainerManager) {
-        this.injectionContainerManager = injectionContainerManager;
+    public void scanAndRegister(String... packages) {
+        InjectionRegisterScan injectionRegisterScan = new InjectionRegisterScan();
+        injectionRegisterScan.scanPackage(packages);
+        mergeWith(injectionRegisterScan, this);
     }
 
-    private InjectionContainerManager getInjectionContainerManager() {
-        return injectionContainerManager;
+    private void mergeWith(InjectionRegisterScan injectionRegisterScan, RegistrationModuleAnnotationScanner registrationModuleAnnotationScanner) {
+        for(InjectionMetaDataBase serviceMetaData:injectionRegisterScan.getInnerContainer().getAnnotatedContainer().getInjectionMetaDataBaseCollection()){
+            registrationModuleAnnotationScanner.register(
+                    serviceMetaData.getServiceRegister().getService(),
+                    serviceMetaData.getInjectionMetaData().getServiceClass());
+        }
     }
+
+
 }

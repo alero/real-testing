@@ -1,17 +1,16 @@
-package org.hrodberaht.inject.extension.tdd;
+package org.hrodberaht.inject.config;
 
 import org.hrodberaht.inject.InjectContainer;
-import org.hrodberaht.inject.extension.tdd.internal.DataSourceExecution;
-import org.hrodberaht.inject.extension.tdd.internal.DataSourceProxy;
-import org.hrodberaht.inject.extension.tdd.internal.InjectionRegisterScanBase;
-import org.hrodberaht.inject.extension.tdd.internal.ProxyResourceCreator;
+import org.hrodberaht.inject.InjectionContainerManager;
+import org.hrodberaht.inject.InjectionRegisterModule;
+import org.hrodberaht.inject.ScopeContainer;
+import org.hrodberaht.inject.register.InjectionRegister;
 import org.hrodberaht.inject.register.RegistrationModuleAnnotation;
 import org.hrodberaht.inject.spi.ContainerConfig;
 import org.hrodberaht.inject.spi.InjectionRegisterScanInterface;
 import org.hrodberaht.inject.spi.ResourceCreator;
 
 import javax.annotation.Resource;
-import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
 import java.util.HashMap;
@@ -27,30 +26,56 @@ import java.util.Map;
  */
 public abstract class ContainerConfigBase<T extends InjectionRegisterScanBase> implements ContainerConfig {
 
-    protected InjectionRegisterScanInterface originalRegister = null;
-    protected InjectionRegisterScanInterface activeRegister = null;
+    protected InjectionRegisterModule originalRegister = null;
+    protected InjectionRegisterModule activeRegister = null;
 
     protected Map<String, Object> resources = null;
     protected Map<Class, Object> typedResources = null;
 
 
-    private ResourceCreator resourceCreator = new ProxyResourceCreator();
+    protected ResourceCreator resourceCreator = createResourceCreator();
+
+    protected abstract ResourceCreator createResourceCreator();
 
     public abstract InjectContainer createContainer();
 
     protected abstract void injectResources(Object serviceInstance);
 
-    protected abstract InjectionRegisterScanInterface getScanner();
+    protected abstract InjectionRegisterScanInterface getScanner(InjectionRegister registerModule);
 
     protected InjectContainer createAutoScanContainer(String... packageName) {
 
-        InjectionRegisterScanInterface registerScan = getScanner();
-        registerScan.scanPackage(packageName);
-        originalRegister = registerScan;
+        InjectionRegisterModule combinedRegister = preScanModuleRegistration();
+        scanAndRegister(combinedRegister, packageName);
+        postScanModuleRegistration(combinedRegister);
+        originalRegister = combinedRegister;
         appendTypedResources();
         activeRegister = originalRegister.clone();
         System.out.println("originalRegister - " + originalRegister);
         return activeRegister.getInjectContainer();
+    }
+
+    private void scanAndRegister(InjectionRegisterModule combinedRegister, String[] packageName) {
+        InjectionRegisterScanInterface registerScan = getScanner(combinedRegister);
+        registerScan.scanPackage(packageName);
+    }
+
+    protected InjectionRegisterModule preScanModuleRegistration() {
+        return new InjectionRegisterModule();
+    }
+
+    protected void postScanModuleRegistration(InjectionRegisterModule injectionRegisterModule) {
+        final ContainerConfigBase configBase = this;
+        RegistrationModuleAnnotation injectionRegisterModuleConfig= new RegistrationModuleAnnotation(){
+            @Override
+            public void registrations() {
+                register(ContainerConfig.class)
+                        .scopeAs(ScopeContainer.Scope.SINGLETON)
+                        .registerTypeAs(InjectionContainerManager.RegisterType.FINAL)
+                        .withInstance(configBase);
+            }
+        };
+        injectionRegisterModule.register(injectionRegisterModuleConfig);
     }
 
     private void appendTypedResources() {
@@ -103,24 +128,7 @@ public abstract class ContainerConfigBase<T extends InjectionRegisterScanBase> i
     }
 
 
-    public void addSQLSchemas(String schemaName, String packageBase) {
-        DataSourceExecution sourceExecution = new DataSourceExecution(resourceCreator);
-        if (!sourceExecution.isInitiated(schemaName, schemaName)) {
-            sourceExecution.addSQLSchemas(schemaName, packageBase);
-        }
-    }
 
-    public void addSQLSchemas(String testPackageName, String schemaName, String packageBase) {
-        DataSourceExecution sourceExecution = new DataSourceExecution(resourceCreator);
-        if (!sourceExecution.isInitiated(testPackageName, schemaName)) {
-            sourceExecution.addSQLSchemas(schemaName, packageBase);
-        }
-    }
-
-
-    public ResourceCreator<EntityManager, DataSourceProxy> getResourceCreator() {
-        return resourceCreator;
-    }
 
     protected boolean injectTypedResource(Object serviceInstance, Field field) {
         if (typedResources == null) {

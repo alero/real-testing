@@ -14,7 +14,7 @@ import org.hrodberaht.inject.register.RegistrationModule;
 public interface InjectionRegisterScanInterface {
     InjectionRegisterScanInterface scanPackage(String... packagenames);
 
-    InjectionRegisterScanInterface scanPackage(String packagename, Class... manuallyexcluded);
+    InjectionRegisterScanInterface scanPackageExclude(String packagename, Class... manuallyExcluded);
 
     void overrideRegister(Class serviceDefinition, Object service);
 

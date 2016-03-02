@@ -1,14 +1,11 @@
 package org.hrodberaht.inject.extension.tdd.spring.internal;
 
 import org.hrodberaht.inject.ScopeContainer;
-import org.hrodberaht.inject.extension.tdd.internal.InjectionRegisterScanBase;
-import org.hrodberaht.inject.internal.exception.InjectRuntimeException;
+import org.hrodberaht.inject.config.InjectionRegisterScanBase;
+import org.hrodberaht.inject.register.InjectionRegister;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
-
-import java.lang.reflect.Modifier;
-import java.util.List;
 
 /**
  * Unit Test EJB (using @Inject)
@@ -21,6 +18,13 @@ import java.util.List;
 public class InjectionRegisterScanSpring extends InjectionRegisterScanBase {
 
 
+    public InjectionRegisterScanSpring(InjectionRegister injectionRegister) {
+        super(injectionRegister);
+    }
+
+    public InjectionRegisterScanSpring() {
+    }
+
     @Override
     public InjectionRegisterScanSpring clone() {
         InjectionRegisterScanSpring clone = new InjectionRegisterScanSpring();
@@ -32,11 +36,11 @@ public class InjectionRegisterScanSpring extends InjectionRegisterScanBase {
         return clone;
     }
 
-    protected boolean isInterfaceAnnotated(Class aClazz) {
+    public boolean isInterfaceAnnotated(Class aClazz) {
         return false;
     }
 
-    protected boolean isServiceAnnotated(Class aClazz) {
+    public boolean isServiceAnnotated(Class aClazz) {
         if (aClazz.isAnnotationPresent(Component.class)) {
             return true;
         } else if (aClazz.isAnnotationPresent(Service.class)) {
@@ -47,33 +51,10 @@ public class InjectionRegisterScanSpring extends InjectionRegisterScanBase {
         return false;
     }
 
-    protected Class findServiceImplementation(Class aClazz, List<Class> listOfClasses) {
-        Class foundServiceImplementation = null;
-        for (Class aServiceClass : listOfClasses) {
-
-            if (!aServiceClass.isInterface()
-                    && !aServiceClass.isAnnotation()
-                    && !Modifier.isAbstract(aServiceClass.getModifiers())
-                    ) {
-                for (Class aInterface : aServiceClass.getInterfaces()) {
-                    if (aInterface == aClazz) {
-                        if (foundServiceImplementation != null) {
-                            throw new InjectRuntimeException("ServiceInterface implemented in two classes {0} and {1}"
-                                    , foundServiceImplementation, aServiceClass
-                            );
-                        }
-                        foundServiceImplementation = aServiceClass;
-                    }
-                }
-            }
-        }
-
-        return foundServiceImplementation;
-    }
-
-    protected ScopeContainer.Scope getScope(Class serviceClass) {
+    public ScopeContainer.Scope getScope(Class serviceClass) {
         // Spring uses singleton as default
         return ScopeContainer.Scope.SINGLETON;
     }
+
 
 }

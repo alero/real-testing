@@ -1,7 +1,6 @@
 package org.hrodberaht.inject.internal.annotation;
 
 import org.hrodberaht.inject.internal.annotation.creator.InstanceCreator;
-import org.hrodberaht.inject.internal.annotation.creator.InstanceCreatorCGLIB;
 import org.hrodberaht.inject.internal.annotation.creator.InstanceCreatorDefault;
 
 /**
@@ -14,32 +13,14 @@ import org.hrodberaht.inject.internal.annotation.creator.InstanceCreatorDefault;
  */
 public class InstanceCreatorFactory {
 
-    private static InstanceCreator creator = null;
+    private InstanceCreator creator = new InstanceCreatorDefault();
 
-    static {
-        initiateFactory();
-    }
-
-    private static void initiateFactory() {
-        if (System.getProperty("simpleinjection.instancecreator.cglib") != null) {
-            InstanceCreatorFactory.creator = new InstanceCreatorCGLIB();
-        } else {
-            InstanceCreatorFactory.creator = new InstanceCreatorDefault();
-        }
-    }
 
     private InstanceCreatorFactory() {
     }
 
-    public static void setCreator(InstanceCreator creator) {
-        InstanceCreatorFactory.creator = creator;
-    }
 
-    public static void resetCreator() {
-        initiateFactory();
-    }
-
-    static InstanceCreator getInstance() {
-        return InstanceCreatorFactory.creator;
+    InstanceCreator getInstance() {
+        return this.creator;
     }
 }

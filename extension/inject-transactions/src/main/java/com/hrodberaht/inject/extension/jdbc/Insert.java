@@ -1,7 +1,7 @@
 package com.hrodberaht.inject.extension.jdbc;
 
 /**
- * Spring extensions
+ * JDBC extension
  *
  * @author Robert Alexandersson
  * @version 1.0

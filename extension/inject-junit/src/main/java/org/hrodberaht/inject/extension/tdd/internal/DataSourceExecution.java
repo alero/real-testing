@@ -1,7 +1,7 @@
 package org.hrodberaht.inject.extension.tdd.internal;
 
 
-import org.hrodberaht.inject.extension.tdd.util.JarUtil;
+import org.hrodberaht.inject.config.JarUtil;
 import org.hrodberaht.inject.extension.tdd.util.SimpleLogger;
 import org.hrodberaht.inject.spi.ResourceCreator;
 

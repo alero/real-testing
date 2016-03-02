@@ -1,15 +1,13 @@
 package org.hrodberaht.inject.extension.tdd.ejb.internal;
 
 import org.hrodberaht.inject.ScopeContainer;
-import org.hrodberaht.inject.extension.tdd.internal.InjectionRegisterScanBase;
-import org.hrodberaht.inject.internal.exception.InjectRuntimeException;
+import org.hrodberaht.inject.config.InjectionRegisterScanBase;
+import org.hrodberaht.inject.register.InjectionRegister;
 
 import javax.ejb.Local;
 import javax.ejb.Remote;
 import javax.ejb.Stateful;
 import javax.ejb.Stateless;
-import java.lang.reflect.Modifier;
-import java.util.List;
 
 /**
  * Unit Test EJB (using @Inject)
@@ -22,9 +20,13 @@ import java.util.List;
 public class InjectionRegisterScanEJB extends InjectionRegisterScanBase {
 
 
+    public InjectionRegisterScanEJB(InjectionRegister registerModule) {
+        super(registerModule);
+    }
+
     @Override
     public InjectionRegisterScanEJB clone() {
-        InjectionRegisterScanEJB clone = new InjectionRegisterScanEJB();
+        InjectionRegisterScanEJB clone = new InjectionRegisterScanEJB(referedRegister);
         try {
             clone.container = this.container.clone();
         } catch (CloneNotSupportedException e) {
@@ -33,7 +35,7 @@ public class InjectionRegisterScanEJB extends InjectionRegisterScanBase {
         return clone;
     }
 
-    protected boolean isInterfaceAnnotated(Class aClazz) {
+    public boolean isInterfaceAnnotated(Class aClazz) {
         if (aClazz.isAnnotationPresent(Local.class)) {
             return true;
         } else if (aClazz.isAnnotationPresent(Remote.class)) {
@@ -43,7 +45,7 @@ public class InjectionRegisterScanEJB extends InjectionRegisterScanBase {
     }
 
     @Override
-    protected boolean isServiceAnnotated(Class aClazz) {
+    public boolean isServiceAnnotated(Class aClazz) {
         if (aClazz.isAnnotationPresent(Stateless.class)) {
             return true;
         } else if (aClazz.isAnnotationPresent(Stateful.class)) {
@@ -52,32 +54,9 @@ public class InjectionRegisterScanEJB extends InjectionRegisterScanBase {
         return false;
     }
 
-    protected Class findServiceImplementation(Class aClazz, List<Class> listOfClasses) {
 
-        Class foundServiceImplementation = null;
-        for (Class aServiceClass : listOfClasses) {
 
-            if (!aServiceClass.isInterface()
-                    && !aServiceClass.isAnnotation()
-                    && !Modifier.isAbstract(aServiceClass.getModifiers())
-                    ) {
-                for (Class aInterface : aServiceClass.getInterfaces()) {
-                    if (aInterface == aClazz) {
-                        if (foundServiceImplementation != null) {
-                            throw new InjectRuntimeException("ServiceInterface implemented in two classes {0} and {1}"
-                                    , foundServiceImplementation, aServiceClass
-                            );
-                        }
-                        foundServiceImplementation = aServiceClass;
-                    }
-                }
-            }
-        }
-
-        return foundServiceImplementation;
-    }
-
-    protected ScopeContainer.Scope getScope(Class serviceClass) {
+    public ScopeContainer.Scope getScope(Class serviceClass) {
         if (serviceClass.isAnnotationPresent(Stateless.class)) {
             return ScopeContainer.Scope.SINGLETON;
         }

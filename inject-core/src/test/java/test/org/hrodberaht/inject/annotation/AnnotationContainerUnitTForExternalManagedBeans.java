@@ -16,9 +16,9 @@ package test.org.hrodberaht.inject.annotation;
 
 
 import org.hrodberaht.inject.Container;
+import org.hrodberaht.inject.InjectionRegisterModule;
 import org.hrodberaht.inject.internal.annotation.InjectionFinder;
-import org.hrodberaht.inject.register.InjectionRegister;
-import org.hrodberaht.inject.spi.InjectionPointFinder;
+import org.hrodberaht.inject.spi.module.CustomInjectionPointFinderModule;
 import org.junit.Test;
 import test.org.hrodberaht.inject.testservices.annotated.Car;
 import test.org.hrodberaht.inject.testservices.annotated.Spare;
@@ -47,7 +47,12 @@ public class AnnotationContainerUnitTForExternalManagedBeans {
     @Test
     public void testFindAnnotatedWithForTwoDifferentServices() {
 
-        InjectionRegister registerJava = AnnotationContainerUtil.prepareVolvoRegister();
+        InjectionRegisterModule registerJava = AnnotationContainerUtil.prepareVolvoRegister();
+
+        // Prepare empty register
+        InjectionFinder finder = new CustomInjectionPointFinder();
+        registerJava.register(new CustomInjectionPointFinderModule(finder));
+
         Container container = registerJava.getContainer();
         Tire spareTire = container.get(Tire.class, Spare.class);
         VindShield vindShield = container.get(VindShield.class, Spare.class);
@@ -56,9 +61,7 @@ public class AnnotationContainerUnitTForExternalManagedBeans {
 
         assertTrue(vindShield instanceof SpareVindShield);
 
-        // Prepare empty register
-        InjectionFinder finder = new CustomInjectionPointFinder();
-        InjectionPointFinder.setInjectionFinder(finder);
+
 
 
         Volvo aCar = (Volvo) container.get(Car.class);

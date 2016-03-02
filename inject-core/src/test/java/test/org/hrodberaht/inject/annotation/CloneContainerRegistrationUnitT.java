@@ -60,13 +60,14 @@ public class CloneContainerRegistrationUnitT implements PerformanceTests {
     @Test
     public void testCloneSingletonService() throws Exception {
         InjectionRegisterScan registerJava = new InjectionRegisterScan();
-        registerJava.registerBasePackageScan("test.org.hrodberaht.inject.testservices.annotated");
+        registerJava.scanPackage("test.org.hrodberaht.inject.testservices.annotated");
 
         CarCreatorSingleton carCreatorSingleton = registerJava.getInjectContainer().get(CarCreatorSingleton.class);
 
         InjectionRegisterScan registerJavaClone = registerJava.clone();
         CarCreatorSingleton carCreatorSingletonClone = registerJavaClone.getInjectContainer().get(CarCreatorSingleton.class);
 
+        // TODO: I need a way to store singletons that survive the cloning?
         assertFalse(carCreatorSingleton == carCreatorSingletonClone);
 
     }
@@ -97,7 +98,7 @@ public class CloneContainerRegistrationUnitT implements PerformanceTests {
         timer.endAndPrint("testCloneAndRegisterPerformance", "Creating 1000 clones large instance module and replacing a service");
     }
 
-    @Test(timeout = 500)
+    @Test(timeout = 1000)
     public void testCloneAndRegisterModulePerformance() throws CloneNotSupportedException {
         TimerUtil timer = new TimerUtil().start();
         InjectionRegisterModule registerJava = AnnotationContainerUtil.prepareLargeVolvoRegister();

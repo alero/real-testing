@@ -14,10 +14,12 @@
 
 package org.hrodberaht.inject;
 
+import org.hrodberaht.inject.config.InjectionRegisterScanBase;
 import org.hrodberaht.inject.register.InjectionRegister;
+import org.hrodberaht.inject.scope.InheritableThreadScope;
+import org.hrodberaht.inject.scope.ThreadScope;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.inject.Singleton;
 
 /**
  * Simple Java Utils - Container
@@ -26,10 +28,8 @@ import java.util.List;
  * @version 1.0
  * @since 1.0
  */
-public class InjectionRegisterScan extends InjectionRegisterBase<InjectionRegisterScan> {
+public class InjectionRegisterScan extends InjectionRegisterScanBase<InjectionRegisterScan> {
 
-
-    private ClassScanner classScanner = new ClassScanner();
 
     public InjectionRegisterScan() {
     }
@@ -38,40 +38,11 @@ public class InjectionRegisterScan extends InjectionRegisterBase<InjectionRegist
         super(register);
     }
 
-    public InjectionRegisterScan registerBasePackageScan(String packagename) {
-        Class[] clazzs = classScanner.getClasses(packagename);
-        for (Class aClazz : clazzs) {
-            classScanner.createRegistration(aClazz, container);
-        }
-        return this;
-    }
-
-    public InjectionRegisterScan registerBasePackageScan(String packagename, Class... manuallyexcluded) {
-        Class[] clazzs = classScanner.getClasses(packagename);
-        List<Class> listOfClasses = new ArrayList<Class>(clazzs.length);
-
-        // remove the manual excludes
-        for (Class aClazz : clazzs) {
-            if (!manuallyExcluded(aClazz, manuallyexcluded)) {
-                listOfClasses.add(aClazz);
-            }
-        }
-        for (Class aClazz : listOfClasses) {
-            classScanner.createRegistration(aClazz, container);
-        }
-        return this;
-    }
-
-    public void setDetailedScanLogging(boolean detailedScanLogging) {
-        this.classScanner.setDetailedScanLogging(detailedScanLogging);
-    }
 
     @Override
     public InjectionRegisterScan clone() {
         InjectionRegisterScan registerScan = new InjectionRegisterScan();
         try {
-            registerScan.classScanner.getCustomClassLoaders().addAll(this.classScanner.getCustomClassLoaders());
-            registerScan.classScanner.setDetailedScanLogging(this.classScanner.isDetailedScanLogging());
             registerScan.container = this.container.clone();
         } catch (CloneNotSupportedException e) {
             throw new RuntimeException(e);
@@ -80,14 +51,25 @@ public class InjectionRegisterScan extends InjectionRegisterBase<InjectionRegist
     }
 
 
-    private boolean manuallyExcluded(Class aClazz, Class[] manuallyexluded) {
-        for (Class excluded : manuallyexluded) {
-            if (excluded == aClazz) {
-                return true;
-            }
+    @Override
+    public ScopeContainer.Scope getScope(Class serviceClass) {
+        if (serviceClass.isAnnotationPresent(Singleton.class)) {
+            return ScopeContainer.Scope.SINGLETON;
+        }if (serviceClass.isAnnotationPresent(ThreadScope.class)) {
+            return ScopeContainer.Scope.THREAD;
+        }if (serviceClass.isAnnotationPresent(InheritableThreadScope.class)) {
+            return ScopeContainer.Scope.INHERITABLE_THREAD;
         }
-        return false;
+        return ScopeContainer.Scope.NEW;
     }
 
+    @Override
+    public boolean isServiceAnnotated(Class aClazz) {
+        return true;
+    }
 
+    @Override
+    public boolean isInterfaceAnnotated(Class aClazz) {
+        return true;
+    }
 }

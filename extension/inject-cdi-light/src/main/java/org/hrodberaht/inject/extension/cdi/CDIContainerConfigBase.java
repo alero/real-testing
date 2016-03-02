@@ -1,8 +1,8 @@
 package org.hrodberaht.inject.extension.cdi;
 
 import org.hrodberaht.inject.InjectContainer;
+import org.hrodberaht.inject.config.InjectionRegisterScanBase;
 import org.hrodberaht.inject.extension.cdi.inner.ContainerConfigBase;
-import org.hrodberaht.inject.extension.cdi.inner.InjectionRegisterScanBase;
 import org.hrodberaht.inject.extension.cdi.inner.InjectionRegisterScanCDI;
 import org.hrodberaht.inject.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.inject.internal.annotation.ReflectionUtils;

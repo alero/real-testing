@@ -12,7 +12,7 @@
  *   ~ See the License for the specific language governing permissions and limitations under the License.
  */
 
-package test.org.hrodberaht.inject;
+package test.org.hrodberaht.inject.annotation;
 
 import org.hrodberaht.inject.Container;
 import org.hrodberaht.inject.InjectionRegisterJava;
@@ -28,6 +28,7 @@ import test.org.hrodberaht.inject.testservices.annotated_extra.SaabManufacturer;
 import test.org.hrodberaht.inject.testservices.simple.AnyService;
 import test.org.hrodberaht.inject.testservices.simple.AnyServiceDoNothingImpl;
 import test.org.hrodberaht.inject.testservices.simple.AnyServiceDoSomethingImpl;
+import test.org.hrodberaht.inject.testservices.sortedinterfaces.ATestingServiceInterface;
 import test.org.hrodberaht.inject.util.RegisterStub;
 
 import static junit.framework.Assert.assertNotNull;
@@ -50,7 +51,7 @@ public class ContainerScanUnitT {
 
         InjectionRegisterScan register = new InjectionRegisterScan();
         // Tests scanning and exclusion of single class
-        register.registerBasePackageScan("test.org.hrodberaht.inject.testservices.simple", AnyServiceDoNothingImpl.class);
+        register.scanPackageExclude("test.org.hrodberaht.inject.testservices.simple", AnyServiceDoNothingImpl.class);
 
         Container container = register.getContainer();
 
@@ -58,6 +59,30 @@ public class ContainerScanUnitT {
         anyService.doStuff();
 
         assertEquals(1, anyService.getStuff().size());
+
+    }
+
+    @Test
+    public void testDeepInterfaceLookupScanning() {
+
+        // The regular (default/basic) registration
+        InjectionRegisterModule registerJava = new InjectionRegisterModule();
+        // The override (of a default) registration
+        registerJava.register(
+                new RegistrationModuleAnnotationScanner() {
+                    @Override
+                    public void scan() {
+                        scanAndRegister("test.org.hrodberaht.inject.testservices.sortedinterfaces");
+                    }
+                }
+        );
+
+
+        Container container = registerJava.getContainer();
+        ATestingServiceInterface testingServiceInterface = container.get(ATestingServiceInterface.class);
+
+        // After the factory created the Car it will be deeper injected.
+        assertTrue(testingServiceInterface != null);
 
     }
 
@@ -85,7 +110,7 @@ public class ContainerScanUnitT {
 
         InjectionRegisterScan register = new InjectionRegisterScan();
         // Tests scanning and exclusion of single class
-        register.registerBasePackageScan("test.org.hrodberaht.inject.testservices.simple", AnyServiceDoNothingImpl.class);
+        register.scanPackageExclude("test.org.hrodberaht.inject.testservices.simple", AnyServiceDoNothingImpl.class);
         Container container = register.getContainer();
 
         AnyService anyService = container.get(AnyService.class);
@@ -100,7 +125,7 @@ public class ContainerScanUnitT {
 
         InjectionRegisterScan register = new InjectionRegisterScan();
         // Tests scanning and exclusion of single class
-        register.registerBasePackageScan("test.org.hrodberaht.inject.testservices.simple");
+        register.scanPackage("test.org.hrodberaht.inject.testservices.simple");
 
         Container container = register.getContainer();
 
@@ -127,13 +152,20 @@ public class ContainerScanUnitT {
 
 
         InjectionRegisterScan register = new InjectionRegisterScan();
-        // Tests scanning and exclusion of single class
-        register.registerBasePackageScan("test.org.hrodberaht.inject.testservices.simple");
-
-        InjectionRegisterJava registerJava = new InjectionRegisterJava(register);
-        registerJava.register(AnyService.class, AnyServiceDoSomethingImpl.class);
+        register.scanPackage("test.org.hrodberaht.inject.testservices.simple");
 
         Container container = register.getContainer();
+        try{
+            AnyService anyService = container.get(AnyService.class);
+            assertEquals("not here", null);
+        }catch (InjectRuntimeException e){
+            assertNotNull(container);
+        }
+
+        InjectionRegisterJava registerJava = new InjectionRegisterJava(register);
+        registerJava.overrideRegister(AnyService.class, AnyServiceDoSomethingImpl.class);
+
+        container = register.getContainer();
 
         AnyService anyService = container.get(AnyService.class);
         assertTrue(anyService instanceof AnyServiceDoSomethingImpl);
@@ -145,7 +177,6 @@ public class ContainerScanUnitT {
 
         InjectionRegisterModule injectionRegisterModule = new InjectionRegisterModule();
         RegistrationModuleAnnotationScanner propertiesModule = new RegistrationModuleAnnotationScanner() {
-
             public void scan() {
                 this.scanAndRegister("test.org.hrodberaht.inject.testservices.annotated_extra");
             }
@@ -154,10 +185,10 @@ public class ContainerScanUnitT {
 
         InjectionRegisterScan register = new InjectionRegisterScan(injectionRegisterModule);
         // Tests scanning and exclusion of single class
-        register.registerBasePackageScan("test.org.hrodberaht.inject.testservices.simple");
+        register.scanPackage("test.org.hrodberaht.inject.testservices.simple");
 
         InjectionRegisterJava registerJava = new InjectionRegisterJava(register);
-        registerJava.register(AnyService.class, AnyServiceDoSomethingImpl.class);
+        registerJava.overrideRegister(AnyService.class, AnyServiceDoSomethingImpl.class);
 
         Container container = register.getContainer();
 

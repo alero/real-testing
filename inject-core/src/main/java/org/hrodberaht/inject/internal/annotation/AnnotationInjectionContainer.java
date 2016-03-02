@@ -29,7 +29,6 @@ import org.hrodberaht.inject.internal.exception.DuplicateRegistrationException;
 import org.hrodberaht.inject.internal.exception.InjectRuntimeException;
 import org.hrodberaht.inject.register.RegistrationModule;
 import org.hrodberaht.inject.register.RegistrationModuleAnnotation;
-import org.hrodberaht.inject.register.RegistrationModuleAnnotationScanner;
 import org.hrodberaht.inject.register.VariableInjectionFactory;
 import org.hrodberaht.inject.register.internal.RegistrationInstanceSimple;
 import org.slf4j.Logger;
@@ -150,9 +149,9 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
     public void register(InjectionContainerManager injectionContainerManager, RegistrationModule... modules) {
         for (RegistrationModule module : modules) {
             RegistrationModuleAnnotation aModule = (RegistrationModuleAnnotation) module;
-            if (aModule instanceof RegistrationModuleAnnotationScanner) {
+            /*if (aModule instanceof RegistrationModuleAnnotationScanner) {
                 ((RegistrationModuleAnnotationScanner) aModule).setInjectionContainerManager(injectionContainerManager);
-            }
+            }*/
             if (aModule.getInjectionFinder() != null) {
                 this.injectionFinder = aModule.getInjectionFinder();
             }
@@ -250,7 +249,7 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
     }
 
     @SuppressWarnings(value = "unchecked")
-    private ServiceRegister registerForInterface(InjectionKey key, boolean b) {
+    private ServiceRegister registerForInterface(InjectionKey key, boolean forceNew) {
         Class serviceDefinition = key.getServiceDefinition();
         AnnotationInjection annotationInjection = new AnnotationInjection(injectionMetaDataCache, container, this);
         Class service = findServiceImplementation(serviceDefinition).getService();
@@ -294,7 +293,7 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
             register.setModule(aModule);
         }
         putServiceIntoRegister(key, register);
-        // validateRegisters(key, injectionMetaData, register);
+        validateRegisters(key, injectionMetaData, register);
         return register;
 
     }
@@ -314,10 +313,7 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
             throw new InjectRuntimeException("ServiceRegister not cached correctly");
         }
 
-        // Validate the ServiceRegister cache
-        //if(annotationInjection.getInjectionCacheHandler().size() != registeredServices.size()){
-        //    throw new InjectRuntimeException("ServiceRegisterCache.size != InjectionCacheHandler.size()");
-        //}
+
     }
 
 
@@ -371,7 +367,8 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
 
     public Object clone(InjectionContainerManager injectionContainerManager) throws CloneNotSupportedException {
         AnnotationInjectionContainer annotationInjectionContainer = new AnnotationInjectionContainer(injectionContainerManager);
-
+        annotationInjectionContainer.injectionFinder = this.injectionFinder;
+        annotationInjectionContainer.instanceCreator = this.instanceCreator;
         annotationInjectionContainer.injectionMetaDataCache.putAll(this.injectionMetaDataCache);
         for (InjectionKey injectionKey : this.injectionMetaDataCache.keySet()) {
             InjectionMetaDataBase injectionMetaData = this.injectionMetaDataCache.get(injectionKey);

@@ -37,8 +37,14 @@ public abstract class RegistrationModuleAnnotation implements RegistrationModule
         this.instanceCreatorImplementation = instanceCreator;
     }
 
-    public RegistrationExtended register(Class anyThing) {
-        RegistrationInstanceSimple instance = new RegistrationInstanceSimple(anyThing);
+    public RegistrationExtended register(Class serviceClass) {
+        RegistrationInstanceSimple instance = new RegistrationInstanceSimple(serviceClass);
+        registrations.put(instance, instance);
+        return instance;
+    }
+
+    public RegistrationExtended register(Class serviceClass, Class interfaceClass) {
+        RegistrationInstanceSimple instance = new RegistrationInstanceSimple(interfaceClass).with(serviceClass);
         registrations.put(instance, instance);
         return instance;
     }

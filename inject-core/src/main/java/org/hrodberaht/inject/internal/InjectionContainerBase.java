@@ -15,6 +15,7 @@
 package org.hrodberaht.inject.internal;
 
 import org.hrodberaht.inject.InjectionContainerManager;
+import org.hrodberaht.inject.internal.annotation.InjectionMetaDataBase;
 import org.hrodberaht.inject.internal.annotation.ServiceRegistryForInjection;
 import org.hrodberaht.inject.internal.exception.InjectRuntimeException;
 import org.hrodberaht.inject.internal.stats.Statistics;
@@ -36,6 +37,10 @@ public abstract class InjectionContainerBase {
 
     public Collection<ServiceRegister> getServiceRegister() {
         return registeredServices.getServiceRegisterCollection();
+    }
+
+    public Collection<InjectionMetaDataBase> getInjectionMetaDataBaseCollection() {
+        return registeredServices.getInjectionMetaDataBaseCollection();
     }
 
     protected InjectionKey getNamedKey(String qualifier, Class serviceDefinition) {

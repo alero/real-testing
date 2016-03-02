@@ -35,6 +35,9 @@ public class TestSpringServiceContext {
     @Autowired
     private SpringServiceInterface anInterface;
 
+    @Inject
+    private ContainerLifeCycleTestUtil containerLifeCycleTestUtil;
+
     @Test
     public void testWiring() {
         String something = anInterface.findSomething(12L);
@@ -83,9 +86,9 @@ public class TestSpringServiceContext {
 
         SpringInnerServiceInterface anInterface = Mockito.mock(SpringInnerServiceInterface.class);
         Mockito.when(anInterface.findSomething(12L)).thenReturn("Something Deep From Mock");
-        ContainerLifeCycleTestUtil.registerServiceInstance(SpringInnerServiceInterface.class, anInterface);
+        containerLifeCycleTestUtil.registerServiceInstance(SpringInnerServiceInterface.class, anInterface);
 
-        SpringServiceInterface serviceInterface = ContainerLifeCycleTestUtil.getService(SpringServiceInterface.class);
+        SpringServiceInterface serviceInterface = containerLifeCycleTestUtil.getService(SpringServiceInterface.class);
         String something = serviceInterface.findSomething(12L);
         assertEquals("Something", something);
 

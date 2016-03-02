@@ -19,6 +19,7 @@ import org.junit.runners.Suite;
 import test.org.hrodberaht.inject.annotation.AnnotationContainerUnitT;
 import test.org.hrodberaht.inject.annotation.AnnotationVariableProviderUnitT;
 import test.org.hrodberaht.inject.annotation.CloneContainerRegistrationUnitT;
+import test.org.hrodberaht.inject.annotation.ContainerScanUnitT;
 
 /**
  * Simple Java Utils
@@ -35,7 +36,6 @@ import test.org.hrodberaht.inject.annotation.CloneContainerRegistrationUnitT;
         ContainerScanUnitT.class,
         ScopeThreadUnitT.class,
         AnnotationVariableProviderUnitT.class,
-        AnnotationContainerUnitT.class,
         InstanceCreationUnitT.class,
         CloneContainerRegistrationUnitT.class
 })

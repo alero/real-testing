@@ -1,10 +1,12 @@
 package org.hrodberaht.inject.extension.tdd.spring;
 
-import org.hrodberaht.inject.extension.tdd.ContainerConfigBase;
-import org.hrodberaht.inject.extension.tdd.internal.InjectionRegisterScanBase;
+import org.hrodberaht.inject.InjectionRegisterModule;
+import org.hrodberaht.inject.config.InjectionRegisterScanBase;
+import org.hrodberaht.inject.extension.tdd.internal.TDDContainerConfigBase;
 import org.hrodberaht.inject.extension.tdd.spring.internal.InjectionRegisterScanSpring;
 import org.hrodberaht.inject.internal.annotation.DefaultInjectionPointFinder;
-import org.hrodberaht.inject.spi.ThreadConfigHolder;
+import org.hrodberaht.inject.register.InjectionRegister;
+import org.hrodberaht.inject.spi.module.CustomInjectionPointFinderModule;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
@@ -19,10 +21,16 @@ import java.lang.reflect.Method;
  * @version 1.0
  * @since 1.0
  */
-public abstract class SpringContainerConfigBase extends ContainerConfigBase<InjectionRegisterScanSpring> {
+public abstract class SpringContainerConfigBase extends TDDContainerConfigBase<InjectionRegisterScanSpring> {
 
     protected SpringContainerConfigBase() {
-        DefaultInjectionPointFinder finder = new DefaultInjectionPointFinder() {
+
+    }
+
+    @Override
+    protected InjectionRegisterModule preScanModuleRegistration() {
+        InjectionRegisterModule injectionRegisterModule = new InjectionRegisterModule();
+        injectionRegisterModule.register(new CustomInjectionPointFinderModule(new DefaultInjectionPointFinder(this) {
             @Override
             protected boolean hasInjectAnnotationOnMethod(Method method) {
                 return method.isAnnotationPresent(Autowired.class) ||
@@ -43,41 +51,23 @@ public abstract class SpringContainerConfigBase extends ContainerConfigBase<Inje
 
             @Override
             public void extendedInjection(Object service) {
-                SpringContainerConfigBase config = (SpringContainerConfigBase) ThreadConfigHolder.get();
+                SpringContainerConfigBase config = (SpringContainerConfigBase) getContainerConfig();
                 config.injectResources(service);
             }
-        };
-        // InjectionPointFinder.setInjectionFinder(finder);
+        }
+        ));
+        return injectionRegisterModule;
     }
 
     @Override
-    protected InjectionRegisterScanBase getScanner() {
-        return new InjectionRegisterScanSpring();
+    protected InjectionRegisterScanBase getScanner(InjectionRegister injectionRegister) {
+        return new InjectionRegisterScanSpring(injectionRegister);
     }
 
-    @Override
-    protected void addResource(final Class typedName, final Object value) {
-        super.addResource(typedName, value);
-
-    }
 
     @Override
     protected void injectResources(Object serviceInstance) {
-        if (resources == null && typedResources == null) {
-            return;
-        }
-        /*
-        List<Member> members = ReflectionUtils.findMembers(serviceInstance.getClass());
-        for (Member member : members) {
-            if (member instanceof Field) {
-                Field field = (Field) member;
-                if (field.isAnnotationPresent(Autowired.class)) {
-                    Qualifier resource = field.getAnnotation(Qualifier.class);
-                    if(!injectNamedResource(serviceInstance, field, resource.value())){
-                        injectTypedResource(serviceInstance, field);
-                    }
-                }
-            }
-        }*/
+
+        injectGenericResources(serviceInstance);
     }
 }

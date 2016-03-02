@@ -5,7 +5,6 @@ import org.hrodberaht.inject.extension.cdi.inner.SimpleLogger;
 import org.hrodberaht.inject.internal.annotation.ReflectionUtils;
 import org.hrodberaht.inject.spi.ContainerConfig;
 import org.hrodberaht.inject.spi.InjectionRegisterScanInterface;
-import org.hrodberaht.inject.spi.ThreadConfigHolder;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
@@ -47,7 +46,6 @@ public class CDIExtensions {
     }
 
     public void runAfterBeanDiscovery(InjectionRegisterScanInterface register, ContainerConfig containerConfig) {
-        ThreadConfigHolder.set(containerConfig);
         AfterBeanDiscoveryByInject inject = new AfterBeanDiscoveryByInject(register);
         List<MethodClassHolder> methods = phaseMethods.get(Phase.AfterBeanDiscovery);
         for (MethodClassHolder methodClassHolder : methods) {
@@ -68,7 +66,6 @@ public class CDIExtensions {
                 throw new RuntimeException(e);
             }
         }
-        ThreadConfigHolder.remove();
     }
 
     public void runBeforeBeanDiscovery(InjectionRegisterScanInterface register, ContainerConfig containerConfig) {

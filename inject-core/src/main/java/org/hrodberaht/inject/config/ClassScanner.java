@@ -1,4 +1,4 @@
-package org.hrodberaht.inject;
+package org.hrodberaht.inject.config;
 
 import org.hrodberaht.inject.internal.exception.InjectRuntimeException;
 import org.slf4j.Logger;
@@ -6,13 +6,12 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Modifier;
 import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * Created by alexbrob on 2015-01-05.
@@ -20,19 +19,67 @@ import java.util.List;
 public class ClassScanner {
     private static final Logger LOG = LoggerFactory.getLogger(ClassScanner.class);
 
-    private Collection<CustomClassLoader> customClassLoaders = new ArrayList<CustomClassLoader>();
-    private boolean detailedScanLogging = false;
+    public List<Class> getClasses(String packageName) {
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        ArrayList<Class> classes = findClassesToLoad(
+                packageName, classLoader, CustomClassLoader.ClassLoaderType.THREAD
+        );
+        classes.addAll(findClassesToLoad(packageName, classLoader, CustomClassLoader.ClassLoaderType.JAR));
 
-    public Collection<CustomClassLoader> getCustomClassLoaders() {
-        return customClassLoaders;
+        return classes;
     }
 
-    public void setDetailedScanLogging(boolean detailedScanLogging) {
-        this.detailedScanLogging = detailedScanLogging;
+    private ArrayList<Class> findClassesToLoad(
+            String packageName, ClassLoader classLoader, CustomClassLoader.ClassLoaderType loaderType) {
+        if (loaderType == CustomClassLoader.ClassLoaderType.THREAD) {
+            return findFiles(packageName, classLoader);
+        } else if (loaderType == CustomClassLoader.ClassLoaderType.JAR) {
+            return findJarFiles(packageName, classLoader);
+        }
+        throw new IllegalAccessError("No classloader type defined");
     }
 
-    public boolean isDetailedScanLogging() {
-        return detailedScanLogging;
+    private ArrayList<Class> findJarFiles(String packageName, ClassLoader classLoader) {
+
+        try {
+            List<File> filesToLoad = JarUtil.findTheJarFiles(packageName, classLoader);
+
+            if (filesToLoad == null) {
+                return new ArrayList<Class>();
+            }
+            ArrayList<Class> classes = new ArrayList<Class>(200);
+            for (File fileToLoad : filesToLoad) {
+                LOG.debug("findJarFiles fileToLoad = " + fileToLoad);
+                JarFile jarFile = new JarFile(fileToLoad);
+                Enumeration<JarEntry> enumeration = jarFile.entries();
+                while (enumeration.hasMoreElements()) {
+                    JarEntry jarEntry = enumeration.nextElement();
+                    String classPath = jarEntry.getName().replaceAll("/", ".");
+                    if (!jarEntry.isDirectory() && classPath.startsWith(packageName) && classPath.endsWith(".class")) {
+                        String classPathName = classPath.substring(0, classPath.length() - 6);
+                        try {
+                            Class aClass = Class.forName(classPathName);
+                            LOG.debug("jar aClass: " + aClass + " for " + fileToLoad.getName());
+                            classes.add(aClass);
+                        } catch (ClassNotFoundException e) {
+                            LOG.info("jar error lookup: " + classPathName);
+                            throw e;
+                        }
+                    }
+                }
+            }
+            return classes;  //To change body of created methods use File | Settings | File Templates.
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static class CustomClassLoader {
+        private enum ClassLoaderType {
+            JAR, THREAD
+        }
     }
 
     /**
@@ -41,52 +88,10 @@ public class ClassScanner {
      * @param packageName The base package
      * @return The classes
      */
-    public Class[] getClasses(String packageName) {
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        ArrayList<Class> classes = findClassesToLoad(
-                packageName, classLoader, CustomClassLoader.ClassLoaderType.THREAD
-        );
-        for (CustomClassLoader customclassLoader : customClassLoaders) {
-            ClassLoader parentClassLoader = ClassLoader.getSystemClassLoader();
-            classes.addAll(findClassesToLoad(packageName, parentClassLoader, customclassLoader.loaderType));
-        }
-        return classes.toArray(new Class[classes.size()]);
-
-    }
-
-    public void createRegistration(Class aClazz, InjectionContainerManager container) {
-        if (
-                !aClazz.isInterface()
-                        && !aClazz.isAnnotation()
-                        && !Modifier.isAbstract(aClazz.getModifiers())
-                ) {
-            try {
-                container.register(aClazz, aClazz, null, InjectionContainerManager.RegisterType.NORMAL);
-            } catch (InjectRuntimeException e) {
-                LOG.info("Hrodberaht Injection: Silently failed to register class = " + aClazz);
-                if (detailedScanLogging) {
-                    LOG.error("Failed registering a class = " + aClazz, e);
-                }
-            }
-        }
-    }
-
-
-    private ArrayList<Class> findClassesToLoad(
-            String packageName, ClassLoader classLoader, CustomClassLoader.ClassLoaderType loaderType) {
-        if (loaderType == CustomClassLoader.ClassLoaderType.THREAD) {
-            return findFiles(packageName, classLoader);
-        } else if (loaderType == CustomClassLoader.ClassLoaderType.JAR) {
-            return findFiles(packageName, classLoader);
-        }
-        return null;
-    }
-
 
     private ArrayList<Class> findFiles(String packageName, ClassLoader classLoader) {
         ArrayList<Class> classes = new ArrayList<Class>();
         try {
-
             assert classLoader != null;
             String path = packageName.replace('.', '/');
             Enumeration<URL> resources = classLoader.getResources(path);
@@ -121,6 +126,9 @@ public class ClassScanner {
             return classes;
         }
         File[] files = directory.listFiles();
+        if (files == null) {
+            return null;
+        }
         for (File file : files) {
             if (file.isDirectory()) {
                 assert !file.getName().contains(".");
@@ -132,22 +140,6 @@ public class ClassScanner {
             }
         }
         return classes;
-    }
-
-
-    private static class CustomClassLoader {
-
-        private enum ClassLoaderType {JAR, THREAD}
-
-        ;
-
-        public CustomClassLoader(URLClassLoader classLoader, ClassLoaderType loaderType) {
-            this.classLoader = classLoader;
-            this.loaderType = loaderType;
-        }
-
-        private ClassLoader classLoader;
-        private ClassLoaderType loaderType;
     }
 
 }

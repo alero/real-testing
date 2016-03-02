@@ -10,6 +10,7 @@ import test.org.hrodberaht.inject.extension.ejbunit.demo.service.CustomerService
 import test.org.hrodberaht.inject.extension.ejbunit.demo.test.config.CourseContainerConfigExample;
 
 import javax.ejb.EJB;
+import javax.inject.Inject;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -31,6 +32,9 @@ public class TestCustomerServicePersistence {
     @EJB
     private CustomerService customerService;
 
+    @Inject
+    JPATestUtil jpaTestUtil;
+
     /**
      * Test Persistence create/read
      */
@@ -40,7 +44,7 @@ public class TestCustomerServicePersistence {
         Customer customer = CourseDataModelStub.createCustomer();
         customerService.create(customer);
         // Flush the JPA session to force insert and clear first lvl cache for reselect
-        JPATestUtil.flushAndClear();
+        jpaTestUtil.flushAndClear();
         // Find the customer from DB, new instance means recreated from db
         Customer foundCustomer = customerService.find(customer.getId());
 

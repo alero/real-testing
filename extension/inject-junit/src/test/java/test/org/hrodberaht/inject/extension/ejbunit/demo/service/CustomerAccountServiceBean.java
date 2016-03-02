@@ -2,7 +2,7 @@ package test.org.hrodberaht.inject.extension.ejbunit.demo.service;
 
 import test.org.hrodberaht.inject.extension.ejbunit.demo.model.CustomerAccount;
 
-import javax.ejb.Local;
+import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
 import javax.persistence.EntityManager;
@@ -16,7 +16,7 @@ import javax.persistence.PersistenceContext;
  * @created 1.0
  * @since 1.0
  */
-@Local
+@Stateless
 public class CustomerAccountServiceBean implements CustomerAccountService {
 
     @PersistenceContext(unitName = "example-jpa")

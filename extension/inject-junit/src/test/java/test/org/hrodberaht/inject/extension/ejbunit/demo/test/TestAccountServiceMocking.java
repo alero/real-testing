@@ -14,6 +14,7 @@ import test.org.hrodberaht.inject.extension.ejbunit.demo.service.CustomerService
 import test.org.hrodberaht.inject.extension.ejbunit.demo.test.config.CourseContainerConfigExample;
 
 import javax.ejb.EJB;
+import javax.inject.Inject;
 
 import static org.junit.Assert.assertEquals;
 
@@ -35,6 +36,9 @@ public class TestAccountServiceMocking {
     @EJB
     private CustomerService customerService;
 
+    @Inject
+    private ContainerLifeCycleTestUtil containerLifeCycleTestUtil;
+
     @Test
     public void testAccountAddMoneyMockedUpdate() throws Exception {
 
@@ -47,10 +51,10 @@ public class TestAccountServiceMocking {
         CustomerAccountService customerAccountMock = Mockito.mock(CustomerAccountService.class);
         // Register prepared data as return
         Mockito.when(customerAccountMock.find(Mockito.anyLong())).thenReturn(customerAccount);
-        ContainerLifeCycleTestUtil.registerServiceInstance(CustomerAccountService.class, customerAccountMock);
+        containerLifeCycleTestUtil.registerServiceInstance(CustomerAccountService.class, customerAccountMock);
 
         // Re "fetch" the service intended for testing, all registration changes will be valid
-        AccountingService accountingService = ContainerLifeCycleTestUtil.getService(AccountingService.class);
+        AccountingService accountingService = containerLifeCycleTestUtil.getService(AccountingService.class);
         accountingService.addMoney(500D, customerAccount.getId());
 
         // Asserting the functionality
@@ -84,10 +88,10 @@ public class TestAccountServiceMocking {
             }
         };
         // Register the Service
-        ContainerLifeCycleTestUtil.registerServiceInstance(CustomerAccountService.class, customerAccountMock);
+        containerLifeCycleTestUtil.registerServiceInstance(CustomerAccountService.class, customerAccountMock);
 
         // Re "fetch" the service intended for testing, all registration changes will be valid
-        AccountingService accountingService = ContainerLifeCycleTestUtil.getService(AccountingService.class);
+        AccountingService accountingService = containerLifeCycleTestUtil.getService(AccountingService.class);
         accountingService.addMoney(500D, customerAccount.getId());
 
         // Asserting the functionality

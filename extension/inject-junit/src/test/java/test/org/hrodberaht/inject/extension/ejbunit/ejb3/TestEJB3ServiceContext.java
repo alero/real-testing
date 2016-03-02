@@ -13,6 +13,7 @@ import test.org.hrodberaht.inject.extension.ejbunit.ejb3.service.EJB3InnerServic
 import test.org.hrodberaht.inject.extension.ejbunit.ejb3.service.EJB3ServiceInterface;
 
 import javax.ejb.EJB;
+import javax.inject.Inject;
 
 import static org.junit.Assert.assertEquals;
 
@@ -37,6 +38,9 @@ public class TestEJB3ServiceContext {
 
     @EJB
     private EJB3InnerServiceInterface ejb3InnerServiceInterface;
+
+    @Inject
+    private ContainerLifeCycleTestUtil containerLifeCycleTestUtil;
 
     @Test
     public void testEJBWiring() {
@@ -116,9 +120,9 @@ public class TestEJB3ServiceContext {
 
         EJB3InnerServiceInterface anInterface = Mockito.mock(EJB3InnerServiceInterface.class);
         Mockito.when(anInterface.findSomething(12L)).thenReturn("Something Deep From Mock");
-        ContainerLifeCycleTestUtil.registerServiceInstance(EJB3InnerServiceInterface.class, anInterface);
+        containerLifeCycleTestUtil.registerServiceInstance(EJB3InnerServiceInterface.class, anInterface);
 
-        EJB3ServiceInterface serviceInterface = ContainerLifeCycleTestUtil.getService(EJB3ServiceInterface.class);
+        EJB3ServiceInterface serviceInterface = containerLifeCycleTestUtil.getService(EJB3ServiceInterface.class);
         String something = serviceInterface.findSomething(12L);
         assertEquals("Something", something);
 
@@ -131,7 +135,7 @@ public class TestEJB3ServiceContext {
     public void testEJBWiringWithContainerLifeCycleHandler() {
 
         EJB3InnerServiceInterface serviceInterface =
-                ContainerLifeCycleTestUtil.getService(EJB3InnerServiceInterface.class);
+                containerLifeCycleTestUtil.getService(EJB3InnerServiceInterface.class);
         String something = serviceInterface.findSomethingFromEntityManager(12L);
         assertEquals("The Name", something);
     }
@@ -139,9 +143,9 @@ public class TestEJB3ServiceContext {
 
     @Test
     public void testModuleRegistration() {
-        ContainerLifeCycleTestUtil.registerModule(new MockedInnerModule());
+        containerLifeCycleTestUtil.registerModule(new MockedInnerModule());
 
-        EJB3ServiceInterface serviceInterface = ContainerLifeCycleTestUtil.getService(EJB3ServiceInterface.class);
+        EJB3ServiceInterface serviceInterface = containerLifeCycleTestUtil.getService(EJB3ServiceInterface.class);
         String something = serviceInterface.findSomethingDeep(12L);
         assertEquals("Mocked", something);
 

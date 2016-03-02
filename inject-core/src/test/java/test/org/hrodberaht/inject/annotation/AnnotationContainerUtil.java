@@ -47,7 +47,7 @@ public class AnnotationContainerUtil {
         InjectionRegisterModule registerJava = new InjectionRegisterModule();
         registerJava.register(new RegisterModuleAnnotated());
         InjectionRegisterScan registerScan = new InjectionRegisterScan(registerJava);
-        registerScan.registerBasePackageScan("test.org.hrodberaht.inject.testservices.largepackage");
+        registerScan.scanPackage("test.org.hrodberaht.inject.testservices.largepackage");
         return registerJava;
     }
 

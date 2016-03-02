@@ -10,7 +10,7 @@ import org.hrodberaht.inject.InjectionContainerManager;
  * @version 1.0
  * @since 1.0
  */
-public class RegistrationInstanceSimple extends RegistrationInstanceAnnotation<RegistrationExtended>
+public class RegistrationInstanceSimple extends RegistrationInstanceAnnotation<RegistrationInstanceSimple>
         implements RegistrationExtended {
 
     private InjectionContainerManager.RegisterType registerType = InjectionContainerManager.RegisterType.NORMAL;

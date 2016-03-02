@@ -1,10 +1,7 @@
 package org.hrodberaht.inject.extension.cdi.inner;
 
 import org.hrodberaht.inject.ScopeContainer;
-import org.hrodberaht.inject.internal.exception.InjectRuntimeException;
-
-import java.lang.reflect.Modifier;
-import java.util.List;
+import org.hrodberaht.inject.config.InjectionRegisterScanBase;
 
 /**
  * Unit Test EJB (using @Inject)
@@ -30,41 +27,18 @@ public class InjectionRegisterScanCDI extends InjectionRegisterScanBase {
         return clone;
     }
 
-    protected boolean isInterfaceAnnotated(Class aClazz) {
+    public boolean isInterfaceAnnotated(Class aClazz) {
         return true;
     }
 
     @Override
-    protected boolean isServiceAnnotated(Class aClazz) {
+    public boolean isServiceAnnotated(Class aClazz) {
         return true;
     }
 
-    protected Class findServiceImplementation(Class aClazz, List<Class> listOfClasses) {
 
-        Class foundServiceImplementation = null;
-        for (Class aServiceClass : listOfClasses) {
 
-            if (!aServiceClass.isInterface()
-                    && !aServiceClass.isAnnotation()
-                    && !Modifier.isAbstract(aServiceClass.getModifiers())
-                    ) {
-                for (Class aInterface : aServiceClass.getInterfaces()) {
-                    if (aInterface == aClazz) {
-                        if (foundServiceImplementation != null) {
-                            throw new InjectRuntimeException("ServiceInterface implemented in two classes {0} and {1}"
-                                    , foundServiceImplementation, aServiceClass
-                            );
-                        }
-                        foundServiceImplementation = aServiceClass;
-                    }
-                }
-            }
-        }
-
-        return foundServiceImplementation;
-    }
-
-    protected ScopeContainer.Scope getScope(Class serviceClass) {
+    public ScopeContainer.Scope getScope(Class serviceClass) {
 
         if (hasStatelessAnnotationInClassPath) {
             try {

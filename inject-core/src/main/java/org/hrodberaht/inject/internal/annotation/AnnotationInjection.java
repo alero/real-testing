@@ -18,11 +18,11 @@ import org.hrodberaht.inject.InjectionContainerManager;
 import org.hrodberaht.inject.ScopeContainer;
 import org.hrodberaht.inject.internal.InjectionKey;
 import org.hrodberaht.inject.internal.annotation.creator.InstanceCreator;
+import org.hrodberaht.inject.internal.annotation.creator.InstanceCreatorDefault;
 import org.hrodberaht.inject.internal.annotation.scope.ObjectAndScope;
 import org.hrodberaht.inject.internal.exception.DuplicateRegistrationException;
 import org.hrodberaht.inject.internal.stats.Statistics;
 import org.hrodberaht.inject.register.VariableInjectionFactory;
-import org.hrodberaht.inject.spi.InjectionPointFinder;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -45,8 +45,8 @@ public class AnnotationInjection {
     private InjectionCacheHandler injectionCacheHandler;
     private AnnotationInjectionContainer injectionContainer;
     private InjectionContainerManager container;
-    private InjectionFinder injectionFinder = InjectionPointFinder.getInjectionFinder();
-    private InstanceCreator instanceCreator = InstanceCreatorFactory.getInstance();
+    private InjectionFinder injectionFinder = new DefaultInjectionPointFinder();
+    private InstanceCreator instanceCreator = new InstanceCreatorDefault();
 
     public AnnotationInjection(Map<InjectionKey, InjectionMetaDataBase> injectionMetaDataCache
             , InjectionContainerManager container
@@ -301,8 +301,6 @@ public class AnnotationInjection {
 
     private Object autowireAndPostConstruct(InjectionMetaData injectionMetaData, Object service) {
         autoWireBean(service, injectionMetaData);
-        // Performance wise this is a bit slow, look into caching the extended injection info injectionMetaData
-        // TODO: for performance enhancements take a look at this
         injectionFinder.extendedInjection(service);
         Method postConstruct = injectionMetaData.getPostConstruct();
         if (postConstruct != null) {

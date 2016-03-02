@@ -3,6 +3,7 @@ package org.hrodberaht.inject.extension.cdi.inner;
 import org.hrodberaht.inject.ExtendedAnnotationInjection;
 import org.hrodberaht.inject.InjectContainer;
 import org.hrodberaht.inject.InjectionContainerManager;
+import org.hrodberaht.inject.config.InjectionRegisterScanBase;
 import org.hrodberaht.inject.extension.cdi.cdiext.CDIExtensions;
 import org.hrodberaht.inject.internal.annotation.InjectionFinder;
 import org.hrodberaht.inject.register.RegistrationModuleAnnotation;

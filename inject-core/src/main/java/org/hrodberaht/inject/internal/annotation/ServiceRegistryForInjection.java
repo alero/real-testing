@@ -29,6 +29,11 @@ public class ServiceRegistryForInjection {
         return registers;
     }
 
+    public Collection<InjectionMetaDataBase> getInjectionMetaDataBaseCollection() {
+        Collection<InjectionMetaDataBase> registers = new ArrayList<>(injectionMetaDataCache.values());
+        return registers;
+    }
+
     public ServiceRegister get(InjectionKey key) {
         InjectionMetaDataBase injectionMetaDataBase = injectionMetaDataCache.get(key);
         if(injectionMetaDataBase != null){
@@ -38,7 +43,11 @@ public class ServiceRegistryForInjection {
     }
 
     public boolean containsKey(InjectionKey key) {
-        return injectionMetaDataCache.containsKey(key);
+        InjectionMetaDataBase injectionMetaDataBase = injectionMetaDataCache.get(key);
+        if(injectionMetaDataBase != null){
+            return injectionMetaDataBase.getServiceRegister() != null;
+        }
+        return false;
     }
 
     public Set<InjectionKey> keySet() {

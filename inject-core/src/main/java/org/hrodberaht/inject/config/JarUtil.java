@@ -1,4 +1,7 @@
-package org.hrodberaht.inject.extension.tdd.util;
+package org.hrodberaht.inject.config;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,19 +19,21 @@ import java.util.List;
  */
 public class JarUtil {
 
+    private static final Logger LOG = LoggerFactory.getLogger(JarUtil.class);
+
     public static List<File> findTheJarFiles(String packageName, ClassLoader classLoader) throws IOException {
         Enumeration<URL> resources = classLoader.getResources(packageName.replace('.', '/'));
         List<File> jarFiles = new ArrayList<File>();
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
             String path = resource.getFile();
-            SimpleLogger.log("evaluating jar-file = " + path);
+            LOG.debug("evaluating jar-file = " + path);
             if (isJarFile(resource)) {
-                SimpleLogger.log("found valid jar-file = " + path);
+                LOG.info("found valid jar-file = " + path);
                 jarFiles.add(new File(findJarFile(path)));
             }
         }
-        SimpleLogger.log("found no valid jar-file");
+        LOG.debug("found no valid jar-file");
         return jarFiles;
     }
 

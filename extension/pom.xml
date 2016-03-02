@@ -16,6 +16,7 @@
     <modules>
         <module>inject-cdi-junittest-service</module>
         <module>inject-cdi-light</module>
+        <module>inject-spring</module>
         <module>inject-junit</module>
         <module>inject-transactions</module>
     </modules>

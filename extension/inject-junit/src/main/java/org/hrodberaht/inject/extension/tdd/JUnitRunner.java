@@ -69,7 +69,6 @@ public class JUnitRunner extends BlockJUnit4ClassRunner {
                 System.out.println("Creating injectContainer for thread " + Thread.currentThread().toString());
             }
             TransactionManager.beginTransaction(creator);
-            ContainerLifeCycleTestUtil.begin(creator);
             activeContainer = creator.getActiveRegister().getInjectContainer();
             try {
                 // This will execute the createTest method below, the activeContainer handling relies on this.
@@ -80,7 +79,6 @@ public class JUnitRunner extends BlockJUnit4ClassRunner {
                         frameworkMethod.getName() + " for thread " + Thread.currentThread().toString());
             } finally {
                 TransactionManager.endTransaction();
-                ContainerLifeCycleTestUtil.end();
             }
         } catch (Throwable e) {
             e.printStackTrace();

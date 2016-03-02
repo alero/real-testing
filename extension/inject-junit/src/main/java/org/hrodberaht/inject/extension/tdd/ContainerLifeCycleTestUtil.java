@@ -1,9 +1,7 @@
 package org.hrodberaht.inject.extension.tdd;
 
-import org.hrodberaht.inject.internal.InjectionContainer;
 import org.hrodberaht.inject.register.RegistrationModule;
 import org.hrodberaht.inject.spi.ContainerConfig;
-import org.hrodberaht.inject.spi.ThreadConfigHolder;
 
 import javax.inject.Inject;
 
@@ -20,28 +18,19 @@ import javax.inject.Inject;
 public class ContainerLifeCycleTestUtil {
 
     @Inject
-    private InjectionContainer injectionContainer;
+    private ContainerConfig containerConfig;
 
-    protected static void begin(ContainerConfig theContainer) {
-        ThreadConfigHolder.set(theContainer);
+
+    public void registerServiceInstance(Class serviceDefinition, Object service) {
+        containerConfig.getActiveRegister().overrideRegister(serviceDefinition, service);
     }
 
-    protected static void end() {
-        ThreadConfigHolder.get().cleanActiveContainer();
-        ThreadConfigHolder.remove();
-    }
-
-    public static void registerServiceInstance(Class serviceDefinition, Object service) {
-        ThreadConfigHolder.get().getActiveRegister().overrideRegister(serviceDefinition, service);
-    }
-
-    public static void registerModule(RegistrationModule module) {
-        ThreadConfigHolder.get().getActiveRegister().register(module);
+    public void registerModule(RegistrationModule module) {
+        containerConfig.getActiveRegister().register(module);
     }
 
 
-    public static <T> T getService(Class<T> aClass) {
-        ContainerConfig containerConfigBase = ThreadConfigHolder.get();
-        return containerConfigBase.getActiveContainer().get(aClass);
+    public <T> T getService(Class<T> aClass) {
+        return containerConfig.getActiveContainer().get(aClass);
     }
 }
