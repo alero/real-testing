@@ -14,7 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
- * Unit Test EJB (using @Inject)
+ * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
  *         2010-okt-11 19:31:30

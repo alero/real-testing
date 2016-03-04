@@ -94,15 +94,11 @@ public abstract class InjectionRegisterBase<T extends InjectionRegister> impleme
         return this;
     }
 
-    public Container getContainer() {
+    public InjectContainer getContainer() {
         return container;
     }
 
     public ScopeContainer getScopedContainer() {
-        return container;
-    }
-
-    public InjectContainer getInjectContainer() {
         return container;
     }
 

@@ -1,29 +1,19 @@
 package org.hrodberaht.inject.extension.tdd.internal;
 
-import org.hrodberaht.inject.config.ContainerConfigBase;
+import org.hrodberaht.inject.InjectionContainerManager;
+import org.hrodberaht.inject.ScopeContainer;
 import org.hrodberaht.inject.config.InjectionRegisterScanBase;
-import org.hrodberaht.inject.internal.annotation.ReflectionUtils;
+import org.hrodberaht.inject.config.JPAContainerConfigBase;
+import org.hrodberaht.inject.extension.tdd.util.EntityManagerHolder;
+import org.hrodberaht.inject.register.RegistrationModuleAnnotation;
 import org.hrodberaht.inject.spi.ResourceCreator;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.sql.DataSource;
-import java.lang.reflect.Field;
-import java.lang.reflect.Member;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by alexbrob on 2016-03-01.
  */
-public abstract class TDDContainerConfigBase<T extends InjectionRegisterScanBase> extends ContainerConfigBase<T> {
-    protected Map<String, EntityManager> entityManagers = null;
-
-    public Collection<EntityManager> getEntityManagers() {
-        return entityManagers.values();
-    }
+public abstract class TDDContainerConfigBase<T extends InjectionRegisterScanBase> extends JPAContainerConfigBase<T> {
 
     @Override
     protected ResourceCreator createResourceCreator() {
@@ -32,10 +22,6 @@ public abstract class TDDContainerConfigBase<T extends InjectionRegisterScanBase
 
     public ResourceCreator<EntityManager, DataSourceProxy> getResourceCreator() {
         return resourceCreator;
-    }
-
-    protected EntityManager createEntityManager(String schemaName, String dataSourceName, DataSource dataSource) {
-        return getResourceCreator().createEntityManager(schemaName, dataSourceName, dataSource);
     }
 
     public void addSQLSchemas(String schemaName, String packageBase) {
@@ -52,34 +38,23 @@ public abstract class TDDContainerConfigBase<T extends InjectionRegisterScanBase
         }
     }
 
-    protected void injectGenericResources(Object serviceInstance) {
-        if (resources == null && entityManagers == null && typedResources == null) {
-            return;
-        }
+    @Override
+    public void addSingletonActiveRegistry() {
+        super.addSingletonActiveRegistry();
 
-        List<Member> members = ReflectionUtils.findMembers(serviceInstance.getClass());
-        for (Member member : members) {
-            if (member instanceof Field) {
-                Field field = (Field) member;
-                if (field.isAnnotationPresent(Resource.class)) {
-                    Resource resource = field.getAnnotation(Resource.class);
-                    if (!injectNamedResource(serviceInstance, field, resource)) {
-                        injectTypedResource(serviceInstance, field);
-                    }
-                }
-                if (field.isAnnotationPresent(PersistenceContext.class)) {
-                    PersistenceContext resource = field.getAnnotation(PersistenceContext.class);
-                    injectEntityManager(serviceInstance, field, resource);
-                }
-            }
-        }
+        addSingletonActiveEntityManagers();
     }
 
-    private void injectEntityManager(Object serviceInstance, Field field, PersistenceContext resource) {
-        Object value = entityManagers.get(resource.unitName());
-        if (value == null && entityManagers.size() == 1 && "".equals(resource.unitName())) {
-            value = entityManagers.values().iterator().next();
-        }
-        injectResourceValue(serviceInstance, field, value);
+    private void addSingletonActiveEntityManagers() {
+        activeRegister.register(new RegistrationModuleAnnotation() {
+                                    @Override
+                                    public void registrations() {
+                                        register(EntityManagerHolder.class)
+                                                .scopeAs(ScopeContainer.Scope.SINGLETON)
+                                                .registerTypeAs(InjectionContainerManager.RegisterType.FINAL)
+                                                .withInstance(new EntityManagerHolder(getEntityManagers()));
+                                    }
+                                }
+        );
     }
 }

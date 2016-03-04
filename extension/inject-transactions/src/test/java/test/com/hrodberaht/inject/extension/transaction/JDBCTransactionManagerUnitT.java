@@ -50,7 +50,7 @@ public class JDBCTransactionManagerUnitT {
     @AfterClass
     // @TransactionAttribute
     public static void destroy() {
-        /*Container container = ModuleContainerForJDBCTests.container;
+        /*InjectContainer container = ModuleContainerForJDBCTests.container;
         TransactedApplication application = container.get(TransactedApplication.class);
         Collection<Person> collection = application.findAllPersons();
 

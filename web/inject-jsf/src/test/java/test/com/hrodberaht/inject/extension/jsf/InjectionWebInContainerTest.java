@@ -33,7 +33,7 @@ public class InjectionWebInContainerTest {
         InjectionRegisterJava registerJava = new InjectionRegisterJava();
         registerJava.activateContainerJavaXInject();
         registerJava.register(ServiceInject.class, ServiceInjectBean.class);
-        InjectContainer container = registerJava.getInjectContainer();
+        InjectInjectContainer container = registerJava.getInjectContainer();
         com.hrodberaht.inject.extension.jsf.JsfInjectionProvider.setInjector(container);
 
         // This is basically what JSF will do

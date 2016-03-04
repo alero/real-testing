@@ -1,6 +1,7 @@
 package test.org.hrodberaht.inject.extension.cdi.config;
 
 import org.hrodberaht.inject.InjectContainer;
+import org.hrodberaht.inject.extension.cdi.inner.InjectionRegisterScanCDI;
 
 import javax.sql.DataSource;
 
@@ -12,9 +13,9 @@ import javax.sql.DataSource;
  * @version 1.0
  * @since 1.0
  */
-public class CDIContainerConfigExampleForJSEResourceCreator extends TDDCDIContainerConfigBase {
+public class CDIContainerConfigExampleManuallyRunExtensions extends TDDCDIContainerConfigBase {
 
-    public CDIContainerConfigExampleForJSEResourceCreator() {
+    public CDIContainerConfigExampleManuallyRunExtensions() {
 
         // super(new JSEResourceCreator());
 
@@ -36,7 +37,15 @@ public class CDIContainerConfigExampleForJSEResourceCreator extends TDDCDIContai
 
     @Override
     public InjectContainer createContainer() {
-        return createAutoScanContainer("test.org.hrodberaht.inject.extension.cdi.service2");
+        InjectionRegisterScanCDI serviceModule = new InjectionRegisterScanCDI();
+        serviceModule.scanPackage("test.org.hrodberaht.inject.extension.cdi.service");
+
+        /*InjectContainer injectContainer = createAutoScanContainerManuallyRunAfterBeanDiscovery(
+                new RegistrationModuleAnnotation[]{serviceModule}, "test.org.hrodberaht.inject.extension.cdi.service2");
+        return injectContainer;
+                */
+
+        return null;
     }
 
 

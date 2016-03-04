@@ -1,8 +1,8 @@
 package test.org.hrodberaht.inject.extension.ejbunit.ejb3;
 
 import org.hrodberaht.inject.extension.tdd.ContainerContext;
-import org.hrodberaht.inject.extension.tdd.ContainerLifeCycleTestUtil;
 import org.hrodberaht.inject.extension.tdd.JUnitRunner;
+import org.hrodberaht.inject.extension.tdd.util.ContainerLifeCycleTestUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
@@ -18,7 +18,7 @@ import javax.inject.Inject;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Unit Test EJB (using @Inject)
+ * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
  *         2010-okt-11 19:31:30

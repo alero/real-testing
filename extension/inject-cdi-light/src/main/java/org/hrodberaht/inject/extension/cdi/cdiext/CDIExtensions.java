@@ -1,10 +1,10 @@
 package org.hrodberaht.inject.extension.cdi.cdiext;
 
+import org.hrodberaht.inject.InjectionRegisterModule;
 import org.hrodberaht.inject.extension.cdi.inner.FileScanningUtil;
 import org.hrodberaht.inject.extension.cdi.inner.SimpleLogger;
 import org.hrodberaht.inject.internal.annotation.ReflectionUtils;
 import org.hrodberaht.inject.spi.ContainerConfig;
-import org.hrodberaht.inject.spi.InjectionRegisterScanInterface;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
@@ -40,19 +40,19 @@ public class CDIExtensions {
     protected Map<Phase, List<MethodClassHolder>> phaseMethods = new ConcurrentHashMap<Phase, List<MethodClassHolder>>();
 
     public CDIExtensions() {
-        phaseMethods.put(Phase.BeforeBeanDiscovery, new ArrayList<MethodClassHolder>());
-        phaseMethods.put(Phase.AfterBeanDiscovery, new ArrayList<MethodClassHolder>());
+        phaseMethods.put(Phase.BeforeBeanDiscovery, new ArrayList<>());
+        phaseMethods.put(Phase.AfterBeanDiscovery, new ArrayList<>());
         findExtensions();
     }
 
-    public void runAfterBeanDiscovery(InjectionRegisterScanInterface register, ContainerConfig containerConfig) {
+    public void runAfterBeanDiscovery(InjectionRegisterModule register, ContainerConfig containerConfig) {
         AfterBeanDiscoveryByInject inject = new AfterBeanDiscoveryByInject(register);
         List<MethodClassHolder> methods = phaseMethods.get(Phase.AfterBeanDiscovery);
         for (MethodClassHolder methodClassHolder : methods) {
             try {
                 methodClassHolder.getMethod().setAccessible(true);
                 Object instance = methodClassHolder.getaClass().newInstance();
-                register.getInjectContainer().injectDependencies(instance);
+                register.getContainer().injectDependencies(instance);
                 if (methodClassHolder.getMethod().getParameterTypes().length == 1) {
                     methodClassHolder.getMethod().invoke(instance, inject);
                 } else {
@@ -68,7 +68,7 @@ public class CDIExtensions {
         }
     }
 
-    public void runBeforeBeanDiscovery(InjectionRegisterScanInterface register, ContainerConfig containerConfig) {
+    public void runBeforeBeanDiscovery(InjectionRegisterModule register, ContainerConfig containerConfig) {
         BeforeBeanDiscoveryByInject inject = new BeforeBeanDiscoveryByInject();
         List<MethodClassHolder> methods = phaseMethods.get(Phase.BeforeBeanDiscovery);
         for (MethodClassHolder methodClassHolder : methods) {

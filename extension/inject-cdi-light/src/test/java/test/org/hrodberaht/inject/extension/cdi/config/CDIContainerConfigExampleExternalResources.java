@@ -1,12 +1,11 @@
 package test.org.hrodberaht.inject.extension.cdi.config;
 
 import org.hrodberaht.inject.InjectContainer;
-import org.hrodberaht.inject.extension.tdd.cdi.TDDCDIContainerConfigBase;
 
 import javax.sql.DataSource;
 
 /**
- * Unit Test EJB (using @Inject)
+ * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
  *         2010-okt-11 19:37:42

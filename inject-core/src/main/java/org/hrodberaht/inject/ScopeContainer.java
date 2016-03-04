@@ -8,7 +8,7 @@ package org.hrodberaht.inject;
  * @version 1.0
  * @since 1.0
  */
-public interface ScopeContainer extends Container {
+public interface ScopeContainer extends InjectContainer {
 
     public enum Scope {
         SINGLETON, NEW, THREAD, INHERITABLE_THREAD

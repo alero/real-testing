@@ -22,7 +22,7 @@ public class ModuleContainerForTests implements InjectionContainerCreator, Trans
         register.register(TransactedApplication.class,  JPATransactedApplication.class);
 
         register.register(new JpaModule("example-jpa"));
-        InjectContainer injectContainer = register.getInjectContainer();
+        InjectContainer injectContainer = register.getContainer();
         container = injectContainer;
     }
 

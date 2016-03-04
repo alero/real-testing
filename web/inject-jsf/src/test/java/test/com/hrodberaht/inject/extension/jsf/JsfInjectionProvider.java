@@ -14,7 +14,7 @@ import org.hrodberaht.inject.InjectionRegisterJava;
  */
 public class JsfInjectionProvider extends JsfInjectionProviderBase{
 
-    private static InjectContainer container;
+    private static InjectInjectContainer container;
 
     static{
         InjectionRegisterJava registerJava = new InjectionRegisterJava();

@@ -1,7 +1,7 @@
-package org.hrodberaht.inject.extension.tdd;
+package org.hrodberaht.inject.extension.tdd.util;
 
 /**
- * Unit Test EJB (using @Inject)
+ * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
  *         2011-05-22 19:25

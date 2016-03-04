@@ -35,7 +35,7 @@ public class GuiceSuiteJsr330TckUnitT extends TestCase {
 
         // Guice does not work with the TCK at version 2.0, need to wait for new release.
         registerJava.registerGuiceModule(new GuiceTckModule());
-        Container container = registerJava.getContainer();
+        InjectContainer container = registerJava.getContainer();
 
 
 

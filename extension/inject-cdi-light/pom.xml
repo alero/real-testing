@@ -64,6 +64,15 @@
             <scope>provided</scope>
         </dependency>
 
+        <!-- TODO resolve this dependency on the TDD extension from the CDI extension, needs a common module probably
+        //-->
+        <dependency>
+            <groupId>org.hrodberaht.inject.extension</groupId>
+            <artifactId>inject-junit</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
@@ -98,24 +107,7 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- TODO resolve this dependency on the TDD extension from the CDI extension, needs a common module probably
-        //-->
-        <dependency>
-            <groupId>org.hrodberaht.inject.extension</groupId>
-            <artifactId>tdd</artifactId>
-            <version>1.4.3.2-SNAPSHOT</version>
-            <scope>test</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.hrodberaht</groupId>
-                    <artifactId>inject</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>hsqldb</groupId>
-                    <artifactId>hsqldb</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+
 
         <dependency>
             <groupId>junit</groupId>

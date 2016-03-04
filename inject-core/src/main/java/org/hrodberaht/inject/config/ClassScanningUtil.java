@@ -1,5 +1,6 @@
 package org.hrodberaht.inject.config;
 
+import org.hrodberaht.inject.ScopeContainer;
 import org.hrodberaht.inject.internal.exception.InjectRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,7 +63,7 @@ public class ClassScanningUtil {
                 }
             }
         }
-        /*else if (
+        else if (
                 !aClazz.isInterface()
                         && !aClazz.isAnnotation()
                         && scanningService.isServiceAnnotated(aClazz)
@@ -79,7 +80,7 @@ public class ClassScanningUtil {
                     e.printStackTrace(System.err);
                 }
             }
-        }*/
+        }
     }
 
 

@@ -1,6 +1,6 @@
 package test.org.hrodberaht.inject;
 
-import org.hrodberaht.inject.Container;
+import org.hrodberaht.inject.InjectContainer;
 import org.hrodberaht.inject.InjectionRegisterScan;
 import org.junit.Before;
 import org.junit.Test;
@@ -32,7 +32,7 @@ public class ScopeThreadUnitT {
     @Test
     public void testThreadScope() {
         InjectionRegisterScan register = RegisterStub.createAnnotatedScanRegister();
-        Container container = register.getContainer();
+        InjectContainer container = register.getContainer();
         register.printRegistration(System.out);
         Volvo aCar = (Volvo) container.get(Car.class);
 
@@ -48,7 +48,7 @@ public class ScopeThreadUnitT {
     @Test
     public void testDifferentThreadScope() {
         InjectionRegisterScan register = RegisterStub.createAnnotatedScanRegister();
-        final Container container = register.getContainer();
+        final InjectContainer container = register.getContainer();
         final Volvo aCar = (Volvo) container.get(Car.class);
 
 
@@ -71,7 +71,7 @@ public class ScopeThreadUnitT {
     public void testInheritedThreadScope() {
         InjectionRegisterScan register = RegisterStub.createAnnotatedScanRegister();
 
-        final Container container = register.getContainer();
+        final InjectContainer container = register.getContainer();
         final Volvo aCar = (Volvo) container.get(Car.class);
 
         Thread thread = new Thread() {

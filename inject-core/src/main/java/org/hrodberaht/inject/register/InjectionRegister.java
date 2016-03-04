@@ -1,6 +1,6 @@
 package org.hrodberaht.inject.register;
 
-import org.hrodberaht.inject.Container;
+import org.hrodberaht.inject.InjectContainer;
 import org.hrodberaht.inject.InjectionContainerManager;
 
 import java.lang.annotation.Annotation;
@@ -35,5 +35,5 @@ public interface InjectionRegister {
 
     InjectionContainerManager getInnerContainer();
 
-    Container getContainer();
+    InjectContainer getContainer();
 }

@@ -15,7 +15,6 @@
 package test.org.hrodberaht.inject.annotation;
 
 
-import org.hrodberaht.inject.Container;
 import org.hrodberaht.inject.InjectContainer;
 import org.hrodberaht.inject.InjectionRegisterModule;
 import org.hrodberaht.inject.InjectionRegisterScan;
@@ -66,7 +65,7 @@ public class AnnotationContainerUnitT {
     public void testFindAnnotatedWithForTwoDifferentServices() {
 
         InjectionRegister registerJava = AnnotationContainerUtil.prepareVolvoRegister();
-        Container container = registerJava.getContainer();
+        InjectContainer container = registerJava.getContainer();
         Tire spareTire = container.get(Tire.class, Spare.class);
         VindShield vindShield = container.get(VindShield.class, Spare.class);
 
@@ -79,7 +78,7 @@ public class AnnotationContainerUnitT {
     public void testInjectDependencies() {
         InjectionRegister registerJava = AnnotationContainerUtil.prepareVolvoRegister();
 
-        InjectContainer container = (InjectContainer) registerJava.getContainer();
+        InjectContainer container = registerJava.getContainer();
 
         Volvo aVolvo = new Volvo();
         container.injectDependencies(aVolvo);
@@ -95,7 +94,7 @@ public class AnnotationContainerUnitT {
         InjectionRegister registerJava = AnnotationContainerUtil.prepareVolvoRegister();
         registerJava.overrideRegister(Spare.class, Tire.class, Tire.class);
 
-        Container container = registerJava.getContainer();
+        InjectContainer container = registerJava.getContainer();
         Tire spareTire = container.get(Tire.class, Spare.class);
         VindShield vindShield = container.get(VindShield.class, Spare.class);
 
@@ -120,7 +119,7 @@ public class AnnotationContainerUnitT {
 
         registerJava.printRegistration(System.out);
 
-        Container container = registerJava.getContainer();
+        InjectContainer container = registerJava.getContainer();
         Tire spareTire = container.get(Tire.class, Spare.class);
         VindShield vindShield = container.get(VindShield.class, Spare.class);
 
@@ -145,7 +144,7 @@ public class AnnotationContainerUnitT {
 
         registerJava.printRegistration(System.out);
 
-        Container container = registerJava.getContainer();
+        InjectContainer container = registerJava.getContainer();
         Car car = container.get(Car.class);
 
 
@@ -159,7 +158,7 @@ public class AnnotationContainerUnitT {
     public void testProviderInjection() {
 
         InjectionRegister registerJava = AnnotationContainerUtil.prepareVolvoRegister();
-        Container container = registerJava.getContainer();
+        InjectContainer container = registerJava.getContainer();
         TestDriverManager manager = container.get(TestDriverManager.class);
 
 
@@ -173,7 +172,7 @@ public class AnnotationContainerUnitT {
     public void testPostConstruct() {
 
         InjectionRegister registerJava = AnnotationContainerUtil.prepareVolvoRegister();
-        Container container = registerJava.getContainer();
+        InjectContainer container = registerJava.getContainer();
         Volvo aCar = (Volvo) container.get(Car.class);
 
         assertEquals("Initialized", aCar.getInitText());
@@ -205,7 +204,7 @@ public class AnnotationContainerUnitT {
 
 
 
-        Container container = registerJava.getContainer();
+        InjectContainer container = registerJava.getContainer();
 
 
 
@@ -224,7 +223,7 @@ public class AnnotationContainerUnitT {
 
         InjectionRegisterModule registerJava = AnnotationContainerUtil.prepareVolvoRegister();
         registerJava.register(new CustomInjectionPointFinderModule(finder));
-        Container container = registerJava.getContainer();
+        InjectContainer container = registerJava.getContainer();
 
         Volvo aCar = (Volvo) container.get(Car.class);
         assertNotNull("getSpecialInjectField is null", aCar.getSpecialInjectField());
@@ -240,7 +239,7 @@ public class AnnotationContainerUnitT {
 
 
         InjectionRegister registerJava = AnnotationContainerUtil.prepareVolvoRegisterWithFinder();
-        Container container = registerJava.getContainer();
+        InjectContainer container = registerJava.getContainer();
 
         Volvo aCar = (Volvo) container.get(Car.class);
         assertNotNull("getSpecialInjectField is null", aCar.getSpecialInjectField());
@@ -269,7 +268,7 @@ public class AnnotationContainerUnitT {
         );
 
 
-        Container container = registerJava.getContainer();
+        InjectContainer container = registerJava.getContainer();
         Car car = container.get(Car.class);
 
         assertTrue(car.getSpareTire() instanceof SpareTire);
@@ -296,7 +295,7 @@ public class AnnotationContainerUnitT {
         );
 
 
-        Container container = registerJava.getContainer();
+        InjectContainer container = registerJava.getContainer();
         Car car = container.get(Car.class);
 
         // After the factory created the Car it will be deeper injected.
@@ -325,7 +324,7 @@ public class AnnotationContainerUnitT {
         );
 
 
-        Container container = registerJava.getContainer();
+        InjectContainer container = registerJava.getContainer();
         TestingServiceInterface testingServiceInterface = container.get(TestingServiceInterface.class);
 
         // After the factory created the Car it will be deeper injected.
@@ -354,7 +353,7 @@ public class AnnotationContainerUnitT {
                 }
         );
 
-        Container container = registerJava.getContainer();
+        InjectContainer container = registerJava.getContainer();
         TestDriverManager driverManager = container.get(TestDriverManager.class);
 
         // After the factory created the Car it will be deeper injected.

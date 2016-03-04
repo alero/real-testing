@@ -61,7 +61,7 @@ public class JPANewTransactionScopeDisabledUnitT {
         TODO: REDO this as the static context and the "thread aware" container will
         always fail in strange ways
 
-        Container container = ModuleContainerForTests.container;
+        InjectContainer container = ModuleContainerForTests.container;
         TransactedApplication application = container.get(TransactedApplication.class);
         Collection<Person> persons = application.findAllPersons();
 

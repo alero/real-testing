@@ -6,7 +6,7 @@ import javax.ejb.SessionContext;
 import java.rmi.RemoteException;
 
 /**
- * Unit Test EJB (using @Inject)
+ * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
  *         2010-okt-11 21:39:30

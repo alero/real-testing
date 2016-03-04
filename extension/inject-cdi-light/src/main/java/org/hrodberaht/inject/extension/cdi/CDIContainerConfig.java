@@ -1,6 +1,5 @@
 package org.hrodberaht.inject.extension.cdi;
 
-import org.hrodberaht.inject.extension.cdi.inner.JSEResourceCreator;
 import org.hrodberaht.inject.spi.ResourceCreator;
 
 /**
@@ -17,8 +16,9 @@ public abstract class CDIContainerConfig extends CDIContainerConfigBase {
     }
 
     protected CDIContainerConfig() {
-        super.resourceCreator = new JSEResourceCreator();
+        super();
     }
+
 
 
 }

@@ -17,6 +17,6 @@ public class ModuleContainerForSimpleTests implements com.hrodberaht.inject.exte
 
     public InjectContainer createContainer() {
         InjectionRegisterModule register = new InjectionRegisterModule();        
-        return register.getInjectContainer();
+        return register.getContainer();
     }
 }

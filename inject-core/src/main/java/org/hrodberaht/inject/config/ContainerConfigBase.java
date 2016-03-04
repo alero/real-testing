@@ -7,7 +7,6 @@ import org.hrodberaht.inject.ScopeContainer;
 import org.hrodberaht.inject.register.InjectionRegister;
 import org.hrodberaht.inject.register.RegistrationModuleAnnotation;
 import org.hrodberaht.inject.spi.ContainerConfig;
-import org.hrodberaht.inject.spi.InjectionRegisterScanInterface;
 import org.hrodberaht.inject.spi.ResourceCreator;
 
 import javax.annotation.Resource;
@@ -17,21 +16,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Unit Test EJB (using @Inject)
+ * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
  *         2010-okt-11 19:35:27
  * @version 1.0
  * @since 1.0
  */
-public abstract class ContainerConfigBase<T extends InjectionRegisterScanBase> implements ContainerConfig {
+public abstract class ContainerConfigBase<T extends InjectionRegisterModule> implements ContainerConfig {
 
     protected InjectionRegisterModule originalRegister = null;
     protected InjectionRegisterModule activeRegister = null;
 
     protected Map<String, Object> resources = null;
     protected Map<Class, Object> typedResources = null;
-
 
     protected ResourceCreator resourceCreator = createResourceCreator();
 
@@ -41,22 +39,26 @@ public abstract class ContainerConfigBase<T extends InjectionRegisterScanBase> i
 
     protected abstract void injectResources(Object serviceInstance);
 
-    protected abstract InjectionRegisterScanInterface getScanner(InjectionRegister registerModule);
+    protected abstract InjectionRegisterScanBase getScanner(InjectionRegister registerModule);
 
     protected InjectContainer createAutoScanContainer(String... packageName) {
-
         InjectionRegisterModule combinedRegister = preScanModuleRegistration();
+        createAutoScanContainerRegister(packageName, combinedRegister);
+        return activeRegister.getContainer();
+    }
+
+    protected void createAutoScanContainerRegister(String[] packageName, InjectionRegisterModule combinedRegister) {
+
         scanAndRegister(combinedRegister, packageName);
-        postScanModuleRegistration(combinedRegister);
+
         originalRegister = combinedRegister;
         appendTypedResources();
         activeRegister = originalRegister.clone();
         System.out.println("originalRegister - " + originalRegister);
-        return activeRegister.getInjectContainer();
     }
 
     private void scanAndRegister(InjectionRegisterModule combinedRegister, String[] packageName) {
-        InjectionRegisterScanInterface registerScan = getScanner(combinedRegister);
+        InjectionRegisterScanBase registerScan = getScanner(combinedRegister);
         registerScan.scanPackage(packageName);
     }
 
@@ -64,21 +66,26 @@ public abstract class ContainerConfigBase<T extends InjectionRegisterScanBase> i
         return new InjectionRegisterModule();
     }
 
-    protected void postScanModuleRegistration(InjectionRegisterModule injectionRegisterModule) {
-        final ContainerConfigBase configBase = this;
-        RegistrationModuleAnnotation injectionRegisterModuleConfig= new RegistrationModuleAnnotation(){
+    public void addSingletonActiveRegistry() {
+        RegistrationModuleAnnotation injectionRegisterModuleConfig = prepareModuleSingletonForRegistry();
+        activeRegister.register(injectionRegisterModuleConfig);
+    }
+
+    private RegistrationModuleAnnotation prepareModuleSingletonForRegistry() {
+        final InjectionRegisterModule configBase = this.activeRegister;
+        return new RegistrationModuleAnnotation(){
             @Override
             public void registrations() {
-                register(ContainerConfig.class)
+                register(InjectionRegisterModule.class)
+                        // .named("ActiveRegisterModule")
                         .scopeAs(ScopeContainer.Scope.SINGLETON)
                         .registerTypeAs(InjectionContainerManager.RegisterType.FINAL)
                         .withInstance(configBase);
             }
         };
-        injectionRegisterModule.register(injectionRegisterModuleConfig);
     }
 
-    private void appendTypedResources() {
+    protected void appendTypedResources() {
         if (typedResources != null) {
             for (final Class typedResource : typedResources.keySet()) {
                 final Object value = typedResources.get(typedResource);
@@ -97,8 +104,7 @@ public abstract class ContainerConfigBase<T extends InjectionRegisterScanBase> i
     }
 
     public InjectContainer getActiveContainer() {
-
-        return activeRegister.getInjectContainer();
+        return activeRegister.getContainer();
     }
 
     public void cleanActiveContainer() {
@@ -126,9 +132,6 @@ public abstract class ContainerConfigBase<T extends InjectionRegisterScanBase> i
     protected boolean hasDataSource(String dataSourceName) {
         return resourceCreator.hasDataSource(dataSourceName);
     }
-
-
-
 
     protected boolean injectTypedResource(Object serviceInstance, Field field) {
         if (typedResources == null) {

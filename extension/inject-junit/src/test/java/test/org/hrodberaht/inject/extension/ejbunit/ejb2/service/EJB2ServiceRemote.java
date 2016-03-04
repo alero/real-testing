@@ -4,7 +4,7 @@ import javax.ejb.EJBObject;
 import java.rmi.RemoteException;
 
 /**
- * Unit Test EJB (using @Inject)
+ * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
  *         2010-okt-11 22:04:21

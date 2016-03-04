@@ -60,7 +60,7 @@ public class JPANewTransactionScopeUnitT {
     @AfterClass
     public static void destroy() {
         TransactionLogging.enableLogging = false;
-        /*Container container = moduleContainer.container;
+        /*InjectContainer container = moduleContainer.container;
         TransactedApplication application = container.get(TransactedApplication.class);
         Collection<Person> collection = application.findAllPersons();
 

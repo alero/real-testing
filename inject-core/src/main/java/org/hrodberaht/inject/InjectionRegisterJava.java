@@ -30,7 +30,7 @@ public class InjectionRegisterJava extends InjectionRegisterBase<InjectionRegist
         super();
     }
 
-    public InjectionRegisterJava(Container container) {
+    public InjectionRegisterJava(InjectContainer container) {
         this.container = (InjectionContainerManager) container;
     }
 

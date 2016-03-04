@@ -15,7 +15,7 @@
 package test.org.hrodberaht.inject.annotation;
 
 
-import org.hrodberaht.inject.Container;
+import org.hrodberaht.inject.InjectContainer;
 import org.hrodberaht.inject.InjectionRegisterModule;
 import org.hrodberaht.inject.internal.annotation.InjectionFinder;
 import org.hrodberaht.inject.spi.module.CustomInjectionPointFinderModule;
@@ -53,7 +53,7 @@ public class AnnotationContainerUnitTForExternalManagedBeans {
         InjectionFinder finder = new CustomInjectionPointFinder();
         registerJava.register(new CustomInjectionPointFinderModule(finder));
 
-        Container container = registerJava.getContainer();
+        InjectContainer container = registerJava.getContainer();
         Tire spareTire = container.get(Tire.class, Spare.class);
         VindShield vindShield = container.get(VindShield.class, Spare.class);
 

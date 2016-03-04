@@ -16,7 +16,7 @@ package test.org.hrodberaht.inject.annotation;
 
 import org.atinject.tck.Tck;
 import org.atinject.tck.auto.Car;
-import org.hrodberaht.inject.Container;
+import org.hrodberaht.inject.InjectContainer;
 import org.hrodberaht.inject.internal.stats.Statistics;
 import org.hrodberaht.inject.register.InjectionRegister;
 import org.junit.After;
@@ -62,7 +62,7 @@ public class AnnotationContinerPerformanceUnitT {
 
     @Test(timeout = 100000)
     public void testPerformance() {
-        Container container = TckUtil.prepareRegister().getContainer();
+        InjectContainer container = TckUtil.prepareRegister().getContainer();
         PerformanceStatistics performanceStatistics = new PerformanceStatistics("testPerformance");
         for (int i = 0; i < threadIterations; i++) {
             // This does loads of fetching from the container, will stress test it a lot.
@@ -85,7 +85,7 @@ public class AnnotationContinerPerformanceUnitT {
     }
 
     private void multiThreadedTest() {
-        final Container container = registerVolvo.getContainer();
+        final InjectContainer container = registerVolvo.getContainer();
         Collection<Thread> threads = new ArrayList<Thread>();
         for (int i = 0; i < threadCount; i++) {
             threads.add(
@@ -136,7 +136,7 @@ public class AnnotationContinerPerformanceUnitT {
         }
     }
 
-    private void runningOfContainerTCK(Container container, PerformanceStatistics performanceStatistics) {
+    private void runningOfContainerTCK(InjectContainer container, PerformanceStatistics performanceStatistics) {
        //  performanceStatistics.markAndPrint("before get");
         Car car = container.get(Car.class);
         // performanceStatistics.markAndPrint("after get");
@@ -144,7 +144,7 @@ public class AnnotationContinerPerformanceUnitT {
         // performanceStatistics.markAndPrint("after testsFor");
     }
 
-    private void runThreadContainerGet(Container container) {
+    private void runThreadContainerGet(InjectContainer container) {
         for (int i = 0; i < threadIterations; i++) {
             Volvo car = container.get(Volvo.class);
             AnnotationContainerUtil.assertVolvo(car);

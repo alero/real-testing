@@ -1,10 +1,12 @@
 package org.hrodberaht.inject.extension.cdi.inner;
 
+import org.hrodberaht.inject.InjectContainer;
 import org.hrodberaht.inject.ScopeContainer;
 import org.hrodberaht.inject.config.InjectionRegisterScanBase;
+import org.hrodberaht.inject.register.InjectionRegister;
 
 /**
- * Unit Test EJB (using @Inject)
+ * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
  *         2010-okt-11 19:45:53
@@ -16,9 +18,22 @@ public class InjectionRegisterScanCDI extends InjectionRegisterScanBase {
     private boolean hasStatelessAnnotationInClassPath = true;
     private boolean hasSingletonAnnotationInClassPath = true;
 
+    public InjectionRegisterScanCDI(InjectionRegister injectionRegister) {
+        super(injectionRegister);
+    }
+
+    public InjectionRegisterScanCDI() {
+        super();
+    }
+
+    @Override
+    public InjectContainer getInjectContainer() {
+        return container;
+    }
+
     @Override
     public InjectionRegisterScanCDI clone() {
-        InjectionRegisterScanCDI clone = new InjectionRegisterScanCDI();
+        InjectionRegisterScanCDI clone = new InjectionRegisterScanCDI(super.referedRegister);
         try {
             clone.container = this.container.clone();
         } catch (CloneNotSupportedException e) {
@@ -33,7 +48,7 @@ public class InjectionRegisterScanCDI extends InjectionRegisterScanBase {
 
     @Override
     public boolean isServiceAnnotated(Class aClazz) {
-        return true;
+        return false;
     }
 
 

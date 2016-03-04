@@ -13,7 +13,7 @@ import org.junit.runners.model.InitializationError;
 import java.lang.annotation.Annotation;
 
 /**
- * Unit Test EJB (using @Inject)
+ * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
  *         2010-okt-11 19:32:34
@@ -25,8 +25,6 @@ public class JUnitRunner extends BlockJUnit4ClassRunner {
     private InjectContainer activeContainer = null;
 
     private ContainerConfig creator = null;
-
-    private InjectContainer injectContainer = null;
 
     /**
      * Creates a BlockJUnit4ClassRunner to run
@@ -47,6 +45,7 @@ public class JUnitRunner extends BlockJUnit4ClassRunner {
                     ContainerContext containerContext = (ContainerContext) annotation;
                     Class<? extends ContainerConfig> transactionClass = containerContext.value();
                     creator = transactionClass.newInstance();
+                    creator.createContainer();
                     System.out.println("Creating creator for thread " + Thread.currentThread().toString());
                 }
             }
@@ -64,12 +63,13 @@ public class JUnitRunner extends BlockJUnit4ClassRunner {
     @Override
     protected void runChild(FrameworkMethod frameworkMethod, RunNotifier notifier) {
         try {
-            if (injectContainer == null) {
-                injectContainer = creator.createContainer();
-                System.out.println("Creating injectContainer for thread " + Thread.currentThread().toString());
-            }
+
             TransactionManager.beginTransaction(creator);
-            activeContainer = creator.getActiveRegister().getInjectContainer();
+
+            // So that ContainerLifeCycleTestUtil can access the activeContainer and do magic
+            creator.addSingletonActiveRegistry();
+
+            activeContainer = creator.getActiveRegister().getContainer();
             try {
                 // This will execute the createTest method below, the activeContainer handling relies on this.
                 System.out.println("START running test " +
@@ -79,6 +79,7 @@ public class JUnitRunner extends BlockJUnit4ClassRunner {
                         frameworkMethod.getName() + " for thread " + Thread.currentThread().toString());
             } finally {
                 TransactionManager.endTransaction();
+                creator.cleanActiveContainer();
             }
         } catch (Throwable e) {
             e.printStackTrace();

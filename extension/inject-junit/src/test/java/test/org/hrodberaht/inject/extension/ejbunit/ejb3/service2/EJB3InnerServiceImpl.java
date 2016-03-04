@@ -4,7 +4,7 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 
 /**
- * Unit Test EJB (using @Inject)
+ * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
  *         2010-okt-11 19:29:52

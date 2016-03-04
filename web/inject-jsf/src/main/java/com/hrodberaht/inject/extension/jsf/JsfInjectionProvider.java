@@ -12,8 +12,8 @@ import org.hrodberaht.inject.InjectContainer;
  */
 public class JsfInjectionProvider extends JsfInjectionProviderBase{
 
-    private static InjectContainer container = null;
-    public static void setInjector(InjectContainer container) {
+    private static InjectInjectContainer container = null;
+    public static void setInjector(InjectInjectContainer container) {
         JsfInjectionProvider.container = container;
     }
 

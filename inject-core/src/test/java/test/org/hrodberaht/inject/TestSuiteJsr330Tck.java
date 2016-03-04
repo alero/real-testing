@@ -17,7 +17,7 @@ package test.org.hrodberaht.inject;
 import junit.framework.TestCase;
 import org.atinject.tck.Tck;
 import org.atinject.tck.auto.Car;
-import org.hrodberaht.inject.Container;
+import org.hrodberaht.inject.InjectContainer;
 
 
 /**
@@ -33,7 +33,7 @@ public class TestSuiteJsr330Tck extends TestCase {
 
     public static junit.framework.Test suite() {
 
-        Container container = TckUtil.prepareRegister().getContainer();
+        InjectContainer container = TckUtil.prepareRegister().getContainer();
 
         final Car car = container.get(Car.class);
         final boolean supportsStatic = false;

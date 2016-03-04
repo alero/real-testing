@@ -40,6 +40,11 @@ public class InjectionRegisterScan extends InjectionRegisterScanBase<InjectionRe
 
 
     @Override
+    public InjectContainer getInjectContainer() {
+        return container;
+    }
+
+    @Override
     public InjectionRegisterScan clone() {
         InjectionRegisterScan registerScan = new InjectionRegisterScan();
         try {
@@ -65,7 +70,7 @@ public class InjectionRegisterScan extends InjectionRegisterScanBase<InjectionRe
 
     @Override
     public boolean isServiceAnnotated(Class aClazz) {
-        return true;
+        return false;
     }
 
     @Override

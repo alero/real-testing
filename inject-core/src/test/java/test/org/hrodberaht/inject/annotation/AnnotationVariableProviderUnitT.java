@@ -34,7 +34,7 @@ public class AnnotationVariableProviderUnitT {
                 register(Car.class).withVariableFactory(new ManufacturerVariableFactory());
             }
         });
-        InjectContainer container = registerJava.getInjectContainer();
+        InjectContainer container = registerJava.getContainer();
 
         Car car = container.get(Car.class, new SaabManufacturer());
 
@@ -53,7 +53,7 @@ public class AnnotationVariableProviderUnitT {
                 register(Car.class).withVariableFactory(new ManufacturerVariableFactory());
             }
         });
-        InjectContainer container = registerJava.getInjectContainer();
+        InjectContainer container = registerJava.getContainer();
 
         CarWrapper carWrapper = container.get(CarWrapper.class);
 

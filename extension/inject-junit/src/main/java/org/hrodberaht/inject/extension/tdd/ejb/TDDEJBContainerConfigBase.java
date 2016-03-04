@@ -19,7 +19,7 @@ import java.rmi.RemoteException;
 import java.util.HashMap;
 
 /**
- * Unit Test EJB (using @Inject)
+ * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
  *         2010-okt-11 19:35:27
@@ -78,7 +78,7 @@ public abstract class TDDEJBContainerConfigBase extends TDDContainerConfigBase<I
 
     protected void addPersistenceContext(String name, EntityManager entityManager) {
         if (entityManagers == null) {
-            entityManagers = new HashMap<String, EntityManager>();
+            entityManagers = new HashMap<>();
         }
         entityManagers.put(name, entityManager);
     }

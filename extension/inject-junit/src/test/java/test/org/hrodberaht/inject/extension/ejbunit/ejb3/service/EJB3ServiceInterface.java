@@ -3,7 +3,7 @@ package test.org.hrodberaht.inject.extension.ejbunit.ejb3.service;
 import javax.ejb.Local;
 
 /**
- * Unit Test EJB (using @Inject)
+ * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
  *         2010-okt-11 19:24:39

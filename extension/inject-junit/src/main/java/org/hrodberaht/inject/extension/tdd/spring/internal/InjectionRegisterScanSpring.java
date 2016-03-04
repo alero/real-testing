@@ -8,7 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 
 /**
- * Unit Test EJB (using @Inject)
+ * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
  *         2010-okt-11 19:45:53
@@ -24,6 +24,8 @@ public class InjectionRegisterScanSpring extends InjectionRegisterScanBase {
 
     public InjectionRegisterScanSpring() {
     }
+
+
 
     @Override
     public InjectionRegisterScanSpring clone() {

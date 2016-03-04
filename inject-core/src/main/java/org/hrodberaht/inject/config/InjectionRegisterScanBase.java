@@ -44,6 +44,11 @@ public abstract class InjectionRegisterScanBase<T extends InjectionRegisterScanB
         super.container = (InjectionContainerManager) injectContainer;
     }
 
+    @Override
+    public InjectContainer getInjectContainer() {
+        return container;
+    }
+
     public T scanPackage(String... packagenames) {
         for (String packagename : packagenames) {
 

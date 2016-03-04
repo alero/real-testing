@@ -14,7 +14,7 @@
 
 package test.org.hrodberaht.inject.annotation;
 
-import org.hrodberaht.inject.Container;
+import org.hrodberaht.inject.InjectContainer;
 import org.hrodberaht.inject.InjectionRegisterJava;
 import org.hrodberaht.inject.InjectionRegisterModule;
 import org.hrodberaht.inject.InjectionRegisterScan;
@@ -53,7 +53,7 @@ public class ContainerScanUnitT {
         // Tests scanning and exclusion of single class
         register.scanPackageExclude("test.org.hrodberaht.inject.testservices.simple", AnyServiceDoNothingImpl.class);
 
-        Container container = register.getContainer();
+        InjectContainer container = register.getContainer();
 
         AnyService anyService = container.get(AnyService.class);
         anyService.doStuff();
@@ -78,7 +78,7 @@ public class ContainerScanUnitT {
         );
 
 
-        Container container = registerJava.getContainer();
+        InjectContainer container = registerJava.getContainer();
         ATestingServiceInterface testingServiceInterface = container.get(ATestingServiceInterface.class);
 
         // After the factory created the Car it will be deeper injected.
@@ -91,7 +91,7 @@ public class ContainerScanUnitT {
     public void testAnnotatedScanningOfImplementations() {
         InjectionRegisterScan register = RegisterStub.createAnnotatedScanRegister();
 
-        Container container = register.getContainer();
+        InjectContainer container = register.getContainer();
         Car aCar = container.get(Car.class);
 
         assertEquals("volvo", aCar.brand());
@@ -111,7 +111,7 @@ public class ContainerScanUnitT {
         InjectionRegisterScan register = new InjectionRegisterScan();
         // Tests scanning and exclusion of single class
         register.scanPackageExclude("test.org.hrodberaht.inject.testservices.simple", AnyServiceDoNothingImpl.class);
-        Container container = register.getContainer();
+        InjectContainer container = register.getContainer();
 
         AnyService anyService = container.get(AnyService.class);
         anyService.doStuff();
@@ -127,7 +127,7 @@ public class ContainerScanUnitT {
         // Tests scanning and exclusion of single class
         register.scanPackage("test.org.hrodberaht.inject.testservices.simple");
 
-        Container container = register.getContainer();
+        InjectContainer container = register.getContainer();
 
         try {
             AnyService anyService = container.get(AnyService.class);
@@ -154,7 +154,7 @@ public class ContainerScanUnitT {
         InjectionRegisterScan register = new InjectionRegisterScan();
         register.scanPackage("test.org.hrodberaht.inject.testservices.simple");
 
-        Container container = register.getContainer();
+        InjectContainer container = register.getContainer();
         try{
             AnyService anyService = container.get(AnyService.class);
             assertEquals("not here", null);
@@ -190,7 +190,7 @@ public class ContainerScanUnitT {
         InjectionRegisterJava registerJava = new InjectionRegisterJava(register);
         registerJava.overrideRegister(AnyService.class, AnyServiceDoSomethingImpl.class);
 
-        Container container = register.getContainer();
+        InjectContainer container = register.getContainer();
 
         AnyService anyService = container.get(AnyService.class);
         assertTrue(anyService instanceof AnyServiceDoSomethingImpl);

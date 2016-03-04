@@ -4,7 +4,7 @@ import com.hrodberaht.inject.extension.transaction.junit.InjectionContainerConte
 import com.hrodberaht.inject.extension.transaction.junit.InjectionJUnitTestRunner;
 import com.hrodberaht.inject.extension.transaction.manager.impl.jpa.StatisticsJPA;
 import com.hrodberaht.inject.extension.transaction.manager.internal.TransactionLogging;
-import org.hrodberaht.inject.Container;
+import org.hrodberaht.inject.InjectContainer;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -72,7 +72,7 @@ public class JPATransactionManagerPerformanceUnitT {
         System.out.println("Estimated sleep-time = "+(sleepTime)+ "ms");
         Date startDate = new Date();
 
-        final Container container = ModuleContainerForTests.container;
+        final InjectContainer container = ModuleContainerForTests.container;
 
         Collection<Thread> threads = new ArrayList<Thread>();
         for (int i = 0; i < threadCount; i++) {
@@ -122,7 +122,7 @@ public class JPATransactionManagerPerformanceUnitT {
         }
     }
 
-    private void runThreadContainerGet(Container container, int iterations) {
+    private void runThreadContainerGet(InjectContainer container, int iterations) {
         for (int i = 0; i < iterations; i++) {
             TransactedApplication application = container.get(TransactedApplication.class);
             application.fakeOperationForPerformanceTest();

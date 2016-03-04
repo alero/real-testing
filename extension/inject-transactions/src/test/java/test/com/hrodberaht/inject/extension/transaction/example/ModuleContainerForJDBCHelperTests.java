@@ -44,7 +44,7 @@ public class ModuleContainerForJDBCHelperTests implements InjectionContainerCrea
         DataSource dataSource = getDataSource(entityManagerFactory);
         register.register(new JdbcModule(dataSource));
         
-        InjectContainer injectContainer = register.getInjectContainer();
+        InjectContainer injectContainer = register.getContainer();
         container = injectContainer;
         return injectContainer;
     }

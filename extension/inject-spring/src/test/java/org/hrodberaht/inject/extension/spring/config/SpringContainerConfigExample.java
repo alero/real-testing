@@ -5,12 +5,11 @@ import org.hrodberaht.inject.ScopeContainer;
 import org.hrodberaht.inject.config.InjectionRegisterScanBase;
 import org.hrodberaht.inject.extension.tdd.internal.TDDContainerConfigBase;
 import org.hrodberaht.inject.register.InjectionRegister;
-import org.hrodberaht.inject.spi.InjectionRegisterScanInterface;
 
 import javax.sql.DataSource;
 
 /**
- * Unit Test EJB (using @Inject)
+ * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
  *         2010-okt-11 19:37:42
@@ -39,7 +38,7 @@ public class SpringContainerConfigExample extends TDDContainerConfigBase {
     }
 
     @Override
-    protected InjectionRegisterScanInterface getScanner(InjectionRegister injectionRegister) {
+    protected InjectionRegisterScanBase getScanner(InjectionRegister injectionRegister) {
         return new InjectionRegisterScanBase(injectionRegister){
             @Override
             public boolean isInterfaceAnnotated(Class aClazz) {

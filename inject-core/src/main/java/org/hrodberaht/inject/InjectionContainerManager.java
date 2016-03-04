@@ -31,7 +31,7 @@ import java.util.Collection;
  * @version 1.0
  * @since 1.0
  */
-public class InjectionContainerManager implements Container, ScopeContainer, InjectContainer, ExtendedInjection, ExtendedAnnotationInjection {
+public class InjectionContainerManager implements ScopeContainer, InjectContainer, ExtendedInjection, ExtendedAnnotationInjection {
 
     private AnnotationInjectionContainer injectionContainer = new AnnotationInjectionContainer(this);
 

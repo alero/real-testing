@@ -48,12 +48,6 @@
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.hrodberaht.inject.extension</groupId>
-            <artifactId>inject-cdi-light</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>

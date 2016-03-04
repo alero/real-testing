@@ -12,4 +12,7 @@ public class ATestingService implements ATestingServiceInterface {
     @Inject
     private BTestingServiceInnerInterface BTestingServiceInnerInterface;
 
+    public BTestingServiceInnerInterface getBTestingServiceInnerInterface() {
+        return BTestingServiceInnerInterface;
+    }
 }

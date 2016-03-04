@@ -1,6 +1,7 @@
 package org.hrodberaht.inject.spi;
 
 import org.hrodberaht.inject.InjectContainer;
+import org.hrodberaht.inject.InjectionRegisterModule;
 
 
 /**
@@ -13,9 +14,11 @@ import org.hrodberaht.inject.InjectContainer;
 public interface ContainerConfig {
     void cleanActiveContainer();
 
-    InjectionRegisterScanInterface getActiveRegister();
+    InjectionRegisterModule getActiveRegister();
 
     InjectContainer getActiveContainer();
+
+    void addSingletonActiveRegistry();
 
     ResourceCreator getResourceCreator();
 

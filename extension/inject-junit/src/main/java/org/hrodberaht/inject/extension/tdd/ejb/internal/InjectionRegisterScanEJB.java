@@ -1,5 +1,6 @@
 package org.hrodberaht.inject.extension.tdd.ejb.internal;
 
+import org.hrodberaht.inject.InjectContainer;
 import org.hrodberaht.inject.ScopeContainer;
 import org.hrodberaht.inject.config.InjectionRegisterScanBase;
 import org.hrodberaht.inject.register.InjectionRegister;
@@ -10,7 +11,7 @@ import javax.ejb.Stateful;
 import javax.ejb.Stateless;
 
 /**
- * Unit Test EJB (using @Inject)
+ * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
  *         2010-okt-11 19:45:53
@@ -22,6 +23,11 @@ public class InjectionRegisterScanEJB extends InjectionRegisterScanBase {
 
     public InjectionRegisterScanEJB(InjectionRegister registerModule) {
         super(registerModule);
+    }
+
+    @Override
+    public InjectContainer getInjectContainer() {
+        return container;
     }
 
     @Override

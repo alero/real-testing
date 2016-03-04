@@ -4,7 +4,7 @@ import org.hrodberaht.inject.InjectContainer;
 import org.hrodberaht.inject.extension.tdd.ejb.TDDEJBContainerConfigBase;
 
 /**
- * Unit Test EJB (using @Inject)
+ * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
  *         2010-okt-11 19:37:42

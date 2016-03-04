@@ -42,7 +42,7 @@ public class ModuleContainerForJDBCTests implements InjectionContainerCreator, T
         // Just hook the data-source to the entity-manager, this is ugly but useful in a JUnit
         DataSource dataSource = getDataSource(entityManagerFactory);
         register.register(new JdbcModule(dataSource));
-        InjectContainer injectContainer = register.getInjectContainer();
+        InjectContainer injectContainer = register.getContainer();
         container = injectContainer;
         return injectContainer;
     }

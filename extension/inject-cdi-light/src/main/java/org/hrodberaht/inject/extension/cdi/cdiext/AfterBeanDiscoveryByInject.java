@@ -1,6 +1,6 @@
 package org.hrodberaht.inject.extension.cdi.cdiext;
 
-import org.hrodberaht.inject.spi.InjectionRegisterScanInterface;
+import org.hrodberaht.inject.InjectionRegisterModule;
 
 import javax.enterprise.context.spi.Context;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
@@ -16,9 +16,9 @@ import javax.enterprise.inject.spi.ObserverMethod;
  */
 public class AfterBeanDiscoveryByInject implements AfterBeanDiscovery {
 
-    private InjectionRegisterScanInterface injectionRegisterScanInterface;
+    private InjectionRegisterModule injectionRegisterScanInterface;
 
-    public AfterBeanDiscoveryByInject(InjectionRegisterScanInterface injectionRegisterScanInterface) {
+    public AfterBeanDiscoveryByInject(InjectionRegisterModule injectionRegisterScanInterface) {
         this.injectionRegisterScanInterface = injectionRegisterScanInterface;
     }
 

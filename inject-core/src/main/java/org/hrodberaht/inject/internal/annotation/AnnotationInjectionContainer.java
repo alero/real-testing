@@ -288,9 +288,12 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
                                                       InjectionKey key,
                                                       RegistrationModuleAnnotation aModule) {
         InjectionMetaData injectionMetaData = createInjectionMetaData(instance, key);
-        ServiceRegister register = createServiceRegister(instance, injectionMetaData);
+        ServiceRegister register;
         if(aModule != null){
+            register = createServiceRegister(instance, injectionMetaData, false);
             register.setModule(aModule);
+        }else {
+            register = createServiceRegister(instance, injectionMetaData, true);
         }
         putServiceIntoRegister(key, register);
         validateRegisters(key, injectionMetaData, register);
@@ -318,19 +321,19 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
 
 
     private ServiceRegister createServiceRegister(
-            RegistrationInstanceSimple instance, InjectionMetaData injectionMetaData) {
-        if (instance.getScope() != ScopeContainer.Scope.SINGLETON) {
+            RegistrationInstanceSimple instance, InjectionMetaData injectionMetaData, boolean preCreateSingletons) {
+        if (preCreateSingletons && instance.getScope() == ScopeContainer.Scope.SINGLETON) {
             return new ServiceRegister(
                     instance.getService(),
-                    null,
-                    getAnnotationScope(injectionMetaData),
+                    createInstance(new ServiceRegister(instance.getService()), instance.getInjectionKey()),
+                    InjectionContainerManager.Scope.SINGLETON,
                     normalizeType(instance.getRegisterType())
             );
         } else {
             return new ServiceRegister(
                     instance.getService(),
-                    createInstance(new ServiceRegister(instance.getService()), instance.getInjectionKey()),
-                    InjectionContainerManager.Scope.SINGLETON,
+                    null,
+                    getAnnotationScope(injectionMetaData),
                     normalizeType(instance.getRegisterType())
             );
         }
@@ -381,10 +384,13 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
 
         for (InjectionKey injectionKey : this.registeredServices.keySet()) {
             ServiceRegister serviceRegister = this.registeredServices.get(injectionKey);
-            if (serviceRegister.getScope() == ScopeContainer.Scope.SINGLETON) {
-                annotationInjectionContainer.registeredServices.put(injectionKey, serviceRegister.clone());
-            } else {
-                annotationInjectionContainer.registeredServices.put(injectionKey, serviceRegister);
+            // If the key exists but not the service, it just means we have injected dependencies into it, but do not manage the lifecycle of it
+            if(serviceRegister != null){
+                if (serviceRegister.getScope() == ScopeContainer.Scope.SINGLETON) {
+                    annotationInjectionContainer.registeredServices.put(injectionKey, serviceRegister.clone());
+                } else {
+                    annotationInjectionContainer.registeredServices.put(injectionKey, serviceRegister);
+                }
             }
         }
         return annotationInjectionContainer;
