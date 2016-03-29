@@ -1,10 +1,10 @@
 package test.com.hrodberaht.inject.extension.transaction.example;
 
-import com.hrodberaht.inject.extension.transaction.junit.InjectionContainerCreator;
-import com.hrodberaht.inject.extension.transaction.junit.TransactionManagedTesting;
-import com.hrodberaht.inject.extension.transaction.manager.JdbcModule;
-import org.hrodberaht.inject.InjectContainer;
-import org.hrodberaht.inject.InjectionRegisterModule;
+import com.hrodberaht.inject.extensions.transaction.junit.InjectionContainerCreator;
+import com.hrodberaht.inject.extensions.transaction.junit.TransactionManagedTesting;
+import com.hrodberaht.inject.extensions.transaction.manager.JdbcModule;
+import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.InjectionRegisterModule;
 
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;

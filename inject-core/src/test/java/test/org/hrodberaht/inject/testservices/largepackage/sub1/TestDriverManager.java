@@ -1,6 +1,6 @@
 package test.org.hrodberaht.inject.testservices.largepackage.sub1;
 
-import org.hrodberaht.inject.scope.InheritableThreadScope;
+import org.hrodberaht.injection.scope.InheritableThreadScope;
 
 /**
  * Simple Java Utils

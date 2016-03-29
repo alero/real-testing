@@ -1,7 +1,7 @@
 package test.com.hrodberaht.inject.extension.transaction.example;
 
-import org.hrodberaht.inject.InjectContainer;
-import org.hrodberaht.inject.InjectionRegisterModule;
+import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.InjectionRegisterModule;
 
 /**
  * Injection Transaction Extension
@@ -11,7 +11,7 @@ import org.hrodberaht.inject.InjectionRegisterModule;
  * @version 1.0
  * @since 1.0
  */
-public class ModuleContainerForSimpleTests implements com.hrodberaht.inject.extension.transaction.junit.InjectionContainerCreator {
+public class ModuleContainerForSimpleTests implements com.hrodberaht.inject.extensions.transaction.junit.InjectionContainerCreator {
     public ModuleContainerForSimpleTests() {
     }
 

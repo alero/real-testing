@@ -1,9 +1,9 @@
-package com.hrodberaht.inject.extension.jsf;
+package com.hrodberaht.inject.extensions.jsf;
 
 import com.sun.faces.spi.InjectionProvider;
 import com.sun.faces.spi.InjectionProviderException;
 import com.sun.faces.vendor.WebContainerInjectionProvider;
-import org.hrodberaht.inject.InjectContainer;
+import org.hrodberaht.injection.InjectContainer;
 
 /**
  * Injection Extension Web

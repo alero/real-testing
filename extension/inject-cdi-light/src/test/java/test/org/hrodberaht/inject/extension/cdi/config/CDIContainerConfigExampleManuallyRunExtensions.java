@@ -1,7 +1,7 @@
 package test.org.hrodberaht.inject.extension.cdi.config;
 
-import org.hrodberaht.inject.InjectContainer;
-import org.hrodberaht.inject.extension.cdi.inner.InjectionRegisterScanCDI;
+import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.extensions.cdi.inner.InjectionRegisterScanCDI;
 
 import javax.sql.DataSource;
 

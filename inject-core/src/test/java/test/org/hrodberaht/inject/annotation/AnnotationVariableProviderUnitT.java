@@ -1,8 +1,8 @@
 package test.org.hrodberaht.inject.annotation;
 
-import org.hrodberaht.inject.InjectContainer;
-import org.hrodberaht.inject.InjectionRegisterModule;
-import org.hrodberaht.inject.register.RegistrationModuleAnnotation;
+import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.InjectionRegisterModule;
+import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.junit.Test;
 import test.org.hrodberaht.inject.testservices.annotated.Car;
 import test.org.hrodberaht.inject.testservices.annotated.SpareTire;

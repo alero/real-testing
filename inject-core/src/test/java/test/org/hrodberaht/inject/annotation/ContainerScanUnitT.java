@@ -14,12 +14,12 @@
 
 package test.org.hrodberaht.inject.annotation;
 
-import org.hrodberaht.inject.InjectContainer;
-import org.hrodberaht.inject.InjectionRegisterJava;
-import org.hrodberaht.inject.InjectionRegisterModule;
-import org.hrodberaht.inject.InjectionRegisterScan;
-import org.hrodberaht.inject.internal.exception.InjectRuntimeException;
-import org.hrodberaht.inject.register.RegistrationModuleAnnotationScanner;
+import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.InjectionRegisterJava;
+import org.hrodberaht.injection.InjectionRegisterModule;
+import org.hrodberaht.injection.InjectionRegisterScan;
+import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
+import org.hrodberaht.injection.register.RegistrationModuleAnnotationScanner;
 import org.junit.Test;
 import test.org.hrodberaht.inject.testservices.annotated.Car;
 import test.org.hrodberaht.inject.testservices.annotated.Volvo;

@@ -1,12 +1,12 @@
 package test.org.hrodberaht.inject.extension.cdi.config;
 
-import org.hrodberaht.inject.InjectContainer;
-import org.hrodberaht.inject.InjectionRegisterModule;
-import org.hrodberaht.inject.extension.cdi.CDIContainerConfigBase;
-import org.hrodberaht.inject.extension.cdi.cdiext.CDIExtensions;
-import org.hrodberaht.inject.extension.tdd.internal.DataSourceExecution;
-import org.hrodberaht.inject.extension.tdd.internal.ProxyResourceCreator;
-import org.hrodberaht.inject.spi.ResourceCreator;
+import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.InjectionRegisterModule;
+import org.hrodberaht.injection.extensions.cdi.CDIContainerConfigBase;
+import org.hrodberaht.injection.extensions.cdi.cdiext.CDIExtensions;
+import org.hrodberaht.injection.extensions.tdd.internal.DataSourceExecution;
+import org.hrodberaht.injection.extensions.tdd.internal.ProxyResourceCreator;
+import org.hrodberaht.injection.spi.ResourceCreator;
 
 /**
  * Created with IntelliJ IDEA.

@@ -15,10 +15,10 @@
 package test.org.hrodberaht.inject.annotation;
 
 
-import org.hrodberaht.inject.InjectContainer;
-import org.hrodberaht.inject.InjectionRegisterModule;
-import org.hrodberaht.inject.internal.annotation.InjectionFinder;
-import org.hrodberaht.inject.spi.module.CustomInjectionPointFinderModule;
+import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.InjectionRegisterModule;
+import org.hrodberaht.injection.internal.annotation.InjectionFinder;
+import org.hrodberaht.injection.spi.module.CustomInjectionPointFinderModule;
 import org.junit.Test;
 import test.org.hrodberaht.inject.testservices.annotated.Car;
 import test.org.hrodberaht.inject.testservices.annotated.Spare;

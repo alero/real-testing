@@ -1,6 +1,6 @@
 package test.org.hrodberaht.inject.testservices.annotated_extra;
 
-import org.hrodberaht.inject.annotation.VariableProvider;
+import org.hrodberaht.injection.annotation.VariableProvider;
 import test.org.hrodberaht.inject.testservices.annotated.Car;
 
 import javax.inject.Inject;

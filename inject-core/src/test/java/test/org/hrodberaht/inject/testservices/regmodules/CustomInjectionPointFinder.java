@@ -1,6 +1,6 @@
 package test.org.hrodberaht.inject.testservices.regmodules;
 
-import org.hrodberaht.inject.internal.annotation.DefaultInjectionPointFinder;
+import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
 import test.org.hrodberaht.inject.annotation.ExtendedResourceInjection;
 import test.org.hrodberaht.inject.testservices.annotated.Injected;
 import test.org.hrodberaht.inject.testservices.annotated.PostConstructInit;

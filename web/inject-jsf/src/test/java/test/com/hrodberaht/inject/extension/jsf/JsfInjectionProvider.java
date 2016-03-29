@@ -1,8 +1,8 @@
 package test.com.hrodberaht.inject.extension.jsf;
 
-import com.hrodberaht.inject.extension.jsf.JsfInjectionProviderBase;
-import org.hrodberaht.inject.InjectContainer;
-import org.hrodberaht.inject.InjectionRegisterJava;
+import com.hrodberaht.inject.extensions.jsf.JsfInjectionProviderBase;
+import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.InjectionRegisterJava;
 
 /**
  * Injection Extension Web

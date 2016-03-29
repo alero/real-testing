@@ -1,7 +1,7 @@
 package test.org.hrodberaht.inject.extension.ejbunit.demo.test;
 
-import org.hrodberaht.inject.extension.tdd.ContainerContext;
-import org.hrodberaht.inject.extension.tdd.JUnitRunner;
+import org.hrodberaht.injection.extensions.tdd.ContainerContext;
+import org.hrodberaht.injection.extensions.tdd.JUnitRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import test.org.hrodberaht.inject.extension.ejbunit.demo.model.Customer;

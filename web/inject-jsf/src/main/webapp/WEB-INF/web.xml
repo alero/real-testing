@@ -10,13 +10,13 @@
     </context-param>
 
     <context-param>
-        <param-name>com.hrodberaht.inject.extension.jsf.injectionContainer</param-name>
-        <param-value>com.hrodberaht.inject.extension.jsf.JsfInjectionProvider</param-value>
+        <param-name>com.hrodberaht.inject.extensions.jsf.injectionContainer</param-name>
+        <param-value>com.hrodberaht.inject.extensions.jsf.JsfInjectionProvider</param-value>
     </context-param>
 
     <context-param>
         <param-name>com.sun.faces.injectionProvider</param-name>
-        <param-value>com.hrodberaht.inject.extension.jsf.JsfInjectionProvider</param-value>
+        <param-value>com.hrodberaht.inject.extensions.jsf.JsfInjectionProvider</param-value>
     </context-param>
 
 

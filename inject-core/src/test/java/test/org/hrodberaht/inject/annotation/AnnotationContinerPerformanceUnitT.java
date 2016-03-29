@@ -16,9 +16,9 @@ package test.org.hrodberaht.inject.annotation;
 
 import org.atinject.tck.Tck;
 import org.atinject.tck.auto.Car;
-import org.hrodberaht.inject.InjectContainer;
-import org.hrodberaht.inject.internal.stats.Statistics;
-import org.hrodberaht.inject.register.InjectionRegister;
+import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.internal.stats.Statistics;
+import org.hrodberaht.injection.register.InjectionRegister;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

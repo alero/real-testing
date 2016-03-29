@@ -14,11 +14,11 @@
             <description>Session Bean</description>
             <display-name>Session Bean</display-name>
             <ejb-name>EJB2ServiceBean</ejb-name>
-            <home>test.org.hrodberaht.inject.extension.ejbunit.ejb2.service.EJB2ServiceHome</home>
-            <remote>test.org.hrodberaht.inject.extension.ejbunit.ejb2.service.EJB2ServiceRemote</remote>
-            <local-home>test.org.hrodberaht.inject.extension.ejbunit.ejb2.service.EJB2ServiceLocalHome</local-home>
-            <local>test.org.hrodberaht.inject.extension.ejbunit.ejb2.service.EJB2ServiceLocal</local>
-            <ejb-class>test.org.hrodberaht.inject.extension.ejbunit.ejb2.service.EJB2ServiceBean</ejb-class>
+            <home>test.org.hrodberaht.injection.extension.ejbunit.ejb2.service.EJB2ServiceHome</home>
+            <remote>test.org.hrodberaht.injection.extension.ejbunit.ejb2.service.EJB2ServiceRemote</remote>
+            <local-home>test.org.hrodberaht.injection.extension.ejbunit.ejb2.service.EJB2ServiceLocalHome</local-home>
+            <local>test.org.hrodberaht.injection.extension.ejbunit.ejb2.service.EJB2ServiceLocal</local>
+            <ejb-class>test.org.hrodberaht.injection.extension.ejbunit.ejb2.service.EJB2ServiceBean</ejb-class>
             <session-type>Stateless</session-type>
             <transaction-type>Container</transaction-type>
         </session>
@@ -27,9 +27,9 @@
             <description>Session Bean</description>
             <display-name>Session Bean</display-name>
             <ejb-name>EJB2InnerServiceBean</ejb-name>
-            <local-home>test.org.hrodberaht.inject.extension.ejbunit.ejb2.service.EJB2InnerServiceLocalHome</local-home>
-            <local>test.org.hrodberaht.inject.extension.ejbunit.ejb2.service.EJB2InnerServiceLocal</local>
-            <ejb-class>test.org.hrodberaht.inject.extension.ejbunit.ejb2.service.EJB2InnerServiceBean</ejb-class>
+            <local-home>test.org.hrodberaht.injection.extension.ejbunit.ejb2.service.EJB2InnerServiceLocalHome</local-home>
+            <local>test.org.hrodberaht.injection.extension.ejbunit.ejb2.service.EJB2InnerServiceLocal</local>
+            <ejb-class>test.org.hrodberaht.injection.extension.ejbunit.ejb2.service.EJB2InnerServiceBean</ejb-class>
             <session-type>Stateless</session-type>
             <transaction-type>Container</transaction-type>
         </session>

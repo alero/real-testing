@@ -1,11 +1,11 @@
 package test.com.hrodberaht.inject.extension.transaction;
 
-import com.hrodberaht.inject.extension.transaction.junit.InjectionContainerContext;
-import com.hrodberaht.inject.extension.transaction.junit.InjectionJUnitTestRunner;
-import com.hrodberaht.inject.extension.transaction.junit.TransactionDisabled;
-import com.hrodberaht.inject.extension.transaction.manager.impl.jpa.TransactionManagerJPA;
-import com.hrodberaht.inject.extension.transaction.manager.internal.TransactionHandlingError;
-import com.hrodberaht.inject.extension.transaction.manager.internal.TransactionLogging;
+import com.hrodberaht.inject.extensions.transaction.junit.InjectionContainerContext;
+import com.hrodberaht.inject.extensions.transaction.junit.InjectionJUnitTestRunner;
+import com.hrodberaht.inject.extensions.transaction.junit.TransactionDisabled;
+import com.hrodberaht.inject.extensions.transaction.manager.impl.jpa.TransactionManagerJPA;
+import com.hrodberaht.inject.extensions.transaction.manager.internal.TransactionHandlingError;
+import com.hrodberaht.inject.extensions.transaction.manager.internal.TransactionLogging;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;

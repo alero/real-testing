@@ -1,7 +1,7 @@
 package test.org.hrodberaht.inject.testservices.regmodules;
 
-import org.hrodberaht.inject.register.Overrides;
-import org.hrodberaht.inject.register.RegistrationModuleAnnotation;
+import org.hrodberaht.injection.register.Overrides;
+import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import test.org.hrodberaht.inject.testservices.annotated.Spare;
 import test.org.hrodberaht.inject.testservices.annotated.Tire;
 

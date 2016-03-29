@@ -14,14 +14,14 @@
 
 package test.org.hrodberaht.inject;
 
-import org.hrodberaht.inject.InjectContainer;
-import org.hrodberaht.inject.InjectionContainerManager;
-import org.hrodberaht.inject.InjectionRegisterJava;
-import org.hrodberaht.inject.InjectionRegisterModule;
-import org.hrodberaht.inject.ScopeContainer;
-import org.hrodberaht.inject.internal.exception.DuplicateRegistrationException;
-import org.hrodberaht.inject.internal.exception.InjectRuntimeException;
-import org.hrodberaht.inject.register.RegistrationModuleAnnotation;
+import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.InjectionContainerManager;
+import org.hrodberaht.injection.InjectionRegisterJava;
+import org.hrodberaht.injection.InjectionRegisterModule;
+import org.hrodberaht.injection.ScopeContainer;
+import org.hrodberaht.injection.internal.exception.DuplicateRegistrationException;
+import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
+import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.junit.Before;
 import org.junit.Test;
 import test.org.hrodberaht.inject.testservices.simple.AnyService;

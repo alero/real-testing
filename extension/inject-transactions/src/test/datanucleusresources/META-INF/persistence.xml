@@ -5,8 +5,8 @@
 
     <persistence-unit name="example-jpa" transaction-type="RESOURCE_LOCAL">
         <provider>org.datanucleus.jpa.PersistenceProviderImpl</provider>
-        <class>test.com.hrodberaht.inject.extension.transaction.example.Person</class>
-        <class>test.com.hrodberaht.inject.extension.transaction.example.Logging</class>
+        <class>test.com.hrodberaht.inject.extensions.transaction.example.Person</class>
+        <class>test.com.hrodberaht.inject.extensions.transaction.example.Logging</class>
         <properties>
             <property name="datanucleus.ConnectionURL" value="jdbc:hsqldb:mem:web-example"/>
             <property name="datanucleus.ConnectionUserName" value="sa"/>

@@ -2,8 +2,8 @@ package test.com.hrodberaht.inject.extension.jsf;
 
 import com.sun.faces.spi.InjectionProvider;
 import com.sun.faces.spi.InjectionProviderException;
-import org.hrodberaht.inject.InjectContainer;
-import org.hrodberaht.inject.InjectionRegisterJava;
+import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.InjectionRegisterJava;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -34,10 +34,10 @@ public class InjectionWebInContainerTest {
         registerJava.activateContainerJavaXInject();
         registerJava.register(ServiceInject.class, ServiceInjectBean.class);
         InjectInjectContainer container = registerJava.getInjectContainer();
-        com.hrodberaht.inject.extension.jsf.JsfInjectionProvider.setInjector(container);
+        com.hrodberaht.inject.extensions.jsf.JsfInjectionProvider.setInjector(container);
 
         // This is basically what JSF will do
-        InjectionProvider injectionProvider = new com.hrodberaht.inject.extension.jsf.JsfInjectionProvider();
+        InjectionProvider injectionProvider = new com.hrodberaht.inject.extensions.jsf.JsfInjectionProvider();
         WebInjectBean bean = new WebInjectBean();
         injectionProvider.inject(bean);
 

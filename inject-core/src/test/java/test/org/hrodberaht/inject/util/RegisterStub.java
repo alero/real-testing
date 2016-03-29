@@ -1,6 +1,6 @@
 package test.org.hrodberaht.inject.util;
 
-import org.hrodberaht.inject.InjectionRegisterScan;
+import org.hrodberaht.injection.InjectionRegisterScan;
 import test.org.hrodberaht.inject.testservices.annotated.Spare;
 import test.org.hrodberaht.inject.testservices.annotated.SpareTire;
 import test.org.hrodberaht.inject.testservices.annotated.Tire;

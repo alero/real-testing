@@ -14,7 +14,7 @@
 
 package test.org.hrodberaht.inject.testservices.annotated;
 
-import org.hrodberaht.inject.annotation.PostConstruct;
+import org.hrodberaht.injection.annotation.PostConstruct;
 
 import javax.inject.Inject;
 

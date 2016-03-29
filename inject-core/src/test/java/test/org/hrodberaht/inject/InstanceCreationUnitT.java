@@ -14,9 +14,9 @@
 
 package test.org.hrodberaht.inject;
 
-import org.hrodberaht.inject.internal.annotation.creator.InstanceCreator;
-import org.hrodberaht.inject.internal.annotation.creator.InstanceCreatorCGLIB;
-import org.hrodberaht.inject.internal.annotation.creator.InstanceCreatorDefault;
+import org.hrodberaht.injection.internal.annotation.creator.InstanceCreator;
+import org.hrodberaht.injection.internal.annotation.creator.InstanceCreatorCGLIB;
+import org.hrodberaht.injection.internal.annotation.creator.InstanceCreatorDefault;
 import org.junit.Test;
 import test.org.hrodberaht.inject.testservices.annotated.Car;
 import test.org.hrodberaht.inject.testservices.annotated.Tire;

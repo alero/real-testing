@@ -1,10 +1,10 @@
 package test.com.hrodberaht.inject.extension.transaction.example;
 
-import com.hrodberaht.inject.extension.jdbc.Insert;
-import com.hrodberaht.inject.extension.jdbc.InsertOrUpdater;
-import com.hrodberaht.inject.extension.jdbc.JDBCService;
-import com.hrodberaht.inject.extension.jdbc.RowIterator;
-import com.hrodberaht.inject.extension.jdbc.SQLDateUtil;
+import com.hrodberaht.inject.extensions.jdbc.Insert;
+import com.hrodberaht.inject.extensions.jdbc.InsertOrUpdater;
+import com.hrodberaht.inject.extensions.jdbc.JDBCService;
+import com.hrodberaht.inject.extensions.jdbc.RowIterator;
+import com.hrodberaht.inject.extensions.jdbc.SQLDateUtil;
 
 import javax.inject.Inject;
 import java.sql.ResultSet;

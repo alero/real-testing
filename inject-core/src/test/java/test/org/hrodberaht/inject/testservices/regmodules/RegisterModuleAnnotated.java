@@ -1,7 +1,7 @@
 package test.org.hrodberaht.inject.testservices.regmodules;
 
-import org.hrodberaht.inject.ScopeContainer;
-import org.hrodberaht.inject.register.RegistrationModuleAnnotation;
+import org.hrodberaht.injection.ScopeContainer;
+import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import test.org.hrodberaht.inject.testservices.annotated.Car;
 import test.org.hrodberaht.inject.testservices.annotated.Spare;
 import test.org.hrodberaht.inject.testservices.annotated.SpareTire;

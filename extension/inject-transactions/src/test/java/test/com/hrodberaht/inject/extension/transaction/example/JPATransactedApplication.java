@@ -1,8 +1,8 @@
 package test.com.hrodberaht.inject.extension.transaction.example;
 
-import com.hrodberaht.inject.extension.jdbc.JDBCService;
-import com.hrodberaht.inject.extension.jdbc.RowIterator;
-import com.hrodberaht.inject.extension.transaction.manager.NotTransactionJoined;
+import com.hrodberaht.inject.extensions.jdbc.JDBCService;
+import com.hrodberaht.inject.extensions.jdbc.RowIterator;
+import com.hrodberaht.inject.extensions.transaction.manager.NotTransactionJoined;
 
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;

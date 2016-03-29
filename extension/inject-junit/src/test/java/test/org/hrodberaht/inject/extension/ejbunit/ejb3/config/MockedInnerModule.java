@@ -1,6 +1,6 @@
 package test.org.hrodberaht.inject.extension.ejbunit.ejb3.config;
 
-import org.hrodberaht.inject.register.RegistrationModuleAnnotation;
+import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.mockito.Mockito;
 import test.org.hrodberaht.inject.extension.ejbunit.ejb3.service.EJB3InnerServiceInterface;
 

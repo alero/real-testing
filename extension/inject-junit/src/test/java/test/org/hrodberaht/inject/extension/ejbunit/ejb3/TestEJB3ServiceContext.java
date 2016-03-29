@@ -1,8 +1,8 @@
 package test.org.hrodberaht.inject.extension.ejbunit.ejb3;
 
-import org.hrodberaht.inject.extension.tdd.ContainerContext;
-import org.hrodberaht.inject.extension.tdd.JUnitRunner;
-import org.hrodberaht.inject.extension.tdd.util.ContainerLifeCycleTestUtil;
+import org.hrodberaht.injection.extensions.tdd.ContainerContext;
+import org.hrodberaht.injection.extensions.tdd.JUnitRunner;
+import org.hrodberaht.injection.extensions.tdd.util.ContainerLifeCycleTestUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;

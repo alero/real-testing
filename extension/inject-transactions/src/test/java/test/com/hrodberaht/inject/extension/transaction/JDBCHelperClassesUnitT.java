@@ -1,7 +1,7 @@
 package test.com.hrodberaht.inject.extension.transaction;
 
-import com.hrodberaht.inject.extension.transaction.junit.InjectionContainerContext;
-import com.hrodberaht.inject.extension.transaction.junit.InjectionJUnitTestRunner;
+import com.hrodberaht.inject.extensions.transaction.junit.InjectionContainerContext;
+import com.hrodberaht.inject.extensions.transaction.junit.InjectionJUnitTestRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import test.com.hrodberaht.inject.extension.transaction.example.AdvanceModel;

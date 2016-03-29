@@ -10,7 +10,7 @@
     </appender>
 
 
-    <logger name="org.hrodberaht.inject" additivity="false">
+    <logger name="org.hrodberaht.injection" additivity="false">
         <level value="INFO"/>
         <appender-ref ref="CONSOLE"/>
     </logger>

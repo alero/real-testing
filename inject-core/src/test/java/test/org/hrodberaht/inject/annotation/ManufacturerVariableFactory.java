@@ -1,6 +1,6 @@
 package test.org.hrodberaht.inject.annotation;
 
-import org.hrodberaht.inject.register.VariableInjectionFactory;
+import org.hrodberaht.injection.register.VariableInjectionFactory;
 import test.org.hrodberaht.inject.testservices.annotated.Car;
 import test.org.hrodberaht.inject.testservices.annotated.Volvo;
 import test.org.hrodberaht.inject.testservices.annotated.VolvoManufacturer;
