@@ -1,5 +1,6 @@
 package org.hrodberaht.injection.extensions.tdd.internal;
 
+import org.hrodberaht.injection.extensions.tdd.ejb.internal.InitialContextFactoryImpl;
 import org.hrodberaht.injection.spi.ResourceCreator;
 
 import javax.naming.Context;
@@ -71,7 +72,8 @@ public class ProxyResourceCreator implements ResourceCreator<EntityManager, Data
     }
 
     private void registerDataSourceInContext(String dataSourceName, DataSource dataSource) {
-        System.setProperty(Context.INITIAL_CONTEXT_FACTORY, "org.hrodberaht.inject.extension.tdd.ejb.internal.InitialContextFactoryImpl");
+        System.setProperty(Context.INITIAL_CONTEXT_FACTORY,
+                InitialContextFactoryImpl.class.getName());
         try {
             Context context = new InitialContext();
             context.bind(dataSourceName, dataSource);

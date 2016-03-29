@@ -1,1 +1,1 @@
-injection.extension.cdi.example.service.CDIExampleExtension
+org.hrodberaht.injection.extensions.cdi.example.service.CDIExampleExtension

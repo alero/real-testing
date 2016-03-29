@@ -11,6 +11,7 @@
     </parent>
 
     <artifactId>samples</artifactId>
+    <packaging>pom</packaging>
 
     <modules>
         <module>inject-common</module>

@@ -25,7 +25,7 @@ public class CDIContainerConfigExampleExternalResources extends TDDCDIContainerC
 
     @Override
     public InjectContainer createContainer() {
-        return createAutoScanContainer("org.hrodberaht.inject.extension.cdi.example.service");
+        return createAutoScanContainer("org.hrodberaht.injection.extensions.cdi.example.service");
     }
 
 

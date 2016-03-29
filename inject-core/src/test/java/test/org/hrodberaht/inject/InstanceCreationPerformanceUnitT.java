@@ -39,10 +39,10 @@ public class InstanceCreationPerformanceUnitT {
     @Test(timeout = 10000)
     public void testPerformance() throws InterruptedException, NoSuchMethodException {
 
-        // warmup
+        // warm-up
         runPerformanceTest(new InstanceCreatorCGLIB(), 10);
 
-        int iterations = 3000000;
+        int iterations = 300000;
 
         System.gc();
         Thread.sleep(100L);

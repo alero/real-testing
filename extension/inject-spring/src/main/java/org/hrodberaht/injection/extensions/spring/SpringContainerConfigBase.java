@@ -30,7 +30,6 @@ import java.util.Map;
  */
 public abstract class SpringContainerConfigBase extends ContainerConfigBase<InjectionRegisterScanBase> {
 
-    protected ResourceCreator resourceCreator = null;
     private boolean hasPersistenceContextInClassPath = true;
     private Map<String, BeanFactory> stringBeanFactoryMap = new HashMap<>();
 
@@ -43,6 +42,11 @@ public abstract class SpringContainerConfigBase extends ContainerConfigBase<Inje
 
     protected void addSpringConfig(String springConfig) {
 
+    }
+
+    @Override
+    protected ResourceCreator createResourceCreator() {
+        return new SpringResourceCreator();
     }
 
     protected void copyOriginalRegistryToActive() {

@@ -1,11 +1,7 @@
 package org.hrodberaht.injection.extensions.spring.config;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.ScopeContainer;
-import org.hrodberaht.injection.config.InjectionRegisterScanBase;
 import org.hrodberaht.injection.extensions.spring.SpringContainerConfigBase;
-import org.hrodberaht.injection.register.InjectionRegister;
-import org.hrodberaht.injection.spi.ResourceCreator;
 
 import javax.sql.DataSource;
 
@@ -35,44 +31,11 @@ public class SpringContainerConfigExample extends SpringContainerConfigBase {
 
 
     @Override
-    protected ResourceCreator createResourceCreator() {
-        return null;
-    }
-
-    @Override
     public InjectContainer createContainer() {
         return createAutoScanContainer("org.hrodberaht.inject.extension.spring.testservices.simple");
     }
 
-    @Override
-    protected void injectResources(Object serviceInstance) {
 
-    }
-
-    @Override
-    protected InjectionRegisterScanBase getScanner(InjectionRegister injectionRegister) {
-        return new InjectionRegisterScanBase(injectionRegister){
-            @Override
-            public boolean isInterfaceAnnotated(Class aClazz) {
-                return false;
-            }
-
-            @Override
-            public boolean isServiceAnnotated(Class aClazz) {
-                return false;
-            }
-
-            @Override
-            public ScopeContainer.Scope getScope(Class serviceClass) {
-                return null;
-            }
-
-            @Override
-            public InjectionRegisterScanBase clone() {
-                return null;
-            }
-        };
-    }
 
 
 }
