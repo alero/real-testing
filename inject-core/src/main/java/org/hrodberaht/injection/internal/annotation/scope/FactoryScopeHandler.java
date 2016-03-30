@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.internal.annotation.scope;
 
-import org.hrodberaht.injection.ScopeContainer;
+import org.hrodberaht.injection.internal.ScopeContainer;
 import org.hrodberaht.injection.register.InjectionFactory;
 
 /**

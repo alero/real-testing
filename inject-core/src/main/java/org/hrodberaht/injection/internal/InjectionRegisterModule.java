@@ -1,5 +1,6 @@
-package org.hrodberaht.injection;
+package org.hrodberaht.injection.internal;
 
+import org.hrodberaht.injection.Module;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.register.RegistrationModule;
 
@@ -56,5 +57,11 @@ public class InjectionRegisterModule extends InjectionRegisterBase<InjectionRegi
             throw new RuntimeException(e);
         }
         return registerModule;
+    }
+
+    public void fillModule(Module module) {
+        for(RegistrationModule registrationModule:registeredModules) {
+            module.putRegistrations(registrationModule.getRegistrationsList());
+        }
     }
 }

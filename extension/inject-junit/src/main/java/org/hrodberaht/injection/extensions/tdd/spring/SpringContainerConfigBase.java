@@ -1,9 +1,9 @@
 package org.hrodberaht.injection.extensions.tdd.spring;
 
-import org.hrodberaht.injection.InjectionRegisterModule;
 import org.hrodberaht.injection.config.InjectionRegisterScanBase;
 import org.hrodberaht.injection.extensions.tdd.internal.TDDContainerConfigBase;
 import org.hrodberaht.injection.extensions.tdd.spring.internal.InjectionRegisterScanSpring;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.spi.module.CustomInjectionPointFinderModule;

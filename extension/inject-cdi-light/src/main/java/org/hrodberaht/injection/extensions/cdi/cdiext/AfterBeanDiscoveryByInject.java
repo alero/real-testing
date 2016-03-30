@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.extensions.cdi.cdiext;
 
-import org.hrodberaht.injection.InjectionRegisterModule;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
 
 import javax.enterprise.context.spi.Context;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;

@@ -1,11 +1,11 @@
 package test.org.hrodberaht.inject.extension.cdi.config;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.InjectionRegisterModule;
 import org.hrodberaht.injection.extensions.cdi.CDIContainerConfigBase;
 import org.hrodberaht.injection.extensions.cdi.cdiext.CDIExtensions;
 import org.hrodberaht.injection.extensions.tdd.internal.DataSourceExecution;
 import org.hrodberaht.injection.extensions.tdd.internal.ProxyResourceCreator;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.spi.ResourceCreator;
 
 /**

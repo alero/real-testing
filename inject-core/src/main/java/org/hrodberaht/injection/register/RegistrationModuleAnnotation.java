@@ -6,9 +6,7 @@ import org.hrodberaht.injection.internal.annotation.creator.InstanceCreator;
 import org.hrodberaht.injection.register.internal.RegistrationExtended;
 import org.hrodberaht.injection.register.internal.RegistrationInstanceSimple;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Simple Java Utils
@@ -18,7 +16,7 @@ import java.util.Map;
  * @version 1.0
  * @since 1.0
  */
-public abstract class RegistrationModuleAnnotation implements RegistrationModule {
+public abstract class RegistrationModuleAnnotation implements RegistrationModule<RegistrationInstanceSimple> {
 
     private InjectionFinder injectionFinderImplementation;
     private InstanceCreator instanceCreatorImplementation;
@@ -59,6 +57,16 @@ public abstract class RegistrationModuleAnnotation implements RegistrationModule
 
     public Collection<RegistrationInstanceSimple> getRegistrations() {
         return registrations.values();
+    }
+
+    public List<RegistrationInstanceSimple> getRegistrationsList() {
+        return new ArrayList<>(registrations.values());
+    }
+
+    public void putRegistrations(List<RegistrationInstanceSimple> registrationList ) {
+        for(RegistrationInstanceSimple registrationInstanceSimple:registrationList){
+            registrations.put(registrationInstanceSimple, registrationInstanceSimple);
+        }
     }
 
     public abstract void registrations();

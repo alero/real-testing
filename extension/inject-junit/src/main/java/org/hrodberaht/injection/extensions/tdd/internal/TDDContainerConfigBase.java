@@ -1,10 +1,10 @@
 package org.hrodberaht.injection.extensions.tdd.internal;
 
-import org.hrodberaht.injection.InjectionContainerManager;
-import org.hrodberaht.injection.ScopeContainer;
 import org.hrodberaht.injection.config.InjectionRegisterScanBase;
 import org.hrodberaht.injection.config.jpa.JPAContainerConfigBase;
 import org.hrodberaht.injection.extensions.tdd.util.EntityManagerHolder;
+import org.hrodberaht.injection.internal.InjectionContainerManager;
+import org.hrodberaht.injection.internal.ScopeContainer;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.spi.ResourceCreator;
 

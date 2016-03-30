@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.config;
 
-import org.hrodberaht.injection.ScopeContainer;
+import org.hrodberaht.injection.internal.ScopeContainer;
 import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

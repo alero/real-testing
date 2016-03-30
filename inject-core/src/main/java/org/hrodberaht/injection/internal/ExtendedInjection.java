@@ -1,4 +1,4 @@
-package org.hrodberaht.injection;
+package org.hrodberaht.injection.internal;
 
 /**
  * Created with IntelliJ IDEA.

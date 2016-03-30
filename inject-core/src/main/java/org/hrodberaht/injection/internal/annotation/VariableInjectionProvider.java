@@ -14,8 +14,8 @@
 
 package org.hrodberaht.injection.internal.annotation;
 
-import org.hrodberaht.injection.InjectionContainerManager;
 import org.hrodberaht.injection.annotation.VariableProvider;
+import org.hrodberaht.injection.internal.InjectionContainerManager;
 import org.hrodberaht.injection.internal.InjectionKey;
 
 /**

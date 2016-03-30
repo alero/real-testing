@@ -16,8 +16,8 @@ package test.org.hrodberaht.inject.annotation;
 
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.InjectionRegisterModule;
-import org.hrodberaht.injection.InjectionRegisterScan;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.internal.InjectionRegisterScan;
 import org.hrodberaht.injection.internal.annotation.InjectionFinder;
 import org.hrodberaht.injection.internal.annotation.creator.InstanceCreator;
 import org.hrodberaht.injection.register.InjectionRegister;
@@ -25,16 +25,7 @@ import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.spi.module.CustomInjectionPointFinderModule;
 import org.hrodberaht.injection.spi.module.CustomInstanceCreatorModule;
 import org.junit.Test;
-import test.org.hrodberaht.inject.testservices.annotated.Car;
-import test.org.hrodberaht.inject.testservices.annotated.Spare;
-import test.org.hrodberaht.inject.testservices.annotated.SpareTire;
-import test.org.hrodberaht.inject.testservices.annotated.SpareVindShield;
-import test.org.hrodberaht.inject.testservices.annotated.SpecialSpareTire;
-import test.org.hrodberaht.inject.testservices.annotated.TestDriverManager;
-import test.org.hrodberaht.inject.testservices.annotated.Tire;
-import test.org.hrodberaht.inject.testservices.annotated.VindShield;
-import test.org.hrodberaht.inject.testservices.annotated.Volvo;
-import test.org.hrodberaht.inject.testservices.annotated.VolvoFactory;
+import test.org.hrodberaht.inject.testservices.annotated.*;
 import test.org.hrodberaht.inject.testservices.interfaces.TestingService;
 import test.org.hrodberaht.inject.testservices.interfaces.TestingServiceInner;
 import test.org.hrodberaht.inject.testservices.interfaces.TestingServiceInnerInterface;
@@ -45,10 +36,7 @@ import test.org.hrodberaht.inject.testservices.regmodules.RegisterModuleAnnotate
 
 import java.lang.reflect.InvocationTargetException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Simple Java Utils

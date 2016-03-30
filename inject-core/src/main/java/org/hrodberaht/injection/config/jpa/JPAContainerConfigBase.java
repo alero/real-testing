@@ -1,7 +1,7 @@
 package org.hrodberaht.injection.config.jpa;
 
-import org.hrodberaht.injection.InjectionRegisterModule;
 import org.hrodberaht.injection.config.ContainerConfigBase;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.internal.annotation.ReflectionUtils;
 import org.hrodberaht.injection.spi.ResourceCreator;
 

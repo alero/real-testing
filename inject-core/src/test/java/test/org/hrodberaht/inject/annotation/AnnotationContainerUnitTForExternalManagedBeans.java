@@ -16,22 +16,14 @@ package test.org.hrodberaht.inject.annotation;
 
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.InjectionRegisterModule;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.internal.annotation.InjectionFinder;
 import org.hrodberaht.injection.spi.module.CustomInjectionPointFinderModule;
 import org.junit.Test;
-import test.org.hrodberaht.inject.testservices.annotated.Car;
-import test.org.hrodberaht.inject.testservices.annotated.Spare;
-import test.org.hrodberaht.inject.testservices.annotated.SpareTire;
-import test.org.hrodberaht.inject.testservices.annotated.SpareVindShield;
-import test.org.hrodberaht.inject.testservices.annotated.Tire;
-import test.org.hrodberaht.inject.testservices.annotated.VindShield;
-import test.org.hrodberaht.inject.testservices.annotated.Volvo;
+import test.org.hrodberaht.inject.testservices.annotated.*;
 import test.org.hrodberaht.inject.testservices.regmodules.CustomInjectionPointFinder;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Simple Java Utils

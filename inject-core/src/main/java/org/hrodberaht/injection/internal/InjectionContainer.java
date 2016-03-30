@@ -14,8 +14,6 @@
 
 package org.hrodberaht.injection.internal;
 
-import org.hrodberaht.injection.InjectionContainerManager;
-
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 

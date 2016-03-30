@@ -1,7 +1,7 @@
 package org.hrodberaht.injection.register;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.InjectionContainerManager;
+import org.hrodberaht.injection.internal.InjectionContainerManager;
 
 import java.lang.annotation.Annotation;
 

@@ -1,8 +1,8 @@
 package org.hrodberaht.injection.extensions.cdi.inner;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.ScopeContainer;
 import org.hrodberaht.injection.config.InjectionRegisterScanBase;
+import org.hrodberaht.injection.internal.ScopeContainer;
 import org.hrodberaht.injection.register.InjectionRegister;
 
 /**

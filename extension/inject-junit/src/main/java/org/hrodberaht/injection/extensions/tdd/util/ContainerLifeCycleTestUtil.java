@@ -1,7 +1,7 @@
 package org.hrodberaht.injection.extensions.tdd.util;
 
-import org.hrodberaht.injection.InjectionContainerManager;
-import org.hrodberaht.injection.InjectionRegisterModule;
+import org.hrodberaht.injection.internal.InjectionContainerManager;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.register.RegistrationModule;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 

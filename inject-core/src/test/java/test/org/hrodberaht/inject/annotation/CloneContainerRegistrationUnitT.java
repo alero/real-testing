@@ -1,8 +1,8 @@
 package test.org.hrodberaht.inject.annotation;
 
-import org.hrodberaht.injection.InjectionRegisterJava;
-import org.hrodberaht.injection.InjectionRegisterModule;
-import org.hrodberaht.injection.InjectionRegisterScan;
+import org.hrodberaht.injection.internal.InjectionRegisterJava;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.internal.InjectionRegisterScan;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.junit.BeforeClass;
 import org.junit.Test;

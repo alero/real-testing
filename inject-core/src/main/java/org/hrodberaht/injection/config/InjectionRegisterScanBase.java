@@ -1,9 +1,9 @@
 package org.hrodberaht.injection.config;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.InjectionContainerManager;
-import org.hrodberaht.injection.InjectionRegisterModule;
-import org.hrodberaht.injection.ScopeContainer;
+import org.hrodberaht.injection.internal.InjectionContainerManager;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.internal.ScopeContainer;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.spi.InjectionRegisterScanInterface;

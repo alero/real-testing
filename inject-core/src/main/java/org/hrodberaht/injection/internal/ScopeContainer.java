@@ -1,4 +1,6 @@
-package org.hrodberaht.injection;
+package org.hrodberaht.injection.internal;
+
+import org.hrodberaht.injection.InjectContainer;
 
 /**
  * Simple Java Utils - Container

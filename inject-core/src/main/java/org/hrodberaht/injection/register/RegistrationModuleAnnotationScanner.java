@@ -1,7 +1,7 @@
 package org.hrodberaht.injection.register;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.InjectionRegisterScan;
+import org.hrodberaht.injection.internal.InjectionRegisterScan;
 import org.hrodberaht.injection.internal.annotation.InjectionMetaDataBase;
 
 /**

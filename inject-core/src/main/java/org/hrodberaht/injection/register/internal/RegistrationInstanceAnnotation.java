@@ -1,8 +1,8 @@
 package org.hrodberaht.injection.register.internal;
 
-import org.hrodberaht.injection.InjectionContainerManager;
-import org.hrodberaht.injection.ScopeContainer;
+import org.hrodberaht.injection.internal.InjectionContainerManager;
 import org.hrodberaht.injection.internal.InjectionKey;
+import org.hrodberaht.injection.internal.ScopeContainer;
 import org.hrodberaht.injection.register.InjectionFactory;
 import org.hrodberaht.injection.register.VariableInjectionFactory;
 

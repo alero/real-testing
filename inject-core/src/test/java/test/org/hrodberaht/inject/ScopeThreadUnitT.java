@@ -1,7 +1,7 @@
 package test.org.hrodberaht.inject;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.InjectionRegisterScan;
+import org.hrodberaht.injection.internal.InjectionRegisterScan;
 import org.junit.Before;
 import org.junit.Test;
 import test.org.hrodberaht.inject.testservices.annotated.Car;

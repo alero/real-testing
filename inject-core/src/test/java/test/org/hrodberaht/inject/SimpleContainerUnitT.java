@@ -15,10 +15,10 @@
 package test.org.hrodberaht.inject;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.InjectionContainerManager;
-import org.hrodberaht.injection.InjectionRegisterJava;
-import org.hrodberaht.injection.InjectionRegisterModule;
-import org.hrodberaht.injection.ScopeContainer;
+import org.hrodberaht.injection.internal.InjectionContainerManager;
+import org.hrodberaht.injection.internal.InjectionRegisterJava;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.internal.ScopeContainer;
 import org.hrodberaht.injection.internal.exception.DuplicateRegistrationException;
 import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;

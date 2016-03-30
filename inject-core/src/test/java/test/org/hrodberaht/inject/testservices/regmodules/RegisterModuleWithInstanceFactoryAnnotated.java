@@ -1,16 +1,9 @@
 package test.org.hrodberaht.inject.testservices.regmodules;
 
-import org.hrodberaht.injection.ScopeContainer;
+import org.hrodberaht.injection.internal.ScopeContainer;
 import org.hrodberaht.injection.internal.annotation.InjectionFinder;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
-import test.org.hrodberaht.inject.testservices.annotated.Car;
-import test.org.hrodberaht.inject.testservices.annotated.Spare;
-import test.org.hrodberaht.inject.testservices.annotated.SpareTire;
-import test.org.hrodberaht.inject.testservices.annotated.SpareVindShield;
-import test.org.hrodberaht.inject.testservices.annotated.TestDriver;
-import test.org.hrodberaht.inject.testservices.annotated.Tire;
-import test.org.hrodberaht.inject.testservices.annotated.VindShield;
-import test.org.hrodberaht.inject.testservices.annotated.Volvo;
+import test.org.hrodberaht.inject.testservices.annotated.*;
 
 /**
  * Simple Java Utils

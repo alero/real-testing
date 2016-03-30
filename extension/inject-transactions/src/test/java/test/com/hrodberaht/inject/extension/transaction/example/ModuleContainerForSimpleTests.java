@@ -1,7 +1,7 @@
 package test.com.hrodberaht.inject.extension.transaction.example;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.InjectionRegisterModule;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
 
 /**
  * Injection Transaction Extension

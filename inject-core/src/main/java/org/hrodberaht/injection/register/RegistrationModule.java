@@ -3,6 +3,7 @@ package org.hrodberaht.injection.register;
 import org.hrodberaht.injection.InjectContainer;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Simple Java Utils - Container
@@ -14,6 +15,8 @@ import java.util.Collection;
  */
 public interface RegistrationModule<T> {
     Collection<T> getRegistrations();
+
+    List<T> getRegistrationsList();
 
     void postRegistration(InjectContainer injectContainer);
 

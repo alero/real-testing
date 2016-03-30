@@ -14,7 +14,6 @@
 
 package org.hrodberaht.injection.internal;
 
-import org.hrodberaht.injection.InjectionContainerManager;
 import org.hrodberaht.injection.internal.annotation.InjectionMetaDataBase;
 import org.hrodberaht.injection.internal.annotation.ServiceRegistryForInjection;
 import org.hrodberaht.injection.internal.exception.InjectRuntimeException;

@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.internal.annotation.scope;
 
-import org.hrodberaht.injection.InjectionContainerManager;
+import org.hrodberaht.injection.internal.InjectionContainerManager;
 
 /**
  * Simple Java Utils - Container

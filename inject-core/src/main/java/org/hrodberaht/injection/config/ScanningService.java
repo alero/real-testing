@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.config;
 
-import org.hrodberaht.injection.ScopeContainer;
+import org.hrodberaht.injection.internal.ScopeContainer;
 
 /**
  * Created by alexbrob on 2016-03-01.

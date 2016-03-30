@@ -14,14 +14,10 @@
 
 package org.hrodberaht.injection.internal.annotation;
 
-import org.hrodberaht.injection.ScopeContainer;
 import org.hrodberaht.injection.annotation.VariableProvider;
 import org.hrodberaht.injection.internal.InjectionKey;
-import org.hrodberaht.injection.internal.annotation.scope.DefaultScopeHandler;
-import org.hrodberaht.injection.internal.annotation.scope.InheritableThreadScopeHandler;
-import org.hrodberaht.injection.internal.annotation.scope.ScopeHandler;
-import org.hrodberaht.injection.internal.annotation.scope.SingletonScopeHandler;
-import org.hrodberaht.injection.internal.annotation.scope.ThreadScopeHandler;
+import org.hrodberaht.injection.internal.ScopeContainer;
+import org.hrodberaht.injection.internal.annotation.scope.*;
 import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.scope.InheritableThreadScope;
 import org.hrodberaht.injection.scope.ThreadScope;

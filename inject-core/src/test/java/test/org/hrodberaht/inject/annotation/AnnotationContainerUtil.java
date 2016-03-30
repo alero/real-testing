@@ -14,8 +14,8 @@
 
 package test.org.hrodberaht.inject.annotation;
 
-import org.hrodberaht.injection.InjectionRegisterModule;
-import org.hrodberaht.injection.InjectionRegisterScan;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.internal.InjectionRegisterScan;
 import org.hrodberaht.injection.register.InjectionRegister;
 import test.org.hrodberaht.inject.testservices.annotated.SpareTire;
 import test.org.hrodberaht.inject.testservices.annotated.SpareVindShield;

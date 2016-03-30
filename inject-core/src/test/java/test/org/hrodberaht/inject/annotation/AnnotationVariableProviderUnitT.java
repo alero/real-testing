@@ -1,7 +1,7 @@
 package test.org.hrodberaht.inject.annotation;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.InjectionRegisterModule;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.junit.Test;
 import test.org.hrodberaht.inject.testservices.annotated.Car;
@@ -10,9 +10,7 @@ import test.org.hrodberaht.inject.testservices.annotated.SpareVindShield;
 import test.org.hrodberaht.inject.testservices.annotated_extra.CarWrapper;
 import test.org.hrodberaht.inject.testservices.annotated_extra.SaabManufacturer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Injection Extension JUnit

@@ -1,19 +1,15 @@
 package org.hrodberaht.injection.extensions.cdi.cdiext;
 
-import org.hrodberaht.injection.InjectionRegisterModule;
 import org.hrodberaht.injection.extensions.cdi.inner.FileScanningUtil;
 import org.hrodberaht.injection.extensions.cdi.inner.SimpleLogger;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.internal.annotation.ReflectionUtils;
 import org.hrodberaht.injection.spi.ContainerConfig;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

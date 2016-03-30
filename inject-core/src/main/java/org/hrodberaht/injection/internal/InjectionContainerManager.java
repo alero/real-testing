@@ -12,11 +12,9 @@
  *   ~ See the License for the specific language governing permissions and limitations under the License.
  */
 
-package org.hrodberaht.injection;
+package org.hrodberaht.injection.internal;
 
-import org.hrodberaht.injection.internal.InjectionContainer;
-import org.hrodberaht.injection.internal.InjectionKey;
-import org.hrodberaht.injection.internal.ServiceRegister;
+import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.internal.annotation.AnnotationInjectionContainer;
 import org.hrodberaht.injection.register.RegistrationModule;
 

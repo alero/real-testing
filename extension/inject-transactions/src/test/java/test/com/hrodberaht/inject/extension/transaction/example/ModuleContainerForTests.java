@@ -4,7 +4,7 @@ import com.hrodberaht.inject.extensions.transaction.junit.InjectionContainerCrea
 import com.hrodberaht.inject.extensions.transaction.junit.TransactionManagedTesting;
 import com.hrodberaht.inject.extensions.transaction.manager.JpaModule;
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.InjectionRegisterModule;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
 
 /**
  * Injection Transaction Extension

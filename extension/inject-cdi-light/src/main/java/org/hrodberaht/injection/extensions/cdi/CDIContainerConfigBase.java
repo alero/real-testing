@@ -1,13 +1,13 @@
 package org.hrodberaht.injection.extensions.cdi;
 
-import org.hrodberaht.injection.ExtendedAnnotationInjection;
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.InjectionContainerManager;
 import org.hrodberaht.injection.config.ContainerConfigBase;
 import org.hrodberaht.injection.config.InjectionRegisterScanBase;
 import org.hrodberaht.injection.extensions.cdi.cdiext.CDIExtensions;
 import org.hrodberaht.injection.extensions.cdi.inner.InjectionRegisterScanCDI;
 import org.hrodberaht.injection.extensions.cdi.inner.JSEResourceCreator;
+import org.hrodberaht.injection.internal.ExtendedAnnotationInjection;
+import org.hrodberaht.injection.internal.InjectionContainerManager;
 import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.internal.annotation.ReflectionUtils;
 import org.hrodberaht.injection.register.InjectionRegister;
