@@ -2,8 +2,8 @@ package org.hrodberaht.inject.extensions.junit.ejb2;
 
 import org.hrodberaht.inject.extensions.junit.ejb2.config.EJBContainerConfigExample;
 import org.hrodberaht.inject.extensions.junit.ejb2.service.EJB2ServiceBean;
-import org.hrodberaht.injection.extensions.tdd.ContainerContext;
-import org.hrodberaht.injection.extensions.tdd.JUnitRunner;
+import org.hrodberaht.injection.extensions.junit.ContainerContext;
+import org.hrodberaht.injection.extensions.junit.JUnitRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

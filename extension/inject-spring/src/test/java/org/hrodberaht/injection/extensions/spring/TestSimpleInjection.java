@@ -1,10 +1,10 @@
 package org.hrodberaht.injection.extensions.spring;
 
 
+import org.hrodberaht.injection.extensions.junit.ContainerContext;
+import org.hrodberaht.injection.extensions.junit.JUnitRunner;
 import org.hrodberaht.injection.extensions.spring.config.SpringContainerConfigExample;
 import org.hrodberaht.injection.extensions.spring.testservices.simple.AnyService;
-import org.hrodberaht.injection.extensions.tdd.ContainerContext;
-import org.hrodberaht.injection.extensions.tdd.JUnitRunner;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;

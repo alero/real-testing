@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.extensions.tdd.util;
+package org.hrodberaht.injection.extensions.junit.util;
 
 import org.hrodberaht.injection.internal.InjectionContainerManager;
 import org.hrodberaht.injection.internal.InjectionRegisterModule;

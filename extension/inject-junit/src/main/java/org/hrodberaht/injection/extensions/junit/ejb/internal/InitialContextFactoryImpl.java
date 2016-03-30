@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.extensions.tdd.ejb.internal;
+package org.hrodberaht.injection.extensions.junit.ejb.internal;
 
 import javax.naming.Context;
 import javax.naming.NamingException;

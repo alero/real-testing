@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.extensions.tdd.internal;
+package org.hrodberaht.injection.extensions.junit.internal;
 
 import java.util.ArrayList;
 import java.util.Collection;

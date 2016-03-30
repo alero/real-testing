@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.extensions.tdd.internal;
+package org.hrodberaht.injection.extensions.junit.internal;
 
 /**
  * Inject extension TDD
@@ -12,7 +12,7 @@ public class TDDLogger {
 
 
     public static void log(String message) {
-        if (System.getProperty("tdd.log") != null) {
+        if (System.getProperty("junit.log") != null) {
             System.out.println(message);
         }
     }

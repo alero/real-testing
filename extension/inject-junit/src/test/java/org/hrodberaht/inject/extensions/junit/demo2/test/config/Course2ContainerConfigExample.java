@@ -1,7 +1,7 @@
 package org.hrodberaht.inject.extensions.junit.demo2.test.config;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.extensions.tdd.ejb.TDDEJBContainerConfigBase;
+import org.hrodberaht.injection.extensions.junit.ejb.TDDEJBContainerConfigBase;
 
 import javax.sql.DataSource;
 

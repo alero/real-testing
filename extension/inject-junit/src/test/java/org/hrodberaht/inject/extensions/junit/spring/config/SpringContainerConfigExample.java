@@ -1,7 +1,7 @@
 package org.hrodberaht.inject.extensions.junit.spring.config;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.extensions.tdd.spring.SpringContainerConfigBase;
+import org.hrodberaht.injection.extensions.junit.spring.SpringContainerConfigBase;
 
 import javax.sql.DataSource;
 

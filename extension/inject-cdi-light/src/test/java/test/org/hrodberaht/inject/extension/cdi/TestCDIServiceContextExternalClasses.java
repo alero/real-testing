@@ -1,8 +1,8 @@
 package test.org.hrodberaht.inject.extension.cdi;
 
 import org.hrodberaht.injection.extensions.cdi.example.service.ExampleInterface;
-import org.hrodberaht.injection.extensions.tdd.ContainerContext;
-import org.hrodberaht.injection.extensions.tdd.JUnitRunner;
+import org.hrodberaht.injection.extensions.junit.ContainerContext;
+import org.hrodberaht.injection.extensions.junit.JUnitRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import test.org.hrodberaht.inject.extension.cdi.config.CDIContainerConfigExampleExternalResources;

@@ -5,9 +5,9 @@ import org.hrodberaht.inject.extensions.junit.ejb3.config.EJBContainerConfigExam
 import org.hrodberaht.inject.extensions.junit.ejb3.config.MockedInnerModule;
 import org.hrodberaht.inject.extensions.junit.ejb3.service.EJB3InnerServiceInterface;
 import org.hrodberaht.inject.extensions.junit.ejb3.service.EJB3ServiceInterface;
-import org.hrodberaht.injection.extensions.tdd.ContainerContext;
-import org.hrodberaht.injection.extensions.tdd.JUnitRunner;
-import org.hrodberaht.injection.extensions.tdd.util.ContainerLifeCycleTestUtil;
+import org.hrodberaht.injection.extensions.junit.ContainerContext;
+import org.hrodberaht.injection.extensions.junit.JUnitRunner;
+import org.hrodberaht.injection.extensions.junit.util.ContainerLifeCycleTestUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;

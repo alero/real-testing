@@ -3,9 +3,9 @@ package org.hrodberaht.inject.extensions.junit.demo.test;
 import org.hrodberaht.inject.extensions.junit.demo.model.Customer;
 import org.hrodberaht.inject.extensions.junit.demo.service.CustomerService;
 import org.hrodberaht.inject.extensions.junit.demo.test.config.CourseContainerConfigExample;
-import org.hrodberaht.injection.extensions.tdd.ContainerContext;
-import org.hrodberaht.injection.extensions.tdd.JUnitRunner;
-import org.hrodberaht.injection.extensions.tdd.util.JPATestUtil;
+import org.hrodberaht.injection.extensions.junit.ContainerContext;
+import org.hrodberaht.injection.extensions.junit.JUnitRunner;
+import org.hrodberaht.injection.extensions.junit.util.JPATestUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

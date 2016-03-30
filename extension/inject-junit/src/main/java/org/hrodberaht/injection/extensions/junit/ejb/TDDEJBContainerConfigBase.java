@@ -1,9 +1,9 @@
-package org.hrodberaht.injection.extensions.tdd.ejb;
+package org.hrodberaht.injection.extensions.junit.ejb;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.extensions.tdd.ejb.internal.InjectionRegisterScanEJB;
-import org.hrodberaht.injection.extensions.tdd.ejb.internal.SessionContextCreator;
-import org.hrodberaht.injection.extensions.tdd.internal.TDDContainerConfigBase;
+import org.hrodberaht.injection.extensions.junit.ejb.internal.InjectionRegisterScanEJB;
+import org.hrodberaht.injection.extensions.junit.ejb.internal.SessionContextCreator;
+import org.hrodberaht.injection.extensions.junit.internal.JunitContainerConfigBase;
 import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.register.InjectionRegister;
@@ -26,7 +26,7 @@ import java.util.HashMap;
  * @version 1.0
  * @since 1.0
  */
-public abstract class TDDEJBContainerConfigBase extends TDDContainerConfigBase<InjectionRegisterScanEJB> {
+public abstract class TDDEJBContainerConfigBase extends JunitContainerConfigBase<InjectionRegisterScanEJB> {
 
 
 

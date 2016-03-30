@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.extensions.tdd.util;
+package org.hrodberaht.injection.extensions.junit.util;
 
 /**
  * Unit Test JUnit (using @Inject)

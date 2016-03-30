@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.extensions.tdd.ejb.internal;
+package org.hrodberaht.injection.extensions.junit.ejb.internal;
 
 import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.config.InjectionRegisterScanBase;

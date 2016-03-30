@@ -1,8 +1,8 @@
-package org.hrodberaht.injection.extensions.tdd.internal;
+package org.hrodberaht.injection.extensions.junit.internal;
 
 import org.hrodberaht.injection.config.InjectionRegisterScanBase;
 import org.hrodberaht.injection.config.jpa.JPAContainerConfigBase;
-import org.hrodberaht.injection.extensions.tdd.util.EntityManagerHolder;
+import org.hrodberaht.injection.extensions.junit.util.EntityManagerHolder;
 import org.hrodberaht.injection.internal.InjectionContainerManager;
 import org.hrodberaht.injection.internal.ScopeContainer;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
@@ -13,7 +13,7 @@ import javax.persistence.EntityManager;
 /**
  * Created by alexbrob on 2016-03-01.
  */
-public abstract class TDDContainerConfigBase<T extends InjectionRegisterScanBase> extends JPAContainerConfigBase<T> {
+public abstract class JunitContainerConfigBase<T extends InjectionRegisterScanBase> extends JPAContainerConfigBase<T> {
 
     @Override
     protected ResourceCreator createResourceCreator() {

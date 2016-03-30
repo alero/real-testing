@@ -1,8 +1,8 @@
-package org.hrodberaht.injection.extensions.tdd.spring;
+package org.hrodberaht.injection.extensions.junit.spring;
 
 import org.hrodberaht.injection.config.InjectionRegisterScanBase;
-import org.hrodberaht.injection.extensions.tdd.internal.TDDContainerConfigBase;
-import org.hrodberaht.injection.extensions.tdd.spring.internal.InjectionRegisterScanSpring;
+import org.hrodberaht.injection.extensions.junit.internal.JunitContainerConfigBase;
+import org.hrodberaht.injection.extensions.junit.spring.internal.InjectionRegisterScanSpring;
 import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.register.InjectionRegister;
@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
  * @version 1.0
  * @since 1.0
  */
-public abstract class SpringContainerConfigBase extends TDDContainerConfigBase<InjectionRegisterScanSpring> {
+public abstract class SpringContainerConfigBase extends JunitContainerConfigBase<InjectionRegisterScanSpring> {
 
     protected SpringContainerConfigBase() {
 

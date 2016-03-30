@@ -1,7 +1,7 @@
 package org.hrodberaht.inject.extensions.junit.ejb2.config;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.extensions.tdd.ejb.TDDEJBContainerConfigBase;
+import org.hrodberaht.injection.extensions.junit.ejb.TDDEJBContainerConfigBase;
 
 /**
  * Injection Extension JUnit

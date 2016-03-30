@@ -1,7 +1,7 @@
-package org.hrodberaht.injection.extensions.tdd;
+package org.hrodberaht.injection.extensions.junit;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.extensions.tdd.internal.TransactionManager;
+import org.hrodberaht.injection.extensions.junit.internal.TransactionManager;
 import org.hrodberaht.injection.spi.ContainerConfig;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;

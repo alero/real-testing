@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.extensions.tdd.spring.internal;
+package org.hrodberaht.injection.extensions.junit.spring.internal;
 
 import org.hrodberaht.injection.config.InjectionRegisterScanBase;
 import org.hrodberaht.injection.internal.ScopeContainer;

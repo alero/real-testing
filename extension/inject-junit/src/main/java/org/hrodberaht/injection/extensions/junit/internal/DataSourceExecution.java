@@ -1,17 +1,11 @@
-package org.hrodberaht.injection.extensions.tdd.internal;
+package org.hrodberaht.injection.extensions.junit.internal;
 
 
 import org.hrodberaht.injection.config.JarUtil;
-import org.hrodberaht.injection.extensions.tdd.util.SimpleLogger;
+import org.hrodberaht.injection.extensions.junit.util.SimpleLogger;
 import org.hrodberaht.injection.spi.ResourceCreator;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;

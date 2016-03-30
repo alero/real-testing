@@ -2,8 +2,8 @@ package org.hrodberaht.inject.extensions.junit.demo2.test;
 
 import org.hrodberaht.inject.extensions.junit.demo2.service.UserService;
 import org.hrodberaht.inject.extensions.junit.demo2.test.config.Course2ContainerConfigExample;
-import org.hrodberaht.injection.extensions.tdd.ContainerContext;
-import org.hrodberaht.injection.extensions.tdd.JUnitRunner;
+import org.hrodberaht.injection.extensions.junit.ContainerContext;
+import org.hrodberaht.injection.extensions.junit.JUnitRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

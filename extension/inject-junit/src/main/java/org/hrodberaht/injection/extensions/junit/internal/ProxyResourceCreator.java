@@ -1,6 +1,6 @@
-package org.hrodberaht.injection.extensions.tdd.internal;
+package org.hrodberaht.injection.extensions.junit.internal;
 
-import org.hrodberaht.injection.extensions.tdd.ejb.internal.InitialContextFactoryImpl;
+import org.hrodberaht.injection.extensions.junit.ejb.internal.InitialContextFactoryImpl;
 import org.hrodberaht.injection.spi.ResourceCreator;
 
 import javax.naming.Context;

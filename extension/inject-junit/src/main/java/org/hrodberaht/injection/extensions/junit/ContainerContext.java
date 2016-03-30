@@ -1,12 +1,8 @@
-package org.hrodberaht.injection.extensions.tdd;
+package org.hrodberaht.injection.extensions.junit;
 
 import org.hrodberaht.injection.spi.ContainerConfig;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Inherited;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
 /**
  * Unit Test JUnit (using @Inject)

@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.extensions.tdd.internal;
+package org.hrodberaht.injection.extensions.junit.internal;
 
 import javax.persistence.EntityManager;
 import java.util.HashMap;
