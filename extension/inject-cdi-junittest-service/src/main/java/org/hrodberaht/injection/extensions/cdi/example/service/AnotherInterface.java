@@ -1,5 +1,8 @@
 package org.hrodberaht.injection.extensions.cdi.example.service;
 
+import javax.persistence.EntityManager;
+import javax.sql.DataSource;
+
 /**
  * Created with IntelliJ IDEA.
  * User: alexbrob
@@ -10,5 +13,7 @@ package org.hrodberaht.injection.extensions.cdi.example.service;
 public interface AnotherInterface {
 
     String what();
+    DataSource getDataSource();
+    EntityManager getEntityManager();
 
 }

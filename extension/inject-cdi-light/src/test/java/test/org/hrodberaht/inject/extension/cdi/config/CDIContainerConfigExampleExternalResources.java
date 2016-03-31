@@ -2,6 +2,7 @@ package test.org.hrodberaht.inject.extension.cdi.config;
 
 import org.hrodberaht.injection.InjectContainer;
 
+import javax.persistence.EntityManager;
 import javax.sql.DataSource;
 
 /**
@@ -16,10 +17,14 @@ public class CDIContainerConfigExampleExternalResources extends TDDCDIContainerC
 
     public CDIContainerConfigExampleExternalResources() {
 
-        String dataSourceName = "MyDataSource";
+        String dataSourceName = "ExampleDataSource";
+        String jpaName = "example-jpa";
         DataSource dataSource = createDataSource(dataSourceName);
         // Named resource
         addResource(dataSourceName, dataSource);
+
+        EntityManager entityManager = createEntityManager(jpaName, dataSourceName, dataSource);
+        addPersistenceContext(jpaName, entityManager);
 
     }
 

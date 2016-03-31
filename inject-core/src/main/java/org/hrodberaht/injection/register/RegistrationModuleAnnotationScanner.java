@@ -1,6 +1,7 @@
 package org.hrodberaht.injection.register;
 
 import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.config.InjectionRegisterScanBase;
 import org.hrodberaht.injection.internal.InjectionRegisterScan;
 import org.hrodberaht.injection.internal.annotation.InjectionMetaDataBase;
 
@@ -28,12 +29,16 @@ public abstract class RegistrationModuleAnnotationScanner extends RegistrationMo
     }
 
     public void scanAndRegister(String... packages) {
-        InjectionRegisterScan injectionRegisterScan = new InjectionRegisterScan();
+        InjectionRegisterScanBase injectionRegisterScan = getScanner();
         injectionRegisterScan.scanPackage(packages);
         mergeWith(injectionRegisterScan, this);
     }
 
-    private void mergeWith(InjectionRegisterScan injectionRegisterScan, RegistrationModuleAnnotationScanner registrationModuleAnnotationScanner) {
+    public InjectionRegisterScanBase getScanner() {
+        return new InjectionRegisterScan();
+    }
+
+    private void mergeWith(InjectionRegisterScanBase injectionRegisterScan, RegistrationModuleAnnotationScanner registrationModuleAnnotationScanner) {
         for(InjectionMetaDataBase serviceMetaData:injectionRegisterScan.getInnerContainer().getAnnotatedContainer().getInjectionMetaDataBaseCollection()){
             registrationModuleAnnotationScanner.register(
                     serviceMetaData.getServiceRegister().getService(),

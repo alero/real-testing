@@ -1,32 +1,22 @@
 package org.hrodberaht.injection.extensions.cdi;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.config.ContainerConfigBase;
 import org.hrodberaht.injection.config.InjectionRegisterScanBase;
+import org.hrodberaht.injection.config.jpa.JPAContainerConfigBase;
+import org.hrodberaht.injection.extensions.cdi.cdiext.ApplicationCDIExtensions;
 import org.hrodberaht.injection.extensions.cdi.cdiext.CDIExtensions;
 import org.hrodberaht.injection.extensions.cdi.inner.InjectionRegisterScanCDI;
 import org.hrodberaht.injection.extensions.cdi.inner.JSEResourceCreator;
-import org.hrodberaht.injection.internal.ExtendedAnnotationInjection;
-import org.hrodberaht.injection.internal.InjectionContainerManager;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
-import org.hrodberaht.injection.internal.annotation.ReflectionUtils;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.spi.ResourceCreator;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.ejb.EJB;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.sql.DataSource;
 import java.lang.reflect.Field;
-import java.lang.reflect.Member;
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Unit Test JUnit (using @Inject)
@@ -36,30 +26,58 @@ import java.util.Map;
  * @version 1.0
  * @since 1.0
  */
-public abstract class CDIContainerConfigBase extends ContainerConfigBase<InjectionRegisterScanBase> {
+public abstract class CDIContainerConfigBase extends JPAContainerConfigBase<InjectionRegisterScanBase> {
 
-
-    protected ResourceCreator resourceCreator = null;
-    private Map<String, EntityManager> entityManagers = null;
-    private boolean hasPersistenceContextInClassPath = true;
     private boolean annotationForEJB = true;
 
     private CDIExtensions cdiExtensions = createExtensionScanner();
     private DefaultInjectionPointFinder injectionFinder;
+
+    protected CDIContainerConfigBase() {
+        initInjectionPoint();
+    }
 
     protected CDIContainerConfigBase(ResourceCreator resourceCreator) {
         this.resourceCreator = resourceCreator;
         initInjectionPoint();
     }
 
+    public abstract InjectContainer createContainer();
 
-
-    protected CDIExtensions createExtensionScanner() {
-        return new CDIExtensions();
+    /**
+     * Will be removed before the 2.0 final release
+     * @param packageName
+     * @return the container
+     */
+    @Deprecated
+    protected InjectContainer createAutoScanContainer(String... packageName) {
+        InjectionRegisterModule combinedRegister = preScanModuleRegistration();
+        cdiExtensions.runBeforeBeanDiscovery(combinedRegister, this);
+        createAutoScanContainerRegister(packageName, combinedRegister);
+        cdiExtensions.runAfterBeanDiscovery(combinedRegister, this);
+        return activeRegister.getContainer();
     }
 
-    protected void copyOriginalRegistryToActive() {
-        activeRegister = originalRegister;
+    public void runBeforeBeanDiscovery(){
+        // null as active registry is important
+        // its before discovery nothing can be registered in the IoC Container, do not change this
+        cdiExtensions.runBeforeBeanDiscovery(null, this);
+    }
+
+    public void runAfterBeanDiscovery(){
+        cdiExtensions.runAfterBeanDiscovery(activeRegister, this);
+    }
+
+    public ResourceCreator getResourceCreator() {
+        return resourceCreator;
+    }
+
+    protected InjectionRegisterScanBase getScanner(InjectionRegister injectionRegister) {
+        return new InjectionRegisterScanCDI(injectionRegister);
+    }
+
+    protected CDIExtensions createExtensionScanner() {
+        return new ApplicationCDIExtensions();
     }
 
     @Override
@@ -67,41 +85,6 @@ public abstract class CDIContainerConfigBase extends ContainerConfigBase<Injecti
         return new JSEResourceCreator();
     }
 
-    protected InjectContainer createAutoScanContainerManuallyRunAfterBeanDiscovery(
-            RegistrationModuleAnnotation[] moduleAnnotation, String... packageName) {
-        cdiExtensions.runBeforeBeanDiscovery(originalRegister, this);
-        InjectionRegisterScanBase registerScan = getScanner(null);
-        if (moduleAnnotation != null) {
-            ((ExtendedAnnotationInjection) registerScan.getInjectContainer()).getAnnotatedContainer().register(
-                    (InjectionContainerManager) registerScan.getInjectContainer(), moduleAnnotation);
-        }
-        registerScan.scanPackage(packageName);
-        originalRegister = registerScan;
-        appendTypedResources();
-        copyOriginalRegistryToActive();
-        System.out.println("createAutoScanContainerManuallyRunAfterBeanDiscovery - " + originalRegister);
-        return activeRegister.getContainer();
-    }
-
-
-    protected InjectContainer createAutoScanContainerManuallyRunAfterBeanDiscovery(String... packageName) {
-        cdiExtensions.runBeforeBeanDiscovery(originalRegister, this);
-        InjectionRegisterScanBase registerScan = getScanner(null);
-        registerScan.scanPackage(packageName);
-        originalRegister = registerScan;
-        appendTypedResources();
-        copyOriginalRegistryToActive();
-        System.out.println("createAutoScanContainerManuallyRunAfterBeanDiscovery - " + originalRegister);
-        return activeRegister.getContainer();
-    }
-
-    protected InjectionRegisterScanBase getScanner(InjectionRegister injectionRegister) {
-        return new InjectionRegisterScanCDI(injectionRegister);
-    }
-
-    protected CDIContainerConfigBase() {
-        initInjectionPoint();
-    }
 
     protected void initInjectionPoint() {
         this.injectionFinder = new DefaultInjectionPointFinder(this) {
@@ -146,7 +129,7 @@ public abstract class CDIContainerConfigBase extends ContainerConfigBase<Injecti
         };
     }
 
-    protected void appendTypedResources() {
+    protected void appendTypedResources(InjectionRegisterModule registerModule) {
         originalRegister.register(new RegistrationModuleAnnotation() {
             @Override
             public void registrations() {
@@ -154,79 +137,12 @@ public abstract class CDIContainerConfigBase extends ContainerConfigBase<Injecti
             }
         });
 
-        if (typedResources != null) {
-            for (final Class typedResource : typedResources.keySet()) {
-                final Object value = typedResources.get(typedResource);
-                originalRegister.register(new RegistrationModuleAnnotation() {
-                    @Override
-                    public void registrations() {
-                        register(typedResource).withInstance(value);
-                    }
-                });
-            }
-        }
-    }
-
-    protected DataSource createDataSource(String dataSourceName) {
-        return resourceCreator.createDataSource(dataSourceName);
-    }
-
-    public Collection<EntityManager> getEntityManagers() {
-        return entityManagers.values();
-    }
-
-    public abstract InjectContainer createContainer();
-
-
-
-    protected void addPersistenceContext(String name, EntityManager entityManager) {
-        if (entityManagers == null) {
-            entityManagers = new HashMap<String, EntityManager>();
-        }
-        entityManagers.put(name, entityManager);
+        super.appendTypedResources(originalRegister);
     }
 
     protected void injectResources(Object serviceInstance) {
-
-        if (resources == null && entityManagers == null && typedResources == null) {
-            return;
-        }
-
-        List<Member> members = ReflectionUtils.findMembers(serviceInstance.getClass());
-        for (Member member : members) {
-            if (member instanceof Field) {
-                Field field = (Field) member;
-                if (field.isAnnotationPresent(Resource.class)) {
-                    Resource resource = field.getAnnotation(Resource.class);
-                    if (!injectNamedResource(serviceInstance, field, resource)) {
-                        injectTypedResource(serviceInstance, field);
-                    }
-                }
-                if (hasPersistenceContextInClassPath) {
-                    try {
-                        if (field.isAnnotationPresent(PersistenceContext.class)) {
-                            PersistenceContext resource = field.getAnnotation(PersistenceContext.class);
-                            injectEntityManager(serviceInstance, field, resource);
-                        }
-                    } catch (NoClassDefFoundError e) {
-                        hasPersistenceContextInClassPath = false;
-                    }
-                }
-            }
-        }
+        resourceInjection.injectResources(serviceInstance);
     }
 
-    private void injectEntityManager(Object serviceInstance, Field field, PersistenceContext resource) {
-        Object value = entityManagers.get(resource.unitName());
-        if (value == null && entityManagers.size() == 1 && "".equals(resource.unitName())) {
-            value = entityManagers.values().iterator().next();
-        }
-        injectResourceValue(serviceInstance, field, value);
-    }
-
-
-    public ResourceCreator getResourceCreator() {
-        return resourceCreator;
-    }
 
 }

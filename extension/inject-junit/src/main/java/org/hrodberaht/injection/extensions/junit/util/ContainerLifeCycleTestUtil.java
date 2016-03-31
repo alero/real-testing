@@ -18,8 +18,6 @@ import javax.inject.Inject;
  */
 public class ContainerLifeCycleTestUtil {
 
-
-
     @Inject
     private InjectionRegisterModule module;
 

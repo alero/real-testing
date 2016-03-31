@@ -5,6 +5,8 @@ import org.hrodberaht.injection.config.InjectionRegisterScanBase;
 import org.hrodberaht.injection.internal.ScopeContainer;
 import org.hrodberaht.injection.register.InjectionRegister;
 
+
+
 /**
  * Unit Test JUnit (using @Inject)
  *
@@ -63,7 +65,16 @@ public class InjectionRegisterScanCDI extends InjectionRegisterScanBase {
             } catch (NoClassDefFoundError e) {
                 hasStatelessAnnotationInClassPath = false;
             }
+            try {
+                if (serviceClass.isAnnotationPresent(javax.enterprise.context.ApplicationScoped.class)) {
+                    return ScopeContainer.Scope.SINGLETON;
+                }
+            } catch (NoClassDefFoundError e) {
+                hasStatelessAnnotationInClassPath = false;
+            }
         }
+
+
         if (hasSingletonAnnotationInClassPath) {
             try {
                 if (serviceClass.isAnnotationPresent(javax.inject.Singleton.class)) {

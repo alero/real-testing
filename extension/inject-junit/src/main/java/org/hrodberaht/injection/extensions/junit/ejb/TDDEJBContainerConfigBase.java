@@ -5,18 +5,11 @@ import org.hrodberaht.injection.extensions.junit.ejb.internal.InjectionRegisterS
 import org.hrodberaht.injection.extensions.junit.ejb.internal.SessionContextCreator;
 import org.hrodberaht.injection.extensions.junit.internal.JunitContainerConfigBase;
 import org.hrodberaht.injection.internal.InjectionRegisterModule;
-import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.register.InjectionRegister;
-import org.hrodberaht.injection.spi.module.CustomInjectionPointFinderModule;
 
-import javax.annotation.PostConstruct;
-import javax.ejb.EJB;
 import javax.ejb.SessionBean;
 import javax.persistence.EntityManager;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.rmi.RemoteException;
-import java.util.HashMap;
 
 /**
  * Unit Test JUnit (using @Inject)
@@ -28,46 +21,13 @@ import java.util.HashMap;
  */
 public abstract class TDDEJBContainerConfigBase extends JunitContainerConfigBase<InjectionRegisterScanEJB> {
 
-
-
     protected TDDEJBContainerConfigBase() {
     }
 
     @Override
     protected InjectionRegisterModule preScanModuleRegistration() {
-        InjectionRegisterModule injectionRegisterModule = new InjectionRegisterModule();
-        injectionRegisterModule.register(new CustomInjectionPointFinderModule(
-                new DefaultInjectionPointFinder(this) {
-                    @Override
-                    protected boolean hasInjectAnnotationOnMethod(Method method) {
-                        return super.hasInjectAnnotationOnMethod(method);
-                    }
-
-                    @Override
-                    protected boolean hasInjectAnnotationOnField(Field field) {
-                        return field.isAnnotationPresent(EJB.class) ||
-                                super.hasInjectAnnotationOnField(field);
-                    }
-
-                    @Override
-                    protected boolean hasPostConstructAnnotation(Method method) {
-                        return method.isAnnotationPresent(PostConstruct.class) ||
-                                super.hasPostConstructAnnotation(method);
-                    }
-
-                    @Override
-                    public void extendedInjection(Object service) {
-                        TDDEJBContainerConfigBase config = (TDDEJBContainerConfigBase) getContainerConfig();
-                        config.injectResources(service);
-                    }
-                }
-        ));
-
-
-        return injectionRegisterModule;
+        return EJBContainerConfigUtil.createEJBInjectionModule(this);
     }
-
-
 
     public abstract InjectContainer createContainer();
 
@@ -76,15 +36,9 @@ public abstract class TDDEJBContainerConfigBase extends JunitContainerConfigBase
         return new InjectionRegisterScanEJB(registerModule);
     }
 
-    protected void addPersistenceContext(String name, EntityManager entityManager) {
-        if (entityManagers == null) {
-            entityManagers = new HashMap<>();
-        }
-        entityManagers.put(name, entityManager);
+    public void addPersistenceContext(String name, EntityManager entityManager) {
+        resourceInjection.addPersistenceContext(name, entityManager);
     }
-
-
-
 
     protected void injectResources(Object serviceInstance) {
         if (serviceInstance instanceof SessionBean) {
@@ -96,7 +50,7 @@ public abstract class TDDEJBContainerConfigBase extends JunitContainerConfigBase
             }
         }
 
-        injectGenericResources(serviceInstance);
+        resourceInjection.injectResources(serviceInstance);
     }
 
 

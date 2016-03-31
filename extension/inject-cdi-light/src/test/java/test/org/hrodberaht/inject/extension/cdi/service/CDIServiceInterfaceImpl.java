@@ -1,5 +1,6 @@
 package test.org.hrodberaht.inject.extension.cdi.service;
 
+import javax.ejb.Stateless;
 import javax.inject.Inject;
 
 /**
@@ -9,6 +10,7 @@ import javax.inject.Inject;
  * Time: 09:35
  * To change this template use File | Settings | File Templates.
  */
+@Stateless
 public class CDIServiceInterfaceImpl implements CDIServiceInterface {
 
     @Inject

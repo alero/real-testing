@@ -20,6 +20,9 @@
         </license>
     </licenses>
 
+    <properties>
+        <hibernate-core-version>3.5.3-Final</hibernate-core-version>
+    </properties>
 
     <developers>
         <developer>
@@ -39,6 +42,16 @@
         <dependency>
             <groupId>javax.enterprise</groupId>
             <artifactId>cdi-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-annotations</artifactId>
+            <version>${hibernate-core-version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate-core-version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

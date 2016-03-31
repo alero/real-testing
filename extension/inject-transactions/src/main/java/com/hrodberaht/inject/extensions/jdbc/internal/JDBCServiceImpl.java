@@ -1,22 +1,11 @@
 package com.hrodberaht.inject.extensions.jdbc.internal;
 
-import com.hrodberaht.inject.extensions.jdbc.Insert;
-import com.hrodberaht.inject.extensions.jdbc.InsertOrUpdater;
-import com.hrodberaht.inject.extensions.jdbc.JDBCService;
-import com.hrodberaht.inject.extensions.jdbc.RowIterator;
-import com.hrodberaht.inject.extensions.jdbc.SQLDateUtil;
+import com.hrodberaht.inject.extensions.jdbc.*;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.math.BigDecimal;
-import java.sql.Blob;
-import java.sql.Clob;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
@@ -99,10 +88,11 @@ public class JDBCServiceImpl implements JDBCService {
         } else if (argument instanceof java.util.Date) {
             if (argument instanceof java.sql.Date) {
                 pstmt.setDate(argumentOrder, (java.sql.Date) argument);
-            }
-            if (argument instanceof Timestamp) {
+            }else if (argument instanceof Timestamp) {
                 pstmt.setTimestamp(argumentOrder, (java.sql.Timestamp) argument);
-            } else {
+            } else if(argument instanceof java.sql.Time) {
+                pstmt.setTime(argumentOrder, (java.sql.Time) argument);
+            }else {
                 pstmt.setDate(argumentOrder, new java.sql.Date(((Date) argument).getTime()));
             }
         } else if (argument instanceof Calendar) {

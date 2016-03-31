@@ -27,7 +27,6 @@ public abstract class SpringContainerConfigBase extends JunitContainerConfigBase
 
     }
 
-    @Override
     protected InjectionRegisterModule preScanModuleRegistration() {
         InjectionRegisterModule injectionRegisterModule = new InjectionRegisterModule();
         injectionRegisterModule.register(new CustomInjectionPointFinderModule(new DefaultInjectionPointFinder(this) {
@@ -59,15 +58,12 @@ public abstract class SpringContainerConfigBase extends JunitContainerConfigBase
         return injectionRegisterModule;
     }
 
-    @Override
     protected InjectionRegisterScanBase getScanner(InjectionRegister injectionRegister) {
         return new InjectionRegisterScanSpring(injectionRegister);
     }
 
-
     @Override
     protected void injectResources(Object serviceInstance) {
-
-        injectGenericResources(serviceInstance);
+        resourceInjection.injectResources(serviceInstance);
     }
 }

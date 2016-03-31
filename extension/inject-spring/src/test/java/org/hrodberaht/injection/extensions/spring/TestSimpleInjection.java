@@ -22,10 +22,9 @@ public class TestSimpleInjection {
     @Inject
     private AnyService anyService;
 
-
-
     @Test
     public void testWired() throws Exception {
+        anyService.doStuff();
         Collection collection = anyService.getStuff();
         Assert.assertEquals(collection.size(), 1);
     }

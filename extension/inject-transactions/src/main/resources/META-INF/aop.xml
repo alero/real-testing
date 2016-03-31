@@ -7,7 +7,7 @@
 
     </aspects>
     <weaver options="-verbose -Xset:weaveJavaxPackages=true">
-        <include within="test.com.hrodberaht.inject.extensions.transaction.example.*"/>
+        <include within="test.com.hrodberaht.inject.extension.transaction.example.*"/>
     </weaver>
 
 </aspectj>

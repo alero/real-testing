@@ -1,22 +1,9 @@
 package org.hrodberaht.injection;
 
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
-
 /**
- * Created by alexbrob on 2016-03-29.
+ * Created by alexbrob on 2016-03-30.
  */
-public class InjectionRegistry {
-
-    private InjectContainer injectionContainer;
-    private InjectionRegisterModule injectionRegisterModule = new InjectionRegisterModule();
-
-    public InjectionRegistry register(Module module) {
-        injectionRegisterModule.register(module);
-        injectionContainer = injectionRegisterModule.getContainer();
-        return this;
-    }
-
-    public InjectContainer getContainer() {
-        return injectionContainer;
-    }
+public interface InjectionRegistry<T extends Module> {
+    InjectContainer getContainer();
+    T getModule();
 }

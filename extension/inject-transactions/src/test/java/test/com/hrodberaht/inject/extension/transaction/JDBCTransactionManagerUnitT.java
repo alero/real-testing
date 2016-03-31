@@ -30,7 +30,8 @@ import static org.junit.Assert.assertEquals;
  * @since 1.0
  *        <p/>
  *        To run these tests with load time weaving add the weaver to the JRE like this.
- *        -javaagent:"C:\Users\alexbrob\.m2\repository\org\aspectj\aspectjweaver\1.7.1\aspectjweaver-1.7.1.jar"
+ *        -javaagent:"C:\Users\alexbrob\.m2\repository\org\aspectj\aspectjweaver\1.8.3\aspectjweaver-1.8.3.jar"
+ *        -javaagent:${settings.localRepository}\org\aspectj\aspectjweaver\1.8.3\aspectjweaver-1.8.3.jar
  */
 @InjectionContainerContext(ModuleContainerForJDBCTests.class)
 @RunWith(InjectionJUnitTestRunner.class)

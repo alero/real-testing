@@ -9,6 +9,7 @@ import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.spi.ResourceCreator;
 
 import javax.persistence.EntityManager;
+import java.util.Collection;
 
 /**
  * Created by alexbrob on 2016-03-01.
@@ -46,15 +47,18 @@ public abstract class JunitContainerConfigBase<T extends InjectionRegisterScanBa
     }
 
     private void addSingletonActiveEntityManagers() {
-        activeRegister.register(new RegistrationModuleAnnotation() {
-                                    @Override
-                                    public void registrations() {
-                                        register(EntityManagerHolder.class)
-                                                .scopeAs(ScopeContainer.Scope.SINGLETON)
-                                                .registerTypeAs(InjectionContainerManager.RegisterType.FINAL)
-                                                .withInstance(new EntityManagerHolder(getEntityManagers()));
+        Collection<EntityManager> entityManagers = getEntityManagers();
+        if(entityManagers != null) {
+            activeRegister.register(new RegistrationModuleAnnotation() {
+                                        @Override
+                                        public void registrations() {
+                                            register(EntityManagerHolder.class)
+                                                    .scopeAs(ScopeContainer.Scope.SINGLETON)
+                                                    .registerTypeAs(InjectionContainerManager.RegisterType.FINAL)
+                                                    .withInstance(new EntityManagerHolder(entityManagers));
+                                        }
                                     }
-                                }
-        );
+            );
+        }
     }
 }

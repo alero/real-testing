@@ -61,7 +61,6 @@
             <groupId>org.hrodberaht.inject</groupId>
             <artifactId>inject-core</artifactId>
             <version>${project.version}</version>
-            <scope>provided</scope>
         </dependency>
 
         <!-- TODO resolve this dependency on the TDD extension from the CDI extension, needs a common module probably

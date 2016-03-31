@@ -38,6 +38,7 @@ public class ProxyResourceCreator implements ResourceCreator<EntityManager, Data
             DataSourceProxy dataSourceProxy = new DataSourceProxy(dbName);
             DATASOURCES.put(dbName, dataSourceProxy);
             localResources.putDataSource(dbName, dataSourceProxy);
+            registerDataSourceInContext(dbName, dataSourceProxy);
             TDDLogger.log("Created dataSourceProxy " + dataSourceProxy);
             return dataSourceProxy;
         }

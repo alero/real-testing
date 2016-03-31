@@ -14,6 +14,7 @@ import org.hrodberaht.injection.extensions.junit.ejb.TDDEJBContainerConfigBase;
 public class EJBContainerConfigExample extends TDDEJBContainerConfigBase {
 
     public EJBContainerConfigExample() {
+
         String dataSourceName = "DataSource";
         if (!hasDataSource(dataSourceName)) {
             addResource(dataSourceName, createDataSource(dataSourceName));

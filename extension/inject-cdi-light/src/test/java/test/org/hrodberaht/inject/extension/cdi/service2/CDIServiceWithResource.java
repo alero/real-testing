@@ -4,6 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 /**
@@ -13,6 +14,7 @@ import javax.sql.DataSource;
  * Time: 08:36
  * To change this template use File | Settings | File Templates.
  */
+@Singleton
 public class CDIServiceWithResource {
 
     @Resource(name = "MyDataSource")

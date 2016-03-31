@@ -1,11 +1,8 @@
 package test.org.hrodberaht.inject.extension.cdi.config;
 
-import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.extensions.cdi.CDIContainerConfigBase;
-import org.hrodberaht.injection.extensions.cdi.cdiext.CDIExtensions;
 import org.hrodberaht.injection.extensions.junit.internal.DataSourceExecution;
 import org.hrodberaht.injection.extensions.junit.internal.ProxyResourceCreator;
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.spi.ResourceCreator;
 
 /**
@@ -17,28 +14,16 @@ import org.hrodberaht.injection.spi.ResourceCreator;
  */
 public abstract class TDDCDIContainerConfigBase extends CDIContainerConfigBase {
 
-    private CDIExtensions cdiExtensions = new CDIExtensions();
+    public TDDCDIContainerConfigBase(ResourceCreator resourceCreator) {
+        super(resourceCreator);
+    }
 
     public TDDCDIContainerConfigBase() {
         initiateInjectionCDI();
-        //  InjectionPointFinder.setInjectionFinder(finder);
     }
 
     private void initiateInjectionCDI() {
         resourceCreator = new ProxyResourceCreator();
-
-    }
-
-    protected InjectContainer createAutoScanContainer(String... packageName) {
-        InjectionRegisterModule combinedRegister = preScanModuleRegistration();
-        cdiExtensions.runBeforeBeanDiscovery(combinedRegister, this);
-        createAutoScanContainerRegister(packageName, combinedRegister);
-        cdiExtensions.runAfterBeanDiscovery(combinedRegister, this);
-        return activeRegister.getContainer();
-    }
-
-    public TDDCDIContainerConfigBase(ResourceCreator resourceCreator) {
-        super(resourceCreator);
     }
 
     public void addSQLSchemas(String schemaName, String packageBase) {

@@ -1,7 +1,7 @@
 package test.org.hrodberaht.inject.annotation;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.InjectionRegistry;
+import org.hrodberaht.injection.InjectionRegistryPlain;
 import org.hrodberaht.injection.Module;
 import org.hrodberaht.injection.stream.InjectionRegistryStream;
 import org.junit.Test;
@@ -47,7 +47,7 @@ public class InjectionRegisterUnitT {
         };
 
         InjectContainer injectionContainer =
-                new InjectionRegistry()
+                new InjectionRegistryPlain()
                 .register(largeScanModule)
                 .register(scanModule)
                 .getContainer();
@@ -94,7 +94,7 @@ public class InjectionRegisterUnitT {
                         .scan(() -> "test.org.hrodberaht.inject.testservices.interfaces")
                         .getModule();
 
-        InjectContainer injectionContainer =new InjectionRegistry()
+        InjectContainer injectionContainer =new InjectionRegistryPlain()
                 .register(moduleOne)
                 .register(moduleTwo)
                 .getContainer();

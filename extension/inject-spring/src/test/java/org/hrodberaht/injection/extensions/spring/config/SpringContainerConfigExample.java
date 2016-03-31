@@ -3,8 +3,6 @@ package org.hrodberaht.injection.extensions.spring.config;
 import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.extensions.spring.SpringContainerConfigBase;
 
-import javax.sql.DataSource;
-
 /**
  * Unit Test JUnit (using @Inject)
  *
@@ -20,19 +18,17 @@ public class SpringContainerConfigExample extends SpringContainerConfigBase {
         // Adding the spring config, will automate the resource registration to also be done to the spring config
         addSpringConfig("/META-INF/spring-config.xml");
 
-        String dataSourceName = "MyDataSource";
+        /*String dataSourceName = "MyDataSource";
         DataSource dataSource = createDataSource(dataSourceName);
         // Named resource
         addResource(dataSourceName, dataSource);
-
+        */
 
     }
 
-
-
     @Override
     public InjectContainer createContainer() {
-        return createAutoScanContainer("org.hrodberaht.inject.extension.spring.testservices.simple");
+        return createAutoScanContainer("org.hrodberaht.injection.extensions.spring.testservices.simple");
     }
 
 

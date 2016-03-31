@@ -35,7 +35,6 @@ public class SpringResourceCreator implements ResourceCreator<EntityManager, Dat
         DataSource dataSource = dataSources.get(dataSourceName);
         if (dataSource == null) {
             try {
-
                 dataSource = (DataSource) ctx.lookup(dataSourceName);
             } catch (NamingException e) {
                 throw new RuntimeException(e);

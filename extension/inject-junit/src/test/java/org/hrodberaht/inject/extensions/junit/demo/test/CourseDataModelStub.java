@@ -17,7 +17,6 @@ public class CourseDataModelStub {
 
     private static final AtomicLong aLong = new AtomicLong(0L);
 
-
     public static Customer createCustomer() {
         Customer customer = new Customer();
         customer.setId(aLong.incrementAndGet());
