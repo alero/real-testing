@@ -25,7 +25,7 @@ public class SpringContainerConfigExample extends SpringContainerConfigBase {
 
     @Override
     public InjectContainer createContainer() {
-        return createAutoScanContainer("org.hrodberaht.inject.extensions.junit.spring.service");
+        return createAutoScanContainer("org.hrodberaht.injectMethod.extensions.junit.spring.service");
     }
 
 

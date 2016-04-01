@@ -106,8 +106,6 @@ public class JDBCServiceImpl implements JDBCService {
             pstmt.setDouble(argumentOrder, (Double) argument);
         } else if (argument instanceof Float) {
             pstmt.setFloat(argumentOrder, (Float) argument);
-        } else if (argument instanceof Float) {
-            pstmt.setFloat(argumentOrder, (Float) argument);
         } else if (argument instanceof Clob) {
             pstmt.setClob(argumentOrder, (Clob) argument);
         } else if (argument instanceof Blob) {

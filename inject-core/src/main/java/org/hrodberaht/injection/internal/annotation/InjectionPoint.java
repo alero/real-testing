@@ -44,6 +44,16 @@ public class InjectionPoint {
     private Method method;
     private Boolean accessible = null;
 
+    public InjectionPoint(Field field) {
+        type = InjectionPointType.FIELD;
+        this.field = field;
+    }
+
+    public InjectionPoint(Method method) {
+        type = InjectionPointType.METHOD;
+        this.method = method;
+    }
+
     public InjectionPoint(Field field, AnnotationInjection annotationInjection) {
         type = InjectionPointType.FIELD;
         this.field = field;
@@ -69,7 +79,7 @@ public class InjectionPoint {
         invokeField(service, serviceDependencies);
     }
 
-    public void inject(Object service, Object... serviceDependencies) {
+    public void injectMethod(Object service, Object... serviceDependencies) {
         invokeMethod(service, serviceDependencies);
     }
 

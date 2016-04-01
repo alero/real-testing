@@ -227,7 +227,7 @@ public class AnnotationInjection {
                     serviceDependencies[i] = serviceDependence;
                     i++;
                 }
-                injectionPoint.inject(service, serviceDependencies);
+                injectionPoint.injectMethod(service, serviceDependencies);
             }
         }
     }
@@ -325,8 +325,8 @@ public class AnnotationInjection {
                 //  serviceDependencies[i] = serviceDependence;
                 //i++;
             //}
-            injectionFinder.extendedInjection(service); // inject services that are pre-created
-            injectionPoint.inject(service, serviceDependencies);
+            injectionFinder.extendedInjection(service); // injectMethod services that are pre-created
+            injectionPoint.injectMethod(service, serviceDependencies);
         } */
     }
 

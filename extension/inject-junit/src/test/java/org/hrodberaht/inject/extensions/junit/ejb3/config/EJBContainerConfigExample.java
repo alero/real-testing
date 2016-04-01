@@ -36,7 +36,7 @@ public class EJBContainerConfigExample extends TDDEJBContainerConfigBase {
 
     @Override
     public InjectContainer createContainer() {
-        return createAutoScanContainer("org.hrodberaht.inject.extensions.junit.ejb3.service");
+        return createAutoScanContainer("org.hrodberaht.injectMethod.extensions.junit.ejb3.service");
     }
 
 

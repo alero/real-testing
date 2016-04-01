@@ -1,7 +1,11 @@
 package org.hrodberaht.injection.extensions.spring.config;
 
 import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.extensions.junit.internal.ProxyResourceCreator;
 import org.hrodberaht.injection.extensions.spring.SpringContainerConfigBase;
+import org.hrodberaht.injection.spi.ResourceCreator;
+
+import javax.sql.DataSource;
 
 /**
  * Unit Test JUnit (using @Inject)
@@ -15,14 +19,14 @@ public class SpringContainerConfigExample extends SpringContainerConfigBase {
 
     public SpringContainerConfigExample() {
 
-        // Adding the spring config, will automate the resource registration to also be done to the spring config
-        addSpringConfig("/META-INF/spring-config.xml");
-
-        /*String dataSourceName = "MyDataSource";
+        String dataSourceName = "jdbc/MyDataSource";
         DataSource dataSource = createDataSource(dataSourceName);
         // Named resource
         addResource(dataSourceName, dataSource);
-        */
+        // Adding the spring config, will automate the resource registration to also be done to the spring config
+        loadSpringConfig("/META-INF/spring-config.xml");
+
+
 
     }
 
@@ -31,7 +35,8 @@ public class SpringContainerConfigExample extends SpringContainerConfigBase {
         return createAutoScanContainer("org.hrodberaht.injection.extensions.spring.testservices.simple");
     }
 
-
-
-
+    @Override
+    protected ResourceCreator createResourceCreator() {
+        return new ProxyResourceCreator();
+    }
 }

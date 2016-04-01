@@ -3,29 +3,33 @@ package org.hrodberaht.injection.extensions.spring.testservices.spring;
 import org.hrodberaht.injection.extensions.spring.instance.SpringInject;
 import org.hrodberaht.injection.extensions.spring.testservices.simple.AnyServiceInner;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
-
-import javax.sql.DataSource;
 
 /**
  * Created by alexbrob on 2016-03-29.
  */
-@Component
-public class SpringBean {
+@Component (value = "SpringBeanInnerNamed")
+public class SpringBeanInner {
 
-    @SpringInject
     private AnyServiceInner anyServiceInner;
 
     @Autowired
-    @Qualifier("MyDataSource")
-    private DataSource dataSource;
+    private SpringBeanInner2 springBeanInner2;
 
     public String getName(){
-        return "SpringBeanName";
+        return "SpringBeanInnerName";
     }
 
     public AnyServiceInner getAnyServiceInner() {
         return anyServiceInner;
+    }
+
+    @SpringInject
+    public void setAnyServiceInner(AnyServiceInner anyServiceInner) {
+        this.anyServiceInner = anyServiceInner;
+    }
+
+    public SpringBeanInner2 getSpringBeanInner2() {
+        return springBeanInner2;
     }
 }

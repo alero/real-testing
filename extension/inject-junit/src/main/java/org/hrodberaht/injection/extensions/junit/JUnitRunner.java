@@ -98,7 +98,7 @@ public class JUnitRunner extends BlockJUnit4ClassRunner {
     @Override
     protected Object createTest() throws Exception {
         Object testInstance = super.createTest();
-        // The active container will automatically inject all normal dependencies and resources
+        // The active container will automatically injectMethod all normal dependencies and resources
         activeContainer.injectDependencies(testInstance);
         return testInstance;
     }

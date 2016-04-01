@@ -125,7 +125,7 @@ public class AnnotationContainerUnitT {
 
         // The regular (default/basic) registration
         InjectionRegisterScan registerScan = new InjectionRegisterScan();
-        registerScan.scanPackage("test.org.hrodberaht.inject.testservices.annotated");
+        registerScan.scanPackage("test.org.hrodberaht.injectMethod.testservices.annotated");
         InjectionRegisterModule registerJava = new InjectionRegisterModule(registerScan);
         // The override (of a default) registration
         registerJava.register(new RegisterModuleAnnotated());

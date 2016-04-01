@@ -36,7 +36,7 @@ public class CDIContainerConfigExampleForJSEResourceCreator extends TDDCDIContai
 
     @Override
     public InjectContainer createContainer() {
-        return createAutoScanContainer("test.org.hrodberaht.inject.extension.cdi.service2");
+        return createAutoScanContainer("test.org.hrodberaht.injectMethod.extension.cdi.service2");
     }
 
 

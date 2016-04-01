@@ -13,6 +13,7 @@ package org.hrodberaht.injection.extensions.spring.testservices.simple;/*
  */
 
 import org.hrodberaht.injection.extensions.spring.testservices.spring.SpringBean;
+import org.hrodberaht.injection.extensions.spring.testservices.spring.SpringBeanInner;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -26,11 +27,13 @@ import java.util.Collection;
  * @since 1.0
  */
 
-public class AnyServiceDoSomethingImpl implements AnyService {
+public class AnyServiceDoSomethingImpl {
 
 
     @Autowired
     private SpringBean springBean;
+
+    private SpringBeanInner springBeanInner;
 
     private Collection<String> collection = new ArrayList<String>();
 
@@ -44,5 +47,14 @@ public class AnyServiceDoSomethingImpl implements AnyService {
 
     public SpringBean getSpringBean() {
         return springBean;
+    }
+
+    public SpringBeanInner getSpringBeanInner() {
+        return springBeanInner;
+    }
+
+    @Autowired
+    public void setSpringBeanInner(SpringBeanInner springBeanInner) {
+        this.springBeanInner = springBeanInner;
     }
 }

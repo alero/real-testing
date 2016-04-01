@@ -3,15 +3,18 @@ package org.hrodberaht.injection.extensions.spring;
 import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.config.InjectionRegisterScanBase;
 import org.hrodberaht.injection.config.jpa.JPAContainerConfigBase;
-import org.hrodberaht.injection.internal.ExtendedAnnotationInjection;
-import org.hrodberaht.injection.internal.InjectionContainerManager;
+import org.hrodberaht.injection.extensions.spring.instance.SpringBeanInjector;
+import org.hrodberaht.injection.extensions.spring.instance.SpringInject;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.register.InjectionRegister;
-import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.spi.ResourceCreator;
-import org.springframework.beans.factory.BeanFactory;
+import org.hrodberaht.injection.spi.module.CustomInjectionPointFinderModule;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * Unit Test JUnit (using @Inject)
@@ -23,14 +26,50 @@ import java.util.Map;
  */
 public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<InjectionRegisterScanBase> {
 
-    private Map<String, BeanFactory> stringBeanFactoryMap = new HashMap<>();
+
+    private ApplicationContext context;
+    private SpringBeanInjector springBeanInjector;
 
     protected SpringContainerConfigBase(ResourceCreator resourceCreator) {
         this.resourceCreator = resourceCreator;
     }
 
-    protected void addSpringConfig(String springConfig) {
+    protected SpringContainerConfigBase() {
+    }
 
+    public void loadSpringConfig(String springConfig){
+        context = new ClassPathXmlApplicationContext("/META-INF/container-spring-config.xml", springConfig){
+
+        };
+        springBeanInjector = new SpringBeanInjector(context);
+    }
+
+    protected InjectionRegisterModule preScanModuleRegistration() {
+        InjectionRegisterModule injectionRegisterModule = new InjectionRegisterModule();
+        injectionRegisterModule.register(new CustomInjectionPointFinderModule(new DefaultInjectionPointFinder(this) {
+            @Override
+            public void extendedInjection(Object service) {
+                SpringContainerConfigBase config = (SpringContainerConfigBase) getContainerConfig();
+                config.injectResources(service);
+                config.injectSpringBeans(service);
+            }
+
+            @Override
+            protected boolean hasInjectAnnotationOnField(Field field) {
+                return field.isAnnotationPresent(SpringInject.class) || super.hasInjectAnnotationOnField(field);
+            }
+
+            @Override
+            protected boolean hasInjectAnnotationOnMethod(Method method) {
+                return method.isAnnotationPresent(SpringInject.class) || super.hasInjectAnnotationOnMethod(method);
+            }
+        }
+        ));
+        return injectionRegisterModule;
+    }
+
+    private void injectSpringBeans(Object serviceObject) {
+        springBeanInjector.inject(serviceObject, getActiveContainer());
     }
 
     @Override
@@ -38,49 +77,11 @@ public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<I
         return new SpringResourceCreator();
     }
 
-    protected void copyOriginalRegistryToActive() {
-        activeRegister = originalRegister;
-    }
-
-
-    protected InjectContainer createAutoScanContainerManuallyRunAfterBeanDiscovery(
-            RegistrationModuleAnnotation[] moduleAnnotation, String... packageName) {
-        InjectionRegisterScanBase registerScan = getScanner(null);
-        if (moduleAnnotation != null) {
-            ((ExtendedAnnotationInjection) registerScan.getInjectContainer())
-                    .getAnnotatedContainer().register(
-                        (InjectionContainerManager) registerScan.getInjectContainer(), moduleAnnotation
-            );
-        }
-        registerScan.scanPackage(packageName);
-        originalRegister = registerScan;
-        appendTypedResources(originalRegister);
-        copyOriginalRegistryToActive();
-        System.out.println("createAutoScanContainerManuallyRunAfterBeanDiscovery - " + originalRegister);
-        return activeRegister.getContainer();
-    }
-
-
-    protected InjectContainer createAutoScanContainerManuallyRunAfterBeanDiscovery(String... packageName) {
-        InjectionRegisterScanBase registerScan = getScanner(null);
-        registerScan.scanPackage(packageName);
-        originalRegister = registerScan;
-        appendTypedResources(originalRegister);
-        copyOriginalRegistryToActive();
-        System.out.println("createAutoScanContainerManuallyRunAfterBeanDiscovery - " + originalRegister);
-        return activeRegister.getContainer();
-    }
-
     protected InjectionRegisterScanBase getScanner(InjectionRegister injectionRegister) {
         return new InjectionRegisterScanSpring(injectionRegister);
     }
 
-    protected SpringContainerConfigBase() {
-
-    }
-
     public abstract InjectContainer createContainer();
-
 
     public ResourceCreator getResourceCreator() {
         return resourceCreator;

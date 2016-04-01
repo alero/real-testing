@@ -12,7 +12,7 @@ public class SimpleLogger {
     private static boolean enabled = false;
 
     static {
-        if ("enabled".equals(System.getProperty("inject.cdi-ext.logger"))) {
+        if ("enabled".equals(System.getProperty("injectMethod.cdi-ext.logger"))) {
             enabled = true;
         }
     }

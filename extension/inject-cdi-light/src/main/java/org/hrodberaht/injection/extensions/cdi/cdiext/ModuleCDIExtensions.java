@@ -66,7 +66,7 @@ public class ModuleCDIExtensions implements CDIExtensions{
             try {
                 methodClassHolder.getMethod().setAccessible(true);
                 Object instance = methodClassHolder.getaClass().newInstance();
-                // Not possible to inject dependencies before the container is built
+                // Not possible to injectMethod dependencies before the container is built
                 // register.getInjectContainer().injectDependencies(instance);
                 if (methodClassHolder.getMethod().getParameterTypes().length == 1) {
                     methodClassHolder.getMethod().invoke(instance, inject);
@@ -88,7 +88,7 @@ public class ModuleCDIExtensions implements CDIExtensions{
         throw new IllegalAccessError("modular cdi extension loader not implemented yet");
         /*
         try {
-            String extensionFileName = "javax.enterprise.inject.spi.Extension";
+            String extensionFileName = "javax.enterprise.injectMethod.spi.Extension";
             Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources("META-INF/services/" + extensionFileName);
             for (URL resource; resources.hasMoreElements(); ) {
                 resource = resources.nextElement();

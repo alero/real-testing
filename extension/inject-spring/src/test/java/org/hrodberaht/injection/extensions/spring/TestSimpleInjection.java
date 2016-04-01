@@ -3,14 +3,17 @@ package org.hrodberaht.injection.extensions.spring;
 
 import org.hrodberaht.injection.extensions.junit.ContainerContext;
 import org.hrodberaht.injection.extensions.junit.JUnitRunner;
+import org.hrodberaht.injection.extensions.junit.util.ContainerLifeCycleTestUtil;
 import org.hrodberaht.injection.extensions.spring.config.SpringContainerConfigExample;
-import org.hrodberaht.injection.extensions.spring.testservices.simple.AnyService;
+import org.hrodberaht.injection.extensions.spring.testservices.simple.AnyServiceDoSomethingImpl;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import java.util.Collection;
+
+import static org.junit.Assert.assertNotNull;
 
 /**
  * Created by alexbrob on 2016-02-25.
@@ -20,12 +23,31 @@ import java.util.Collection;
 public class TestSimpleInjection {
 
     @Inject
-    private AnyService anyService;
+    private AnyServiceDoSomethingImpl anyService;
+
+    @Inject
+    private ContainerLifeCycleTestUtil containerLifeCycleTestUtil;
 
     @Test
     public void testWired() throws Exception {
         anyService.doStuff();
         Collection collection = anyService.getStuff();
         Assert.assertEquals(collection.size(), 1);
+    }
+
+    @Test
+    public void testSpringWired() throws Exception {
+
+        anyService.doStuff();
+        Collection collection = anyService.getStuff();
+        Assert.assertEquals(collection.size(), 1);
+
+        assertNotNull(containerLifeCycleTestUtil.getService(AnyServiceDoSomethingImpl.class).getSpringBean());
+
+        assertNotNull(containerLifeCycleTestUtil.getService(AnyServiceDoSomethingImpl.class).getSpringBeanInner());
+
+        assertNotNull(containerLifeCycleTestUtil.getService(AnyServiceDoSomethingImpl.class).getSpringBeanInner().getSpringBeanInner2());
+
+        assertNotNull(containerLifeCycleTestUtil.getService(AnyServiceDoSomethingImpl.class).getSpringBeanInner().getAnyServiceInner());
     }
 }

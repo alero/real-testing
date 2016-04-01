@@ -25,7 +25,7 @@ public class CDIContainerConfigExample extends TDDCDIContainerConfigBase {
 
     @Override
     public InjectContainer createContainer() {
-        return createAutoScanContainer("test.org.hrodberaht.inject.extension.cdi.service");
+        return createAutoScanContainer("test.org.hrodberaht.injectMethod.extension.cdi.service");
     }
 
 

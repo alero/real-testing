@@ -141,7 +141,7 @@ public class InjectionJUnitTestRunner extends BlockJUnit4ClassRunner {
     }
 
     private void injectTransactionHandler() {
-        if(System.getProperty("inject.transactionManager.junitregistration") == null){
+        if(System.getProperty("injectMethod.transactionManager.junitregistration") == null){
             try{
                 TransactionManagerUtil.registerTransactionManager(theContainer);
             }catch (InjectRuntimeException ignore){

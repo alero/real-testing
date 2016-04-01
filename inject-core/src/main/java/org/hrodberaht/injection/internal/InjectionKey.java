@@ -17,7 +17,7 @@ public class InjectionKey {
     private Class<? extends Annotation> annotation;
     private String name;
     private Class serviceDefinition;
-    // is the service a javax.inject.Provider
+    // is the service a javax.injectMethod.Provider
     private boolean provider = false;
     private int hashCode;
 

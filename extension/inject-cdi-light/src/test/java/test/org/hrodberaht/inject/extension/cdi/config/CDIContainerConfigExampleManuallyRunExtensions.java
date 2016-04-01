@@ -38,10 +38,10 @@ public class CDIContainerConfigExampleManuallyRunExtensions extends TDDCDIContai
     @Override
     public InjectContainer createContainer() {
         InjectionRegisterScanCDI serviceModule = new InjectionRegisterScanCDI();
-        serviceModule.scanPackage("test.org.hrodberaht.inject.extension.cdi.service");
+        serviceModule.scanPackage("test.org.hrodberaht.injectMethod.extension.cdi.service");
 
         /*InjectContainer injectContainer = createAutoScanContainerManuallyRunAfterBeanDiscovery(
-                new RegistrationModuleAnnotation[]{serviceModule}, "test.org.hrodberaht.inject.extension.cdi.service2");
+                new RegistrationModuleAnnotation[]{serviceModule}, "test.org.hrodberaht.injectMethod.extension.cdi.service2");
         return injectContainer;
                 */
 
