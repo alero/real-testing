@@ -60,7 +60,7 @@ public class CloneContainerRegistrationUnitT implements PerformanceTests {
     @Test
     public void testCloneSingletonService() throws Exception {
         InjectionRegisterScan registerJava = new InjectionRegisterScan();
-        registerJava.scanPackage("test.org.hrodberaht.injectMethod.testservices.annotated");
+        registerJava.scanPackage("test.org.hrodberaht.inject.testservices.annotated");
 
         CarCreatorSingleton carCreatorSingleton = registerJava.getInjectContainer().get(CarCreatorSingleton.class);
 

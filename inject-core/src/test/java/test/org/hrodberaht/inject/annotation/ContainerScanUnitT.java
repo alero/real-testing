@@ -135,9 +135,9 @@ public class ContainerScanUnitT {
         } catch (InjectRuntimeException e) {
             /*assertEquals(
                     "Found two Implementations " +
-                            "\"class test.org.hrodberaht.injectMethod.testservices.simple.AnyServiceDoSomethingImpl\"" +
-                            ", \"class test.org.hrodberaht.injectMethod.testservices.simple.AnyServiceDoNothingImpl\" " +
-                            "matching the Interface \"interface test.org.hrodberaht.injectMethod.testservices.simple.AnyService\"" +
+                            "\"class test.org.hrodberaht.inject.testservices.simple.AnyServiceDoSomethingImpl\"" +
+                            ", \"class test.org.hrodberaht.inject.testservices.simple.AnyServiceDoNothingImpl\" " +
+                            "matching the Interface \"interface test.org.hrodberaht.inject.testservices.simple.AnyService\"" +
                             ". This normally occurs when scanning implementations and can be corrected " +
                             " by manually registering one of them to the Interface"
                     , e.getMessage());
@@ -152,7 +152,7 @@ public class ContainerScanUnitT {
 
 
         InjectionRegisterScan register = new InjectionRegisterScan();
-        register.scanPackage("test.org.hrodberaht.injectMethod.testservices.simple");
+        register.scanPackage("test.org.hrodberaht.inject.testservices.simple");
 
         InjectContainer container = register.getContainer();
         try{

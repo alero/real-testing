@@ -28,7 +28,7 @@ public class Course2ContainerConfigExample extends TDDEJBContainerConfigBase {
 
     @Override
     public InjectContainer createContainer() {
-        return createAutoScanContainer("org.hrodberaht.injectMethod.extensions.junit.demo2.service");
+        return createAutoScanContainer("org.hrodberaht.inject.extensions.junit.demo2.service");
     }
 
 }

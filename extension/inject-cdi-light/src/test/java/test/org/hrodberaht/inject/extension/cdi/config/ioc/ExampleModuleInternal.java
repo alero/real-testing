@@ -15,7 +15,7 @@ public class ExampleModuleInternal {
 
     public ExampleModuleInternal(CDIContainerConfigBase configBase) {
         module =  new CDIInjectionRegistryStream(configBase)
-                .scan(() -> "test.org.hrodberaht.injectMethod.extension.cdi.service2")
+                .scan(() -> "test.org.hrodberaht.inject.extension.cdi.service2")
                 .resource(e -> {
                         e.createDataSource(DATASOURCE);
                     }
