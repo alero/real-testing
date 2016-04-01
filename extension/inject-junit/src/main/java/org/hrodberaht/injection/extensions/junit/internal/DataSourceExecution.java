@@ -165,7 +165,9 @@ public class DataSourceExecution {
                 throw new IllegalAccessError("schemaName:" + schemaName + " does not exist ");
             }
             Connection connection = dataSourceProxy.getConnection();
-            pstmt = connection.prepareStatement("create table " + testPackageName + initiatedTableName + " (  control_it integer)");
+            initiatedTableName = cleanedName(initiatedTableName);
+            testPackageName = cleanedName(testPackageName);
+            pstmt = connection.prepareStatement("create table " + testPackageName + initiatedTableName + " (  control_it integer )");
             pstmt.execute();
             dataSourceProxy.commitDataSource();
             return false;
@@ -181,6 +183,10 @@ public class DataSourceExecution {
             }
 
         }
+    }
+
+    private String cleanedName(String schemaName) {
+        return schemaName.replaceAll("/", "");
     }
 
 

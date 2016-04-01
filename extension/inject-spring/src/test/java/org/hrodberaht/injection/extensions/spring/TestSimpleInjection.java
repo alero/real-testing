@@ -6,13 +6,13 @@ import org.hrodberaht.injection.extensions.junit.JUnitRunner;
 import org.hrodberaht.injection.extensions.junit.util.ContainerLifeCycleTestUtil;
 import org.hrodberaht.injection.extensions.spring.config.SpringContainerConfigExample;
 import org.hrodberaht.injection.extensions.spring.testservices.simple.AnyServiceDoSomethingImpl;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 import java.util.Collection;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -32,7 +32,7 @@ public class TestSimpleInjection {
     public void testWired() throws Exception {
         anyService.doStuff();
         Collection collection = anyService.getStuff();
-        Assert.assertEquals(collection.size(), 1);
+        assertEquals(collection.size(), 1);
     }
 
     @Test
@@ -40,14 +40,28 @@ public class TestSimpleInjection {
 
         anyService.doStuff();
         Collection collection = anyService.getStuff();
-        Assert.assertEquals(collection.size(), 1);
+        assertEquals(collection.size(), 1);
 
         assertNotNull(containerLifeCycleTestUtil.getService(AnyServiceDoSomethingImpl.class).getSpringBean());
+
+        assertNotNull(containerLifeCycleTestUtil.getService(AnyServiceDoSomethingImpl.class).getSpringBean().getAnyServiceInner());
 
         assertNotNull(containerLifeCycleTestUtil.getService(AnyServiceDoSomethingImpl.class).getSpringBeanInner());
 
         assertNotNull(containerLifeCycleTestUtil.getService(AnyServiceDoSomethingImpl.class).getSpringBeanInner().getSpringBeanInner2());
 
         assertNotNull(containerLifeCycleTestUtil.getService(AnyServiceDoSomethingImpl.class).getSpringBeanInner().getAnyServiceInner());
+    }
+
+    @Test
+    public void testSpringDataSource() throws Exception {
+
+        anyService.doStuff();
+        Collection collection = anyService.getStuff();
+        assertEquals(collection.size(), 1);
+
+        assertEquals("dude", anyService.getSpringBean().getNameFromDB());
+        assertEquals("SpringBeanName", anyService.getSpringBean().getName());
+
     }
 }

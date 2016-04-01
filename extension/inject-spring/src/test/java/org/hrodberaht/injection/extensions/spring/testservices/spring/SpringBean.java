@@ -4,8 +4,10 @@ import org.hrodberaht.injection.extensions.spring.instance.SpringInject;
 import org.hrodberaht.injection.extensions.spring.testservices.simple.AnyServiceInner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 
 /**
@@ -21,8 +23,19 @@ public class SpringBean {
     @Qualifier("MyDataSource")
     private DataSource dataSource;
 
+    private JdbcTemplate jdbcTemplate;
+
+    @PostConstruct
+    public void init(){
+        jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
     public String getName(){
         return "SpringBeanName";
+    }
+
+    public String getNameFromDB(){
+        return jdbcTemplate.queryForObject("select username from user where username=?", String.class, "dude");
     }
 
     public AnyServiceInner getAnyServiceInner() {
