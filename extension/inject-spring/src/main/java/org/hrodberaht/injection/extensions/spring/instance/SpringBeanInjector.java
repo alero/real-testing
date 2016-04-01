@@ -47,7 +47,7 @@ public class SpringBeanInjector {
 
         for(InjectionPoint injectionPoint:injectionMetaData.getInjectionPoints()){
             SpringInjectionPoint springInjectionPoint = (SpringInjectionPoint)injectionPoint;
-            Object springBean = context.getBean(springInjectionPoint.getName());
+            Object springBean = getBean(springInjectionPoint);
             springInjectionBeanInjector.autowireInjection(springBean, springInjectionPoint.getName(), injectContainer);
             if(springInjectionPoint.getType() == InjectionPoint.InjectionPointType.FIELD){
                 springInjectionPoint.injectField(serviceObject, springBean);
@@ -56,6 +56,13 @@ public class SpringBeanInjector {
                 springInjectionPoint.injectMethod(serviceObject, springBean);
             }
         }
+    }
+
+    private Object getBean(SpringInjectionPoint springInjectionPoint) {
+        if(springInjectionPoint.getInterfaceClass() != null){
+            return context.getBean(springInjectionPoint.getInterfaceClass());
+        }
+        return context.getBean(springInjectionPoint.getName());
     }
 
     private InjectionMetaData createMetaDataAndInject(InjectionKey injectionKey, Object serviceObject, Class serviceClass) {
@@ -78,10 +85,15 @@ public class SpringBeanInjector {
                                 String beanName = component.value();
                                 createFieldInjectionPointAndAddToMetaData(field, beanName, injectionMetaData);
                             }
+                        }else if(type.isInterface()){
+                            createFieldInjectionPointAndAddToMetaData(field, type, injectionMetaData);
                         }
                     }
                 }else{
-                    // TODO: solve qualifier
+                    Autowired autowired = field.getAnnotation(Autowired.class);
+                    if(autowired != null){
+
+                    }
                 }
             }else if(member instanceof Method){
                 Method method = (Method) member;
@@ -106,10 +118,16 @@ public class SpringBeanInjector {
         return injectionMetaData;
     }
 
+    private void createFieldInjectionPointAndAddToMetaData(Field field, Class interfaceClass, InjectionMetaData injectionMetaData) {
+        SpringInjectionPoint injectionPoint = new SpringInjectionPoint(field, interfaceClass);
+        injectionMetaData.getInjectionPoints().add(injectionPoint);
+    }
+
     private void createFieldInjectionPointAndAddToMetaData(Field field, String beanName, InjectionMetaData injectionMetaData) {
         SpringInjectionPoint injectionPoint = new SpringInjectionPoint(field, beanName);
         injectionMetaData.getInjectionPoints().add(injectionPoint);
     }
+
     private void createMethodInjectionPointAndAddToMetaData(Method method, String beanName, InjectionMetaData injectionMetaData) {
         SpringInjectionPoint injectionPoint = new SpringInjectionPoint(method, beanName);
         injectionMetaData.getInjectionPoints().add(injectionPoint);

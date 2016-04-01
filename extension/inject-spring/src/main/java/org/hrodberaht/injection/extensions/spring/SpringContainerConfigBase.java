@@ -6,6 +6,7 @@ import org.hrodberaht.injection.config.jpa.JPAContainerConfigBase;
 import org.hrodberaht.injection.extensions.spring.instance.SpringBeanInjector;
 import org.hrodberaht.injection.extensions.spring.instance.SpringInject;
 import org.hrodberaht.injection.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.internal.InjectionRegisterScan;
 import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.spi.ResourceCreator;
@@ -72,13 +73,8 @@ public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<I
         springBeanInjector.inject(serviceObject, getActiveContainer());
     }
 
-    @Override
-    protected ResourceCreator createResourceCreator() {
-        return new SpringResourceCreator();
-    }
-
     protected InjectionRegisterScanBase getScanner(InjectionRegister injectionRegister) {
-        return new InjectionRegisterScanSpring(injectionRegister);
+        return new InjectionRegisterScan(injectionRegister);
     }
 
     public abstract InjectContainer createContainer();

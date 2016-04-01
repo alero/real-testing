@@ -11,6 +11,12 @@ import java.lang.reflect.Method;
 public class SpringInjectionPoint extends InjectionPoint {
 
     private String name;
+    private Class interfaceClass;
+
+    public SpringInjectionPoint(Field field, Class interfaceClass) {
+        super(field);
+        this.interfaceClass = interfaceClass;
+    }
 
     public SpringInjectionPoint(Field field, String name) {
         super(field);
@@ -24,5 +30,9 @@ public class SpringInjectionPoint extends InjectionPoint {
 
     public String getName() {
         return name;
+    }
+
+    public Class getInterfaceClass() {
+        return interfaceClass;
     }
 }

@@ -17,7 +17,7 @@ public class RegisterStub {
 
     public static InjectionRegisterScan createAnnotatedScanRegister() {
         InjectionRegisterScan register = new InjectionRegisterScan();
-        register.scanPackage("test.org.hrodberaht.injectMethod.testservices.annotated");
+        register.scanPackage("test.org.hrodberaht.inject.testservices.annotated");
         register.register(Spare.class, Tire.class, SpareTire.class);
         return register;
     }

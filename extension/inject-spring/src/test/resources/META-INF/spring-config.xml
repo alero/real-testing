@@ -10,8 +10,6 @@
     >
 
     <context:component-scan base-package="org.hrodberaht.injection.extensions.spring.testservices.spring"  >
-        <context:exclude-filter type="annotation" expression="javax.inject.Named" />
-        <context:exclude-filter type="annotation" expression="javax.inject.Inject" />
     </context:component-scan>
 
 

@@ -51,7 +51,7 @@ public class ContainerScanUnitT {
 
         InjectionRegisterScan register = new InjectionRegisterScan();
         // Tests scanning and exclusion of single class
-        register.scanPackageExclude("test.org.hrodberaht.injectMethod.testservices.simple", AnyServiceDoNothingImpl.class);
+        register.scanPackageExclude("test.org.hrodberaht.inject.testservices.simple", AnyServiceDoNothingImpl.class);
 
         InjectContainer container = register.getContainer();
 
@@ -72,7 +72,7 @@ public class ContainerScanUnitT {
                 new RegistrationModuleAnnotationScanner() {
                     @Override
                     public void scan() {
-                        scanAndRegister("test.org.hrodberaht.injectMethod.testservices.sortedinterfaces");
+                        scanAndRegister("test.org.hrodberaht.inject.testservices.sortedinterfaces");
                     }
                 }
         );
@@ -110,7 +110,7 @@ public class ContainerScanUnitT {
 
         InjectionRegisterScan register = new InjectionRegisterScan();
         // Tests scanning and exclusion of single class
-        register.scanPackageExclude("test.org.hrodberaht.injectMethod.testservices.simple", AnyServiceDoNothingImpl.class);
+        register.scanPackageExclude("test.org.hrodberaht.inject.testservices.simple", AnyServiceDoNothingImpl.class);
         InjectContainer container = register.getContainer();
 
         AnyService anyService = container.get(AnyService.class);
@@ -125,7 +125,7 @@ public class ContainerScanUnitT {
 
         InjectionRegisterScan register = new InjectionRegisterScan();
         // Tests scanning and exclusion of single class
-        register.scanPackage("test.org.hrodberaht.injectMethod.testservices.simple");
+        register.scanPackage("test.org.hrodberaht.inject.testservices.simple");
 
         InjectContainer container = register.getContainer();
 
@@ -178,14 +178,14 @@ public class ContainerScanUnitT {
         InjectionRegisterModule injectionRegisterModule = new InjectionRegisterModule();
         RegistrationModuleAnnotationScanner propertiesModule = new RegistrationModuleAnnotationScanner() {
             public void scan() {
-                this.scanAndRegister("test.org.hrodberaht.injectMethod.testservices.annotated_extra");
+                this.scanAndRegister("test.org.hrodberaht.inject.testservices.annotated_extra");
             }
         };
         injectionRegisterModule.register(propertiesModule);
 
         InjectionRegisterScan register = new InjectionRegisterScan(injectionRegisterModule);
         // Tests scanning and exclusion of single class
-        register.scanPackage("test.org.hrodberaht.injectMethod.testservices.simple");
+        register.scanPackage("test.org.hrodberaht.inject.testservices.simple");
 
         InjectionRegisterJava registerJava = new InjectionRegisterJava(register);
         registerJava.overrideRegister(AnyService.class, AnyServiceDoSomethingImpl.class);

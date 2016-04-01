@@ -56,8 +56,10 @@ public class SpringInjectionBeanInjector implements BeanPostProcessor {
     }
 
     public void autowireInjection(Object springBean, String springBeanName, InjectContainer injectContainer) {
-           if(postProcessBeforeInitBeans.containsKey(springBeanName)){
-               injectContainer.injectDependencies(springBean);
-           }
+        if(springBeanName != null){
+            if(postProcessBeforeInitBeans.containsKey(springBeanName)){
+                injectContainer.injectDependencies(springBean);
+            }
+        }
     }
 }
