@@ -90,7 +90,7 @@ public class ApplicationCDIExtensions implements CDIExtensions{
 
     private void findExtensions() {
         try {
-            String extensionFileName = "javax.enterprise.injectMethod.spi.Extension";
+            String extensionFileName = "javax.enterprise.inject.spi.Extension";
             Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources("META-INF/services/" + extensionFileName);
             for (URL resource; resources.hasMoreElements(); ) {
                 resource = resources.nextElement();
