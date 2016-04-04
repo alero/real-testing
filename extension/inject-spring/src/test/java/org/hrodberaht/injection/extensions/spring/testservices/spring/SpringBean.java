@@ -5,7 +5,7 @@ import org.hrodberaht.injection.extensions.spring.testservices.simple.AnyService
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 /**
  * Created by alexbrob on 2016-03-29.
  */
-@Component
+@Repository
 public class SpringBean {
 
     @SpringInject

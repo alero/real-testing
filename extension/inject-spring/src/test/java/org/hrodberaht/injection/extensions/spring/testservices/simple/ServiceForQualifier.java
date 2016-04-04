@@ -1,7 +1,8 @@
 package org.hrodberaht.injection.extensions.spring.testservices.simple;
 
-import org.hrodberaht.injection.extensions.spring.testservices.spring.SpringBeanInterface;
+import org.hrodberaht.injection.extensions.spring.testservices.spring.SpringBeanQualifierInterface;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * Created by alexbrob on 2016-03-29.
@@ -9,16 +10,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class ServiceForQualifier {
 
     @Autowired
-    private SpringBeanInterface springBeanInterface;
+    private SpringBeanQualifierInterface springBeanInterface;
 
     @Autowired
-    private SpringBeanInterface springBeanInterface2;
+    @Qualifier(value = "QImpl2")
+    private SpringBeanQualifierInterface springBeanInterface2;
 
-    public SpringBeanInterface getSpringBeanInterface() {
+    public SpringBeanQualifierInterface getSpringBeanInterface() {
         return springBeanInterface;
     }
 
-    public SpringBeanInterface getSpringBeanInterface2() {
+    public SpringBeanQualifierInterface getSpringBeanInterface2() {
         return springBeanInterface2;
     }
 }

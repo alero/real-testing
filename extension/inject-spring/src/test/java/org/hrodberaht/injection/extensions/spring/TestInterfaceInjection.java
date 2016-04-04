@@ -19,10 +19,10 @@ import static org.junit.Assert.assertNotNull;
 public class TestInterfaceInjection {
 
     @Inject
-    private ServiceForInterface serviceForQualifier;
+    private ServiceForInterface serviceForInterface;
 
     @Test
     public void testServiceForQualifier() throws Exception {
-        assertNotNull(serviceForQualifier.getSpringBeanInterface());
+        assertNotNull(serviceForInterface.getSpringBeanInterface());
     }
 }

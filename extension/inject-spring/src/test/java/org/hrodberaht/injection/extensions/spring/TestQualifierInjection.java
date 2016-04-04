@@ -4,12 +4,15 @@ import org.hrodberaht.injection.extensions.junit.ContainerContext;
 import org.hrodberaht.injection.extensions.junit.JUnitRunner;
 import org.hrodberaht.injection.extensions.spring.config.SpringContainerConfigExample;
 import org.hrodberaht.injection.extensions.spring.testservices.simple.ServiceForQualifier;
+import org.hrodberaht.injection.extensions.spring.testservices.spring.SpringBeanQualifierInterfaceImpl1;
+import org.hrodberaht.injection.extensions.spring.testservices.spring.SpringBeanQualifierInterfaceImpl2;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by alexbrob on 2016-04-01.
@@ -24,6 +27,11 @@ public class TestQualifierInjection {
     @Test
     public void testServiceForQualifier() throws Exception {
         assertNotNull(serviceForQualifier.getSpringBeanInterface());
+        assertTrue(serviceForQualifier.getSpringBeanInterface().getClass()
+                .isAssignableFrom(SpringBeanQualifierInterfaceImpl1.class));
+
         assertNotNull(serviceForQualifier.getSpringBeanInterface2());
+        assertTrue(serviceForQualifier.getSpringBeanInterface2().getClass()
+                .isAssignableFrom(SpringBeanQualifierInterfaceImpl2.class));
     }
 }

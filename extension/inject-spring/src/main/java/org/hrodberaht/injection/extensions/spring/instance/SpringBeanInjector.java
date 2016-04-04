@@ -10,7 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -48,11 +52,11 @@ public class SpringBeanInjector {
         for(InjectionPoint injectionPoint:injectionMetaData.getInjectionPoints()){
             SpringInjectionPoint springInjectionPoint = (SpringInjectionPoint)injectionPoint;
             Object springBean = getBean(springInjectionPoint);
-            springInjectionBeanInjector.autowireInjection(springBean, springInjectionPoint.getName(), injectContainer);
+            springInjectionBeanInjector.autowireInjection(springBean,
+                    springInjectionPoint.getName(), injectContainer);
             if(springInjectionPoint.getType() == InjectionPoint.InjectionPointType.FIELD){
                 springInjectionPoint.injectField(serviceObject, springBean);
-            }
-            if(springInjectionPoint.getType() == InjectionPoint.InjectionPointType.METHOD){
+            } else if (springInjectionPoint.getType() == InjectionPoint.InjectionPointType.METHOD) {
                 springInjectionPoint.injectMethod(serviceObject, springBean);
             }
         }
@@ -76,13 +80,14 @@ public class SpringBeanInjector {
                     Autowired autowired = field.getAnnotation(Autowired.class);
                     if(autowired != null){
                         Class type = field.getType();
-                        Component component = (Component) type.getAnnotation(Component.class);
-                        if(component != null){
-                            if(component.value().isEmpty()) {
+                        Annotation stereotype = getStereotype(type);
+                        if (stereotype != null) {
+                            String stereotypeValue = getStereotypeValue(type);
+                            if (stereotypeValue.isEmpty()) {
                                 String beanName = type.getSimpleName().substring(0, 1).toLowerCase() + type.getSimpleName().substring(1);
                                 createFieldInjectionPointAndAddToMetaData(field, beanName, injectionMetaData);
                             }else{
-                                String beanName = component.value();
+                                String beanName = stereotypeValue;
                                 createFieldInjectionPointAndAddToMetaData(field, beanName, injectionMetaData);
                             }
                         }else if(type.isInterface()){
@@ -92,7 +97,14 @@ public class SpringBeanInjector {
                 }else{
                     Autowired autowired = field.getAnnotation(Autowired.class);
                     if(autowired != null){
+                        Class type = field.getType();
+                        Annotation stereotype = getStereotype(type);
+                        if (stereotype != null) {
 
+                        } else if (type.isInterface()) {
+                            String beanName = qualifier.value();
+                            createFieldInjectionPointAndAddToMetaData(field, beanName, injectionMetaData);
+                        }
                     }
                 }
             }else if(member instanceof Method){
@@ -101,13 +113,14 @@ public class SpringBeanInjector {
                 for(Type type:types) {
                     if(type instanceof Class) {
                         Class typeClass = (Class)type;
-                        Component component = (Component) typeClass.getAnnotation(Component.class);
-                        if (component != null) {
-                            if (component.value().isEmpty()) {
+                        Annotation stereoType = getStereotype(typeClass);
+                        if (stereoType != null) {
+                            String stereoTypeValue = getStereotypeValue(typeClass);
+                            if (stereoTypeValue.isEmpty()) {
                                 String beanName = typeClass.getSimpleName().substring(0, 1).toLowerCase() + typeClass.getSimpleName().substring(1);
                                 createMethodInjectionPointAndAddToMetaData(method, beanName, injectionMetaData);
                             } else {
-                                String beanName = component.value();
+                                String beanName = stereoTypeValue;
                                 createMethodInjectionPointAndAddToMetaData(method, beanName, injectionMetaData);
                             }
                         }
@@ -116,6 +129,40 @@ public class SpringBeanInjector {
             }
         }
         return injectionMetaData;
+    }
+
+    private String getStereotypeValue(Class type) {
+        Annotation stereotype = type.getAnnotation(Component.class);
+        if (stereotype != null) {
+            return ((Component) stereotype).value();
+        }
+        stereotype = type.getAnnotation(Service.class);
+        if (stereotype != null) {
+            return ((Service) stereotype).value();
+        }
+        stereotype = type.getAnnotation(Controller.class);
+        if (stereotype != null) {
+            return ((Controller) stereotype).value();
+        }
+        stereotype = type.getAnnotation(Repository.class);
+        if (stereotype != null) {
+            return ((Repository) stereotype).value();
+        }
+        return "";
+    }
+
+    private Annotation getStereotype(Class type) {
+        Annotation stereotype = type.getAnnotation(Component.class);
+        if (stereotype == null) {
+            stereotype = type.getAnnotation(Repository.class);
+        }
+        if (stereotype == null) {
+            stereotype = type.getAnnotation(Service.class);
+        }
+        if (stereotype == null) {
+            stereotype = type.getAnnotation(Controller.class);
+        }
+        return stereotype;
     }
 
     private void createFieldInjectionPointAndAddToMetaData(Field field, Class interfaceClass, InjectionMetaData injectionMetaData) {
