@@ -1,5 +1,6 @@
 package org.hrodberaht.injection.extensions.spring.testservices.spring;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 /**
@@ -9,10 +10,14 @@ import org.springframework.stereotype.Component;
 public class SpringBeanInner2 {
 
 
+    @Autowired
+    private SpringBean springBean;
+
     public String getName(){
         return "SpringBeanInnerName";
     }
 
-
-
+    public SpringBean getSpringBean() {
+        return springBean;
+    }
 }

@@ -11,7 +11,7 @@
 
     <artifactId>inject-cdi-light</artifactId>
     <packaging>jar</packaging>
-    <name>Injection CDI-light</name>
+    <name>Extension CDI-light</name>
     <description>A Container extension with CDI annotation support, Partial CDI implementation for supporting useful Container with applications</description>
     <url>http://code.google.com/p/injection-extensions/</url>
 

@@ -10,7 +10,8 @@
 
     <artifactId>inject-cdi-junittest-service</artifactId>
     <packaging>jar</packaging>
-    <name>Example classes for CDI to scan and discover</name>
+    <name>Extension JUnit sampleservices</name>
+    <description>Example classes for CDI to scan and discover</description>
     <url>http://code.google.com/p/injection-extensions/</url>
 
     <licenses>

@@ -28,9 +28,6 @@ public class TestSimpleInjection {
     @Inject
     private ContainerLifeCycleTestUtil containerLifeCycleTestUtil;
 
-
-
-
     @Test
     public void testWired() throws Exception {
         anyService.doStuff();

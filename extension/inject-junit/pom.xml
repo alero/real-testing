@@ -11,7 +11,7 @@
 
     <artifactId>inject-junit</artifactId>
     <packaging>jar</packaging>
-    <name>Injection JUnit extension</name>
+    <name>Extension JUnit</name>
     <description>JUnit and EJB3, CDI, Spring support for Inject</description>
     <url>http://code.google.com/p/injection-extensions/</url>
 

@@ -11,8 +11,9 @@
 
     <artifactId>inject-core</artifactId>
     <packaging>jar</packaging>
-    <name>@Inject Inversion of Control Container</name>
-    <description>The Injection project for simpler java development</description>
+    <name>Injection Core</name>
+    <description>@Inject Inversion of Control Container, the Injection project for simpler java development
+    </description>
 
     <repositories>
         <!-- Is NO LONGER needed for the javax.injectMethod-tck artifact

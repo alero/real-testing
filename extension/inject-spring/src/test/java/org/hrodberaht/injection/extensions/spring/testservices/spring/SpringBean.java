@@ -2,12 +2,11 @@ package org.hrodberaht.injection.extensions.spring.testservices.spring;
 
 import org.hrodberaht.injection.extensions.spring.instance.SpringInject;
 import org.hrodberaht.injection.extensions.spring.testservices.simple.AnyServiceInner;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 /**
@@ -19,8 +18,7 @@ public class SpringBean {
     @SpringInject
     private AnyServiceInner anyServiceInner;
 
-    @Autowired
-    @Qualifier("MyDataSource")
+    @Resource(lookup = "MyDataSource")
     private DataSource dataSource;
 
     private JdbcTemplate jdbcTemplate;

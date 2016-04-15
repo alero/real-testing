@@ -7,7 +7,7 @@
     <artifactId>parent-pom</artifactId>
     <version>2.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Parent For Injection Core and Extensions</name>
+    <name>Injection Parent POM</name>
     <description>A gathering of projects for simpler java development</description>
     <url>https://github.com/alero/injection</url>
 
@@ -55,7 +55,6 @@
 
     <modules>
         <module>extension</module>
-        <module>samples</module>
         <module>inject-core</module>
     </modules>
 
@@ -182,79 +181,86 @@
             </plugin>
         </plugins>
     </build>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-site-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>cobertura-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-changelog-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-checkstyle-plugin</artifactId>
-                <configuration>
-                    <configLocation>${basedir}/../checkstyle_customchecks.xml</configLocation>
-                    <xrefLocation>${project.reporting.outputDirectory}/../xref</xrefLocation>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <failOnError>false</failOnError>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jxr-plugin</artifactId>
-                <reportSets>
-                    <reportSet>
-                        <id>aggregate</id>
-                        <reports>
-                            <report>aggregate</report>
-                            <report>test-aggregate</report>
-                        </reports>
-                    </reportSet>
-                </reportSets>
-            </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-report-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>javancss-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>taglist-maven-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-pmd-plugin</artifactId>
-                <configuration>
-                    <sourceEncoding>utf-8</sourceEncoding>
-                    <minimumTokens>100</minimumTokens>
-                    <linkXRef>true</linkXRef>
-                    <targetJdk>1.8</targetJdk>
-                    <aggregate>true</aggregate>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
     <profiles>
+        <profile>
+            <id>release-seal-nexus</id>
+            <distributionManagement>
+                <repository>
+                    <id>seal-releases</id>
+                    <name>Internal Releases</name>
+                    <url>http://nexus.seal-software.net/content/repositories/releases/</url>
+                </repository>
+                <snapshotRepository>
+                    <id>seal-snapshots</id>
+                    <url>http://nexus.seal-software.net/content/repositories/snapshots/</url>
+                </snapshotRepository>
+            </distributionManagement>
+        </profile>
+        <profile>
+            <id>sonar-jacoco</id>
+            <properties>
+                <!-- Sonar -->
+                <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
+                <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+                <sonar.language>java</sonar.language>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>0.7.6.201602180812</version>
+                        <configuration>
+                            <destFile>${sonar.jacoco.reportPath}</destFile>
+                            <append>true</append>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>agent</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>sonar-cobertura</id>
+            <properties>
+                <!-- Sonar -->
+                <sonar.java.coveragePlugin>cobertura</sonar.java.coveragePlugin>
+                <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+                <sonar.language>java</sonar.language>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>cobertura-maven-plugin</artifactId>
+                        <version>2.7</version>
+                        <configuration>
+                            <check/>
+                            <outputDirectory>./target/cobertura</outputDirectory>
+                            <formats>
+                                <format>xml</format>
+                            </formats>
+                            <aggregate>true</aggregate>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>cobertura</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
         <profile>
             <id>alexandersson-local-profile</id>
             <repositories>
@@ -288,12 +294,6 @@
         </profile>
         <profile>
             <id>release-sign-artifacts-to-sonatype-nexus</id>
-            <activation>
-                <property>
-                    <name>performARelease</name>
-                    <value>true</value>
-                </property>
-            </activation>
             <distributionManagement>
                 <repository>
                     <id>sonatype-nexus-staging</id>

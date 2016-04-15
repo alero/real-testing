@@ -5,6 +5,7 @@ import org.hrodberaht.injection.extensions.spring.instance.SpringInject;
 import org.hrodberaht.injection.internal.annotation.ReflectionUtils;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
@@ -16,16 +17,23 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by alexbrob on 2016-04-01.
  */
+@Component
 public class SpringInjectionBeanInjector implements BeanPostProcessor {
 
     private Map<String, Object> postProcessBeforeInitBeans = new ConcurrentHashMap<>();
 
+    public SpringInjectionBeanInjector() {
+        postProcessBeforeInitBeans.put("replacementBeans", new Object());
+    }
+
     @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if(!postProcessBeforeInitBeans.containsKey(beanName)
                 && containsSpringInjectionAnnotation(bean)) {
+            System.out.println("ADDED bean: " + bean.getClass().getName());
             postProcessBeforeInitBeans.put(beanName, bean);
         }
+        System.out.println("SKIPPED bean: " + bean.getClass().getName());
         return bean;
     }
 
@@ -51,7 +59,7 @@ public class SpringInjectionBeanInjector implements BeanPostProcessor {
     }
 
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
         return bean;
     }
 

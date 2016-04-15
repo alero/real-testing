@@ -311,23 +311,7 @@ public class AnnotationInjection {
 
 
     public void injectExtendedDependencies(Object service) {
-        /*InjectionMetaData injectionMetaData =
-                findInjectionData(service.getClass(),
-                        new InjectionKey(service.getClass(), false)
-                );
-        List<InjectionPoint> injectionPoints = injectionMetaData.getInjectionPoints();
-        for (InjectionPoint injectionPoint : injectionPoints) {
-            List<InjectionMetaData> dependencies = injectionPoint.getDependencies();
-            Object[] serviceDependencies = new Object[dependencies.size()];
-            int i = 0;
-            // for (InjectionMetaData dependence : dependencies) {
-                // Object serviceDependence = innerCreateInstance(dependence);
-                //  serviceDependencies[i] = serviceDependence;
-                //i++;
-            //}
-            injectionFinder.extendedInjection(service); // injectMethod services that are pre-created
-            injectionPoint.injectMethod(service, serviceDependencies);
-        } */
+        injectionFinder.extendedInjection(service);
     }
 
 

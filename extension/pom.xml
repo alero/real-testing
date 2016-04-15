@@ -11,12 +11,13 @@
     <groupId>org.hrodberaht.inject.extension</groupId>
     <artifactId>extensions-parent-pom</artifactId>
     <packaging>pom</packaging>
-    <name>Extension</name>
+    <name>Extensions</name>
 
     <modules>
         <module>inject-cdi-junittest-service</module>
         <module>inject-cdi-light</module>
         <module>inject-spring</module>
+        <module>inject-spring-junit</module>
         <module>inject-junit</module>
         <module>inject-transactions</module>
     </modules>

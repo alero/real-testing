@@ -62,11 +62,12 @@ public class InjectionRegisterUnitT {
         InjectContainer injectionContainer =
             new InjectionRegistryStream()
                     .scan(() -> "test.org.hrodberaht.inject.testservices.largepackage")
-                    .register( e -> {
-                                        e.create(AnyService.class).with(AnyServiceDoSomethingImpl.class);
-                                        e.create(ATestingServiceInterface.class).with(ATestingService.class);
-                                        e.create(BTestingServiceInnerInterface.class).with(BTestingServiceInner.class);
-                                    }
+                    .register(
+                            e -> {
+                                e.create(AnyService.class).with(AnyServiceDoSomethingImpl.class);
+                                e.create(ATestingServiceInterface.class).with(ATestingService.class);
+                                e.create(BTestingServiceInnerInterface.class).with(BTestingServiceInner.class);
+                            }
                     )
                     .scan(() -> "test.org.hrodberaht.inject.testservices.annotated")
             .getContainer();
@@ -80,7 +81,8 @@ public class InjectionRegisterUnitT {
         Module moduleOne =
                 new InjectionRegistryStream()
                         .scan(() -> "test.org.hrodberaht.inject.testservices.largepackage")
-                        .register( e -> {
+                        .register(
+                                e -> {
                                     e.create(AnyService.class).with(AnyServiceDoSomethingImpl.class);
                                     e.create(ATestingServiceInterface.class).with(ATestingService.class);
                                     e.create(BTestingServiceInnerInterface.class).with(BTestingServiceInner.class);
@@ -94,7 +96,7 @@ public class InjectionRegisterUnitT {
                         .scan(() -> "test.org.hrodberaht.inject.testservices.interfaces")
                         .getModule();
 
-        InjectContainer injectionContainer =new InjectionRegistryPlain()
+        InjectContainer injectionContainer = new InjectionRegistryPlain()
                 .register(moduleOne)
                 .register(moduleTwo)
                 .getContainer();

@@ -13,8 +13,8 @@ import javax.sql.DataSource;
  *
  * @author Robert Alexandersson
  *         2010-okt-11 19:37:42
- * @version 1.0
- * @since 1.0
+ * @version 2.0
+ * @since 2.0
  */
 public class SpringContainerConfigExample extends SpringContainerConfigBase {
 
@@ -29,7 +29,7 @@ public class SpringContainerConfigExample extends SpringContainerConfigBase {
 
         junitSQLContainerService.addSQLSchemas(dataSourceName, "sql");
 
-        // Adding the spring config, will automate the resource registration to also be done to the spring config
+        // Adding the spring config, will combine the IoC of the tests and the spring config
         loadSpringConfig("/META-INF/spring-config.xml");
 
     }

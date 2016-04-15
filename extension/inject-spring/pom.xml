@@ -12,7 +12,8 @@
 
     <artifactId>inject-spring</artifactId>
     <packaging>jar</packaging>
-    <name>Injection Container merged with Spring bean management</name>
+    <name>Extension Spring</name>
+    <description>Injection Container merged with Spring bean management</description>
 
     <dependencies>
         <dependency>

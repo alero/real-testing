@@ -48,14 +48,19 @@ public abstract class ContainerConfigBase<T extends InjectionRegisterModule> imp
         return activeRegister.getContainer();
     }
 
+    protected InjectContainer createEmptyContainer() {
+        InjectionRegisterModule combinedRegister = preScanModuleRegistration();
+        createAutoScanContainerRegister(null, combinedRegister);
+        return activeRegister.getContainer();
+    }
+
     protected void createAutoScanContainerRegister(String[] packageName, InjectionRegisterModule combinedRegister) {
-
-        scanAndRegister(combinedRegister, packageName);
-
+        if (packageName != null) {
+            scanAndRegister(combinedRegister, packageName);
+        }
         originalRegister = combinedRegister;
         appendTypedResources(originalRegister);
         activeRegister = originalRegister.clone();
-        System.out.println("originalRegister - " + originalRegister);
     }
 
     private void scanAndRegister(InjectionRegisterModule combinedRegister, String[] packageName) {

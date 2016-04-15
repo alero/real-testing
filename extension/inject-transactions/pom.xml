@@ -9,8 +9,8 @@
     </parent>
     <artifactId>inject-transactions</artifactId>
     <packaging>jar</packaging>
-    <name>A transaction manager extensions to Injection</name>
-
+    <name>Extension Transactions</name>
+    <description>A transaction manager extensions to Injection</description>
 
     <build>
         <plugins>
@@ -20,7 +20,7 @@
                 <configuration>
                     <forkMode>once</forkMode>
                     <argLine>
-                        -javaagent:${settings.localRepository}\org\aspectj\aspectjweaver\1.8.3\aspectjweaver-1.8.3.jar
+                        -javaagent:${settings.localRepository}/org/aspectj/aspectjweaver/1.8.7/aspectjweaver-1.8.7.jar
                     </argLine>
                     <useSystemClassLoader>true</useSystemClassLoader>
                     <includes>
@@ -104,13 +104,13 @@
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjweaver</artifactId>
-            <version>1.8.3</version>
+            <version>1.8.7</version>
             <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.aspectj</groupId>
             <artifactId>aspectjrt</artifactId>
-            <version>1.8.3</version>
+            <version>1.8.7</version>
             <optional>true</optional>
         </dependency>
 

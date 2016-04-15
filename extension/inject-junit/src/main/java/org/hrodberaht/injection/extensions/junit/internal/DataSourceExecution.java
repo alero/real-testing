@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -91,6 +92,9 @@ public class DataSourceExecution {
 
     private List<File> findFiles(ClassLoader classLoader, String packageBase) {
         URL url = classLoader.getResource(packageBase);
+        if (url == null) {
+            throw new IllegalStateException(MessageFormat.format("Could not find resource at : '{0}'", packageBase));
+        }
         String directoryString = url.getFile().replaceAll("%20", " ");
         File directory = new File(directoryString);
         File[] files = directory.listFiles();
