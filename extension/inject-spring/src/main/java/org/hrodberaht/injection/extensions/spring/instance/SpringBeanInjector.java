@@ -100,7 +100,8 @@ public class SpringBeanInjector {
                         Class type = field.getType();
                         Annotation stereotype = getStereotype(type);
                         if (stereotype != null) {
-
+                            String beanName = qualifier.value();
+                            createFieldInjectionPointAndAddToMetaData(field, beanName, injectionMetaData);
                         } else if (type.isInterface()) {
                             String beanName = qualifier.value();
                             createFieldInjectionPointAndAddToMetaData(field, beanName, injectionMetaData);

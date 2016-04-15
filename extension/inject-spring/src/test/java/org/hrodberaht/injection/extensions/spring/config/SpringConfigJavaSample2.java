@@ -12,7 +12,7 @@ import javax.sql.DataSource;
  * Created by robertalexandersson on 4/14/16.
  */
 @Configuration
-@ImportResource(value = "classpath:/META-INF/spring-config.xml")
+@ImportResource(value = "classpath:/META-INF/spring-config-beans.xml")
 public class SpringConfigJavaSample2 {
 
 

@@ -26,7 +26,6 @@ public class TestJavaConfigOnlyInjectionQualifier {
     @Qualifier("springBean2")
     private SpringBean springBean2;
 
-
     @Test
     public void testWiredResource() throws Exception {
 
