@@ -10,8 +10,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 /**
@@ -30,12 +32,22 @@ public class TestJavaConfigOnlyInjection {
     @Autowired
     private SpringBeanInner springBeanInner;
 
+    private String init;
+
+    @PostConstruct
+    public void init() {
+        init = "initiated";
+    }
+
     @Test
     public void testWired() throws Exception {
+
 
         assertNotNull(springBeanInner);
 
         assertNotNull(springBeanInner.getSpringBeanInner2());
+
+        assertEquals("initiated", init);
 
     }
 

@@ -5,12 +5,8 @@ import org.hrodberaht.inject.extensions.junit.demo.model.CustomerAccount;
 import org.hrodberaht.inject.extensions.junit.demo.service.AccountingService;
 import org.hrodberaht.inject.extensions.junit.demo.service.CustomerAccountService;
 import org.hrodberaht.inject.extensions.junit.demo.service.CustomerService;
-import org.hrodberaht.inject.extensions.junit.demo.test.config.CourseContainerConfigExample;
-import org.hrodberaht.injection.extensions.junit.ContainerContext;
-import org.hrodberaht.injection.extensions.junit.JUnitRunner;
 import org.hrodberaht.injection.extensions.junit.util.ContainerLifeCycleTestUtil;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 
 import javax.ejb.EJB;
@@ -26,9 +22,7 @@ import static org.junit.Assert.assertEquals;
  * @created 1.0
  * @since 1.0
  */
-@ContainerContext(CourseContainerConfigExample.class)
-@RunWith(JUnitRunner.class)
-public class TestAccountServiceMocking {
+public class TestAccountServiceMocking extends AbstractBaseClass {
 
     @EJB
     private CustomerAccountService customerAccountService;

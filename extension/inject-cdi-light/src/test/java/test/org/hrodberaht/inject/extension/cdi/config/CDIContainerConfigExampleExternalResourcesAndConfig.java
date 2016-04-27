@@ -27,7 +27,7 @@ public class CDIContainerConfigExampleExternalResourcesAndConfig extends TDDCDIC
 
     @Override
     public InjectContainer createContainer() {
-        // This will actually create the container and run the CDI extensions
+        // This will actually register the container and run the CDI extensions
         return cdiApplication.createContainer();
     }
 

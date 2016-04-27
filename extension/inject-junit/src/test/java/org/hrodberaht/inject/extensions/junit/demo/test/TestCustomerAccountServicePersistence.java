@@ -34,7 +34,7 @@ public class TestCustomerAccountServicePersistence {
     private CustomerService customerService;
 
     /**
-     * Test Persistence create/read
+     * Test Persistence register/read
      */
     @Test
     public void testCustomerCreateRead() {

@@ -26,7 +26,7 @@ import java.lang.reflect.Method;
  * @version 1.0
  * @since 1.0
  */
-public abstract class CDIContainerConfigBase extends JPAContainerConfigBase<InjectionRegisterScanBase> {
+public abstract class CDIContainerConfigBase extends JPAContainerConfigBase<InjectionRegisterModule> {
 
     private boolean annotationForEJB = true;
 

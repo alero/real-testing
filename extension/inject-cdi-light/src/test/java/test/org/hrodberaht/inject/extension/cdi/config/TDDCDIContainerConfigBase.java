@@ -1,7 +1,7 @@
 package test.org.hrodberaht.inject.extension.cdi.config;
 
 import org.hrodberaht.injection.extensions.cdi.CDIContainerConfigBase;
-import org.hrodberaht.injection.extensions.junit.internal.DataSourceExecution;
+import org.hrodberaht.injection.extensions.junit.internal.JunitSQLContainerService;
 import org.hrodberaht.injection.extensions.junit.internal.ProxyResourceCreator;
 import org.hrodberaht.injection.spi.ResourceCreator;
 
@@ -13,6 +13,8 @@ import org.hrodberaht.injection.spi.ResourceCreator;
  * To change this template use File | Settings | File Templates.
  */
 public abstract class TDDCDIContainerConfigBase extends CDIContainerConfigBase {
+
+    private JunitSQLContainerService junitSQLContainerService = new JunitSQLContainerService(this);
 
     public TDDCDIContainerConfigBase(ResourceCreator resourceCreator) {
         super(resourceCreator);
@@ -27,17 +29,11 @@ public abstract class TDDCDIContainerConfigBase extends CDIContainerConfigBase {
     }
 
     public void addSQLSchemas(String schemaName, String packageBase) {
-        DataSourceExecution sourceExecution = new DataSourceExecution(resourceCreator);
-        if (!sourceExecution.isInitiated(schemaName, schemaName)) {
-            sourceExecution.addSQLSchemas(schemaName, packageBase);
-        }
+        junitSQLContainerService.addSQLSchemas(schemaName, packageBase);
     }
 
     public void addSQLSchemas(String testPackageName, String schemaName, String packageBase) {
-        DataSourceExecution sourceExecution = new DataSourceExecution(resourceCreator);
-        if (!sourceExecution.isInitiated(testPackageName, schemaName)) {
-            sourceExecution.addSQLSchemas(schemaName, packageBase);
-        }
+        junitSQLContainerService.addSQLSchemas(testPackageName, schemaName, packageBase);
     }
 
 

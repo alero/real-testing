@@ -23,7 +23,7 @@
 
         <class>test.org.hrodberaht.inject.extension.ejbunit.common.SomeData</class>
         <properties>
-            <property name="eclipselink.ddl-generation" value="drop-and-create-tables"/>
+            <property name="eclipselink.ddl-generation" value="drop-and-register-tables"/>
         </properties>
     </persistence-unit>
     -->

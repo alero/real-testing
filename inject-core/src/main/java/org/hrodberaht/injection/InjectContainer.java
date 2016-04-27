@@ -12,7 +12,20 @@ import java.lang.annotation.Annotation;
  */
 public interface InjectContainer {
 
-    public void injectDependencies(Object service);
+
+    /**
+     * Will inject only inner container resources (no extended injections and no post-construct)
+     *
+     * @param service
+     */
+    void injectDependencies(Object service);
+
+    /**
+     * Will inject all dependencies (inner and extended) as well as post-construct
+     *
+     * @param service
+     */
+    void autowireAndPostConstruct(Object service);
 
     <T, K> T get(Class<T> service, K variable);
 
@@ -33,4 +46,6 @@ public interface InjectContainer {
     <T> T get(Class<T> service, String qualifier);
 
     <T> T get(Class<T> service, Class<? extends Annotation> qualifier);
+
+
 }

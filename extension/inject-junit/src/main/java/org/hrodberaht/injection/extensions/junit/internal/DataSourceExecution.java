@@ -5,7 +5,14 @@ import org.hrodberaht.injection.config.JarUtil;
 import org.hrodberaht.injection.extensions.junit.util.SimpleLogger;
 import org.hrodberaht.injection.spi.ResourceCreator;
 
-import java.io.*;
+import javax.sql.DataSource;
+import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -136,57 +143,50 @@ public class DataSourceExecution {
     }
 
     private void executeStringToSQL(String schemaName, StringBuffer stringBuffer) {
-        DataSourceProxy dataSourceProxy = (DataSourceProxy) resourceCreator.getDataSource(schemaName);
-        Statement stmt = null;
-        try {
-            Connection connection = dataSourceProxy.getConnection();
-            stmt = connection.createStatement();
+        DataSource dataSource = resourceCreator.getDataSource(schemaName);
+        if (dataSource == null) {
+            throw new IllegalAccessError("schemaName:" + schemaName + " does not exist ");
+        }
+
+        try (Connection connection = dataSource.getConnection();
+             Statement stmt = connection.createStatement();) {
             stmt.execute(stringBuffer.toString());
+            if (dataSource instanceof DataSourceProxy) {
+                DataSourceProxy dataSourceProxy = (DataSourceProxy) dataSource;
+                dataSourceProxy.commitDataSource();
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } finally {
-            try {
-                if (stmt != null) {
-                    stmt.close();
-                }
-            } catch (SQLException e) {
-
-            }
-            dataSourceProxy.commitDataSource();
         }
     }
 
 
-    public boolean isInitiated(String testPackageName, String schemaName) {
-        return this.isInitiated(testPackageName, schemaName, testPackageName);
+    public boolean isInitiated(String schemaName, String packageName) {
+        return this.isInitiated(packageName, schemaName, packageName);
     }
 
     public boolean isInitiated(String testPackageName, String schemaName, String initiatedTableName) {
-        DataSourceProxy dataSourceProxy = (DataSourceProxy) resourceCreator.getDataSource(schemaName);
-        PreparedStatement pstmt = null;
-        try {
-            if (dataSourceProxy == null) {
-                throw new IllegalAccessError("schemaName:" + schemaName + " does not exist ");
-            }
-            Connection connection = dataSourceProxy.getConnection();
+        DataSource dataSource = resourceCreator.getDataSource(schemaName);
+        if (dataSource == null) {
+            throw new IllegalAccessError("schemaName:" + schemaName + " does not exist ");
+        }
+
+        try (Connection connection = dataSource.getConnection()) {
+
             initiatedTableName = cleanedName(initiatedTableName);
             testPackageName = cleanedName(testPackageName);
-            pstmt = connection.prepareStatement("create table " + testPackageName + initiatedTableName + " (  control_it integer )");
-            pstmt.execute();
-            dataSourceProxy.commitDataSource();
+            try (PreparedStatement pstmt = connection.prepareStatement("create table " + testPackageName + initiatedTableName + " (  control_it integer )")) {
+                pstmt.execute();
+            }
+            if (dataSource instanceof DataSourceProxy) {
+                DataSourceProxy dataSourceProxy = (DataSourceProxy) dataSource;
+                dataSourceProxy.commitDataSource();
+            }
             return false;
         } catch (SQLException e) {
             return true;
-        } finally {
-            try {
-                if (pstmt != null) {
-                    pstmt.close();
-                }
-            } catch (SQLException e) {
-
-            }
-
         }
+
     }
 
     private String cleanedName(String schemaName) {

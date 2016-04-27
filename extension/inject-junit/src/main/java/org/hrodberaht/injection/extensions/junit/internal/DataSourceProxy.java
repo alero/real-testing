@@ -4,7 +4,6 @@ import org.hrodberaht.injection.spi.DataSourceProxyInterface;
 
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -12,8 +11,8 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Logger;
 
 /**
@@ -26,9 +25,11 @@ import java.util.logging.Logger;
  */
 public class DataSourceProxy implements DataSourceProxyInterface {
 
-    private static Map<String, String> DB_NAME_MAPPING = new HashMap<String, String>();
+    private static Map<String, String> DB_NAME_MAPPING = new ConcurrentHashMap<String, String>();
 
-    private final ThreadLocal<ConnectionHandler> threadLocal = new ThreadLocal<ConnectionHandler>();
+    private static final Map<String, Connection> CONNECTIONS = new ConcurrentHashMap<>();
+
+    private final InheritableThreadLocal<ConnectionHandler> threadLocal = new InheritableThreadLocal<ConnectionHandler>();
 
     public String JDBC_DRIVER = "org.hsqldb.jdbcDriver";
     public String JDBC_URL = "jdbc:hsqldb:mem:test";
@@ -53,39 +54,52 @@ public class DataSourceProxy implements DataSourceProxyInterface {
     public void clearDataSource() {
         ConnectionHandler connection = threadLocal.get();
         if (connection != null) {
-            try {
-                connection.conn.rollback();
-                connection.conn.close();
-                closeRecursively(connection);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            rollbackAndClose(connection);
             threadLocal.remove();
         }
     }
 
-    private void closeRecursively(ConnectionHandler connection) {
+    private void rollbackRecursively(ConnectionHandler connection) {
         for (ConnectionHandler children : connection.children) {
-            try {
-                children.conn.rollback();
-                children.conn.close();
-                closeRecursively(children);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            rollbackAndClose(children);
+        }
+    }
+
+    private void rollbackAndClose(ConnectionHandler connectionHandler) {
+        try {
+            connectionHandler.conn.rollback();
+            connectionHandler.conn.close();
+            CONNECTIONS.remove(connectionHandler.conn);
+            TDDLogger.log("rollback/close Connection " + connectionHandler + " Thread:" + Thread.currentThread());
+            rollbackRecursively(connectionHandler);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
     public void commitDataSource() {
         ConnectionHandler connection = threadLocal.get();
         if (connection != null) {
-            try {
-                connection.conn.commit();
-                connection.conn.close();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+            commitAndClose(connection);
             threadLocal.remove();
+        }
+    }
+
+    private void commitRecursively(ConnectionHandler connection) {
+        for (ConnectionHandler children : connection.children) {
+            commitAndClose(children);
+        }
+    }
+
+    private void commitAndClose(ConnectionHandler connectionHandler) {
+        try {
+            connectionHandler.conn.commit();
+            connectionHandler.conn.close();
+            CONNECTIONS.remove(connectionHandler.conn);
+            TDDLogger.log("commit/close Connection " + connectionHandler + " Thread:" + Thread.currentThread());
+            commitRecursively(connectionHandler);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -105,25 +119,26 @@ public class DataSourceProxy implements DataSourceProxyInterface {
 
     public Connection getConnection() throws SQLException {
         ConnectionHandler connection = threadLocal.get();
+
         if (connection != null && connection.hasConnection()) {
+            TDDLogger.log("reusing Connection " + connection + " Thread:" + Thread.currentThread());
             return connection.proxy;
         }
         try {
             ConnectionHandler connectionHandler = new ConnectionHandler();
             Class.forName(JDBC_DRIVER);
             final Connection conn = DriverManager.getConnection(JDBC_URL + dbName, JDBC_USERNAME, JDBC_PASSWORD);
+            CONNECTIONS.put(conn.toString(), conn);
             conn.setAutoCommit(false);
-            InvocationHandler invocationHandler = new InvocationHandler() {
-                public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                    if (method.getName().equals("close")) {
-                        // do nothing
-                        return null;
-                    } else if (method.getName().equals("commit")) {
-                        // do nothing
-                        return null;
-                    }
-                    return method.invoke(conn, args);
+            InvocationHandler invocationHandler = (proxy, method, args) -> {
+                if (method.getName().equals("close")) {
+                    // do nothing
+                    return null;
+                } else if (method.getName().equals("commit")) {
+                    // do nothing
+                    return null;
                 }
+                return method.invoke(conn, args);
             };
 
             Connection proxy = (Connection) Proxy.newProxyInstance(
@@ -132,9 +147,11 @@ public class DataSourceProxy implements DataSourceProxyInterface {
             if (connection != null && !connection.hasConnection()) {
                 connection.conn = conn;
                 connection.proxy = proxy;
+                TDDLogger.log(" new empty Connection " + connectionHandler);
             } else {
                 connectionHandler.conn = conn;
                 connectionHandler.proxy = proxy;
+                TDDLogger.log(" new Connection " + connectionHandler + " Thread:" + Thread.currentThread());
                 threadLocal.set(connectionHandler);
             }
             return proxy;

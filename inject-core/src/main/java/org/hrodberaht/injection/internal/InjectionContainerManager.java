@@ -29,7 +29,7 @@ import java.util.Collection;
  * @version 1.0
  * @since 1.0
  */
-public class InjectionContainerManager implements ScopeContainer, InjectContainer, ExtendedInjection, ExtendedAnnotationInjection {
+public class InjectionContainerManager implements ScopeContainer, InjectContainer, ExtendedAnnotationInjection {
 
     private AnnotationInjectionContainer injectionContainer = new AnnotationInjectionContainer(this);
 
@@ -88,6 +88,7 @@ public class InjectionContainerManager implements ScopeContainer, InjectContaine
         return injectionContainer.getService(service, null, qualifier);
     }
 
+
     public <T, K> T get(Class<T> service, K variable) {
         return injectionContainer.getService(service, variable);
     }
@@ -115,11 +116,11 @@ public class InjectionContainerManager implements ScopeContainer, InjectContaine
     }
 
 
-    protected synchronized void register(Class serviceDefinition, Class service, Scope scope, RegisterType type) {
+    protected void register(Class serviceDefinition, Class service, Scope scope, RegisterType type) {
         injectionContainer.register(new InjectionKey(serviceDefinition, false), service, scope, type, true);
     }
 
-    protected synchronized void register(InjectionKey key, Class service, Scope scope, RegisterType type) {
+    protected void register(InjectionKey key, Class service, Scope scope, RegisterType type) {
         injectionContainer.register(key, service, scope, type, true);
     }
 
@@ -127,17 +128,18 @@ public class InjectionContainerManager implements ScopeContainer, InjectContaine
         injectionContainer.register(this, modules);
     }
 
-    protected synchronized InjectionContainer getContainer() {
+    protected InjectionContainer getContainer() {
         // TODO: make this support clone or remove
         return injectionContainer;
     }
 
-    public void injectDependencies(Object service) {
-        injectionContainer.injectDependencies(service);
+    @Override
+    public void autowireAndPostConstruct(Object service) {
+        injectionContainer.autowireAndPostConstruct(service);
     }
 
-    public void injectExtendedDependencies(Object service) {
-        injectionContainer.extendedInjectDependencies(service);
+    public void injectDependencies(Object service) {
+        injectionContainer.injectDependencies(service);
     }
 
     @Override

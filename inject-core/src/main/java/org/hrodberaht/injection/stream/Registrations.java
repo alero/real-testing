@@ -13,7 +13,7 @@ public class Registrations {
 
     private List<RegistrationInstanceSimple> simpleCollection = new ArrayList<>();
 
-    public RegistrationExtended create(Class serviceClass) {
+    public RegistrationExtended register(Class serviceClass) {
         RegistrationInstanceSimple registrationInstanceSimple = new RegistrationInstanceSimple(serviceClass);
         simpleCollection.add(registrationInstanceSimple);
         return registrationInstanceSimple;

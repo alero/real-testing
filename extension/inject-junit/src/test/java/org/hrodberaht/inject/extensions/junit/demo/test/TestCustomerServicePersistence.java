@@ -12,7 +12,9 @@ import org.junit.runner.RunWith;
 import javax.ejb.EJB;
 import javax.inject.Inject;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
 
 /**
  * Inject extension TDD
@@ -34,7 +36,7 @@ public class TestCustomerServicePersistence {
     JPATestUtil jpaTestUtil;
 
     /**
-     * Test Persistence create/read
+     * Test Persistence register/read
      */
     @Test
     public void testCustomerCreateRead() {

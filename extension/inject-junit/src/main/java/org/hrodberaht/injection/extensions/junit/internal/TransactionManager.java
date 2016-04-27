@@ -3,6 +3,7 @@ package org.hrodberaht.injection.extensions.junit.internal;
 import org.hrodberaht.injection.spi.ContainerConfig;
 
 import javax.persistence.EntityManager;
+import java.sql.SQLException;
 
 /**
  * Inject extension TDD
@@ -30,9 +31,8 @@ public class TransactionManager {
         }
 
         DataSources dataSources = DATA_SOURCES.get();
-        for (DataSourceProxy dataSourceProxy : dataSources.getDataSources()) {
-            if (dataSources != null) {
-
+        if (dataSources != null) {
+            for (DataSourceProxy dataSourceProxy : dataSources.getDataSources()) {
                 dataSourceProxy.clearDataSource();
                 TDDLogger.log("dataSourceProxy rollback " + dataSourceProxy);
             }
@@ -51,6 +51,16 @@ public class TransactionManager {
                 entityManager.getTransaction().begin();
                 // entityManager.close();
                 TDDLogger.log("entityManager begin " + entityManager);
+            }
+        }
+        DataSources dataSources = DATA_SOURCES.get();
+        if (dataSources != null) {
+            for (DataSourceProxy dataSourceProxy : dataSources.getDataSources()) {
+                try {
+                    dataSourceProxy.getConnection();
+                } catch (SQLException e) {
+                }
+                TDDLogger.log("dataSourceProxy Begin " + dataSourceProxy);
             }
         }
     }

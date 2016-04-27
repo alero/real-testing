@@ -31,19 +31,15 @@ public class JEEResourceCreator implements ResourceCreator<EntityManager, DataSo
         }
     }
 
+    public String getJDBCJNDIBase() {
+        return "java:/";
+    }
+
     public DataSource createDataSource(String dataSourceName) {
         DataSource dataSource = dataSources.get(dataSourceName);
         if (dataSource == null) {
             try {
-                String appServer = System.getProperty("app.server");
-                if (appServer != null && appServer.equals("jboss")) {
-                    dataSource = (DataSource) ctx.lookup("java:/" + dataSourceName);
-                } else if (appServer != null && appServer.equals("dynamic")) {
-                    String dataSourceBase = System.getProperty("app.server.jndi.datasourcebase");
-                    dataSource = (DataSource) ctx.lookup(dataSourceBase + dataSourceName);
-                } else {
-                    dataSource = (DataSource) ctx.lookup(dataSourceName);
-                }
+                dataSource = (DataSource) ctx.lookup(getJDBCJNDIBase() + dataSourceName);
             } catch (NamingException e) {
                 throw new RuntimeException(e);
             }

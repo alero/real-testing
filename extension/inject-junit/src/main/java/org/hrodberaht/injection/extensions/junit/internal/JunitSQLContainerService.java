@@ -22,16 +22,15 @@ public class JunitSQLContainerService {
 
     public void addSQLSchemas(String schemaName, String packageBase) {
         DataSourceExecution sourceExecution = new DataSourceExecution(jpaContainerConfigBase.getResourceCreator());
-        if (!sourceExecution.isInitiated(schemaName, schemaName)) {
+        if (!sourceExecution.isInitiated(schemaName, packageBase)) {
             sourceExecution.addSQLSchemas(schemaName, packageBase);
         }
     }
 
 
-
-    public void addSQLSchemas(String testPackageName, String schemaName, String packageBase) {
+    public void addSQLSchemas(String controllerPackageName, String schemaName, String packageBase) {
         DataSourceExecution sourceExecution = new DataSourceExecution(jpaContainerConfigBase.getResourceCreator());
-        if (!sourceExecution.isInitiated(testPackageName, schemaName)) {
+        if (!sourceExecution.isInitiated(controllerPackageName, packageBase)) {
             sourceExecution.addSQLSchemas(schemaName, packageBase);
         }
     }

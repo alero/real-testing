@@ -4,6 +4,7 @@ import org.hrodberaht.injection.internal.InjectionContainerManager;
 import org.hrodberaht.injection.internal.InjectionKey;
 import org.hrodberaht.injection.internal.ScopeContainer;
 import org.hrodberaht.injection.register.InjectionFactory;
+import org.hrodberaht.injection.register.SimpleInjectionFactory;
 import org.hrodberaht.injection.register.VariableInjectionFactory;
 
 import java.lang.annotation.Annotation;
@@ -62,6 +63,13 @@ public class RegistrationInstanceAnnotation<T extends Registration> implements R
 
     public T withFactory(InjectionFactory aFactory) {
         this.theFactory = aFactory;
+        this.theService = theFactory.getInstanceType();
+        this.scope = ScopeContainer.Scope.NEW;
+        return (T) this;
+    }
+
+    public T withFactoryInstance(Object theInstance) {
+        this.theFactory = new SimpleInjectionFactory<>(theInstance);
         this.theService = theFactory.getInstanceType();
         this.scope = ScopeContainer.Scope.NEW;
         return (T) this;

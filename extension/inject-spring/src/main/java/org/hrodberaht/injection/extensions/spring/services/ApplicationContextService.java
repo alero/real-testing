@@ -3,7 +3,6 @@ package org.hrodberaht.injection.extensions.spring.services;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -19,8 +18,7 @@ public class ApplicationContextService implements ApplicationContextAware {
         this.applicationContext = applicationContext;
     }
 
-    public void refresh() {
-        ((ConfigurableApplicationContext) applicationContext).close();
-        ((ConfigurableApplicationContext) applicationContext).refresh();
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
     }
 }

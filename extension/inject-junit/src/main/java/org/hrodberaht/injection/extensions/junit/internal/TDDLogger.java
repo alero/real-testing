@@ -12,7 +12,7 @@ public class TDDLogger {
 
 
     public static void log(String message) {
-        if (System.getProperty("junit.log") != null) {
+        if (System.getProperty("hrodberaht.junit.log") != null) {
             System.out.println(message);
         }
     }

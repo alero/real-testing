@@ -123,13 +123,7 @@ public class InjectionMetaData {
     }
 
     public ObjectAndScope createNewInstance(Object[] parameters) {
-        if (accessible == null) {
-            final boolean originalAccessible = constructor != null && constructor.isAccessible();
-            if (!originalAccessible && constructor != null) {
-                constructor.setAccessible(true);
-            }
-            accessible = true;
-        }
+        verifyAccess();
         try {
             Object newInstance = instanceCreator.createInstance(constructor, parameters);
             scopeHandler.addInstance(newInstance);
@@ -152,13 +146,7 @@ public class InjectionMetaData {
                 return new ObjectAndScope(scopedInstance, false);
             }
         }
-        if (accessible == null) {
-            final boolean originalAccessible = constructor != null && constructor.isAccessible();
-            if (!originalAccessible && constructor != null) {
-                constructor.setAccessible(true);
-            }
-            accessible = true;
-        }
+        verifyAccess();
         try {
 
 
@@ -170,6 +158,16 @@ public class InjectionMetaData {
             /*if (!originalAccessible) {
                 constructor.setAccessible(originalAccessible);
             }*/
+        }
+    }
+
+    private void verifyAccess() {
+        if (accessible == null) {
+            final boolean originalAccessible = constructor != null && constructor.isAccessible();
+            if (!originalAccessible && constructor != null) {
+                constructor.setAccessible(true);
+            }
+            accessible = true;
         }
     }
 

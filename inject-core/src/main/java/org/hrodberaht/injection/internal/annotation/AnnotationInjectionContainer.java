@@ -14,11 +14,18 @@
 
 package org.hrodberaht.injection.internal.annotation;
 
-import org.hrodberaht.injection.internal.*;
+import org.hrodberaht.injection.internal.InjectionContainer;
+import org.hrodberaht.injection.internal.InjectionContainerBase;
+import org.hrodberaht.injection.internal.InjectionContainerManager;
+import org.hrodberaht.injection.internal.InjectionKey;
+import org.hrodberaht.injection.internal.RegistrationInjectionContainer;
+import org.hrodberaht.injection.internal.ScopeContainer;
+import org.hrodberaht.injection.internal.ServiceRegister;
 import org.hrodberaht.injection.internal.annotation.creator.InstanceCreator;
 import org.hrodberaht.injection.internal.annotation.scope.FactoryScopeHandler;
 import org.hrodberaht.injection.internal.annotation.scope.SingletonScopeHandler;
 import org.hrodberaht.injection.internal.annotation.scope.VariableFactoryScopeHandler;
+import org.hrodberaht.injection.internal.exception.DependencyLocationError;
 import org.hrodberaht.injection.internal.exception.DuplicateRegistrationException;
 import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.register.RegistrationModule;
@@ -29,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -102,7 +110,10 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
      */
     public ServiceRegister findServiceRegister(Class service, InjectionKey key) {
         ServiceRegister serviceRegister = registeredServices.get(key);
-        if (serviceRegister == null && !service.isInterface()) {
+        if (serviceRegister == null && Modifier.isAbstract(service.getModifiers()) && !service.isInterface()) {
+            throw new DependencyLocationError(service.getName() +
+                    " is abstract and not registered in container, fix this by registering an implementation");
+        } else if (serviceRegister == null && !service.isInterface()) {
             serviceRegister = register(key, false);
         } else if (serviceRegister == null && service.isInterface()) {
             serviceRegister = registerForInterface(key, false);
@@ -147,9 +158,15 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
                 ((RegistrationModuleAnnotationScanner) aModule).setInjectionContainerManager(injectionContainerManager);
             }*/
             if (aModule.getInjectionFinder() != null) {
+                if (this.injectionFinder != null) {
+                    throw new IllegalStateException("Can not change injectionFinder once set");
+                }
                 this.injectionFinder = aModule.getInjectionFinder();
             }
             if (aModule.getInstanceCreator() != null) {
+                if (this.instanceCreator != null) {
+                    throw new IllegalStateException("Can not change instanceCreator once set");
+                }
                 this.instanceCreator = aModule.getInstanceCreator();
             }
             aModule.preRegistration(container);
@@ -178,11 +195,10 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
         annotationInjection.injectDependencies(service);
     }
 
-    public void extendedInjectDependencies(Object service) {
+    public void autowireAndPostConstruct(Object service) {
         AnnotationInjection annotationInjection = new AnnotationInjection(injectionMetaDataCache, container, this);
-        annotationInjection.injectExtendedDependencies(service);
+        annotationInjection.autowireAndPostConstruct(service);
     }
-
 
     @SuppressWarnings(value = "unchecked")
     private Object instantiateService(Object variable, ServiceRegister serviceRegister, InjectionKey key) {

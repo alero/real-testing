@@ -5,11 +5,7 @@ import org.hrodberaht.inject.extensions.junit.demo.model.CustomerAccount;
 import org.hrodberaht.inject.extensions.junit.demo.service.AccountingService;
 import org.hrodberaht.inject.extensions.junit.demo.service.CustomerAccountService;
 import org.hrodberaht.inject.extensions.junit.demo.service.CustomerService;
-import org.hrodberaht.inject.extensions.junit.demo.test.config.CourseContainerConfigExample;
-import org.hrodberaht.injection.extensions.junit.ContainerContext;
-import org.hrodberaht.injection.extensions.junit.JUnitRunner;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import javax.ejb.EJB;
 
@@ -23,9 +19,8 @@ import static org.junit.Assert.assertEquals;
  * @created 1.0
  * @since 1.0
  */
-@ContainerContext(CourseContainerConfigExample.class)
-@RunWith(JUnitRunner.class)
-public class TestAccountService {
+
+public class TestAccountService extends AbstractBaseClass {
 
     @EJB
     private AccountingService accountingService;
@@ -36,6 +31,10 @@ public class TestAccountService {
     @EJB
     private CustomerService customerService;
 
+    @Test
+    public void testWiring() throws Exception {
+        assertEquals("initiated", this.init);
+    }
 
     @Test
     public void testAccountAddMoney() throws Exception {

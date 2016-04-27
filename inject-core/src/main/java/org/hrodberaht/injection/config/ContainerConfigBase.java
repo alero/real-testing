@@ -40,10 +40,15 @@ public abstract class ContainerConfigBase<T extends InjectionRegisterModule> imp
 
     protected abstract void injectResources(Object serviceInstance);
 
+    protected void registerModules(InjectionRegisterModule combinedRegister) {
+        // This is intended for loading modules
+    }
+
     protected abstract InjectionRegisterScanBase getScanner(InjectionRegister registerModule);
 
     protected InjectContainer createAutoScanContainer(String... packageName) {
         InjectionRegisterModule combinedRegister = preScanModuleRegistration();
+        registerModules(combinedRegister);
         createAutoScanContainerRegister(packageName, combinedRegister);
         return activeRegister.getContainer();
     }

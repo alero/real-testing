@@ -36,6 +36,29 @@ public class InjectionRegistryStream<T extends Module> implements InjectionRegis
         return null;
     }
 
+    public InjectionRegistryStream scanAll(ScanModulesFunc scanModuleFunc) {
+        Packaging packaging = new Packaging();
+        String[] _packages = scanModuleFunc.scan(packaging);
+        Module module = new Module() {
+            @Override
+            public void scan() {
+                this.scanAndRegister(_packages);
+            }
+
+            @Override
+            public InjectionRegisterScanBase getScanner() {
+                InjectionRegisterScanBase registerScan = getCustomScanner();
+                if (registerScan != null) {
+                    return registerScan;
+                }
+                return super.getScanner();
+            }
+        };
+        injectionRegisterModule.register(module);
+        injectionContainer = injectionRegisterModule.getContainer();
+        return this;
+    }
+
     public InjectionRegistryStream scan(ScanModuleFunc scanModuleFunc){
         String _packages = scanModuleFunc.scan();
         Module module = new Module() {

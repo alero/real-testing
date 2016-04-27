@@ -16,16 +16,25 @@ import javax.sql.DataSource;
 public class SpringJavaConfigExample2 extends JUnitSpringContainerConfigBase {
 
     public SpringJavaConfigExample2() {
+        final String dataSourceName = "jdbc/MyDataSource";
 
+        /*
+
+        new SpringInjectionRegistryStream(this)
+            .resource(injectionResources -> { createDataSource(dataSourceName); })
+            .springConfig(() -> SpringConfigJavaSample2.class )
+        ;
+*/
 
         // Prepare the datasource
-        String dataSourceName = "jdbc/MyDataSource";
+
         DataSource dataSource = createDataSource(dataSourceName);
         addResource(dataSourceName, dataSource);
 
         // Load reusable test data to the datasource
 
         junitSQLContainerService.addSQLSchemas(dataSourceName, "sql");
+        junitSQLContainerService.addSQLSchemas(dataSourceName, "sql/insert");
 
         // Adding the spring config, will combine the IoC of the tests and the spring config
         loadJavaSpringConfig(SpringConfigJavaSample2.class);

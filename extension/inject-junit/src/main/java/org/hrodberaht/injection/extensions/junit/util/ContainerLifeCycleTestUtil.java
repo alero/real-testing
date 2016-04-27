@@ -42,4 +42,8 @@ public class ContainerLifeCycleTestUtil {
     public <T> T getService(Class<T> aClass) {
         return module.getContainer().get(aClass);
     }
+
+    public <T> T getService(Class<T> aClass, String name) {
+        return module.getContainer().get(aClass, name);
+    }
 }

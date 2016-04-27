@@ -1,6 +1,7 @@
 package org.hrodberaht.injection.extensions.spring;
 
 import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.annotation.PostConstruct;
 import org.hrodberaht.injection.config.InjectionRegisterScanBase;
 import org.hrodberaht.injection.config.jpa.JPAContainerConfigBase;
 import org.hrodberaht.injection.extensions.spring.config.ContainerSpringConfig;
@@ -28,7 +29,7 @@ import java.util.stream.Stream;
  * @version 1.0
  * @since 1.0
  */
-public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<InjectionRegisterScanBase> {
+public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<InjectionRegisterModule> {
 
 
     private ApplicationContext context;
@@ -39,6 +40,10 @@ public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<I
     }
 
     protected SpringContainerConfigBase() {
+    }
+
+    protected ApplicationContext getContext() {
+        return context;
     }
 
     public void loadSpringConfig(String... springConfigs) {
@@ -60,7 +65,6 @@ public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<I
         if (springConfigs != null) {
             Stream<Class> stringStream = Stream.concat(Stream.of(springConfigs), Stream.of(ContainerSpringConfig.class));
             config = stringStream.toArray(Class[]::new);
-            ;
         }
         context = new AnnotationConfigApplicationContext(config);
         springBeanInjector = new SpringBeanInjector(context);
@@ -92,6 +96,10 @@ public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<I
             @Override
             protected boolean hasInjectAnnotationOnMethod(Method method) {
                 return method.isAnnotationPresent(SpringInject.class) || super.hasInjectAnnotationOnMethod(method);
+            }
+
+            protected boolean hasPostConstructAnnotation(Method method) {
+                return method.isAnnotationPresent(javax.annotation.PostConstruct.class) || method.isAnnotationPresent(PostConstruct.class);
             }
         }
         ));

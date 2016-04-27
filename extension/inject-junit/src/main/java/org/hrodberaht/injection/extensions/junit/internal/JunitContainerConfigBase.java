@@ -34,7 +34,7 @@ public abstract class JunitContainerConfigBase<T extends InjectionRegisterScanBa
 
     public void addSQLSchemas(String testPackageName, String schemaName, String packageBase) {
         DataSourceExecution sourceExecution = new DataSourceExecution(resourceCreator);
-        if (!sourceExecution.isInitiated(testPackageName, schemaName)) {
+        if (!sourceExecution.isInitiated(schemaName, testPackageName)) {
             sourceExecution.addSQLSchemas(schemaName, packageBase);
         }
     }

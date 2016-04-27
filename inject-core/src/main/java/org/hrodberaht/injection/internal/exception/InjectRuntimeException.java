@@ -58,7 +58,7 @@ public class InjectRuntimeException extends RuntimeException {
     @Override
     public String toString() {
         if (args != null) {
-            return InjectRuntimeException.class.getName()
+            return this.getClass().getName()
                     + ": " + MessageFormat.format(super.getMessage(), args);
         }
         return super.toString();

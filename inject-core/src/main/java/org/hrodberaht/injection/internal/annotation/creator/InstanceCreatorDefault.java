@@ -1,5 +1,6 @@
 package org.hrodberaht.injection.internal.annotation.creator;
 
+import org.hrodberaht.injection.internal.exception.InstanceCreationError;
 import org.hrodberaht.injection.internal.stats.Statistics;
 
 import java.lang.reflect.Constructor;
@@ -21,15 +22,15 @@ public class InstanceCreatorDefault implements InstanceCreator {
             return constructor.newInstance(parameters);
 
         } catch (InstantiationException e) {
-            throw new RuntimeException(e);
+            throw new InstanceCreationError(e);
         } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new InstanceCreationError(e);
         } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
+            throw new InstanceCreationError(e);
         } catch (IllegalArgumentException e) {
-            throw new RuntimeException(e);
+            throw new InstanceCreationError(e);
         } catch (NullPointerException e){
-            throw new RuntimeException(e);
+            throw new InstanceCreationError(e);
         }
     }
 }

@@ -1,6 +1,7 @@
 package test.org.hrodberaht.inject.extension.cdi.config;
 
 import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.extensions.cdi.inner.JSEResourceCreator;
 
 import javax.sql.DataSource;
 
@@ -16,7 +17,7 @@ public class CDIContainerConfigExampleForJSEResourceCreator extends TDDCDIContai
 
     public CDIContainerConfigExampleForJSEResourceCreator() {
 
-        // super(new JSEResourceCreator());
+        super(new JSEResourceCreator());
 
         System.setProperty("MyDataSource.driver", "org.hsqldb.jdbcDriver");
         System.setProperty("MyDataSource.url", "jdbc:hsqldb:mem:MyDataSource");

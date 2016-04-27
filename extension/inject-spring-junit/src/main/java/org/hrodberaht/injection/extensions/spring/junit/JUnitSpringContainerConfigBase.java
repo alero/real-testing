@@ -38,4 +38,5 @@ public abstract class JUnitSpringContainerConfigBase extends SpringContainerConf
         return new ProxyResourceCreator();
     }
 
+
 }

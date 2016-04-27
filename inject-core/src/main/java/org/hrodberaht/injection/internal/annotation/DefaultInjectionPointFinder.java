@@ -73,6 +73,12 @@ public class DefaultInjectionPointFinder implements InjectionFinder {
                 foundMethod = method;
             }
         }
+        if (foundMethod != null) {
+            // Open up access for post-construct
+            if (!foundMethod.isAccessible()) {
+                foundMethod.setAccessible(true);
+            }
+        }
         return foundMethod;
     }
 

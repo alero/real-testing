@@ -97,15 +97,12 @@ public class SpringBeanInjector {
                 }else{
                     Autowired autowired = field.getAnnotation(Autowired.class);
                     if(autowired != null){
-                        Class type = field.getType();
-                        Annotation stereotype = getStereotype(type);
-                        if (stereotype != null) {
-                            String beanName = qualifier.value();
-                            createFieldInjectionPointAndAddToMetaData(field, beanName, injectionMetaData);
-                        } else if (type.isInterface()) {
-                            String beanName = qualifier.value();
-                            createFieldInjectionPointAndAddToMetaData(field, beanName, injectionMetaData);
-                        }
+                        // Class type = field.getType();
+                        // Annotation stereotype = getStereotype(type);
+
+                        String beanName = qualifier.value();
+                        createFieldInjectionPointAndAddToMetaData(field, beanName, injectionMetaData);
+
                     }
                 }
             }else if(member instanceof Method){

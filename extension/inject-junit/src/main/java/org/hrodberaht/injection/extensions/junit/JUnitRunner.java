@@ -2,7 +2,6 @@ package org.hrodberaht.injection.extensions.junit;
 
 import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.extensions.junit.internal.TransactionManager;
-import org.hrodberaht.injection.internal.ExtendedInjection;
 import org.hrodberaht.injection.spi.ContainerConfig;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
@@ -100,10 +99,12 @@ public class JUnitRunner extends BlockJUnit4ClassRunner {
     protected Object createTest() throws Exception {
         Object testInstance = super.createTest();
         // The active container will automatically injectMethod all normal dependencies and resources
-        activeContainer.injectDependencies(testInstance);
-        if (activeContainer instanceof ExtendedInjection) {
-            ((ExtendedInjection) activeContainer).injectExtendedDependencies(testInstance);
-        }
+        // activeContainer.injectDependencies(testInstance);
+        // if (activeContainer instanceof ExtendedInjection) {
+        //     ((ExtendedInjection) activeContainer).injectExtendedDependencies(testInstance);
+        //}
+
+        activeContainer.autowireAndPostConstruct(testInstance);
         return testInstance;
     }
 
