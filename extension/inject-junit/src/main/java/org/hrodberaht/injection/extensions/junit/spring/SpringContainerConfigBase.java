@@ -1,9 +1,9 @@
 package org.hrodberaht.injection.extensions.junit.spring;
 
 import org.hrodberaht.injection.config.InjectionRegisterScanBase;
+import org.hrodberaht.injection.config.InjectionStoreFactory;
 import org.hrodberaht.injection.extensions.junit.internal.JunitContainerConfigBase;
 import org.hrodberaht.injection.extensions.junit.spring.internal.InjectionRegisterScanSpring;
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.spi.module.CustomInjectionPointFinderModule;
@@ -27,8 +27,8 @@ public abstract class SpringContainerConfigBase extends JunitContainerConfigBase
 
     }
 
-    protected InjectionRegisterModule preScanModuleRegistration() {
-        InjectionRegisterModule injectionRegisterModule = new InjectionRegisterModule();
+    protected InjectionRegister preScanModuleRegistration() {
+        InjectionRegister injectionRegisterModule = InjectionStoreFactory.getInjectionRegister();
         injectionRegisterModule.register(new CustomInjectionPointFinderModule(new DefaultInjectionPointFinder(this) {
             @Override
             protected boolean hasInjectAnnotationOnMethod(Method method) {

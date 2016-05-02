@@ -2,14 +2,18 @@ package org.hrodberaht.injection.extensions.cdi.cdiext;
 
 import org.hrodberaht.injection.extensions.cdi.inner.FileScanningUtil;
 import org.hrodberaht.injection.extensions.cdi.inner.SimpleLogger;
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.internal.annotation.ReflectionUtils;
+import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.spi.ContainerConfig;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
 import javax.enterprise.inject.spi.BeforeBeanDiscovery;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -41,7 +45,7 @@ public class ApplicationCDIExtensions implements CDIExtensions{
         findExtensions();
     }
 
-    public void runAfterBeanDiscovery(InjectionRegisterModule register, ContainerConfig containerConfig) {
+    public void runAfterBeanDiscovery(InjectionRegister register, ContainerConfig containerConfig) {
         AfterBeanDiscoveryByInject inject = new AfterBeanDiscoveryByInject(register);
         List<MethodClassHolder> methods = phaseMethods.get(Phase.AfterBeanDiscovery);
         for (MethodClassHolder methodClassHolder : methods) {
@@ -64,7 +68,7 @@ public class ApplicationCDIExtensions implements CDIExtensions{
         }
     }
 
-    public void runBeforeBeanDiscovery(InjectionRegisterModule register, ContainerConfig containerConfig) {
+    public void runBeforeBeanDiscovery(InjectionRegister register, ContainerConfig containerConfig) {
         BeforeBeanDiscoveryByInject inject = new BeforeBeanDiscoveryByInject();
         List<MethodClassHolder> methods = phaseMethods.get(Phase.BeforeBeanDiscovery);
         for (MethodClassHolder methodClassHolder : methods) {

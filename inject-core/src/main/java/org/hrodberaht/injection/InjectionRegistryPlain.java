@@ -1,6 +1,7 @@
 package org.hrodberaht.injection;
 
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.config.InjectionStoreFactory;
+import org.hrodberaht.injection.register.InjectionRegister;
 
 /**
  * Created by alexbrob on 2016-03-29.
@@ -8,11 +9,11 @@ import org.hrodberaht.injection.internal.InjectionRegisterModule;
 public class InjectionRegistryPlain implements InjectionRegistry {
 
     private InjectContainer injectionContainer;
-    private InjectionRegisterModule injectionRegisterModule = new InjectionRegisterModule();
+    private InjectionRegister injectionRegister = InjectionStoreFactory.getInjectionRegister();
 
     public InjectionRegistryPlain register(Module module) {
-        injectionRegisterModule.register(module);
-        injectionContainer = injectionRegisterModule.getContainer();
+        injectionRegister.register(module);
+        injectionContainer = injectionRegister.getContainer();
         return this;
     }
 
@@ -22,7 +23,7 @@ public class InjectionRegistryPlain implements InjectionRegistry {
 
     public Module getModule() {
         Module module = new Module(injectionContainer);
-        injectionRegisterModule.fillModule(module);
+        injectionRegister.fillModule(module);
         return module;
     }
 }

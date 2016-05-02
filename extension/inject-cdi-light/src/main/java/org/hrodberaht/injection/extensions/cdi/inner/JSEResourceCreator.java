@@ -26,6 +26,13 @@ public class JSEResourceCreator implements ResourceCreator<EntityManager, DataSo
         return dataSourceHandler;
     }
 
+    @Override
+    public DataSource createDataSource(String dbName, String dataSourceName) {
+        JSEDataSourceHandler dataSourceHandler = new JSEDataSourceHandler(dataSourceName);
+        dataSourceHandlerMap.put(dataSourceName, dataSourceHandler);
+        return dataSourceHandler;
+    }
+
     public boolean hasDataSource(String dataSourceName) {
         return dataSourceHandlerMap.containsKey(dataSourceName);
     }

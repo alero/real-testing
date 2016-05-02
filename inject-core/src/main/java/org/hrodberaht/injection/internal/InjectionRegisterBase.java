@@ -45,6 +45,8 @@ public abstract class InjectionRegisterBase<T extends InjectionRegister> impleme
         this.container = register.getInnerContainer();
     }
 
+    public abstract T clone();
+
 
     public InjectionRegister register(Class<? extends Annotation> qualifier, Class serviceDefinition, Class service) {
         register(qualifier, serviceDefinition, service, InjectionContainerManager.Scope.NEW);

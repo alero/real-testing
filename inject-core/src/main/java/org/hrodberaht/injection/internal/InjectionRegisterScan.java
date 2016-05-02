@@ -28,7 +28,12 @@ import javax.inject.Singleton;
  * @author Robert Alexandersson
  * @version 1.0
  * @since 1.0
+ *
+ * Use the InjectionRegisterModule for all variations, will be removed
+ * {@link InjectionRegisterModule}
+ *
  */
+@Deprecated
 public class InjectionRegisterScan extends InjectionRegisterScanBase<InjectionRegisterScan> {
 
 

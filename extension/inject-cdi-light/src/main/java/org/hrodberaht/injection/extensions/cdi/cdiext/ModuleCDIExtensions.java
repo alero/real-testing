@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.extensions.cdi.cdiext;
 
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.spi.ContainerConfig;
 
 /**
@@ -15,11 +15,11 @@ public class ModuleCDIExtensions implements CDIExtensions{
     public ModuleCDIExtensions() {
     }
 
-    public void runAfterBeanDiscovery(InjectionRegisterModule register, ContainerConfig containerConfig) {
+    public void runAfterBeanDiscovery(InjectionRegister register, ContainerConfig containerConfig) {
         throw new RuntimeException("not yet implemented");
     }
 
-    public void runBeforeBeanDiscovery(InjectionRegisterModule register, ContainerConfig containerConfig) {
+    public void runBeforeBeanDiscovery(InjectionRegister register, ContainerConfig containerConfig) {
         throw new RuntimeException("not yet implemented");
     }
 

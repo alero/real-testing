@@ -42,7 +42,13 @@ public class SpringInjectionRegistryStream<T extends SpringModule> extends Injec
     }
 
     public SpringInjectionRegistryStream springConfig(SpringModuleFunc scanModuleFunc) {
-        springConfigs = scanModuleFunc.value();
+        springConfigs = new Class[]{scanModuleFunc.value()};
+        return this;
+    }
+
+    public SpringInjectionRegistryStream springConfig(SpringModulesFunc scanModuleFunc) {
+        ConfigResource configResource = new ConfigResource();
+        springConfigs = scanModuleFunc.value(configResource);
         return this;
     }
 

@@ -42,4 +42,12 @@ public class LocalResources {
     public void putEntityManager(String name, EntityManager entityManager) {
         entityManagers.put(name, entityManager);
     }
+
+    public Map<String, DataSourceProxy> getDataSources() {
+        return dataSources;
+    }
+
+    public Map<String, EntityManager> getEntityManagers() {
+        return entityManagers;
+    }
 }

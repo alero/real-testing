@@ -3,7 +3,6 @@ package org.hrodberaht.injection.config;
 import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.Module;
 import org.hrodberaht.injection.internal.InjectionContainerManager;
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.internal.ResourceInjection;
 import org.hrodberaht.injection.internal.ScopeContainer;
 import org.hrodberaht.injection.register.InjectionRegister;
@@ -23,10 +22,10 @@ import java.util.Map;
  * @version 1.0
  * @since 1.0
  */
-public abstract class ContainerConfigBase<T extends InjectionRegisterModule> implements ContainerConfig {
+public abstract class ContainerConfigBase<T extends InjectionRegister> implements ContainerConfig {
 
-    protected InjectionRegisterModule originalRegister = null;
-    protected InjectionRegisterModule activeRegister = null;
+    protected InjectionRegister originalRegister = null;
+    protected InjectionRegister activeRegister = null;
 
     protected ResourceCreator resourceCreator = createResourceCreator();
 
@@ -40,26 +39,28 @@ public abstract class ContainerConfigBase<T extends InjectionRegisterModule> imp
 
     protected abstract void injectResources(Object serviceInstance);
 
-    protected void registerModules(InjectionRegisterModule combinedRegister) {
+    protected void registerModules(InjectionRegister activeRegister) {
         // This is intended for loading modules
     }
 
     protected abstract InjectionRegisterScanBase getScanner(InjectionRegister registerModule);
 
     protected InjectContainer createAutoScanContainer(String... packageName) {
-        InjectionRegisterModule combinedRegister = preScanModuleRegistration();
+        InjectionRegister combinedRegister = preScanModuleRegistration();
         registerModules(combinedRegister);
         createAutoScanContainerRegister(packageName, combinedRegister);
         return activeRegister.getContainer();
     }
 
     protected InjectContainer createEmptyContainer() {
-        InjectionRegisterModule combinedRegister = preScanModuleRegistration();
+        InjectionRegister combinedRegister = preScanModuleRegistration();
+        registerModules(combinedRegister);
         createAutoScanContainerRegister(null, combinedRegister);
         return activeRegister.getContainer();
     }
 
-    protected void createAutoScanContainerRegister(String[] packageName, InjectionRegisterModule combinedRegister) {
+    protected void createAutoScanContainerRegister(String[] packageName, InjectionRegister combinedRegister) {
+        registerModules(combinedRegister);
         if (packageName != null) {
             scanAndRegister(combinedRegister, packageName);
         }
@@ -68,13 +69,13 @@ public abstract class ContainerConfigBase<T extends InjectionRegisterModule> imp
         activeRegister = originalRegister.clone();
     }
 
-    private void scanAndRegister(InjectionRegisterModule combinedRegister, String[] packageName) {
+    private void scanAndRegister(InjectionRegister combinedRegister, String[] packageName) {
         InjectionRegisterScanBase registerScan = getScanner(combinedRegister);
         registerScan.scanPackage(packageName);
     }
 
-    protected InjectionRegisterModule preScanModuleRegistration() {
-        return new InjectionRegisterModule();
+    protected InjectionRegister preScanModuleRegistration() {
+        return InjectionStoreFactory.getInjectionRegister();
     }
 
     public void addSingletonActiveRegistry() {
@@ -83,11 +84,11 @@ public abstract class ContainerConfigBase<T extends InjectionRegisterModule> imp
     }
 
     private RegistrationModuleAnnotation prepareModuleSingletonForRegistry() {
-        final InjectionRegisterModule configBase = this.activeRegister;
+        final InjectionRegister configBase = this.activeRegister;
         return new RegistrationModuleAnnotation() {
             @Override
             public void registrations() {
-                register(InjectionRegisterModule.class)
+                register(InjectionRegister.class)
                         // .named("ActiveRegisterModule")
                         .scopeAs(ScopeContainer.Scope.SINGLETON)
                         .registerTypeAs(InjectionContainerManager.RegisterType.FINAL)
@@ -96,7 +97,7 @@ public abstract class ContainerConfigBase<T extends InjectionRegisterModule> imp
         };
     }
 
-    protected void appendTypedResources(InjectionRegisterModule registerModule) {
+    protected void appendTypedResources(InjectionRegister registerModule) {
         Map<Class, Object> typedResources = resourceInjection.getTypeResources();
         if (typedResources != null) {
             for (final Class typedResource : typedResources.keySet()) {
@@ -131,6 +132,10 @@ public abstract class ContainerConfigBase<T extends InjectionRegisterModule> imp
         resourceInjection.addResource(typedName, value);
     }
 
+    public DataSource createDataSource(String dataSourceName, String databaseName) {
+        return resourceCreator.createDataSource(databaseName, dataSourceName);
+    }
+
     public DataSource createDataSource(String dataSourceName) {
         return resourceCreator.createDataSource(dataSourceName);
     }
@@ -151,7 +156,7 @@ public abstract class ContainerConfigBase<T extends InjectionRegisterModule> imp
      * @return the active InjectionContainer with all services loaded and registered
      */
     public InjectContainer loadModule(List<Module> modules) {
-        InjectionRegisterModule injectionRegisterModule = new InjectionRegisterModule();
+        InjectionRegister injectionRegisterModule = InjectionStoreFactory.getInjectionRegister();
         for (Module module : modules) {
             injectionRegisterModule.register(module);
         }

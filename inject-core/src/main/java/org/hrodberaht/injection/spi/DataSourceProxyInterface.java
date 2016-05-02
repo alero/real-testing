@@ -1,5 +1,7 @@
 package org.hrodberaht.injection.spi;
 
+import java.sql.Connection;
+
 /**
  * Created with IntelliJ IDEA.
  * User: alexbrob
@@ -12,4 +14,11 @@ public interface DataSourceProxyInterface extends javax.sql.DataSource {
     void clearDataSource();
 
     void commitDataSource();
+
+    Connection getNativeConnection();
+
+    void loadSnapshot();
+
+    void createSnapshot();
+
 }

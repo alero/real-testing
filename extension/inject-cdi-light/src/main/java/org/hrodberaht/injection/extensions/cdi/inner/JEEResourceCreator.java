@@ -50,6 +50,11 @@ public class JEEResourceCreator implements ResourceCreator<EntityManager, DataSo
         return dataSource;
     }
 
+    @Override
+    public DataSource createDataSource(String dbName, String dataSourceName) {
+        return createDataSource(dataSourceName);
+    }
+
     public boolean hasDataSource(String dataSourceName) {
         return dataSources.get(dataSourceName) != null;
     }

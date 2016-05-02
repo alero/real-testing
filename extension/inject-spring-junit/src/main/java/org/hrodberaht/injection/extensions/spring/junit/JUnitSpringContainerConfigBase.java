@@ -9,9 +9,11 @@ import org.hrodberaht.injection.spi.ResourceCreator;
 /**
  * Created by robertalexandersson on 4/15/16.
  */
-public abstract class JUnitSpringContainerConfigBase extends SpringContainerConfigBase {
+public class JUnitSpringContainerConfigBase extends SpringContainerConfigBase {
 
     protected JunitSQLContainerService junitSQLContainerService;
+
+    private JunitSpringStreamApplication streamApplication;
 
     public JUnitSpringContainerConfigBase(ResourceCreator resourceCreator) {
         super(resourceCreator);
@@ -19,6 +21,11 @@ public abstract class JUnitSpringContainerConfigBase extends SpringContainerConf
     }
 
     public JUnitSpringContainerConfigBase() {
+        junitSQLContainerService = new JunitSQLContainerService(this);
+    }
+
+    public JUnitSpringContainerConfigBase(JunitSpringStreamApplication streamApplication) {
+        this.streamApplication = streamApplication;
         junitSQLContainerService = new JunitSQLContainerService(this);
     }
 

@@ -15,7 +15,9 @@
 package org.hrodberaht.injection.internal;
 
 import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.Module;
 import org.hrodberaht.injection.register.InjectionRegister;
+import org.hrodberaht.injection.register.RegistrationModule;
 
 /**
  * Simple Java Utils - Container
@@ -23,7 +25,13 @@ import org.hrodberaht.injection.register.InjectionRegister;
  * @author Robert Alexandersson
  * @version 1.0
  * @since 1.0
+ *
+ *
+ * Use the InjectionRegisterModule for all variations, will be removed
+ * {@link InjectionRegisterModule}
+ *
  */
+@Deprecated
 public class InjectionRegisterJava extends InjectionRegisterBase<InjectionRegister> {
 
     public InjectionRegisterJava() {
@@ -69,6 +77,11 @@ public class InjectionRegisterJava extends InjectionRegisterBase<InjectionRegist
     }
 
     @Override
+    public InjectionRegister register(RegistrationModule... modules) {
+        throw new IllegalAccessError("deprecated use InjectionRegisterModule");
+    }
+
+    @Override
     public InjectionRegisterJava clone() {
         InjectionRegisterJava registerJava = new InjectionRegisterJava();
         try {
@@ -77,6 +90,11 @@ public class InjectionRegisterJava extends InjectionRegisterBase<InjectionRegist
             throw new RuntimeException(e);
         }
         return registerJava;
+    }
+
+    @Override
+    public void fillModule(Module module) {
+        throw new IllegalAccessError("deprecated use InjectionRegisterModule");
     }
 
 }

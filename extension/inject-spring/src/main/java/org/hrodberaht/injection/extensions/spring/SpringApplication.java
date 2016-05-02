@@ -20,9 +20,14 @@ public class SpringApplication {
     }
 
     public InjectContainer createContainer() {
-        // containerConfigBase.runBeforeBeanDiscovery();
+
         InjectContainer injectContainer = containerConfigBase.loadModule(moduleList);
-        // containerConfigBase.runAfterBeanDiscovery();
+        for (Module module : moduleList) {
+            if (module instanceof SpringModule) {
+                containerConfigBase.loadJavaSpringConfig(((SpringModule) module).getClasses());
+            }
+        }
+        containerConfigBase.createContainer();
         return injectContainer;
     }
 

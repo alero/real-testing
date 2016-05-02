@@ -1,8 +1,6 @@
 package org.hrodberaht.injection.spi;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
-import org.hrodberaht.injection.register.RegistrationModule;
 
 /**
  * Created with IntelliJ IDEA.
@@ -17,8 +15,6 @@ public interface InjectionRegisterScanInterface {
     InjectionRegisterScanInterface scanPackageExclude(String packagename, Class... manuallyExcluded);
 
     void overrideRegister(Class serviceDefinition, Object service);
-
-    InjectionRegisterModule register(RegistrationModule... modules);
 
     InjectContainer getInjectContainer();
 

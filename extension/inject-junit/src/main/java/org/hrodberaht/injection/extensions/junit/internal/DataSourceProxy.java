@@ -1,14 +1,18 @@
 package org.hrodberaht.injection.extensions.junit.internal;
 
+import org.hrodberaht.injection.extensions.junit.internal.embedded.DataSourceConfigFactory;
+import org.hrodberaht.injection.extensions.junit.internal.embedded.DataSourceConfiguration;
+import org.hrodberaht.injection.extensions.junit.internal.embedded.PersistenceResource;
+import org.hrodberaht.injection.extensions.junit.internal.embedded.ResourceWatcher;
 import org.hrodberaht.injection.spi.DataSourceProxyInterface;
 
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
+import java.sql.SQLNonTransientConnectionException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -31,21 +35,51 @@ public class DataSourceProxy implements DataSourceProxyInterface {
 
     private final InheritableThreadLocal<ConnectionHandler> threadLocal = new InheritableThreadLocal<ConnectionHandler>();
 
-    public String JDBC_DRIVER = "org.hsqldb.jdbcDriver";
-    public String JDBC_URL = "jdbc:hsqldb:mem:test";
-    public String JDBC_USERNAME = "sa";
-    public String JDBC_PASSWORD = "";
 
+    private DataSourceConfiguration dataSourceConfiguration;
     private String dbName = null;
+    private ResourceWatcher resourceWatcher;
+    private PersistenceResource resource;
+    private DataSourceConfigFactory dataSourceConfigFactory;
 
-    public DataSourceProxy(String dbName) {
+    private ProxyResourceCreator.DataSourceProvider provider;
+    private ProxyResourceCreator.DataSourcePersistence persistence;
+
+    public DataSourceProxy(String dbName,
+                           ProxyResourceCreator.DataSourceProvider provider,
+                           ProxyResourceCreator.DataSourcePersistence persistence,
+                           PersistenceResource resource,
+                           ResourceWatcher resourceWatcher) {
+        this.resource = resource;
+        this.resourceWatcher = resourceWatcher;
+        this.provider = provider;
+        this.persistence = persistence;
         if (DB_NAME_MAPPING.containsKey(dbName)) {
             this.dbName = DB_NAME_MAPPING.get(dbName);
         } else {
             this.dbName = dbName;
         }
+        init();
     }
 
+    private void init() {
+        if (resource == null) {
+            resource = new PersistenceResource("dbscript.script");
+        }
+        if (resourceWatcher == null) {
+            resourceWatcher = () -> false;
+        }
+        dataSourceConfigFactory = new DataSourceConfigFactory(this, resourceWatcher, resource, dbName);
+        dataSourceConfiguration = dataSourceConfigFactory.createConfiguration(provider, persistence);
+    }
+
+    public void createSnapshot() {
+        dataSourceConfiguration.createSnapshot();
+    }
+
+    public void loadSnapshot() {
+        dataSourceConfiguration.loadSnapshot();
+    }
 
     public static void addDataSourceNameMapping(String dataSourceName, String databaseName) {
         DB_NAME_MAPPING.put(dataSourceName, databaseName);
@@ -69,7 +103,7 @@ public class DataSourceProxy implements DataSourceProxyInterface {
         try {
             connectionHandler.conn.rollback();
             connectionHandler.conn.close();
-            CONNECTIONS.remove(connectionHandler.conn);
+            CONNECTIONS.remove(connectionHandler.conn.toString());
             TDDLogger.log("rollback/close Connection " + connectionHandler + " Thread:" + Thread.currentThread());
             rollbackRecursively(connectionHandler);
         } catch (SQLException e) {
@@ -85,6 +119,11 @@ public class DataSourceProxy implements DataSourceProxyInterface {
         }
     }
 
+    @Override
+    public Connection getNativeConnection() {
+        return threadLocal.get().conn;
+    }
+
     private void commitRecursively(ConnectionHandler connection) {
         for (ConnectionHandler children : connection.children) {
             commitAndClose(children);
@@ -93,11 +132,16 @@ public class DataSourceProxy implements DataSourceProxyInterface {
 
     private void commitAndClose(ConnectionHandler connectionHandler) {
         try {
+            CONNECTIONS.remove(connectionHandler.conn.toString());
             connectionHandler.conn.commit();
             connectionHandler.conn.close();
-            CONNECTIONS.remove(connectionHandler.conn);
             TDDLogger.log("commit/close Connection " + connectionHandler + " Thread:" + Thread.currentThread());
             commitRecursively(connectionHandler);
+        } catch (SQLNonTransientConnectionException exception) {
+            if (exception.getMessage().contains("connection does not exist")) {
+                TDDLogger.log("connection closed from the outside");
+                return;
+            }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -118,16 +162,15 @@ public class DataSourceProxy implements DataSourceProxyInterface {
     }
 
     public Connection getConnection() throws SQLException {
-        ConnectionHandler connection = threadLocal.get();
+        final ConnectionHandler connection = threadLocal.get();
 
         if (connection != null && connection.hasConnection()) {
             TDDLogger.log("reusing Connection " + connection + " Thread:" + Thread.currentThread());
             return connection.proxy;
         }
         try {
-            ConnectionHandler connectionHandler = new ConnectionHandler();
-            Class.forName(JDBC_DRIVER);
-            final Connection conn = DriverManager.getConnection(JDBC_URL + dbName, JDBC_USERNAME, JDBC_PASSWORD);
+            final ConnectionHandler connectionHandler = new ConnectionHandler();
+            final Connection conn = dataSourceConfiguration.initateConnection();
             CONNECTIONS.put(conn.toString(), conn);
             conn.setAutoCommit(false);
             InvocationHandler invocationHandler = (proxy, method, args) -> {
@@ -141,7 +184,7 @@ public class DataSourceProxy implements DataSourceProxyInterface {
                 return method.invoke(conn, args);
             };
 
-            Connection proxy = (Connection) Proxy.newProxyInstance(
+            final Connection proxy = (Connection) Proxy.newProxyInstance(
                     Thread.currentThread().getContextClassLoader(), new Class[]{Connection.class}, invocationHandler
             );
             if (connection != null && !connection.hasConnection()) {
@@ -159,6 +202,7 @@ public class DataSourceProxy implements DataSourceProxyInterface {
             throw new RuntimeException(e);
         }
     }
+
 
     public Connection getConnection(String username, String password) throws SQLException {
         return getConnection();

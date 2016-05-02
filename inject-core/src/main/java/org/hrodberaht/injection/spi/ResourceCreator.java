@@ -13,6 +13,8 @@ import java.util.Collection;
 public interface ResourceCreator<T, K extends DataSource> {
     K createDataSource(String dataSourceName);
 
+    K createDataSource(String dbName, String dataSourceName);
+
     boolean hasDataSource(String dataSourceName);
 
     K getDataSource(String schemaName);

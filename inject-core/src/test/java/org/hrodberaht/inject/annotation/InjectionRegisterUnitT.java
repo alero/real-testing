@@ -82,7 +82,7 @@ public class InjectionRegisterUnitT {
     public void moduleMultiScanRegistrationLambda() throws Exception {
         InjectContainer injectionContainer =
                 new InjectionRegistryStream()
-                        .scanAll(e -> e.packages(
+                        .scan(e -> e.packages(
                                 "org.hrodberaht.inject.testservices.largepackage"
                                 , "org.hrodberaht.inject.testservices.annotated"
                         ))

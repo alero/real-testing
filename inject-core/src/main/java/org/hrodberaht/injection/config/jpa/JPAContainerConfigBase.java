@@ -1,8 +1,8 @@
 package org.hrodberaht.injection.config.jpa;
 
 import org.hrodberaht.injection.config.ContainerConfigBase;
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.internal.ResourceInjection;
+import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.spi.ResourceCreator;
 
 import javax.persistence.EntityManager;
@@ -17,7 +17,7 @@ import java.util.Collection;
  * @version 1.0
  * @since 1.0
  */
-public abstract class JPAContainerConfigBase<T extends InjectionRegisterModule> extends ContainerConfigBase<T> {
+public abstract class JPAContainerConfigBase<T extends InjectionRegister> extends ContainerConfigBase<T> {
 
 
     public Collection<EntityManager> getEntityManagers() {

@@ -4,8 +4,9 @@ import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.InjectionRegistry;
 import org.hrodberaht.injection.Module;
 import org.hrodberaht.injection.config.InjectionRegisterScanBase;
+import org.hrodberaht.injection.config.InjectionStoreFactory;
 import org.hrodberaht.injection.config.jpa.JPAContainerConfigBase;
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.register.internal.RegistrationInstanceSimple;
 
 import javax.persistence.EntityManager;
@@ -18,7 +19,7 @@ import java.util.List;
 public class InjectionRegistryStream<T extends Module> implements InjectionRegistry<T> {
 
     private InjectContainer injectionContainer;
-    private InjectionRegisterModule injectionRegisterModule = new InjectionRegisterModule();
+    private InjectionRegister injectionRegisterModule = InjectionStoreFactory.getInjectionRegister();
     private JPAContainerConfigBase configBase;
 
     public InjectionRegistryStream(JPAContainerConfigBase configBase) {
@@ -36,7 +37,7 @@ public class InjectionRegistryStream<T extends Module> implements InjectionRegis
         return null;
     }
 
-    public InjectionRegistryStream scanAll(ScanModulesFunc scanModuleFunc) {
+    public InjectionRegistryStream scan(ScanModulesFunc scanModuleFunc) {
         Packaging packaging = new Packaging();
         String[] _packages = scanModuleFunc.scan(packaging);
         Module module = new Module() {
