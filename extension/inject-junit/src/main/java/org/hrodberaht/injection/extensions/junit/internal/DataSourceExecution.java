@@ -18,7 +18,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
@@ -48,16 +47,21 @@ public class DataSourceExecution {
 
     public void addSQLSchemas(String schemaName, String packageBase) {
 
-        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-
+        ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
+        ClassLoader classClassLoader = DataSourceExecution.class.getClassLoader();
 
         List<File> files = new ArrayList<File>();
-        files.addAll(findFiles(classLoader, packageBase));
-        runScripts(files, schemaName, SCHEMA_PREFIX);
-        runScripts(files, schemaName, INSERT_SCRIPT_PREFIX);
-
-
-        findJarFiles(classLoader, packageBase, schemaName);
+        List<File> foundFiles = findFiles(threadClassLoader, packageBase);
+        if (foundFiles == null) {
+            foundFiles = findFiles(classClassLoader, packageBase);
+        }
+        if (foundFiles != null) {
+            files.addAll(foundFiles);
+            runScripts(files, schemaName, SCHEMA_PREFIX);
+            runScripts(files, schemaName, INSERT_SCRIPT_PREFIX);
+        }
+        findJarFiles(threadClassLoader, packageBase, schemaName);
+        findJarFiles(classClassLoader, packageBase, schemaName);
 
     }
 
@@ -100,7 +104,7 @@ public class DataSourceExecution {
     private List<File> findFiles(ClassLoader classLoader, String packageBase) {
         URL url = classLoader.getResource(packageBase);
         if (url == null) {
-            throw new IllegalStateException(MessageFormat.format("Could not find resource at : '{0}'", packageBase));
+            return null;
         }
         String directoryString = url.getFile().replaceAll("%20", " ");
         File directory = new File(directoryString);

@@ -11,8 +11,9 @@ import javax.naming.NamingException;
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
 import javax.sql.DataSource;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Unit Test JUnit (using @Inject)
@@ -24,12 +25,10 @@ import java.util.Collection;
  */
 public class ProxyResourceCreator implements ResourceCreator<EntityManager, DataSourceProxy> {
 
-    private static InheritableThreadLocal<LocalResources> LOCAL = new InheritableThreadLocal<>();
+    private static LocalResources LOCAL = new LocalResources();
 
-    static {
-        LOCAL.set(new LocalResources());
-    }
-
+    private Map<String, DataSourceProxy> DATASOURCES = new HashMap<String, DataSourceProxy>();
+    private Map<String, EntityManager> ENTITYMANAGERS = new HashMap<String, EntityManager>();
     private DataSourceProvider provider = DataSourceProvider.HSQLDB;
     private DataSourcePersistence persistence = DataSourcePersistence.MEM;
     private ResourceWatcher resourceWatcher = null;
@@ -46,7 +45,6 @@ public class ProxyResourceCreator implements ResourceCreator<EntityManager, Data
     public ProxyResourceCreator() {
     }
 
-
     public ProxyResourceCreator(DataSourceProvider provider, DataSourcePersistence persistence) {
         this.provider = provider;
         this.persistence = persistence;
@@ -60,50 +58,51 @@ public class ProxyResourceCreator implements ResourceCreator<EntityManager, Data
     }
 
     public DataSourceProxy createDataSource(String dbName) {
-        return createDataSource(dbName, dbName);
-    }
-
-    public DataSourceProxy createDataSource(String dbName, String dataSourceName) {
-        LocalResources localResources = LOCAL.get();
-        if (!localResources.hasDataSource(dataSourceName)) {
+        LocalResources localResources = LOCAL;
+        if (!localResources.hasDataSource(dbName)) {
             DataSourceProxy dataSourceProxy = createDataSourceProxy(dbName);
-            // DATASOURCES.put(dataSourceName, dataSourceProxy);
-            localResources.putDataSource(dataSourceName, dataSourceProxy);
-            registerDataSourceInContext(dataSourceName, dataSourceProxy);
+            DATASOURCES.put(dbName, dataSourceProxy);
+            localResources.putDataSource(dbName, dataSourceProxy);
+            registerDataSourceInContext(dbName, dataSourceProxy);
             TDDLogger.log("Created dataSourceProxy " + dataSourceProxy);
             return dataSourceProxy;
         }
-        DataSourceProxy dataSourceProxy = localResources.getDataSource(dataSourceName);
+        DataSourceProxy dataSourceProxy = localResources.getDataSource(dbName);
         TDDLogger.log("Reused dataSourceProxy " + dataSourceProxy);
-        // DATASOURCES.put(dataSourceName, dataSourceProxy);
+        DATASOURCES.put(dbName, dataSourceProxy);
         return dataSourceProxy;
+    }
+
+    @Override
+    public DataSourceProxy createDataSource(String dbName, String dataSourceName) {
+        return createDataSource(dataSourceName);
     }
 
     protected DataSourceProxy createDataSourceProxy(String dbName) {
         return new DataSourceProxy(dbName, provider, persistence, resource, resourceWatcher);
     }
 
-    public DataSourceProxy getDataSource(String dataSourceName) {
-        return LOCAL.get().getDataSource(dataSourceName);
+    public DataSourceProxy getDataSource(String dbName) {
+        return DATASOURCES.get(dbName);
     }
 
     public boolean hasDataSource(String dataSourceName) {
-        return LOCAL.get().hasDataSource(dataSourceName);
+        return DATASOURCES.get(dataSourceName) != null;
     }
 
     public EntityManager createEntityManager(String name, String dataSourceName, DataSource dataSource) {
-        LocalResources localResources = LOCAL.get();
+        LocalResources localResources = LOCAL;
         if (!localResources.hasEntityManager(name)) {
             registerDataSourceInContext(dataSourceName, dataSource);
             EntityManager entityManager = Persistence.createEntityManagerFactory(name).createEntityManager();
             TDDLogger.log("Created entity manager " + entityManager);
-            // ENTITYMANAGERS.put(name, entityManager);
+            ENTITYMANAGERS.put(name, entityManager);
             localResources.putEntityManager(name, entityManager);
             return entityManager;
         }
         EntityManager entityManager = localResources.getEntityManager(name);
         TDDLogger.log("Reused entity manager " + entityManager);
-        // ENTITYMANAGERS.put(name, entityManager);
+        ENTITYMANAGERS.put(name, entityManager);
         return entityManager;
     }
 
@@ -119,10 +118,10 @@ public class ProxyResourceCreator implements ResourceCreator<EntityManager, Data
     }
 
     public Collection<DataSourceProxy> getDataSources() {
-        return new ArrayList<>(LOCAL.get().getDataSources().values());
+        return DATASOURCES.values();
     }
 
     public Collection<EntityManager> getEntityManagers() {
-        return new ArrayList<>(LOCAL.get().getEntityManagers().values());
+        return ENTITYMANAGERS.values();
     }
 }

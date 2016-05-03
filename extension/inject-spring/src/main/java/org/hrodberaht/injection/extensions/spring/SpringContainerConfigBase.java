@@ -11,6 +11,7 @@ import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.internal.InjectionRegisterScan;
 import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.register.InjectionRegister;
+import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.spi.ResourceCreator;
 import org.hrodberaht.injection.spi.module.CustomInjectionPointFinderModule;
 import org.springframework.context.ApplicationContext;
@@ -77,6 +78,16 @@ public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<I
         }
     }
 
+    @Override
+    public void addSingletonActiveRegistry() {
+        activeRegister.register(new RegistrationModuleAnnotation() {
+            @Override
+            public void registrations() {
+                register(ApplicationContext.class).withFactoryInstance(context);
+            }
+        });
+        super.addSingletonActiveRegistry();
+    }
 
     protected InjectionRegisterModule preScanModuleRegistration() {
         InjectionRegisterModule injectionRegisterModule = new InjectionRegisterModule();

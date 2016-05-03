@@ -27,8 +27,9 @@ public class SpringApplication {
                 containerConfigBase.loadJavaSpringConfig(((SpringModule) module).getClasses());
             }
         }
-        containerConfigBase.createContainer();
-        return injectContainer;
+
+
+        return containerConfigBase.createContainer();
     }
 
 }

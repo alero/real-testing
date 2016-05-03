@@ -22,17 +22,17 @@ import java.lang.annotation.Annotation;
  */
 public class JUnitRunner extends BlockJUnit4ClassRunner {
 
-    private InjectContainer activeContainer = null;
+    protected InjectContainer activeContainer = null;
 
-    private ContainerConfig creator = null;
+    protected ContainerConfig creator = null;
 
     /**
      * Creates a BlockJUnit4ClassRunner to run
      *
      * @throws org.junit.runners.model.InitializationError if the test class is malformed.
      */
-    public JUnitRunner(Class<?> klass) throws InitializationError {
-        super(klass);
+    public JUnitRunner(Class<?> clazz) throws InitializationError {
+        super(clazz);
         createContainerFromRegistration();
     }
 
@@ -64,12 +64,7 @@ public class JUnitRunner extends BlockJUnit4ClassRunner {
     protected void runChild(FrameworkMethod frameworkMethod, RunNotifier notifier) {
         try {
 
-            TransactionManager.beginTransaction(creator);
-
-            // So that ContainerLifeCycleTestUtil can access the activeContainer and do magic
-            creator.addSingletonActiveRegistry();
-
-            activeContainer = creator.getActiveRegister().getContainer();
+            beforeRunChild();
             try {
                 // This will execute the createTest method below, the activeContainer handling relies on this.
                 System.out.println("START running test " +
@@ -78,8 +73,7 @@ public class JUnitRunner extends BlockJUnit4ClassRunner {
                 System.out.println("END running test " +
                         frameworkMethod.getName() + " for thread " + Thread.currentThread().toString());
             } finally {
-                TransactionManager.endTransaction();
-                creator.cleanActiveContainer();
+                afterRunChild();
             }
         } catch (Throwable e) {
             e.printStackTrace();
@@ -87,6 +81,20 @@ public class JUnitRunner extends BlockJUnit4ClassRunner {
             notifier.fireTestFailure(new Failure(description, e));
             notifier.fireTestFinished(description);
         }
+    }
+
+    protected void afterRunChild() {
+        TransactionManager.endTransaction();
+        creator.cleanActiveContainer();
+    }
+
+    protected void beforeRunChild() {
+        TransactionManager.beginTransaction(creator);
+
+        // So that ContainerLifeCycleTestUtil can access the activeContainer and do magic
+        creator.addSingletonActiveRegistry();
+
+        activeContainer = creator.getActiveRegister().getContainer();
     }
 
     /**
