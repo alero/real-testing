@@ -1,7 +1,7 @@
 package org.hrodberaht.injection.extensions.junit;
 
 import org.hrodberaht.injection.extensions.junit.internal.TDDLogger;
-import org.hrodberaht.injection.extensions.spring.services.SpringEntityManager;
+import org.hrodberaht.injection.extensions.spring.jpa.SpringEntityManager;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
@@ -53,7 +53,6 @@ public class SpringJUnitRunner extends SpringJUnit4ClassRunner {
 
     private void flushEntityManager() {
         SpringEntityManager springEntityManager = getSpringEntityManager();
-        // springEntityManager.getEntityManager().getTransaction().commit();
         if (springEntityManager != null) {
             if (springEntityManager.getEntityManager() != null) {
                 springEntityManager.getEntityManager().flush();

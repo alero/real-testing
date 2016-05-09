@@ -4,5 +4,5 @@
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd">
 
     <bean class="org.hrodberaht.injection.extensions.spring.services.SpringInjectionBeanInjector" />
-
+    <bean class="org.hrodberaht.injection.extensions.spring.services.ApplicationContextService"/>
 </beans>

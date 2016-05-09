@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.extensions.spring.services;
+package org.hrodberaht.injection.extensions.spring.jpa;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

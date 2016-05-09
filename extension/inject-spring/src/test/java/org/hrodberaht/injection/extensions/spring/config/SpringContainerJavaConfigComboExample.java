@@ -4,6 +4,7 @@ import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.extensions.junit.internal.JunitSQLContainerService;
 import org.hrodberaht.injection.extensions.junit.internal.ProxyResourceCreator;
 import org.hrodberaht.injection.extensions.spring.SpringContainerConfigBase;
+import org.hrodberaht.injection.extensions.spring.junit.SpringBeanReplacementProxy;
 import org.hrodberaht.injection.spi.ResourceCreator;
 
 import javax.sql.DataSource;

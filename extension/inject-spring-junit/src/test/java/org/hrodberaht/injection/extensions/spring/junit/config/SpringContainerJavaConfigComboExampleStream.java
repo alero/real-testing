@@ -1,7 +1,7 @@
 package org.hrodberaht.injection.extensions.spring.junit.config;
 
-import org.hrodberaht.injection.extensions.spring.config.SpringBeanReplacementProxy;
 import org.hrodberaht.injection.extensions.spring.junit.JunitSpringStreamApplication;
+import org.hrodberaht.injection.extensions.spring.junit.SpringBeanReplacementProxy;
 
 /**
  * Unit Test JUnit (using @Inject)

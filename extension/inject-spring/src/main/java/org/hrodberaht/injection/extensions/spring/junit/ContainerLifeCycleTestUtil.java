@@ -1,6 +1,5 @@
 package org.hrodberaht.injection.extensions.spring.junit;
 
-import org.hrodberaht.injection.extensions.spring.config.ReplacementBeans;
 import org.hrodberaht.injection.extensions.spring.services.ApplicationContextService;
 import org.hrodberaht.injection.register.RegistrationModule;
 import org.springframework.beans.factory.annotation.Autowired;

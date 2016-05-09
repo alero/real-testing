@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.extensions.spring.config;
+package org.hrodberaht.injection.extensions.spring.junit;
 
 import org.hrodberaht.injection.InjectContainer;
 import org.springframework.stereotype.Component;

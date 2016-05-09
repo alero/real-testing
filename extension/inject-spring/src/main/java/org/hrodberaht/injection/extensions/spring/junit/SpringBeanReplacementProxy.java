@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.extensions.spring.config;
+package org.hrodberaht.injection.extensions.spring.junit;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;

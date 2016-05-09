@@ -2,6 +2,7 @@ package org.hrodberaht.injection.extensions.spring.config;
 
 import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.extensions.spring.instance.SpringInject;
+import org.hrodberaht.injection.extensions.spring.junit.ReplacementBeans;
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;

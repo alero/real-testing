@@ -4,6 +4,7 @@ import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.annotation.PostConstruct;
 import org.hrodberaht.injection.config.InjectionRegisterScanBase;
 import org.hrodberaht.injection.config.jpa.JPAContainerConfigBase;
+import org.hrodberaht.injection.extensions.spring.config.ContainerAllSpringConfig;
 import org.hrodberaht.injection.extensions.spring.config.ContainerSpringConfig;
 import org.hrodberaht.injection.extensions.spring.instance.SpringBeanInjector;
 import org.hrodberaht.injection.extensions.spring.instance.SpringInject;
@@ -35,12 +36,17 @@ public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<I
 
     private ApplicationContext context;
     private SpringBeanInjector springBeanInjector;
+    private boolean enableJPA = false;
 
     protected SpringContainerConfigBase(ResourceCreator resourceCreator) {
         this.resourceCreator = resourceCreator;
     }
 
     protected SpringContainerConfigBase() {
+    }
+
+    protected void setEnableJPA(boolean enableJPA) {
+        this.enableJPA = enableJPA;
     }
 
     protected ApplicationContext getContext() {
@@ -62,14 +68,18 @@ public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<I
 
     public void loadJavaSpringConfig(Class... springConfigs) {
         validateEmptyContext(context);
-        Class[] config = new Class[]{ContainerSpringConfig.class};
+        Class[] config = new Class[]{getContainerSpringConfigClass()};
         if (springConfigs != null) {
-            Stream<Class> stringStream = Stream.concat(Stream.of(springConfigs), Stream.of(ContainerSpringConfig.class));
+            Stream<Class> stringStream = Stream.concat(Stream.of(springConfigs), Stream.of(getContainerSpringConfigClass()));
             config = stringStream.toArray(Class[]::new);
         }
         context = new AnnotationConfigApplicationContext(config);
         springBeanInjector = new SpringBeanInjector(context);
 
+    }
+
+    private Class<?> getContainerSpringConfigClass() {
+        return enableJPA ? ContainerAllSpringConfig.class : ContainerSpringConfig.class;
     }
 
     private void validateEmptyContext(ApplicationContext context) {
