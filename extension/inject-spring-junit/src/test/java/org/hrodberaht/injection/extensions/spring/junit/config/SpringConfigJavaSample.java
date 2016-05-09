@@ -1,10 +1,12 @@
 package org.hrodberaht.injection.extensions.spring.junit.config;
 
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.datasource.lookup.JndiDataSourceLookup;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 
@@ -28,6 +30,11 @@ public class SpringConfigJavaSample {
     public DataSource dataSource() {
         final JndiDataSourceLookup jndiLookup = new JndiDataSourceLookup();
         return jndiLookup.getDataSource("jdbc/MyDataSource");
+    }
+
+    @Bean
+    public PlatformTransactionManager platformTransactionManager() {
+        return Mockito.mock(PlatformTransactionManager.class);
     }
 
 

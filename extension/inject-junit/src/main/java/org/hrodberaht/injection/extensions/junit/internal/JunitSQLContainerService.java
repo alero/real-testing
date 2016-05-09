@@ -22,6 +22,7 @@ public class JunitSQLContainerService {
 
     public void addSQLSchemas(String schemaName, String packageBase) {
         DataSourceExecution sourceExecution = new DataSourceExecution(jpaContainerConfigBase.getResourceCreator());
+        TDDLogger.log("JunitSQLContainerService addSQLSchemas " + schemaName + ":" + packageBase);
         if (!sourceExecution.isInitiated(schemaName, packageBase)) {
             sourceExecution.addSQLSchemas(schemaName, packageBase);
         }
@@ -30,6 +31,8 @@ public class JunitSQLContainerService {
 
     public void addSQLSchemas(String controllerPackageName, String schemaName, String packageBase) {
         DataSourceExecution sourceExecution = new DataSourceExecution(jpaContainerConfigBase.getResourceCreator());
+        TDDLogger.log("JunitSQLContainerService addSQLSchemas " +
+                controllerPackageName + ":" + schemaName + ":" + packageBase);
         if (!sourceExecution.isInitiated(controllerPackageName, packageBase)) {
             sourceExecution.addSQLSchemas(schemaName, packageBase);
         }

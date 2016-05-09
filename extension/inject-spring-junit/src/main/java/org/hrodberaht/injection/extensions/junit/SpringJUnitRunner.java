@@ -1,5 +1,7 @@
 package org.hrodberaht.injection.extensions.junit;
 
+import org.hrodberaht.injection.extensions.junit.internal.TDDLogger;
+import org.hrodberaht.injection.extensions.spring.services.SpringEntityManager;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
@@ -10,16 +12,22 @@ import org.springframework.test.context.TestContextManager;
 import org.springframework.test.context.TestExecutionListener;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
+import org.springframework.test.context.transaction.TransactionalTestExecutionListener;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class SpringJUnitRunner extends SpringJUnit4ClassRunner {
 
 
-    final JUnitRunner jUnitRunner;
+    private final JUnitRunner jUnitRunner;
+
+    private TestContext testContext;
+
+    private TransactionalTestExecutionListener transactionalTestExecutionListener;
 
     /**
      * Creates a BlockJUnit4ClassRunner to run
@@ -38,7 +46,30 @@ public class SpringJUnitRunner extends SpringJUnit4ClassRunner {
             jUnitRunner.beforeRunChild();
             super.runChild(frameworkMethod, notifier);
         } finally {
+
             jUnitRunner.afterRunChild();
+        }
+    }
+
+    private void flushEntityManager() {
+        SpringEntityManager springEntityManager = getSpringEntityManager();
+        // springEntityManager.getEntityManager().getTransaction().commit();
+        if (springEntityManager != null) {
+            if (springEntityManager.getEntityManager() != null) {
+                springEntityManager.getEntityManager().flush();
+                springEntityManager.getEntityManager().close();
+            }
+        }
+
+    }
+
+    private SpringEntityManager getSpringEntityManager() {
+        try {
+            return jUnitRunner.activeContainer.get(ApplicationContext.class)
+                    .getBean(SpringEntityManager.class);
+        } catch (Exception ex) {
+            TDDLogger.log("SpringJUnitRunner error: " + ex.getMessage());
+            return null;
         }
     }
 
@@ -60,7 +91,7 @@ public class SpringJUnitRunner extends SpringJUnit4ClassRunner {
         try {
             Field field = TestContextManager.class.getDeclaredField("testContext");
             field.setAccessible(true);
-            TestContext testContext = (TestContext) field.get(contextManager);
+            testContext = (TestContext) field.get(contextManager);
             field.set(contextManager, new TestContextLocal(testContext));
         } catch (NoSuchFieldException | IllegalAccessException e) {
             throw new RuntimeException(e);
@@ -76,9 +107,30 @@ public class SpringJUnitRunner extends SpringJUnit4ClassRunner {
 
         @Override
         public void registerTestExecutionListeners(List<TestExecutionListener> testExecutionListeners) {
-            List<TestExecutionListener> listeners = testExecutionListeners
-                    .stream().filter(t -> !(t instanceof DependencyInjectionTestExecutionListener))
-                    .collect(Collectors.toList());
+
+
+            final List<TestExecutionListener> listeners = new ArrayList<>();
+            testExecutionListeners
+                    .stream()
+                    .filter(t -> !(t instanceof DependencyInjectionTestExecutionListener))
+                    .collect(Collectors.toList())
+                    .forEach(t -> {
+                                if (t instanceof TransactionalTestExecutionListener) {
+                                    transactionalTestExecutionListener = new TransactionalTestExecutionListener() {
+                                        @Override
+                                        public void afterTestMethod(TestContext testContext) throws Exception {
+                                            flushEntityManager();
+                                            super.afterTestMethod(testContext);
+                                        }
+                                    };
+                                    listeners.add(transactionalTestExecutionListener);
+                                } else {
+                                    listeners.add(t);
+                                }
+                            }
+
+                    );
+
             super.registerTestExecutionListeners(listeners);
         }
     }

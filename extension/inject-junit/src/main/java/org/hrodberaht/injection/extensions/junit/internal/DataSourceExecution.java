@@ -83,7 +83,7 @@ public class DataSourceExecution {
                     String jarName = jarEntry.getName();
                     if (!jarEntry.isDirectory() && jarName.startsWith(packageBase)
                             && jarName.endsWith(".sql")) {
-
+                        TDDLogger.log("DataSourceExecution findJarFiles " + fileToLoad.getName());
                         java.io.InputStream is = jarFile.getInputStream(jarEntry);
                         BufferedReader br = new BufferedReader(new InputStreamReader(is));
                         String strLine;
@@ -118,12 +118,14 @@ public class DataSourceExecution {
     private void runScripts(List<File> files, String schemaName, String prefix) {
         for (File file : files) {
             if (file.isFile() && file.getName().startsWith(prefix)) {
+
                 executeScript(file, schemaName);
             }
         }
     }
 
     private void executeScript(File file, String schemaName) {
+        TDDLogger.log("DataSourceExecution runScripts " + file.getName());
         FileInputStream fstream = null;
         try {
             fstream = new FileInputStream(file);
