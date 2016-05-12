@@ -20,13 +20,15 @@ public class TransactionManager {
 
     public static void endTransaction() {
         EntityManagers entityManagers = MANAGERS.get();
-        for (EntityManager entityManager : entityManagers.getEntityManagers()) {
-            if (entityManager != null) {
+        if(entityManagers != null) {
+            for (EntityManager entityManager : entityManagers.getEntityManagers()) {
+                if (entityManager != null) {
 
-                entityManager.getTransaction().rollback();
-                entityManager.clear();
-                // entityManager.close();
-                TDDLogger.log("entityManager rollback " + entityManager);
+                    entityManager.getTransaction().rollback();
+                    entityManager.clear();
+                    // entityManager.close();
+                    TDDLogger.log("entityManager rollback " + entityManager);
+                }
             }
         }
 
@@ -45,12 +47,14 @@ public class TransactionManager {
         DATA_SOURCES.set(new DataSources(creator.getResourceCreator().getDataSources()));
 
         EntityManagers entityManagers = MANAGERS.get();
-        for (EntityManager entityManager : entityManagers.getEntityManagers()) {
-            if (entityManager != null) {
+        if(entityManagers != null) {
+            for (EntityManager entityManager : entityManagers.getEntityManagers()) {
+                if (entityManager != null) {
 
-                entityManager.getTransaction().begin();
-                // entityManager.close();
-                TDDLogger.log("entityManager begin " + entityManager);
+                    entityManager.getTransaction().begin();
+                    // entityManager.close();
+                    TDDLogger.log("entityManager begin " + entityManager);
+                }
             }
         }
         DataSources dataSources = DATA_SOURCES.get();

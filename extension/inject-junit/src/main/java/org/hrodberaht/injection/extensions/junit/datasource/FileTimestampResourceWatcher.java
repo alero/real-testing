@@ -36,14 +36,14 @@ public class FileTimestampResourceWatcher implements ResourceWatcher {
             filesToWatchCache = new HashMap<>(resourceFiles.length);
             prepareFileToWatch(resourceFiles);
             if (filesToWatch != null && filesToWatch.size() > 0) {
-                computeSyncStatusFormWatchers(timestampHolder);
+                computeSyncStatusFromWatchers(timestampHolder);
             }
 
         }
 
     }
 
-    private void computeSyncStatusFormWatchers(File timestampHolder) {
+    private void computeSyncStatusFromWatchers(File timestampHolder) {
         if (!timestampHolder.exists()) {
             TDDLogger.log("First time syncing");
             writeLatestStatus();
@@ -51,9 +51,9 @@ public class FileTimestampResourceWatcher implements ResourceWatcher {
         } else {
             try (Stream<String> stream = Files.lines(Paths.get(timestampHolder.getPath()))) {
                 stream.forEach(line -> {
-                            FileWatcher fileWatcher = FileWatcher.readString(line);
-                            filesToWatchCache.put(fileWatcher.getFile(), fileWatcher);
-                        }
+                        FileWatcher fileWatcher = FileWatcher.readString(line);
+                        filesToWatchCache.put(fileWatcher.getFile(), fileWatcher);
+                    }
                 );
                 if (!compareEquals(filesToWatch, filesToWatchCache)) {
                     TDDLogger.log("Syncing on changed sourcefile");
@@ -92,6 +92,9 @@ public class FileTimestampResourceWatcher implements ResourceWatcher {
     private boolean compareEquals(Map<File, FileWatcher> filesToWatch, Map<File, FileWatcher> filesToWatchCache) {
         for (Map.Entry<File, FileWatcher> file : filesToWatch.entrySet()) {
             FileWatcher fileWatcher = filesToWatchCache.get(file.getKey());
+            if(fileWatcher == null){
+                return false;
+            }
             if (!fileWatcher.equals(file.getValue())) {
                 return false;
             }
@@ -105,6 +108,7 @@ public class FileTimestampResourceWatcher implements ResourceWatcher {
         try (BufferedWriter writer = Files.newBufferedWriter(path)) {
             for (Map.Entry<File, FileWatcher> file : filesToWatch.entrySet()) {
                 writer.write(file.getValue().writeString());
+                writer.newLine();
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

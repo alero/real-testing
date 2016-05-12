@@ -149,6 +149,11 @@ public class DataSourceExecution {
     }
 
     private void executeStringToSQL(String schemaName, StringBuffer stringBuffer) {
+
+        if(stringBuffer.toString().isEmpty()){
+            return;
+        }
+
         DataSource dataSource = resourceCreator.getDataSource(schemaName);
         if (dataSource == null) {
             throw new IllegalAccessError("schemaName:" + schemaName + " does not exist ");

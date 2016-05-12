@@ -67,7 +67,7 @@ public class SpringJUnitRunner extends SpringJUnit4ClassRunner {
             return jUnitRunner.activeContainer.get(ApplicationContext.class)
                     .getBean(SpringEntityManager.class);
         } catch (Exception ex) {
-            TDDLogger.log("SpringJUnitRunner error: " + ex.getMessage());
+            TDDLogger.log("SpringJUnitRunner info: " + ex.getMessage());
             return null;
         }
     }
