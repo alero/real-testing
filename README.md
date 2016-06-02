@@ -22,6 +22,7 @@ Uses a special @RunWith(SpringJUnitRunner.class) to do this
 
 **Planned Container Implemented support**
 * Google Guice, as the IoC Container inside the tests was built using Guice as blueprint it should be fairly esasy to support it fully.
+* Spring Light, as spring contains alot of variations and code the Glue version was created. But this makes it a bit slow!
 
 **Resources support**
 * Loading SQL schema files (*.sql)
