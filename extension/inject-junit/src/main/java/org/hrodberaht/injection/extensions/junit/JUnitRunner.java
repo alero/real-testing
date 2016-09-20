@@ -29,7 +29,7 @@ public class JUnitRunner extends BlockJUnit4ClassRunner {
     /**
      * Creates a BlockJUnit4ClassRunner to run
      *
-     * @throws org.junit.runners.model.InitializationError if the test class is malformed.
+     * @throws InitializationError if the test class is malformed.
      */
     public JUnitRunner(Class<?> clazz) throws InitializationError {
         super(clazz);

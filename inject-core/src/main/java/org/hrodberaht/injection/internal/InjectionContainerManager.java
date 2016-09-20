@@ -48,7 +48,7 @@ public class InjectionContainerManager implements ScopeContainer, InjectContaine
 
     /**
      * Will retrieve a service as it has been registered,
-     * scope's supported today are {@link InjectionContainerManager.Scope#SINGLETON} and {@link InjectionContainerManager.Scope#NEW}
+     * scope's supported today are {@link Scope#SINGLETON} and {@link Scope#NEW}
      *
      * @param service the interface service intended for creation
      * @param <T>     the typed service intended for creation
@@ -60,7 +60,7 @@ public class InjectionContainerManager implements ScopeContainer, InjectContaine
 
     /**
      * Will retrieve a service as it has been registered,
-     * scope's supported today are {@link InjectionContainerManager.Scope#SINGLETON} and {@link InjectionContainerManager.Scope#NEW}
+     * scope's supported today are {@link Scope#SINGLETON} and {@link Scope#NEW}
      *
      * @param service   the interface service intended for creation
      * @param qualifier the named service intended for creation
@@ -75,7 +75,7 @@ public class InjectionContainerManager implements ScopeContainer, InjectContaine
 
     /**
      * Will retrieve a service as it has been registered,
-     * scope's supported today are {@link InjectionContainerManager.Scope#SINGLETON} and {@link InjectionContainerManager.Scope#NEW}
+     * scope's supported today are {@link Scope#SINGLETON} and {@link Scope#NEW}
      *
      * @param service   the interface service intended for creation
      * @param qualifier the named service intended for creation
@@ -94,7 +94,7 @@ public class InjectionContainerManager implements ScopeContainer, InjectContaine
     }
 
     /**
-     * Will retrieve a service and force the scope to {@link InjectionContainerManager.Scope#NEW}
+     * Will retrieve a service and force the scope to {@link Scope#NEW}
      *
      * @param service the interface service intended for creation
      * @param <T>     the typed service intended for creation
@@ -105,7 +105,7 @@ public class InjectionContainerManager implements ScopeContainer, InjectContaine
     }
 
     /**
-     * Will retrieve a service and force the scope to {@link InjectionContainerManager.Scope#SINGLETON}
+     * Will retrieve a service and force the scope to {@link Scope#SINGLETON}
      *
      * @param service the interface service intended for creation
      * @param <T>     the typed service intended for creation

@@ -30,10 +30,10 @@ public class SpringInjectionBeanInjector implements BeanPostProcessor {
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
         if(!postProcessBeforeInitBeans.containsKey(beanName)
                 && containsSpringInjectionAnnotation(bean)) {
-            System.out.println("ADDED bean: " + bean.getClass().getName());
+            // System.out.println("ADDED bean: " + bean.getClass().getName());
             postProcessBeforeInitBeans.put(beanName, bean);
         }
-        System.out.println("SKIPPED bean: " + bean.getClass().getName());
+        // System.out.println("SKIPPED bean: " + bean.getClass().getName());
         return bean;
     }
 

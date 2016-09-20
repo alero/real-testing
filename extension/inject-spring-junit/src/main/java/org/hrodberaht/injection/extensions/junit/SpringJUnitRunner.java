@@ -55,8 +55,13 @@ public class SpringJUnitRunner extends SpringJUnit4ClassRunner {
         SpringEntityManager springEntityManager = getSpringEntityManager();
         if (springEntityManager != null) {
             if (springEntityManager.getEntityManager() != null) {
-                springEntityManager.getEntityManager().flush();
-                springEntityManager.getEntityManager().close();
+                try {
+                    springEntityManager.getEntityManager().flush();
+                    // springEntityManager.getEntityManager().close();
+                } catch (RuntimeException exception) {
+                    // No not fail due to springEntityManager issues
+                }
+
             }
         }
 

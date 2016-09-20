@@ -122,7 +122,7 @@ public abstract class CDIContainerConfigBase extends JPAContainerConfigBase<Inje
                 if (config != null) {
                     config.injectResources(service);
                 } else {
-                    System.out.println("DefaultInjectionPointFinder NOT injecting resources due to config value null");
+                    // System.out.println("DefaultInjectionPointFinder NOT injecting resources due to config value null");
                 }
             }
         };

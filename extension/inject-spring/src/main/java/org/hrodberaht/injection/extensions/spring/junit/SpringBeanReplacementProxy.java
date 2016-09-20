@@ -29,10 +29,10 @@ public class SpringBeanReplacementProxy implements BeanPostProcessor {
 
         Class<?> clazz = result.getClass();
         if (!isFinal(clazz.getModifiers()) && replacementBeans.createReplacementProxy(bean, beanName)) {
-            System.out.println("Creating proxy for " + result.getClass().getName());
+            // System.out.println("Creating proxy for " + result.getClass().getName());
             return Enhancer.create(clazz, (MethodInterceptor) (obj, method, args, proxy) -> {
                         Object instance = replacementBeans.getService(clazz, bean);
-                        System.out.println("invoking method " + method.getName() + " on " + instance.getClass().getName());
+                        // System.out.println("invoking method " + method.getName() + " on " + instance.getClass().getName());
                         return method.invoke(instance, args);
                     }
             );

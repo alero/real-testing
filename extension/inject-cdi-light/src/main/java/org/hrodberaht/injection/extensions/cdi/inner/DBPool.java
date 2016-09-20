@@ -85,7 +85,7 @@ public class DBPool {
             throws SQLException {
         try {
             Class.forName(dataSourceDriver.driver);
-            System.out.println("dataSourceDriver Creating Proxy - " + dataSourceDriver);
+            // System.out.println("dataSourceDriver Creating Proxy - " + dataSourceDriver);
             final Connection conn = DriverManager.getConnection(
                     dataSourceDriver.url, dataSourceDriver.username, dataSourceDriver.password);
             conn.setAutoCommit(true);

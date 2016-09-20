@@ -92,6 +92,8 @@ public class SpringBeanInjector {
                             }
                         }else if(type.isInterface()){
                             createFieldInjectionPointAndAddToMetaData(field, type, injectionMetaData);
+                        }else if(!type.isAnonymousClass() && !type.isMemberClass() ){
+                            createFieldInjectionPointAndAddToMetaData(field, type, injectionMetaData);
                         }
                     }
                 }else{

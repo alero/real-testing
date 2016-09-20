@@ -18,10 +18,8 @@ public class TransactionMandatory {
 
     Object transactionHandling(ProceedingJoinPoint thisJoinPoint, TransactionManager transactionManager) throws Throwable {        
         if (!transactionManager.isActive()) {
-            System.out.println("Mandatory error");
             throw new TransactionHandlingError("has no active transaction");
         }
-        System.out.println("Mandatory ok");
         return thisJoinPoint.proceed();
     }
 
