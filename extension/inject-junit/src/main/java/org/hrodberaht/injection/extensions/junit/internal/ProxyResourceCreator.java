@@ -1,7 +1,6 @@
 package org.hrodberaht.injection.extensions.junit.internal;
 
 import org.hrodberaht.injection.extensions.junit.ejb.internal.InitialContextFactoryImpl;
-import org.hrodberaht.injection.extensions.junit.internal.embedded.PersistenceResource;
 import org.hrodberaht.injection.extensions.junit.internal.embedded.ResourceWatcher;
 import org.hrodberaht.injection.spi.ResourceCreator;
 
@@ -30,9 +29,8 @@ public class ProxyResourceCreator implements ResourceCreator<EntityManager, Data
     private Map<String, DataSourceProxy> DATASOURCES = new HashMap<String, DataSourceProxy>();
     private Map<String, EntityManager> ENTITYMANAGERS = new HashMap<String, EntityManager>();
     private DataSourceProvider provider = DataSourceProvider.HSQLDB;
-    private DataSourcePersistence persistence = DataSourcePersistence.MEM;
+    private DataSourcePersistence persistence = DataSourcePersistence.RESTORABLE;
     private ResourceWatcher resourceWatcher = null;
-    private PersistenceResource resource = null;
 
     public enum DataSourceProvider {
         HSQLDB, H2
@@ -50,11 +48,10 @@ public class ProxyResourceCreator implements ResourceCreator<EntityManager, Data
         this.persistence = persistence;
     }
 
-    public ProxyResourceCreator(DataSourceProvider provider, DataSourcePersistence persistence, ResourceWatcher resourceWatcher, PersistenceResource resource) {
+    public ProxyResourceCreator(DataSourceProvider provider, DataSourcePersistence persistence, ResourceWatcher resourceWatcher) {
         this.provider = provider;
         this.persistence = persistence;
         this.resourceWatcher = resourceWatcher;
-        this.resource = resource;
     }
 
     public DataSourceProxy createDataSource(String dbName) {
@@ -79,7 +76,7 @@ public class ProxyResourceCreator implements ResourceCreator<EntityManager, Data
     }
 
     protected DataSourceProxy createDataSourceProxy(String dbName) {
-        return new DataSourceProxy(dbName, provider, persistence, resource, resourceWatcher);
+        return new DataSourceProxy(dbName, provider, persistence, resourceWatcher);
     }
 
     public DataSourceProxy getDataSource(String dbName) {

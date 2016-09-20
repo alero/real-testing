@@ -9,14 +9,12 @@ public class DataSourceConfigFactory {
 
     private DataSourceProxyInterface dataSourceProxyInterface;
     private ResourceWatcher resourceWatcher;
-    private PersistenceResource resource;
     private String dbName;
 
     public DataSourceConfigFactory(DataSourceProxyInterface dataSourceProxyInterface,
-                                   ResourceWatcher resourceWatcher, PersistenceResource resource, String dbName) {
+                                   ResourceWatcher resourceWatcher,  String dbName) {
         this.dataSourceProxyInterface = dataSourceProxyInterface;
         this.resourceWatcher = resourceWatcher;
-        this.resource = resource;
         this.dbName = dbName;
     }
 
@@ -27,7 +25,7 @@ public class DataSourceConfigFactory {
             if (persistence == ProxyResourceCreator.DataSourcePersistence.MEM) {
                 return new HsqlBDDataSourceConfigurationMem(dbName);
             } else if (persistence == ProxyResourceCreator.DataSourcePersistence.RESTORABLE) {
-                return new HsqlBDDataSourceConfigurationRestorable(dbName, resourceWatcher, resource, dataSourceProxyInterface);
+                return new HsqlBDDataSourceConfigurationRestorable(dbName, resourceWatcher);
             }
         }
         throw new RuntimeException("not supported databasetype");

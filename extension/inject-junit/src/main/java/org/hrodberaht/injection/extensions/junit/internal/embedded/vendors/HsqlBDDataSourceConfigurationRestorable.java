@@ -2,40 +2,38 @@ package org.hrodberaht.injection.extensions.junit.internal.embedded.vendors;
 
 import org.hrodberaht.injection.extensions.junit.internal.TDDLogger;
 import org.hrodberaht.injection.extensions.junit.internal.embedded.DataSourceConfiguration;
-import org.hrodberaht.injection.extensions.junit.internal.embedded.PersistenceResource;
 import org.hrodberaht.injection.extensions.junit.internal.embedded.ResourceWatcher;
 import org.hrodberaht.injection.spi.DataSourceProxyInterface;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.sql.SQLFeatureNotSupportedException;
+import java.sql.SQLInvalidAuthorizationSpecException;
 import java.util.Scanner;
+import java.util.logging.Logger;
 
 public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfiguration {
 
     private static final String JDBC_DRIVER = "org.hsqldb.jdbcDriver";
     private static final String JDBC_BASEURL_NEW = "jdbc:hsqldb:mem:";
-    private static final String JDBC_BASEURL_RESTORE = "jdbc:hsqldb:file:";
-    private static final String JDBC_PROPS = "files_readonly=true";
     private static final String JDBC_USERNAME = "sa";
-    private static final String JDBC_PASSWORD = "hsql";
+    private static final String JDBC_PASSWORD = "";
+
+    private static final String lineSeparator = System.getProperty("line.separator");
 
     private String dbName = null;
     private ResourceWatcher resourceWatcher;
-    private PersistenceResource resource;
-    private DataSourceProxyInterface dataSource;
 
     private HSQLDriverManager driverManager = null;
 
-    public HsqlBDDataSourceConfigurationRestorable(String dbName, ResourceWatcher resourceWatcher,
-                                                   PersistenceResource resource, DataSourceProxyInterface dataSource) {
+    public HsqlBDDataSourceConfigurationRestorable(String dbName, ResourceWatcher resourceWatcher) {
         this.dbName = dbName;
         this.resourceWatcher = resourceWatcher;
-        this.resource = resource;
-        this.dataSource = dataSource;
     }
 
     public Connection initateConnection() throws ClassNotFoundException, SQLException {
@@ -45,13 +43,9 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
         }
 
         Class.forName(JDBC_DRIVER);
-        if (useMemStore()) {
-            driverManager = new HSQLBasicDriverManager();
-            return driverManager.getConnection();
-        } else {
-            driverManager = new HSQLBasicDriverManager();
-            return driverManager.getConnection();
-        }
+        driverManager = new HSQLBasicDriverManager();
+        return driverManager.getConnection();
+
     }
 
     private interface HSQLDriverManager {
@@ -63,43 +57,47 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
         @Override
         public Connection getConnection() throws SQLException {
             TDDLogger.log("-- Creating Connection HsqlBDDataSourceConfigurationRestorable from mem");
-            return DriverManager.getConnection(JDBC_BASEURL_NEW + dbName, JDBC_USERNAME, JDBC_PASSWORD);
-        }
-    }
-
-    private class HSQLRestoredDriverManager implements HSQLDriverManager {
-
-        @Override
-        public Connection getConnection() throws SQLException {
-            TDDLogger.log("-- Creating Connection HsqlBDDataSourceConfigurationRestorable from file:" + resource.getName());
-            String url = JDBC_BASEURL_RESTORE + resource.getName() + dbName + ";" + JDBC_PROPS;
-            return DriverManager.getConnection(url, JDBC_USERNAME, JDBC_PASSWORD);
+            try {
+                return DriverManager.getConnection(JDBC_BASEURL_NEW + dbName, JDBC_USERNAME, JDBC_PASSWORD);
+            }catch (SQLInvalidAuthorizationSpecException e){
+                throw e;
+            }
         }
     }
 
 
-    private boolean useMemStore() {
-        return !resource.exists();
+    @Override
+    public void createSnapshot(String name) {
+        try (Connection connection = driverManager.getConnection();){
+
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(new DataSourceWrapper(connection));
+            String backup = "SCRIPT '" + name + "'";
+            jdbcTemplate.execute(backup);
+            connection.commit();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void loadSnapshot(String name) {
+        try (Connection connection = driverManager.getConnection();){
+
+            JdbcTemplate jdbcTemplate = new JdbcTemplate(new DataSourceWrapper(connection));
+            File file = new File(name);
+                TDDLogger.log("---- BACKUPFILE CONTENT " + readFile(file));
+            readFile(file, jdbcTemplate);
+            connection.commit();
+        } catch (IOException | SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public void createSnapshot() {
-        try {
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-            String backup = "SCRIPT '" + resource.getName() + "'";
-            jdbcTemplate.execute(backup);
-        } finally {
-            dataSource.clearDataSource();
-        }
-    }
-
-    public void loadSnapshot() {
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
-        File file = new File(resource.getName());
-        try {
-            TDDLogger.log("---- BACKUPFILE CONTENT " + readFile(file));
-            readFile(file, jdbcTemplate);
-        } catch (IOException e) {
+    public void runWithConnectionAndCommit(DataSourceProxyInterface.ConnectionRunner connectionRunner) {
+        try (Connection conn = initateConnection()) {
+            connectionRunner.run(conn);
+            conn.commit();
+        } catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -107,7 +105,6 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
     private String readFile(File file) throws IOException {
         StringBuilder fileContents = new StringBuilder((int) file.length());
         Scanner scanner = new Scanner(file);
-        String lineSeparator = System.getProperty("line.separator");
 
         try {
             while (scanner.hasNextLine()) {
@@ -146,6 +143,61 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
                         || line.contains("INSERT INTO BLOCKS VALUES")
 
                 );
+    }
+
+
+    private class DataSourceWrapper implements javax.sql.DataSource{
+
+        private final Connection connection;
+
+        public DataSourceWrapper(Connection connection) {
+            this.connection = connection;
+        }
+
+        @Override
+        public Connection getConnection() throws SQLException {
+            return connection;
+        }
+
+        @Override
+        public Connection getConnection(String username, String password) throws SQLException {
+            return connection;
+        }
+
+        @Override
+        public <T> T unwrap(Class<T> iface) throws SQLException {
+            return null;
+        }
+
+        @Override
+        public boolean isWrapperFor(Class<?> iface) throws SQLException {
+            return false;
+        }
+
+        @Override
+        public PrintWriter getLogWriter() throws SQLException {
+            return null;
+        }
+
+        @Override
+        public void setLogWriter(PrintWriter out) throws SQLException {
+
+        }
+
+        @Override
+        public void setLoginTimeout(int seconds) throws SQLException {
+
+        }
+
+        @Override
+        public int getLoginTimeout() throws SQLException {
+            return 0;
+        }
+
+        @Override
+        public Logger getParentLogger() throws SQLFeatureNotSupportedException {
+            return null;
+        }
     }
 
 }

@@ -1,6 +1,7 @@
 package org.hrodberaht.injection.extensions.junit.internal.embedded.vendors;
 
 import org.hrodberaht.injection.extensions.junit.internal.embedded.DataSourceConfiguration;
+import org.hrodberaht.injection.spi.DataSourceProxyInterface;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -25,13 +26,23 @@ public class HsqlBDDataSourceConfigurationMem implements DataSourceConfiguration
     }
 
     @Override
-    public void createSnapshot() {
+    public void createSnapshot(String name) {
         throw new IllegalAccessError("not supported");
     }
 
     @Override
-    public void loadSnapshot() {
+    public void loadSnapshot(String name) {
         throw new IllegalAccessError("not supported");
+    }
+
+    @Override
+    public void runWithConnectionAndCommit(DataSourceProxyInterface.ConnectionRunner connectionRunner) {
+        try (Connection conn = initateConnection()) {
+            connectionRunner.run(conn);
+            conn.commit();
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

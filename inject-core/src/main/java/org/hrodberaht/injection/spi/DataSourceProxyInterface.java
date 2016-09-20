@@ -17,8 +17,14 @@ public interface DataSourceProxyInterface extends javax.sql.DataSource {
 
     Connection getNativeConnection();
 
-    void loadSnapshot();
+    void loadSnapshot(String name);
 
-    void createSnapshot();
+    void createSnapshot(String name);
+
+    void runWithConnectionAndCommit(ConnectionRunner connectionRunner);
+
+    interface ConnectionRunner{
+        void run(Connection con);
+    }
 
 }

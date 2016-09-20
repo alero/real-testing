@@ -2,7 +2,6 @@ package org.hrodberaht.injection.extensions.junit.internal;
 
 import org.hrodberaht.injection.extensions.junit.internal.embedded.DataSourceConfigFactory;
 import org.hrodberaht.injection.extensions.junit.internal.embedded.DataSourceConfiguration;
-import org.hrodberaht.injection.extensions.junit.internal.embedded.PersistenceResource;
 import org.hrodberaht.injection.extensions.junit.internal.embedded.ResourceWatcher;
 import org.hrodberaht.injection.spi.DataSourceProxyInterface;
 
@@ -39,7 +38,6 @@ public class DataSourceProxy implements DataSourceProxyInterface {
     private DataSourceConfiguration dataSourceConfiguration;
     private String dbName = null;
     private ResourceWatcher resourceWatcher;
-    private PersistenceResource resource;
     private DataSourceConfigFactory dataSourceConfigFactory;
 
     private ProxyResourceCreator.DataSourceProvider provider;
@@ -48,9 +46,7 @@ public class DataSourceProxy implements DataSourceProxyInterface {
     public DataSourceProxy(String dbName,
                            ProxyResourceCreator.DataSourceProvider provider,
                            ProxyResourceCreator.DataSourcePersistence persistence,
-                           PersistenceResource resource,
                            ResourceWatcher resourceWatcher) {
-        this.resource = resource;
         this.resourceWatcher = resourceWatcher;
         this.provider = provider;
         this.persistence = persistence;
@@ -63,22 +59,24 @@ public class DataSourceProxy implements DataSourceProxyInterface {
     }
 
     private void init() {
-        if (resource == null) {
-            resource = new PersistenceResource("dbscript.script");
-        }
         if (resourceWatcher == null) {
             resourceWatcher = () -> false;
         }
-        dataSourceConfigFactory = new DataSourceConfigFactory(this, resourceWatcher, resource, dbName);
+        dataSourceConfigFactory = new DataSourceConfigFactory(this, resourceWatcher, dbName);
         dataSourceConfiguration = dataSourceConfigFactory.createConfiguration(provider, persistence);
     }
 
-    public void createSnapshot() {
-        dataSourceConfiguration.createSnapshot();
+    public void createSnapshot(String name) {
+        dataSourceConfiguration.createSnapshot(name);
     }
 
-    public void loadSnapshot() {
-        dataSourceConfiguration.loadSnapshot();
+    @Override
+    public void runWithConnectionAndCommit(ConnectionRunner connectionRunner) {
+        dataSourceConfiguration.runWithConnectionAndCommit(connectionRunner);
+    }
+
+    public void loadSnapshot(String name) {
+        dataSourceConfiguration.loadSnapshot(name);
     }
 
     public static void addDataSourceNameMapping(String dataSourceName, String databaseName) {

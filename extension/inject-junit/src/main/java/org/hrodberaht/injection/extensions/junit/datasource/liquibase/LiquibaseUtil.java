@@ -17,13 +17,15 @@ import java.sql.SQLException;
 
 public class LiquibaseUtil {
 
-    private String verificationQuery;
-    private File tempStore;
-    private ResourceWatcher resourceWatcher;
+    private final String verificationQuery;
+    private final String liquibaseStorageName;
+    private final File tempStore;
+    private final ResourceWatcher resourceWatcher;
 
-    public LiquibaseUtil(String verificationQuery, File file, ResourceWatcher resourceWatcher) {
+    public LiquibaseUtil(String verificationQuery, String liquibaseStorageName, ResourceWatcher resourceWatcher) {
         this.verificationQuery = verificationQuery;
-        this.tempStore = file;
+        this.liquibaseStorageName = liquibaseStorageName;
+        this.tempStore = new File(this.liquibaseStorageName);
         this.resourceWatcher = resourceWatcher;
     }
 
@@ -75,12 +77,12 @@ public class LiquibaseUtil {
             if (tempStore.exists()) {
                 tempStore.delete();
             }
-            dataSource.createSnapshot();
+            dataSource.createSnapshot(liquibaseStorageName);
         }
     }
 
     private void readFromFile(DataSourceProxyInterface dataSource) {
-        dataSource.loadSnapshot();
+        dataSource.loadSnapshot(liquibaseStorageName);
     }
 
     private boolean isTempStoreValid() {
@@ -91,28 +93,25 @@ public class LiquibaseUtil {
     private void loadSchemaFromConfig(DataSourceProxyInterface dataSource, String liquiBaseSchema) throws SQLException, LiquibaseException {
 
         DataSourceProxyInterface dataSourceProxyInterface = init(dataSource);
-        try (
-                Connection connection = dataSourceProxyInterface.getNativeConnection();
-        ) {
 
+        dataSourceProxyInterface.runWithConnectionAndCommit(con -> {
             TDDLogger.log("RUNNING Liquidbase update on schema!");
-
-            HsqlDatabase hsqlDatabase = new HsqlDatabase() {
-                @Override
-                public boolean failOnDefferable() {
-                    return false;
+                try{
+                    HsqlDatabase hsqlDatabase = new HsqlDatabase() {
+                        @Override
+                        public boolean failOnDefferable() {
+                            return false;
+                        }
+                    };
+                    hsqlDatabase.setConnection(new JdbcConnection(con));
+                    Liquibase liquibase = new Liquibase(liquiBaseSchema,
+                            new ClassLoaderResourceAccessor(), hsqlDatabase);
+                    liquibase.update("");
+                } catch (LiquibaseException e) {
+                    e.printStackTrace();
                 }
-            };
-            hsqlDatabase.setConnection(new JdbcConnection(connection));
-            Liquibase liquibase = new Liquibase(liquiBaseSchema,
-                    new ClassLoaderResourceAccessor(), hsqlDatabase);
-
-            liquibase.update("");
-
-
-        } finally {
-            dataSourceProxyInterface.commitDataSource();
-        }
+            }
+        );
 
     }
 

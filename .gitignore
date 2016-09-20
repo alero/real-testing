@@ -1,0 +1,53 @@
+*.log*
+*.class
+target/
+
+# Logging #
+*.log
+
+# Package Files #
+*.jar
+*.war
+*.ear
+
+# VIM #
+.*.sw[a-z]
+*.un~
+Session.vim
+
+# IntelliJ #
+*.iml
+*.ipr
+*.iws
+.idea/
+
+# Maven Shade Plugin #
+dependency-reduced-pom.xml
+
+# Maven Release Plugin
+*.releaseBackup
+release.properties
+*.versionsBackup
+
+# JIRA and IntelliJ
+atlassian-ide-plugin.xml
+
+# Eclipse #
+.settings/
+.classpath
+.project
+
+# Netbeans #
+nbproject/private/
+build/
+nbbuild/
+dist/
+nbdist/
+nbactions.xml
+nb-configuration.xml
+
+# MacOS X #
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
