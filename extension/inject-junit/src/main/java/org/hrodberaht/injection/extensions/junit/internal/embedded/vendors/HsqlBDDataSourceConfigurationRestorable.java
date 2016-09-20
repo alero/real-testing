@@ -9,6 +9,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -93,11 +95,12 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
     }
 
     @Override
-    public void runWithConnectionAndCommit(DataSourceProxyInterface.ConnectionRunner connectionRunner) {
+    public boolean runWithConnectionAndCommit(DataSourceProxyInterface.ConnectionRunner connectionRunner) {
         try (Connection conn = initateConnection()) {
-            connectionRunner.run(conn);
+            boolean returnBool = connectionRunner.run(conn);
             conn.commit();
-        } catch (ClassNotFoundException | SQLException e) {
+            return returnBool;
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
@@ -149,19 +152,34 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
     private class DataSourceWrapper implements javax.sql.DataSource{
 
         private final Connection connection;
+        private final Connection proxy;
 
         public DataSourceWrapper(Connection connection) {
             this.connection = connection;
+            proxy = createNoCloseProxy();
+        }
+
+        private Connection createNoCloseProxy() {
+            InvocationHandler invocationHandler = (proxy, method, args) -> {
+                if (method.getName().equals("close")) {
+                    // do nothing
+                    return null;
+                }
+                return method.invoke(connection, args);
+            };
+            return (Connection) Proxy.newProxyInstance(
+                    Thread.currentThread().getContextClassLoader(), new Class[]{Connection.class}, invocationHandler
+            );
         }
 
         @Override
         public Connection getConnection() throws SQLException {
-            return connection;
+            return proxy;
         }
 
         @Override
         public Connection getConnection(String username, String password) throws SQLException {
-            return connection;
+            return proxy;
         }
 
         @Override

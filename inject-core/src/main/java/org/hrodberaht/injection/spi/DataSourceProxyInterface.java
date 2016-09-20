@@ -21,10 +21,10 @@ public interface DataSourceProxyInterface extends javax.sql.DataSource {
 
     void createSnapshot(String name);
 
-    void runWithConnectionAndCommit(ConnectionRunner connectionRunner);
+    boolean runWithConnectionAndCommit(ConnectionRunner connectionRunner) throws Exception;
 
     interface ConnectionRunner{
-        void run(Connection con);
+        boolean run(Connection con) throws Exception;
     }
 
 }

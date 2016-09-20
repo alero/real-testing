@@ -3,6 +3,7 @@ package org.hrodberaht.injection.extensions.junit.internal;
 
 import org.hrodberaht.injection.config.JarUtil;
 import org.hrodberaht.injection.extensions.junit.util.SimpleLogger;
+import org.hrodberaht.injection.spi.DataSourceProxyInterface;
 import org.hrodberaht.injection.spi.ResourceCreator;
 
 import javax.sql.DataSource;
@@ -17,6 +18,7 @@ import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -158,17 +160,33 @@ public class DataSourceExecution {
         if (dataSource == null) {
             throw new IllegalAccessError("schemaName:" + schemaName + " does not exist ");
         }
-
-        try (Connection connection = dataSource.getConnection();
-             Statement stmt = connection.createStatement();) {
-            stmt.execute(stringBuffer.toString());
-            if (dataSource instanceof DataSourceProxy) {
-                DataSourceProxy dataSourceProxy = (DataSourceProxy) dataSource;
-                dataSourceProxy.commitDataSource();
+        if(dataSource instanceof DataSourceProxyInterface) {
+            DataSourceProxyInterface proxyInterface = (DataSourceProxyInterface) dataSource;
+            try {
+                proxyInterface.runWithConnectionAndCommit(
+                        con -> runScriptForConnection(stringBuffer, con)
+                );
+            } catch (Exception e) {
+                throw new RuntimeException(e);
             }
+        }else{
+            try {
+                runScriptForConnection(stringBuffer, dataSource.getConnection());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private boolean runScriptForConnection(StringBuffer stringBuffer, Connection con) {
+        try (Statement stmt = con.createStatement();) {
+            stmt.execute(stringBuffer.toString());
+        } catch (SQLIntegrityConstraintViolationException e) {
+            // Just skip this, its annoying but cant seem to fix it
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return true;
     }
 
 
@@ -176,28 +194,39 @@ public class DataSourceExecution {
         return this.isInitiated(packageName, schemaName, packageName);
     }
 
-    public boolean isInitiated(String testPackageName, String schemaName, String initiatedTableName) {
+    public synchronized boolean isInitiated(final String testPackageName, final String schemaName, final String initiatedTableName) {
         DataSource dataSource = resourceCreator.getDataSource(schemaName);
         if (dataSource == null) {
             throw new IllegalAccessError("schemaName:" + schemaName + " does not exist ");
         }
-
-        try (Connection connection = dataSource.getConnection()) {
-
-            initiatedTableName = cleanedName(initiatedTableName);
-            testPackageName = cleanedName(testPackageName);
-            try (PreparedStatement pstmt = connection.prepareStatement("create table " + testPackageName + initiatedTableName + " (  control_it integer )")) {
-                pstmt.execute();
+        if(dataSource instanceof DataSourceProxyInterface) {
+            DataSourceProxyInterface proxyInterface = (DataSourceProxyInterface) dataSource;
+            try {
+                return proxyInterface.runWithConnectionAndCommit(
+                        con -> verifyScriptExistence(testPackageName, initiatedTableName, con));
+            } catch (Exception e) {
+                return false;
             }
-            if (dataSource instanceof DataSourceProxy) {
-                DataSourceProxy dataSourceProxy = (DataSourceProxy) dataSource;
-                dataSourceProxy.commitDataSource();
+        }else{
+            try {
+                return verifyScriptExistence(testPackageName, initiatedTableName, dataSource.getConnection());
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private boolean verifyScriptExistence(String testPackageName, String initiatedTableName, Connection con) {
+        try {
+            String tableName = cleanedName(initiatedTableName);
+            String packageName = cleanedName(testPackageName);
+            try (PreparedStatement pstmt = con.prepareStatement("create table " + packageName + tableName + " (  control_it integer )")) {
+                pstmt.execute();
             }
             return false;
         } catch (SQLException e) {
             return true;
         }
-
     }
 
     private String cleanedName(String schemaName) {

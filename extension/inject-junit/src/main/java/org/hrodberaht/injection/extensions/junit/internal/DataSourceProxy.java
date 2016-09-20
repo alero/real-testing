@@ -71,8 +71,8 @@ public class DataSourceProxy implements DataSourceProxyInterface {
     }
 
     @Override
-    public void runWithConnectionAndCommit(ConnectionRunner connectionRunner) {
-        dataSourceConfiguration.runWithConnectionAndCommit(connectionRunner);
+    public boolean runWithConnectionAndCommit(ConnectionRunner connectionRunner) {
+        return dataSourceConfiguration.runWithConnectionAndCommit(connectionRunner);
     }
 
     public void loadSnapshot(String name) {

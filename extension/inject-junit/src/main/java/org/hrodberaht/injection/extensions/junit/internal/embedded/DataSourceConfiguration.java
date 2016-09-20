@@ -12,5 +12,5 @@ public interface DataSourceConfiguration {
 
     void loadSnapshot(String name);
 
-    void runWithConnectionAndCommit(DataSourceProxyInterface.ConnectionRunner connectionRunner);
+    boolean runWithConnectionAndCommit(DataSourceProxyInterface.ConnectionRunner connectionRunner);
 }

@@ -94,24 +94,29 @@ public class LiquibaseUtil {
 
         DataSourceProxyInterface dataSourceProxyInterface = init(dataSource);
 
-        dataSourceProxyInterface.runWithConnectionAndCommit(con -> {
-            TDDLogger.log("RUNNING Liquidbase update on schema!");
-                try{
-                    HsqlDatabase hsqlDatabase = new HsqlDatabase() {
-                        @Override
-                        public boolean failOnDefferable() {
-                            return false;
-                        }
-                    };
-                    hsqlDatabase.setConnection(new JdbcConnection(con));
-                    Liquibase liquibase = new Liquibase(liquiBaseSchema,
-                            new ClassLoaderResourceAccessor(), hsqlDatabase);
-                    liquibase.update("");
-                } catch (LiquibaseException e) {
-                    e.printStackTrace();
+        try {
+            dataSourceProxyInterface.runWithConnectionAndCommit(con -> {
+                TDDLogger.log("RUNNING Liquidbase update on schema!");
+                    try{
+                        HsqlDatabase hsqlDatabase = new HsqlDatabase() {
+                            @Override
+                            public boolean failOnDefferable() {
+                                return false;
+                            }
+                        };
+                        hsqlDatabase.setConnection(new JdbcConnection(con));
+                        Liquibase liquibase = new Liquibase(liquiBaseSchema,
+                                new ClassLoaderResourceAccessor(), hsqlDatabase);
+                        liquibase.update("");
+                    } catch (LiquibaseException e) {
+                        throw new RuntimeException(e);
+                    }
+                    return true;
                 }
-            }
-        );
+            );
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
     }
 

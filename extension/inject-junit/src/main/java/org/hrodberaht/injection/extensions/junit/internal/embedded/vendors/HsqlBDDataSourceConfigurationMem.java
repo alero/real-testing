@@ -36,11 +36,12 @@ public class HsqlBDDataSourceConfigurationMem implements DataSourceConfiguration
     }
 
     @Override
-    public void runWithConnectionAndCommit(DataSourceProxyInterface.ConnectionRunner connectionRunner) {
+    public boolean runWithConnectionAndCommit(DataSourceProxyInterface.ConnectionRunner connectionRunner) {
         try (Connection conn = initateConnection()) {
-            connectionRunner.run(conn);
+            boolean returnBool = connectionRunner.run(conn);
             conn.commit();
-        } catch (ClassNotFoundException | SQLException e) {
+            return returnBool;
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
