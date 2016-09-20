@@ -40,19 +40,19 @@ public class DataSourceExecution {
     public static String SCHEMA_PREFIX = "create_schema";
     public static String INSERT_SCRIPT_PREFIX = "insert_script";
 
-    private ResourceCreator resourceCreator;
+    private final ResourceCreator resourceCreator;
 
 
     public DataSourceExecution(ResourceCreator resourceCreator) {
         this.resourceCreator = resourceCreator;
     }
 
-    public void addSQLSchemas(String schemaName, String packageBase) {
+    public void addSQLSchemas(final String schemaName, final String packageBase) {
 
         ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
         ClassLoader classClassLoader = DataSourceExecution.class.getClassLoader();
 
-        List<File> files = new ArrayList<File>();
+        final List<File> files = new ArrayList<File>();
         List<File> foundFiles = findFiles(threadClassLoader, packageBase);
         if (foundFiles == null) {
             foundFiles = findFiles(classClassLoader, packageBase);
@@ -67,10 +67,10 @@ public class DataSourceExecution {
 
     }
 
-    private void findJarFiles(ClassLoader classLoader, String packageBase, String schemaName) {
+    private void findJarFiles(final ClassLoader classLoader, final String packageBase, final String schemaName) {
 
         try {
-            List<File> filesToLoad = JarUtil.findTheJarFiles(packageBase, classLoader);
+            final List<File> filesToLoad = JarUtil.findTheJarFiles(packageBase, classLoader);
 
 
             if (filesToLoad == null) {
@@ -78,11 +78,11 @@ public class DataSourceExecution {
             }
             for (File fileToLoad : filesToLoad) {
                 SimpleLogger.log("findJarFiles fileToLoad = " + fileToLoad);
-                JarFile jarFile = new JarFile(fileToLoad);
+                final JarFile jarFile = new JarFile(fileToLoad);
                 Enumeration<JarEntry> enumeration = jarFile.entries();
                 while (enumeration.hasMoreElements()) {
-                    JarEntry jarEntry = enumeration.nextElement();
-                    String jarName = jarEntry.getName();
+                    final JarEntry jarEntry = enumeration.nextElement();
+                    final String jarName = jarEntry.getName();
                     if (!jarEntry.isDirectory() && jarName.startsWith(packageBase)
                             && jarName.endsWith(".sql")) {
                         TDDLogger.log("DataSourceExecution findJarFiles " + fileToLoad.getName());
@@ -103,7 +103,7 @@ public class DataSourceExecution {
 
     }
 
-    private List<File> findFiles(ClassLoader classLoader, String packageBase) {
+    private List<File> findFiles(final ClassLoader classLoader, final String packageBase) {
         URL url = classLoader.getResource(packageBase);
         if (url == null) {
             return null;
@@ -112,29 +112,27 @@ public class DataSourceExecution {
         File directory = new File(directoryString);
         File[] files = directory.listFiles();
         if (files == null) {
-            return new ArrayList<File>();
+            return new ArrayList<>();
         }
         return Arrays.asList(files);
     }
 
-    private void runScripts(List<File> files, String schemaName, String prefix) {
+    private void runScripts(final List<File> files, final String schemaName, final String prefix) {
         for (File file : files) {
             if (file.isFile() && file.getName().startsWith(prefix)) {
-
                 executeScript(file, schemaName);
             }
         }
     }
 
-    private void executeScript(File file, String schemaName) {
+    private void executeScript(final File file, final String schemaName) {
         TDDLogger.log("DataSourceExecution runScripts " + file.getName());
-        FileInputStream fstream = null;
-        try {
-            fstream = new FileInputStream(file);
 
-            // Get the object of DataInputStream
-            DataInputStream in = new DataInputStream(fstream);
-            BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        try (FileInputStream fstream = new FileInputStream(file);
+             DataInputStream in = new DataInputStream(fstream);
+             BufferedReader br = new BufferedReader(new InputStreamReader(in));
+        ){
+
             String strLine;
             StringBuffer stringBuffer = new StringBuffer();
             while ((strLine = br.readLine()) != null) {
@@ -143,20 +141,18 @@ public class DataSourceExecution {
 
             executeStringToSQL(schemaName, stringBuffer);
 
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void executeStringToSQL(String schemaName, StringBuffer stringBuffer) {
+    private void executeStringToSQL(final String schemaName, final StringBuffer stringBuffer) {
 
         if(stringBuffer.toString().isEmpty()){
             return;
         }
 
-        DataSource dataSource = resourceCreator.getDataSource(schemaName);
+        final DataSource dataSource = resourceCreator.getDataSource(schemaName);
         if (dataSource == null) {
             throw new IllegalAccessError("schemaName:" + schemaName + " does not exist ");
         }
