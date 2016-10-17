@@ -1,12 +1,14 @@
 package org.hrodberaht.injection.extensions.cdi;
 
 import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.Module;
 import org.hrodberaht.injection.config.InjectionRegisterScanBase;
 import org.hrodberaht.injection.config.jpa.JPAContainerConfigBase;
 import org.hrodberaht.injection.extensions.cdi.cdiext.ApplicationCDIExtensions;
 import org.hrodberaht.injection.extensions.cdi.cdiext.CDIExtensions;
 import org.hrodberaht.injection.extensions.cdi.inner.InjectionRegisterScanCDI;
 import org.hrodberaht.injection.extensions.cdi.inner.JSEResourceCreator;
+import org.hrodberaht.injection.extensions.cdi.stream.CDIInjectionRegistryStream;
 import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
@@ -57,10 +59,24 @@ public abstract class CDIContainerConfigBase extends JPAContainerConfigBase<Inje
         return activeRegister.getContainer();
     }
 
+    @Override
+    protected InjectContainer createContainer(Module module) {
+        InjectionRegister combinedRegister = preScanModuleRegistration(module);
+        registerModules(combinedRegister);
+        cdiExtensions.runBeforeBeanDiscovery(combinedRegister, this);
+        createAutoScanContainerRegister(null, combinedRegister);
+        cdiExtensions.runAfterBeanDiscovery(combinedRegister, this);
+        return activeRegister.getContainer();
+    }
+
     public void runBeforeBeanDiscovery(){
         // null as active registry is important
         // its before discovery nothing can be registered in the IoC Container, do not change this
         cdiExtensions.runBeforeBeanDiscovery(null, this);
+    }
+
+    protected CDIInjectionRegistryStream stream(){
+        return new CDIInjectionRegistryStream(this);
     }
 
     public void runAfterBeanDiscovery(){
@@ -84,6 +100,10 @@ public abstract class CDIContainerConfigBase extends JPAContainerConfigBase<Inje
         return new JSEResourceCreator();
     }
 
+    @Override
+    protected void createAutoScanContainerRegister(String[] packageName, InjectionRegister combinedRegister) {
+        super.createAutoScanContainerRegister(packageName, combinedRegister);
+    }
 
     protected void initInjectionPoint() {
         this.injectionFinder = new DefaultInjectionPointFinder(this) {

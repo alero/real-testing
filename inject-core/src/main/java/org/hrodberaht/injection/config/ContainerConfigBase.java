@@ -3,6 +3,7 @@ package org.hrodberaht.injection.config;
 import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.Module;
 import org.hrodberaht.injection.internal.InjectionContainerManager;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.internal.ResourceInjection;
 import org.hrodberaht.injection.internal.ScopeContainer;
 import org.hrodberaht.injection.register.InjectionRegister;
@@ -50,6 +51,17 @@ public abstract class ContainerConfigBase<T extends InjectionRegister> implement
         registerModules(combinedRegister);
         createAutoScanContainerRegister(packageName, combinedRegister);
         return activeRegister.getContainer();
+    }
+
+    protected InjectContainer createContainer(Module module) {
+        InjectionRegister combinedRegister = preScanModuleRegistration(module);
+        registerModules(combinedRegister);
+        createAutoScanContainerRegister(null, combinedRegister);
+        return activeRegister.getContainer();
+    }
+
+    protected InjectionRegister preScanModuleRegistration(Module module) {
+        return new InjectionRegisterModule(module);
     }
 
     protected InjectContainer createEmptyContainer() {

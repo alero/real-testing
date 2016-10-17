@@ -1,6 +1,7 @@
 package test.org.hrodberaht.inject.extension.cdi.config;
 
 import org.hrodberaht.injection.extensions.cdi.CDIContainerConfigBase;
+import org.hrodberaht.injection.extensions.cdi.stream.CDIInjectionRegistryStream;
 import org.hrodberaht.injection.extensions.junit.internal.JunitSQLContainerService;
 import org.hrodberaht.injection.extensions.junit.internal.ProxyResourceCreator;
 import org.hrodberaht.injection.spi.ResourceCreator;
@@ -35,6 +36,7 @@ public abstract class TDDCDIContainerConfigBase extends CDIContainerConfigBase {
     public void addSQLSchemas(String testPackageName, String schemaName, String packageBase) {
         junitSQLContainerService.addSQLSchemas(testPackageName, schemaName, packageBase);
     }
+
 
 
 }

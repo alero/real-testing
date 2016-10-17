@@ -1,5 +1,6 @@
 package org.hrodberaht.injection.internal;
 
+import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.Module;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.register.RegistrationModule;
@@ -25,6 +26,11 @@ public class InjectionRegisterModule extends InjectionRegisterBase<InjectionRegi
 
     public InjectionRegisterModule(InjectionRegister register) {
         super(register);
+    }
+
+    public InjectionRegisterModule(Module module) {
+        registeredModules.add(module);
+        container.register(module);
     }
 
     public InjectionRegisterModule register(RegistrationModule... modules) {
