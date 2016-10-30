@@ -1,11 +1,12 @@
 # Real testing
 The basic need of the project is to cover a Test driven environment for the developer. 
-Doing this by combining best of breed products to enable a productive and accurate way of testing 
+Doing this by combining best of breed products to enable a productive and effective way of testing 
 
 It all starts with @RunWith and a configuration via @ContainerContext
 The IoC container that manages the lifecycle in the JUnit tests is a bit special and resets all its states between all tests (Singletons are not shared over tests). The basic idea is that all TDD rules are automatically implemented via the framework, like cleanup and no accidental shared statefulness.
 
-The ContainerContext can in its turn append alot of different resources and thirdparty IoC Containers to support a variation of normal development environments in Java.
+The ContainerContext configurations can in its turn append alot of different resources and thirdparty IoC Containers to support a variation of normal development environments in Java.
+These adapteds and base classes ban be found in the "extensions" modules.
 
 If the IoC Container used by the JUnit Runner is used standalone its very fast. 
 It has the same object creation speed as Google Guice but can also clone and reset itself in a few milliseconds between tests.
