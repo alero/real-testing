@@ -26,11 +26,7 @@ public class CDIContainerConfigExample extends JUnitStreamCDIContainerConfig {
         // Named resource
         addResource(dataSourceName, dataSource);
 
-
-
     }
-
-
 
     @Override
     protected void registerStream(CDIInjectionRegistryStream stream) {

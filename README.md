@@ -15,6 +15,8 @@ It was built to be used in tests and beeing slow is not an option.
 It is built to be extendable so that the developers can use the frameworks they are used to:
 The main focus has been on CDI and Spring supported development.
 
+[CDI-Light / JUNit testing support!](extension/inject-cdi-light-junit/README.md)
+
 **Container Glue support**
 * Spring support (Use the @Autowired) to leave the Testing Container and jump over to spring
 -- This means a Spring Container is started and attached to the lifecycle handling using the same principles as spring normally does.
