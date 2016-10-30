@@ -10,8 +10,11 @@ import test.service.CDIServiceInterface;
 
 
 import javax.inject.Inject;
+import javax.sql.DataSource;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -41,6 +44,9 @@ public class TestCDIServiceContext {
         String somethingDeep = anInterface.findSomethingDeep(12L);
         assertEquals("initialized", somethingDeep);
 
+        DataSource dataSource = anInterface.getDataSource();
+        assertNotNull(dataSource);
+
         assertTrue(
                 containerLifeCycleTestUtil.getService(CDIServiceInterface.class)
                 ==
@@ -68,6 +74,11 @@ public class TestCDIServiceContext {
             public String findSomethingDeep(long l) {
                 return "DeepMocking";
             }
+
+            @Override
+            public DataSource getDataSource() {
+                return null;
+            }
         });
 
         assertEquals("Mocking", containerLifeCycleTestUtil.getService(CDIServiceInterface.class)
@@ -75,6 +86,9 @@ public class TestCDIServiceContext {
 
         assertEquals("DeepMocking", containerLifeCycleTestUtil.getService(CDIServiceInterface.class)
                 .findSomethingDeep(14L));
+
+        assertNull(containerLifeCycleTestUtil.getService(CDIServiceInterface.class)
+                .getDataSource());
 
 
     }
