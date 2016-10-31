@@ -43,8 +43,8 @@ This tool can be used to replace and get components in the IoC Container for eac
 All manipluations done using the tool is limited to the test that executes, all other tests are protected from the manipluation of the components that can be done.
 
 The sample test below showcases a few of the features the tool can do.
-1. using a basic get to verify that singleton lifecycle is fulfilled.
-2. replacing a service and using it with different results (enabled deep mocking without changes in the codebase, this is core in the real-testing idea)
+* using a basic get to verify that singleton lifecycle is fulfilled.
+* replacing a service and using it with different results (enabled deep mocking without changes in the codebase, this is core in the real-testing idea)
 
 > Example Unit test using the @RunWith and a configuration via @ContainerContext, enabling the use of @Inject on the test
 
