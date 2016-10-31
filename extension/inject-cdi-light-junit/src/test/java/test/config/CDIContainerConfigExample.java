@@ -5,7 +5,9 @@ import org.hrodberaht.injection.extensions.cdi.stream.CDIInjectionRegistryStream
 import org.hrodberaht.injection.internal.ScopeContainer;
 import test.service.CDIServiceInterface;
 import test.service.CDIServiceInterfaceImpl;
-import test.service.ConstantClassLoadedPostContainer;
+import test.service.SimpleService;
+import test.service.SimpleServiceSingleton;
+import test.service.SimpleServiceSingletonAnnotated;
 
 import javax.sql.DataSource;
 
@@ -33,7 +35,9 @@ public class CDIContainerConfigExample extends JUnitStreamCDIContainerConfig {
         stream
             .register(registrations -> {
                 registrations.register(CDIServiceInterface.class).with(CDIServiceInterfaceImpl.class);
-                registrations.register(ConstantClassLoadedPostContainer.class).scopeAs(ScopeContainer.Scope.SINGLETON);
+                registrations.register(SimpleServiceSingleton.class).scopeAs(ScopeContainer.Scope.SINGLETON);
+                registrations.register(SimpleServiceSingletonAnnotated.class);
+                registrations.register(SimpleService.class);
             });
     }
 

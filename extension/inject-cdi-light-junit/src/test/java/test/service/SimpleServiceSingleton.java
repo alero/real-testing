@@ -4,7 +4,7 @@ import javax.annotation.PostConstruct;
 import javax.inject.Singleton;
 
 
-public class ConstantClassLoadedPostContainer {
+public class SimpleServiceSingleton {
 
     private String initData = null;
 

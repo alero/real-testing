@@ -12,5 +12,5 @@ public interface CDIServiceInterface {
 
     DataSource getDataSource();
 
-    ConstantClassLoadedPostContainer getLoadedPostContainer();
+    SimpleServiceSingleton getLoadedPostContainer();
 }

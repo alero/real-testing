@@ -2,7 +2,6 @@ package test.service;
 
 import javax.annotation.Resource;
 import javax.inject.Inject;
-import javax.inject.Singleton;
 import javax.sql.DataSource;
 
 @javax.ejb.Stateless
@@ -12,7 +11,10 @@ public class CDIServiceInterfaceImpl implements CDIServiceInterface {
     private DataSource dataSource;
 
     @Inject
-    private ConstantClassLoadedPostContainer postContainer;
+    private SimpleServiceSingleton postContainer;
+
+    @Inject
+    private SimpleServiceSingletonAnnotated postContainerSingleton;
 
     public String findSomething(long l) {
         return "Something";
@@ -28,7 +30,7 @@ public class CDIServiceInterfaceImpl implements CDIServiceInterface {
     }
 
     @Override
-    public ConstantClassLoadedPostContainer getLoadedPostContainer() {
+    public SimpleServiceSingleton getLoadedPostContainer() {
         return postContainer;
     }
 
