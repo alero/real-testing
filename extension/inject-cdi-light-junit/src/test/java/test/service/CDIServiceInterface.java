@@ -11,4 +11,6 @@ public interface CDIServiceInterface {
     String findSomethingDeep(long l);
 
     DataSource getDataSource();
+
+    ConstantClassLoadedPostContainer getLoadedPostContainer();
 }

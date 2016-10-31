@@ -7,6 +7,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import test.config.CDIContainerConfigExample;
 import test.service.CDIServiceInterface;
+import test.service.ConstantClassLoadedPostContainer;
 
 
 import javax.inject.Inject;
@@ -49,8 +50,21 @@ public class TestCDIServiceContext {
 
         assertTrue(
                 containerLifeCycleTestUtil.getService(CDIServiceInterface.class)
-                ==
-                containerLifeCycleTestUtil.getService(CDIServiceInterface.class));
+                    ==
+                containerLifeCycleTestUtil.getService(CDIServiceInterface.class)
+        );
+
+        assertTrue(
+                containerLifeCycleTestUtil.getService(CDIServiceInterface.class).getLoadedPostContainer()
+                    ==
+                containerLifeCycleTestUtil.getService(CDIServiceInterface.class).getLoadedPostContainer()
+        );
+
+        assertTrue(
+                containerLifeCycleTestUtil.getService(ConstantClassLoadedPostContainer.class)
+                    ==
+                containerLifeCycleTestUtil.getService(ConstantClassLoadedPostContainer.class)
+        );
 
     }
 
@@ -79,6 +93,11 @@ public class TestCDIServiceContext {
             public DataSource getDataSource() {
                 return null;
             }
+
+            @Override
+            public ConstantClassLoadedPostContainer getLoadedPostContainer() {
+                return null;
+            }
         });
 
         assertEquals("Mocking", containerLifeCycleTestUtil.getService(CDIServiceInterface.class)
@@ -89,6 +108,9 @@ public class TestCDIServiceContext {
 
         assertNull(containerLifeCycleTestUtil.getService(CDIServiceInterface.class)
                 .getDataSource());
+
+        assertNull(containerLifeCycleTestUtil.getService(CDIServiceInterface.class)
+                .getLoadedPostContainer());
 
 
     }

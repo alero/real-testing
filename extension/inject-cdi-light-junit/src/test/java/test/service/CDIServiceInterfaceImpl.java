@@ -26,4 +26,11 @@ public class CDIServiceInterfaceImpl implements CDIServiceInterface {
     public DataSource getDataSource() {
         return dataSource;
     }
+
+    @Override
+    public ConstantClassLoadedPostContainer getLoadedPostContainer() {
+        return postContainer;
+    }
+
+
 }
