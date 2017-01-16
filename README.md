@@ -1,6 +1,6 @@
 # Real testing
-The basic need of the project is to cover a Test driven environment for the developer. 
-Doing this by combining best of breed products to enable a productive and effective way of testing 
+The basic usage scenario of the project is to support a Test driven JVM environment for the developer. 
+Enabling the developer by combining best of breed products for a productive and effective way of testing 
 
 It all starts with @RunWith and a configuration via @ContainerContext
 The IoC container that manages the lifecycle in the JUnit tests is a bit special and resets all its states between all tests (Singletons are not shared over tests). The basic idea is that all TDD rules are automatically implemented via the framework, like cleanup and no accidental shared statefulness.
