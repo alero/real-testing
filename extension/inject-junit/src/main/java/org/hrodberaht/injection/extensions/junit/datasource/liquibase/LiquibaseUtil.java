@@ -32,7 +32,7 @@ public class LiquibaseUtil {
     public void liquiBaseSchemaCreation(DataSource dataSource, String liquiBaseSchema) throws SQLException, LiquibaseException {
 
         if (!(dataSource instanceof DataSourceProxyInterface)) {
-            throw new RuntimeException("Datasource is not correct for JUnit testing, muse be " + DataSourceProxyInterface.class.getName());
+            throw new RuntimeException("DataSource is not correct for JUnit testing, muse be " + DataSourceProxyInterface.class.getName());
         }
 
         DataSourceProxyInterface dataSourceProxyInterface = (DataSourceProxyInterface) dataSource;
@@ -41,7 +41,7 @@ public class LiquibaseUtil {
         if (isLoadedAlready) {
             loadSchemaDataStore(dataSourceProxyInterface, liquiBaseSchema);
         } else {
-            TDDLogger.log("NOT - RUNNING Liquidbase update on schema!");
+            TDDLogger.log("NOT - RUNNING Liquibase update on schema!");
         }
     }
 
@@ -99,7 +99,6 @@ public class LiquibaseUtil {
                 TDDLogger.log("RUNNING Liquidbase update on schema!");
                     try{
                         HsqlDatabase hsqlDatabase = new HsqlDatabase() {
-                            @Override
                             public boolean failOnDefferable() {
                                 return false;
                             }

@@ -4,6 +4,7 @@ import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.annotation.PostConstruct;
 import org.hrodberaht.injection.config.InjectionRegisterScanBase;
 import org.hrodberaht.injection.config.jpa.JPAContainerConfigBase;
+import org.hrodberaht.injection.extensions.junit.internal.TDDLogger;
 import org.hrodberaht.injection.extensions.spring.config.ContainerAllSpringConfig;
 import org.hrodberaht.injection.extensions.spring.config.ContainerSpringConfig;
 import org.hrodberaht.injection.extensions.spring.instance.SpringBeanInjector;
@@ -21,6 +22,8 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 /**
@@ -33,10 +36,11 @@ import java.util.stream.Stream;
  */
 public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<InjectionRegisterModule> {
 
-
+    private static final Map<Class, SpringContainerConfigBase> CACHE = new ConcurrentHashMap<>();
     private ApplicationContext context;
     private SpringBeanInjector springBeanInjector;
     private boolean enableJPA = false;
+    private final boolean enabledCache = System.getProperty("hrodberaht.test.spring.cache") != null;
 
     protected SpringContainerConfigBase(ResourceCreator resourceCreator) {
         this.resourceCreator = resourceCreator;
@@ -67,14 +71,23 @@ public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<I
     }
 
     public void loadJavaSpringConfig(Class... springConfigs) {
-        validateEmptyContext(context);
-        Class[] config = new Class[]{getContainerSpringConfigClass()};
-        if (springConfigs != null) {
-            Stream<Class> stringStream = Stream.concat(Stream.of(springConfigs), Stream.of(getContainerSpringConfigClass()));
-            config = stringStream.toArray(Class[]::new);
+        SpringContainerConfigBase configBase = CACHE.get(this.getClass());
+        if(configBase != null && enabledCache){
+            TDDLogger.log("SpringContainerConfigBase - Using cached SpringApplication for "+this.getClass());
+            context = configBase.context;
+            springBeanInjector = configBase.springBeanInjector;
+        }else {
+            TDDLogger.log("SpringContainerConfigBase - Creating SpringApplication for "+this.getClass());
+            validateEmptyContext(context);
+            Class[] config = new Class[]{getContainerSpringConfigClass()};
+            if (springConfigs != null) {
+                Stream<Class> stringStream = Stream.concat(Stream.of(springConfigs), Stream.of(getContainerSpringConfigClass()));
+                config = stringStream.toArray(Class[]::new);
+            }
+            context = new AnnotationConfigApplicationContext(config);
+            springBeanInjector = new SpringBeanInjector(context);
+            CACHE.put(this.getClass(), this);
         }
-        context = new AnnotationConfigApplicationContext(config);
-        springBeanInjector = new SpringBeanInjector(context);
 
     }
 
