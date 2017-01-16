@@ -23,6 +23,7 @@
         <springframework-version>4.2.4.RELEASE</springframework-version>
     </properties>
 
+
     <issueManagement>
         <system>Git Hub</system>
         <url>https://github.com/alero/injection/issues</url>
