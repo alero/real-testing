@@ -29,6 +29,7 @@ public class SpringContainerJavaConfigExample extends SpringContainerConfigBase 
         // Load reusable test data to the datasource
         junitSQLContainerService = new JunitSQLContainerService(this);
         junitSQLContainerService.addSQLSchemas(dataSourceName, "sql");
+        junitSQLContainerService.addSQLSchemas(dataSourceName, "sql/insert");
 
         // Adding the spring config, will combine the IoC of the tests and the spring config
         loadJavaSpringConfig(SpringConfigJavaSample.class);

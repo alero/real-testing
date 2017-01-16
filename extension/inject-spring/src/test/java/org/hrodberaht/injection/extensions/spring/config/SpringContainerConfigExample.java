@@ -28,6 +28,7 @@ public class SpringContainerConfigExample extends SpringContainerConfigBase {
         addResource(dataSourceName, dataSource);
 
         junitSQLContainerService.addSQLSchemas(dataSourceName, "sql");
+        junitSQLContainerService.addSQLSchemas(dataSourceName, "sql/insert");
 
         // Adding the spring config, will combine the IoC of the tests and the spring config
         loadSpringConfig("/META-INF/spring-config.xml");
