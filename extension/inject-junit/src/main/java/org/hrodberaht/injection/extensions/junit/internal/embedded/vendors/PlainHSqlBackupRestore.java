@@ -1,6 +1,9 @@
 package org.hrodberaht.injection.extensions.junit.internal.embedded.vendors;
 
+import org.hrodberaht.injection.config.ClassScanner;
 import org.hrodberaht.injection.extensions.junit.internal.TDDLogger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.File;
@@ -11,6 +14,9 @@ import java.sql.SQLException;
 import java.util.Scanner;
 
 public class PlainHSqlBackupRestore implements DatasourceBackupRestore{
+
+
+    private static final Logger LOG = LoggerFactory.getLogger(PlainHSqlBackupRestore.class);
 
     private final HsqlBDDataSourceConfigurationRestorable.HSQLDriverManager driverManager;
     private static final String JDBC_BASEURL_NEW = "jdbc:hsqldb:mem:";
@@ -24,7 +30,7 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore{
 
         final String fileName = getFilename(name);
 
-        TDDLogger.log("PlainHSqlBackupRestore backup to : " + fileName);
+        LOG.info("PlainHSqlBackupRestore backup to : {}", fileName);
 
 
         try (final Connection connection = driverManager.getConnection()){
@@ -50,7 +56,7 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore{
     public void loadSnapshot(String name) {
 
         final String fileName = getFilename(name);
-        TDDLogger.log("PlainHSqlBackupRestore restore from : " + fileName);
+        LOG.debug("PlainHSqlBackupRestore restore from : " + fileName);
 
         try (Connection connection = driverManager.getConnection();){
 
@@ -78,7 +84,7 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore{
                     try{
                         jdbcTemplate.execute(line);
                     }catch (Exception e){
-                        TDDLogger.log("Failed to restore line - "+line);
+                        LOG.debug("Failed to restore line - "+line);
                     }
                 }
             }

@@ -4,6 +4,7 @@ import org.hrodberaht.injection.extensions.junit.internal.TDDLogger;
 import org.hrodberaht.injection.extensions.junit.internal.embedded.DataSourceConfiguration;
 import org.hrodberaht.injection.extensions.junit.internal.embedded.ResourceWatcher;
 import org.hrodberaht.injection.spi.DataSourceProxyInterface;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.File;
@@ -21,6 +22,7 @@ import java.util.logging.Logger;
 
 public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfiguration {
 
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(HsqlBDDataSourceConfigurationRestorable.class);
     private static final String JDBC_DRIVER = "org.hsqldb.jdbcDriver";
     private static final String JDBC_USERNAME = "sa";
 
@@ -57,7 +59,7 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
 
         @Override
         public Connection getConnection() throws SQLException {
-            TDDLogger.log("-- Creating Connection HsqlBDDataSourceConfigurationRestorable from mem");
+            LOG.debug("-- Creating Connection HsqlBDDataSourceConfigurationRestorable from mem");
             try {
                 return DriverManager.getConnection(datasourceBackupRestore.jdbcUrl() + dbName, JDBC_USERNAME, "");
             }catch (SQLInvalidAuthorizationSpecException e){

@@ -3,6 +3,8 @@ package org.hrodberaht.injection.extensions.junit.internal;
 import org.hrodberaht.injection.extensions.junit.ejb.internal.InitialContextFactoryImpl;
 import org.hrodberaht.injection.extensions.junit.internal.embedded.ResourceWatcher;
 import org.hrodberaht.injection.spi.ResourceCreator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
@@ -23,6 +25,8 @@ import java.util.Map;
  * @since 1.0
  */
 public class ProxyResourceCreator implements ResourceCreator<EntityManager, DataSourceProxy> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ProxyResourceCreator.class);
 
     private static LocalResources LOCAL = new LocalResources();
 
@@ -61,11 +65,11 @@ public class ProxyResourceCreator implements ResourceCreator<EntityManager, Data
             DATASOURCES.put(dbName, dataSourceProxy);
             localResources.putDataSource(dbName, dataSourceProxy);
             registerDataSourceInContext(dbName, dataSourceProxy);
-            TDDLogger.log("Created dataSourceProxy " + dataSourceProxy);
+            LOG.debug("Created dataSourceProxy " + dataSourceProxy);
             return dataSourceProxy;
         }
         DataSourceProxy dataSourceProxy = localResources.getDataSource(dbName);
-        TDDLogger.log("Reused dataSourceProxy " + dataSourceProxy);
+        LOG.debug("Reused dataSourceProxy " + dataSourceProxy);
         DATASOURCES.put(dbName, dataSourceProxy);
         return dataSourceProxy;
     }
@@ -92,13 +96,13 @@ public class ProxyResourceCreator implements ResourceCreator<EntityManager, Data
         if (!localResources.hasEntityManager(name)) {
             registerDataSourceInContext(dataSourceName, dataSource);
             EntityManager entityManager = Persistence.createEntityManagerFactory(name).createEntityManager();
-            TDDLogger.log("Created entity manager " + entityManager);
+            LOG.debug("Created entity manager " + entityManager);
             ENTITYMANAGERS.put(name, entityManager);
             localResources.putEntityManager(name, entityManager);
             return entityManager;
         }
         EntityManager entityManager = localResources.getEntityManager(name);
-        TDDLogger.log("Reused entity manager " + entityManager);
+        LOG.debug("Reused entity manager " + entityManager);
         ENTITYMANAGERS.put(name, entityManager);
         return entityManager;
     }

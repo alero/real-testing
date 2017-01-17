@@ -5,6 +5,8 @@ import org.hrodberaht.injection.extensions.junit.util.EntityManagerHolder;
 import org.hrodberaht.injection.internal.InjectionContainerManager;
 import org.hrodberaht.injection.internal.ScopeContainer;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import java.util.Collection;
@@ -14,6 +16,8 @@ import java.util.Collection;
  */
 public class JunitSQLContainerService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(JunitSQLContainerService.class);
+
     private JPAContainerConfigBase jpaContainerConfigBase;
 
     public JunitSQLContainerService(JPAContainerConfigBase jpaContainerConfigBase) {
@@ -22,7 +26,7 @@ public class JunitSQLContainerService {
 
     public void addSQLSchemas(String schemaName, String packageBase) {
         DataSourceExecution sourceExecution = new DataSourceExecution(jpaContainerConfigBase.getResourceCreator());
-        TDDLogger.log("JunitSQLContainerService addSQLSchemas " + schemaName + ":" + packageBase);
+        LOG.debug("JunitSQLContainerService addSQLSchemas " + schemaName + ":" + packageBase);
         if (!sourceExecution.isInitiated(schemaName, packageBase)) {
             sourceExecution.addSQLSchemas(schemaName, packageBase);
         }
@@ -31,7 +35,7 @@ public class JunitSQLContainerService {
 
     public void addSQLSchemas(String controllerPackageName, String schemaName, String packageBase) {
         DataSourceExecution sourceExecution = new DataSourceExecution(jpaContainerConfigBase.getResourceCreator());
-        TDDLogger.log("JunitSQLContainerService addSQLSchemas " +
+        LOG.debug("JunitSQLContainerService addSQLSchemas " +
                 controllerPackageName + ":" + schemaName + ":" + packageBase);
         if (!sourceExecution.isInitiated(controllerPackageName, packageBase)) {
             sourceExecution.addSQLSchemas(schemaName, packageBase);

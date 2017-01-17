@@ -1,10 +1,12 @@
 package org.hrodberaht.injection.extensions.cdi.cdiext;
 
+import org.hrodberaht.injection.extensions.cdi.exception.CDIException;
 import org.hrodberaht.injection.extensions.cdi.inner.FileScanningUtil;
-import org.hrodberaht.injection.extensions.cdi.inner.SimpleLogger;
 import org.hrodberaht.injection.internal.annotation.ReflectionUtils;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.spi.ContainerConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.event.Observes;
 import javax.enterprise.inject.spi.AfterBeanDiscovery;
@@ -35,6 +37,8 @@ import java.util.jar.JarFile;
  */
 public class ApplicationCDIExtensions implements CDIExtensions{
 
+    private static final Logger LOG = LoggerFactory.getLogger(ApplicationCDIExtensions.class);
+
     protected enum Phase {AfterBeanDiscovery, BeforeBeanDiscovery}
 
     protected Map<Phase, List<MethodClassHolder>> phaseMethods = new ConcurrentHashMap<Phase, List<MethodClassHolder>>();
@@ -58,12 +62,8 @@ public class ApplicationCDIExtensions implements CDIExtensions{
                 } else {
                     // TODO: figure out what to do some day
                 }
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            } catch (InvocationTargetException e) {
-                throw new RuntimeException(e);
-            } catch (InstantiationException e) {
-                throw new RuntimeException(e);
+            } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+                throw new CDIException(e);
             }
         }
     }
@@ -76,18 +76,13 @@ public class ApplicationCDIExtensions implements CDIExtensions{
                 methodClassHolder.getMethod().setAccessible(true);
                 Object instance = methodClassHolder.getaClass().newInstance();
                 // Not possible to injectMethod dependencies before the container is built
-                // register.getInjectContainer().injectDependencies(instance);
                 if (methodClassHolder.getMethod().getParameterTypes().length == 1) {
                     methodClassHolder.getMethod().invoke(instance, inject);
                 } else {
                     // TODO: figure out what to do some day
                 }
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            } catch (InvocationTargetException e) {
-                throw new RuntimeException(e);
-            } catch (InstantiationException e) {
-                throw new RuntimeException(e);
+            } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
+                throw new CDIException(e);
             }
         }
     }
@@ -99,35 +94,41 @@ public class ApplicationCDIExtensions implements CDIExtensions{
             for (URL resource; resources.hasMoreElements(); ) {
                 resource = resources.nextElement();
                 String path = resource.getFile();
-                SimpleLogger.log("evaluating jar-file = " + path);
+                LOG.info("evaluating jar-file = " + path);
                 if (FileScanningUtil.isJarFile(resource)) {
-                    SimpleLogger.log("findJarFiles fileToLoad = " + path);
-                    JarFile jarFile = new JarFile(FileScanningUtil.findJarFile(path));
-                    Enumeration<JarEntry> enumeration = jarFile.entries();
-                    while (enumeration.hasMoreElements()) {
-                        JarEntry jarEntry = enumeration.nextElement();
-                        String classPath = jarEntry.getName().replaceAll("/", ".");
-                        if (!jarEntry.isDirectory() && jarEntry.getName().contains(extensionFileName)) {
-                            try {
-                                BufferedReader br = new BufferedReader(new InputStreamReader(jarFile.getInputStream(jarEntry)));
-                                readExtensionsAndRegister(br);
-                                br.close();
-                            } catch (ClassFormatError e) {
-                                SimpleLogger.log("jar aClass error: " + classPath);
-                            } catch (NoClassDefFoundError e) {
-                                SimpleLogger.log("jar aClass error: " + classPath);
-                                throw new RuntimeException("jar aClass error: " + classPath, e);
-                            }
-                        }
+                    LOG.info("findJarFiles fileToLoad = " + path);
+                    try(JarFile jarFile = new JarFile(FileScanningUtil.findJarFile(path))) {
+                        handleJarEntries(extensionFileName, jarFile);
                     }
                 } else {
-                    BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(new File(resource.toURI()))));
-                    readExtensionsAndRegister(br);
-                    br.close();
+                    try(FileInputStream fileInputStream = new FileInputStream(new File(resource.toURI()));
+                        BufferedReader br = new BufferedReader(new InputStreamReader(fileInputStream));
+                    ) {
+                        readExtensionsAndRegister(br);
+                    }
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new CDIException(e);
+        }
+    }
+
+    private void handleJarEntries(String extensionFileName, JarFile jarFile) throws IOException {
+        Enumeration<JarEntry> enumeration = jarFile.entries();
+        while (enumeration.hasMoreElements()) {
+            JarEntry jarEntry = enumeration.nextElement();
+            String classPath = jarEntry.getName().replaceAll("/", ".");
+            if (!jarEntry.isDirectory() && jarEntry.getName().contains(extensionFileName)) {
+                try {
+                    BufferedReader br = new BufferedReader(new InputStreamReader(jarFile.getInputStream(jarEntry)));
+                    readExtensionsAndRegister(br);
+                    br.close();
+                } catch (ClassFormatError e) {
+                    LOG.debug("jar aClass error: " + classPath, e);
+                } catch (NoClassDefFoundError e) {
+                    throw new CDIException("jar aClass error: " + classPath, e);
+                }
+            }
         }
     }
 
@@ -137,6 +138,7 @@ public class ApplicationCDIExtensions implements CDIExtensions{
             try {
                 evaluateMethodAndPutToCache(strLine);
             } catch (Exception e) {
+                LOG.debug("readExtensionsAndRegister - hidden error "+e.getMessage());
             }
         }
     }
@@ -156,18 +158,20 @@ public class ApplicationCDIExtensions implements CDIExtensions{
                     continue;
                 }
             }
-            for (int i = 0; i < parameters.length; i++) {
-                Class parameter = parameters[i];
-                if (parameterAnnotations[0][0].annotationType() == Observes.class) {
-                    if (parameter.equals(AfterBeanDiscovery.class)) {
-                        this.phaseMethods.get(Phase.AfterBeanDiscovery).add(new MethodClassHolder(aClass, method));
-                    }
-                    if (parameter.equals(BeforeBeanDiscovery.class)) {
-                        this.phaseMethods.get(Phase.BeforeBeanDiscovery).add(new MethodClassHolder(aClass, method));
-                    }
+            discoveryAnnotation(new MethodClassHolder(aClass, method), parameters, parameterAnnotations[0]);
+        }
+    }
+
+    private void discoveryAnnotation(MethodClassHolder e, Class[] parameters, Annotation[] parameterAnnotation) {
+        for (Class parameter : parameters) {
+            if (parameterAnnotation[0].annotationType() == Observes.class) {
+                if (parameter.equals(AfterBeanDiscovery.class)) {
+                    this.phaseMethods.get(Phase.AfterBeanDiscovery).add(e);
+                }
+                if (parameter.equals(BeforeBeanDiscovery.class)) {
+                    this.phaseMethods.get(Phase.BeforeBeanDiscovery).add(e);
                 }
             }
-
         }
     }
 

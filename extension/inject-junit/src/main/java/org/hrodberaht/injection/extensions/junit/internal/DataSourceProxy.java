@@ -4,6 +4,7 @@ import org.hrodberaht.injection.extensions.junit.internal.embedded.DataSourceCon
 import org.hrodberaht.injection.extensions.junit.internal.embedded.DataSourceConfiguration;
 import org.hrodberaht.injection.extensions.junit.internal.embedded.ResourceWatcher;
 import org.hrodberaht.injection.spi.DataSourceProxyInterface;
+import org.slf4j.LoggerFactory;
 
 import java.io.PrintWriter;
 import java.lang.reflect.InvocationHandler;
@@ -27,6 +28,8 @@ import java.util.logging.Logger;
  * @since 1.0
  */
 public class DataSourceProxy implements DataSourceProxyInterface {
+
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(DataSourceProxy.class);
 
     private static Map<String, String> DB_NAME_MAPPING = new ConcurrentHashMap<String, String>();
 
@@ -102,7 +105,7 @@ public class DataSourceProxy implements DataSourceProxyInterface {
             connectionHandler.conn.rollback();
             connectionHandler.conn.close();
             CONNECTIONS.remove(connectionHandler.conn.toString());
-            TDDLogger.log("rollback/close Connection " + connectionHandler + " Thread:" + Thread.currentThread());
+            LOG.debug("rollback/close Connection " + connectionHandler + " Thread:" + Thread.currentThread());
             rollbackRecursively(connectionHandler);
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -133,11 +136,11 @@ public class DataSourceProxy implements DataSourceProxyInterface {
             CONNECTIONS.remove(connectionHandler.conn.toString());
             connectionHandler.conn.commit();
             connectionHandler.conn.close();
-            TDDLogger.log("commit/close Connection " + connectionHandler + " Thread:" + Thread.currentThread());
+            LOG.debug("commit/close Connection " + connectionHandler + " Thread:" + Thread.currentThread());
             commitRecursively(connectionHandler);
         } catch (SQLNonTransientConnectionException exception) {
             if (exception.getMessage().contains("connection does not exist")) {
-                TDDLogger.log("connection closed from the outside");
+                LOG.debug("connection closed from the outside");
                 return;
             }
         } catch (SQLException e) {
@@ -163,7 +166,7 @@ public class DataSourceProxy implements DataSourceProxyInterface {
         final ConnectionHandler connection = threadLocal.get();
 
         if (connection != null && connection.hasConnection()) {
-            TDDLogger.log("reusing Connection " + connection + " Thread:" + Thread.currentThread());
+            LOG.debug("reusing Connection " + connection + " Thread:" + Thread.currentThread());
             return connection.proxy;
         }
         try {
@@ -188,11 +191,11 @@ public class DataSourceProxy implements DataSourceProxyInterface {
             if (connection != null && !connection.hasConnection()) {
                 connection.conn = conn;
                 connection.proxy = proxy;
-                TDDLogger.log(" new empty Connection " + connectionHandler);
+                LOG.debug(" new empty Connection " + connectionHandler);
             } else {
                 connectionHandler.conn = conn;
                 connectionHandler.proxy = proxy;
-                TDDLogger.log(" new Connection " + connectionHandler + " Thread:" + Thread.currentThread());
+                LOG.debug(" new Connection " + connectionHandler + " Thread:" + Thread.currentThread());
                 threadLocal.set(connectionHandler);
             }
             return proxy;

@@ -5,6 +5,8 @@ import org.hrodberaht.injection.extensions.spring.jpa.SpringEntityManager;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.TestContext;
@@ -22,11 +24,10 @@ import java.util.stream.Collectors;
 
 public class SpringJUnitRunner extends SpringJUnit4ClassRunner {
 
+    private static final Logger LOG = LoggerFactory.getLogger(SpringJUnitRunner.class);
 
     private final JUnitRunner jUnitRunner;
-
     private TestContext testContext;
-
     private TransactionalTestExecutionListener transactionalTestExecutionListener;
 
     /**
@@ -72,7 +73,7 @@ public class SpringJUnitRunner extends SpringJUnit4ClassRunner {
             return jUnitRunner.activeContainer.get(ApplicationContext.class)
                     .getBean(SpringEntityManager.class);
         } catch (Exception ex) {
-            TDDLogger.log("SpringJUnitRunner info: " + ex.getMessage());
+            LOG.debug("SpringJUnitRunner info: " + ex.getMessage());
             return null;
         }
     }

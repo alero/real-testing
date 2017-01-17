@@ -1,6 +1,8 @@
 package org.hrodberaht.injection.extensions.junit.internal;
 
 import org.hrodberaht.injection.spi.ContainerConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import java.sql.SQLException;
@@ -15,6 +17,8 @@ import java.sql.SQLException;
  */
 public class TransactionManager {
 
+    private static final Logger LOG = LoggerFactory.getLogger(TransactionManager.class);
+
     private static final ThreadLocal<EntityManagers> MANAGERS = new ThreadLocal<EntityManagers>();
     private static final ThreadLocal<DataSources> DATA_SOURCES = new ThreadLocal<DataSources>();
 
@@ -27,7 +31,7 @@ public class TransactionManager {
                     entityManager.getTransaction().rollback();
                     entityManager.clear();
                     // entityManager.close();
-                    TDDLogger.log("entityManager rollback " + entityManager);
+                    LOG.debug("entityManager rollback " + entityManager);
                 }
             }
         }
@@ -36,7 +40,7 @@ public class TransactionManager {
         if (dataSources != null) {
             for (DataSourceProxy dataSourceProxy : dataSources.getDataSources()) {
                 dataSourceProxy.clearDataSource();
-                TDDLogger.log("dataSourceProxy rollback " + dataSourceProxy);
+                LOG.debug("dataSourceProxy rollback " + dataSourceProxy);
             }
         }
     }
@@ -53,7 +57,7 @@ public class TransactionManager {
 
                     entityManager.getTransaction().begin();
                     // entityManager.close();
-                    TDDLogger.log("entityManager begin " + entityManager);
+                    LOG.debug("entityManager begin " + entityManager);
                 }
             }
         }
@@ -64,7 +68,7 @@ public class TransactionManager {
                     dataSourceProxy.getConnection();
                 } catch (SQLException e) {
                 }
-                TDDLogger.log("dataSourceProxy Begin " + dataSourceProxy);
+                LOG.debug("dataSourceProxy Begin " + dataSourceProxy);
             }
         }
     }

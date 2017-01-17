@@ -1,5 +1,7 @@
 package org.hrodberaht.injection.extensions.junit.exception;
 
+import java.io.IOException;
+
 public class DataSourceException extends RuntimeException {
 
     public DataSourceException(Throwable cause) {
@@ -8,5 +10,9 @@ public class DataSourceException extends RuntimeException {
 
     public DataSourceException(String message) {
         super(message);
+    }
+
+    public DataSourceException(String message, Throwable e) {
+        super(message, e);
     }
 }

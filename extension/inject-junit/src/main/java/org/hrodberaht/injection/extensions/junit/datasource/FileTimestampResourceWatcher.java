@@ -2,6 +2,8 @@ package org.hrodberaht.injection.extensions.junit.datasource;
 
 import org.hrodberaht.injection.extensions.junit.internal.TDDLogger;
 import org.hrodberaht.injection.extensions.junit.internal.embedded.ResourceWatcher;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
@@ -19,6 +21,8 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class FileTimestampResourceWatcher implements ResourceWatcher {
+
+    private static final Logger LOG = LoggerFactory.getLogger(FileTimestampResourceWatcher.class);
 
     private File timestampHolder;
     private String[] resourceFiles;
@@ -45,7 +49,7 @@ public class FileTimestampResourceWatcher implements ResourceWatcher {
 
     private void computeSyncStatusFromWatchers(File timestampHolder) {
         if (!timestampHolder.exists()) {
-            TDDLogger.log("First time syncing");
+            LOG.debug("First time syncing");
             writeLatestStatus();
             hasChanged = true;
         } else {
@@ -56,7 +60,7 @@ public class FileTimestampResourceWatcher implements ResourceWatcher {
                     }
                 );
                 if (!compareEquals(filesToWatch, filesToWatchCache)) {
-                    TDDLogger.log("Syncing on changed sourcefile");
+                    LOG.debug("Syncing on changed sourcefile");
                     hasChanged = true;
                     writeLatestStatus();
                     return;
@@ -65,7 +69,7 @@ public class FileTimestampResourceWatcher implements ResourceWatcher {
                 throw new RuntimeException(e);
             }
 
-            TDDLogger.log("Not syncing");
+            LOG.debug("Not syncing");
             hasChanged = false;
         }
     }

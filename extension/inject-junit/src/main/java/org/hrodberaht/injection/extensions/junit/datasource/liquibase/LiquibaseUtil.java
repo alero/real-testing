@@ -8,6 +8,8 @@ import liquibase.resource.ClassLoaderResourceAccessor;
 import org.hrodberaht.injection.extensions.junit.internal.TDDLogger;
 import org.hrodberaht.injection.extensions.junit.internal.embedded.ResourceWatcher;
 import org.hrodberaht.injection.spi.DataSourceProxyInterface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
@@ -16,6 +18,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class LiquibaseUtil {
+
+    private static final Logger LOG = LoggerFactory.getLogger(LiquibaseUtil.class);
 
     private final String verificationQuery;
     private final String liquibaseStorageName;
@@ -41,7 +45,7 @@ public class LiquibaseUtil {
         if (isLoadedAlready) {
             loadSchemaDataStore(dataSourceProxyInterface, liquiBaseSchema);
         } else {
-            TDDLogger.log("NOT - RUNNING Liquibase update on schema!");
+            LOG.debug("NOT - RUNNING Liquibase update on schema!");
         }
     }
 
@@ -96,7 +100,7 @@ public class LiquibaseUtil {
 
         try {
             dataSourceProxyInterface.runWithConnectionAndCommit(con -> {
-                TDDLogger.log("RUNNING Liquidbase update on schema!");
+                LOG.debug("RUNNING Liquidbase update on schema!");
                     try{
                         HsqlDatabase hsqlDatabase = new HsqlDatabase() {
                             public boolean failOnDefferable() {

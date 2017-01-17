@@ -16,6 +16,8 @@ import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.spi.ResourceCreator;
 import org.hrodberaht.injection.spi.module.CustomInjectionPointFinderModule;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -35,6 +37,8 @@ import java.util.stream.Stream;
  * @since 1.0
  */
 public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<InjectionRegisterModule> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SpringContainerConfigBase.class);
 
     private static final Map<Class, SpringContainerConfigBase> CACHE = new ConcurrentHashMap<>();
     private ApplicationContext context;
@@ -73,11 +77,11 @@ public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<I
     public void loadJavaSpringConfig(Class... springConfigs) {
         SpringContainerConfigBase configBase = CACHE.get(this.getClass());
         if(configBase != null && enabledCache){
-            TDDLogger.log("SpringContainerConfigBase - Using cached SpringApplication for "+this.getClass());
+            LOG.debug("SpringContainerConfigBase - Using cached SpringApplication for "+this.getClass());
             context = configBase.context;
             springBeanInjector = configBase.springBeanInjector;
         }else {
-            TDDLogger.log("SpringContainerConfigBase - Creating SpringApplication for "+this.getClass());
+            LOG.debug("SpringContainerConfigBase - Creating SpringApplication for "+this.getClass());
             validateEmptyContext(context);
             Class[] config = new Class[]{getContainerSpringConfigClass()};
             if (springConfigs != null) {

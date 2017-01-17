@@ -5,6 +5,8 @@ import org.hrodberaht.injection.config.JarUtil;
 import org.hrodberaht.injection.extensions.junit.exception.DataSourceException;
 import org.hrodberaht.injection.spi.DataSourceProxyInterface;
 import org.hrodberaht.injection.spi.ResourceCreator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.io.BufferedReader;
@@ -37,6 +39,8 @@ import java.util.jar.JarFile;
  */
 public class DataSourceExecution {
 
+    private static final Logger LOG = LoggerFactory.getLogger(DataSourceExecution.class);
+
     private static final String SCHEMA_PREFIX = "create_schema";
     private static final String INSERT_SCRIPT_PREFIX = "insert_script";
 
@@ -52,7 +56,7 @@ public class DataSourceExecution {
         final ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
         final ClassLoader classClassLoader = DataSourceExecution.class.getClassLoader();
 
-        final List<File> files = new ArrayList<File>();
+        final List<File> files = new ArrayList<>();
         List<File> foundFiles = findFiles(threadClassLoader, packageBase);
         if (foundFiles == null) {
             foundFiles = findFiles(classClassLoader, packageBase);
@@ -77,37 +81,41 @@ public class DataSourceExecution {
                 return;
             }
             for (File fileToLoad : filesToLoad) {
-                TDDLogger.log("findJarFiles fileToLoad = " + fileToLoad);
+                LOG.debug("findJarFiles fileToLoad = " + fileToLoad);
                 try(final JarFile jarFile = new JarFile(fileToLoad)) {
                     Enumeration<JarEntry> enumeration = jarFile.entries();
-                    while (enumeration.hasMoreElements()) {
-                        final JarEntry jarEntry = enumeration.nextElement();
-                        final String jarName = jarEntry.getName();
-                        if (!jarEntry.isDirectory() && jarName.startsWith(packageBase)
-                                && jarName.endsWith(".sql")) {
-                            TDDLogger.log("DataSourceExecution findJarFiles " + fileToLoad.getName());
-                            java.io.InputStream is = jarFile.getInputStream(jarEntry);
-                            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                            String strLine;
-                            StringBuffer stringBuffer = new StringBuffer();
-                            while ((strLine = br.readLine()) != null) {
-                                stringBuffer.append(strLine);
-                            }
-                            executeStringToSQL(schemaName, stringBuffer);
-                        }
-                    }
+                    handleJarEntries(packageBase, schemaName, fileToLoad, jarFile, enumeration);
                 }
             }
         } catch (IOException e) {
-            throw new DataSourceException("Bad file " + packageBase + " with classloader:" + classLoader);
+            throw new DataSourceException("Bad file " + packageBase + " with classloader:" + classLoader, e);
         }
 
+    }
+
+    private void handleJarEntries(String packageBase, String schemaName, File fileToLoad, JarFile jarFile, Enumeration<JarEntry> enumeration) throws IOException {
+        while (enumeration.hasMoreElements()) {
+            final JarEntry jarEntry = enumeration.nextElement();
+            final String jarName = jarEntry.getName();
+            if (!jarEntry.isDirectory() && jarName.startsWith(packageBase)
+                    && jarName.endsWith(".sql")) {
+                LOG.debug("DataSourceExecution findJarFiles " + fileToLoad.getName());
+                java.io.InputStream is = jarFile.getInputStream(jarEntry);
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                String strLine;
+                StringBuilder stringBuffer = new StringBuilder();
+                while ((strLine = br.readLine()) != null) {
+                    stringBuffer.append(strLine);
+                }
+                executeStringToSQL(schemaName, stringBuffer);
+            }
+        }
     }
 
     private List<File> findFiles(final ClassLoader classLoader, final String packageBase) {
         URL url = classLoader.getResource(packageBase);
         if (url == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         }
         String directoryString = url.getFile().replaceAll("%20", " ");
         File directory = new File(directoryString);
@@ -127,7 +135,7 @@ public class DataSourceExecution {
     }
 
     private void executeScript(final File file, final String schemaName) {
-        TDDLogger.log("DataSourceExecution runScripts " + file.getName());
+        LOG.debug("DataSourceExecution runScripts " + file.getName());
 
         try (FileInputStream fstream = new FileInputStream(file);
              DataInputStream in = new DataInputStream(fstream);
@@ -135,7 +143,7 @@ public class DataSourceExecution {
         ){
 
             String strLine;
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuffer = new StringBuilder();
             while ((strLine = br.readLine()) != null) {
                 stringBuffer.append(strLine);
             }
@@ -147,7 +155,7 @@ public class DataSourceExecution {
         }
     }
 
-    private void executeStringToSQL(final String schemaName, final StringBuffer stringBuffer) {
+    private void executeStringToSQL(final String schemaName, final StringBuilder stringBuffer) {
 
         if(stringBuffer.toString().isEmpty()){
             return;
@@ -164,7 +172,7 @@ public class DataSourceExecution {
                         con -> runScriptForConnection(stringBuffer, con)
                 );
             } catch (Exception e) {
-                throw new RuntimeException(e);
+                throw new DataSourceException(e);
             }
         }else{
             try {
@@ -175,11 +183,12 @@ public class DataSourceExecution {
         }
     }
 
-    private boolean runScriptForConnection(StringBuffer stringBuffer, Connection con) {
+    private boolean runScriptForConnection(StringBuilder stringBuffer, Connection con) {
         try (Statement stmt = con.createStatement()) {
             stmt.execute(stringBuffer.toString());
         } catch (SQLIntegrityConstraintViolationException e) {
             // Just skip this, its annoying but cant seem to fix it
+            LOG.debug("hidden error: "+ e.getMessage());
         } catch (SQLException e) {
             throw new DataSourceException(e);
         }
@@ -223,7 +232,6 @@ public class DataSourceExecution {
             }
             return false;
         } catch (SQLException e) {
-            TDDLogger.log(e.getMessage());
             return true;
         }
     }
