@@ -11,6 +11,7 @@ import com.hrodberaht.inject.extensions.transaction.manager.impl.jpa.Transaction
 import com.hrodberaht.inject.extensions.transaction.manager.impl.jpa.TransactionManagerJPAImpl;
 import com.hrodberaht.inject.extensions.transaction.manager.internal.vendor.ProviderFactory;
 import com.hrodberaht.inject.extensions.transaction.manager.internal.vendor.ProviderService;
+import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.register.ExtendedModule;
 import org.hrodberaht.injection.register.InjectionFactory;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
@@ -33,44 +34,48 @@ public class TransactionManagerModule extends ExtendedModule {
         registration = new RegistrationModuleAnnotation() {
             @Override
             public void registrations() {
-                // the withInstance will automatically create a singleton with that instance
-                register(TransactionManager.class).withInstance(transactionManager);
-
-                // This will make the registration to the specific implementation interface as well
-                // for usage in an application that needs implementation specific information
-                register(getInterface(transactionManager)).withInstance(transactionManager);
-
-                if (transactionManager instanceof InjectionFactory) {
-                    InjectionFactory injectionFactory = (InjectionFactory) transactionManager;
-                    register(injectionFactory.getInstanceType()).withFactory(injectionFactory);
-                }
-
-                if(transactionManager instanceof TransactionManagerJPA){
-                    final TransactionManagerJPA transactionManagerJPA = (TransactionManagerJPA)transactionManager;
-                    InjectionFactory<Connection> injectionFactory = new InjectionFactory<Connection>(){
-                        public Connection getInstance() {
-                            return getConnection(transactionManagerJPA);
-                        }
-
-                        public Class getInstanceType() {
-                            return Connection.class;
-                        }
-
-                        public boolean newObjectOnInstance() {
-                            return false;
-                        }
-                    };
-                    register(Connection.class).withFactory(injectionFactory);
-                }
-
-                // Configure the JDBC Services
-                register(JDBCService.class).with(JDBCServiceImpl.class);
-                register(InsertOrUpdater.class).with(InsertOrUpdaterImpl.class);
+                registerServices(this, transactionManager);
             }
-
 
         };
         registration.registrations();
+    }
+
+    private void registerServices(RegistrationModuleAnnotation registrationModuleAnnotation, final TransactionManager transactionManager) {
+        // the withInstance will automatically create a singleton with that instance
+        registrationModuleAnnotation.register(TransactionManager.class).withInstance(transactionManager);
+
+        // This will make the registration to the specific implementation interface as well
+        // for usage in an application that needs implementation specific information
+        registrationModuleAnnotation.register(getInterface(transactionManager)).withInstance(transactionManager);
+
+        if (transactionManager instanceof InjectionFactory) {
+            InjectionFactory injectionFactory = (InjectionFactory) transactionManager;
+            registrationModuleAnnotation.register(injectionFactory.getInstanceType()).withFactory(injectionFactory);
+        }
+
+        if(transactionManager instanceof TransactionManagerJPA){
+            final TransactionManagerJPA transactionManagerJPA = (TransactionManagerJPA)transactionManager;
+            InjectionFactory<Connection> injectionFactory = new InjectionFactory<Connection>(){
+                @Override
+                public Connection getInstance() {
+                    return getConnection(transactionManagerJPA);
+                }
+                @Override
+                public Class getInstanceType() {
+                    return Connection.class;
+                }
+                @Override
+                public boolean newObjectOnInstance() {
+                    return false;
+                }
+            };
+            registrationModuleAnnotation.register(Connection.class).withFactory(injectionFactory);
+        }
+
+        // Configure the JDBC Services
+        registrationModuleAnnotation.register(JDBCService.class).with(JDBCServiceImpl.class);
+        registrationModuleAnnotation.register(InsertOrUpdater.class).with(InsertOrUpdaterImpl.class);
     }
 
     private Connection getConnection(TransactionManagerJPA transactionManagerJPA) {
@@ -79,7 +84,7 @@ public class TransactionManagerModule extends ExtendedModule {
         if(providerService != null){
             return providerService.findConnection(entityManager);   
         }
-        throw new RuntimeException("Cannot find Connection for entity-manager "+entityManager);
+        throw new InjectRuntimeException("Cannot find Connection for entity-manager "+entityManager);
     }
 
     private Class getInterface(TransactionManager transactionManager) {

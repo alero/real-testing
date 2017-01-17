@@ -4,18 +4,21 @@ import java.text.MessageFormat;
 
 public class DependencyLocationError extends RuntimeException {
 
-    private Object[] args = null;
+    private transient final Object[] args;
 
     public DependencyLocationError(String message) {
         super(message);
+        this.args = null;
     }
 
     public DependencyLocationError(String message, Throwable e) {
         super(message, e);
+        this.args = null;
     }
 
     public DependencyLocationError(Throwable e) {
         super(e);
+        this.args = null;
     }
 
     public DependencyLocationError(String message, Object... args) {

@@ -25,19 +25,22 @@ import java.text.MessageFormat;
  * @since 1.0
  */
 public class InjectRuntimeException extends RuntimeException {
-    private Object[] args = null;
+    private transient final Object[] args;
 
 
     public InjectRuntimeException(String message) {
         super(message);
+        this.args = null;
     }
 
     public InjectRuntimeException(String message, Throwable e) {
         super(message, e);
+        this.args = null;
     }
 
     public InjectRuntimeException(Throwable e) {
         super(e);
+        this.args = null;
     }
 
     public InjectRuntimeException(String message, Object... args) {

@@ -25,19 +25,22 @@ import java.text.MessageFormat;
  * @since 1.0
  */
 public class DuplicateRegistrationException extends RuntimeException {
-    private Object[] args = null;
+    private transient final Object[] args;
 
 
     public DuplicateRegistrationException(String message) {
         super(message);
+        this.args = null;
     }
 
     public DuplicateRegistrationException(String message, Throwable e) {
         super(message, e);
+        this.args = null;
     }
 
     public DuplicateRegistrationException(Throwable e) {
         super(e);
+        this.args = null;
     }
 
     public DuplicateRegistrationException(String message, Object... args) {

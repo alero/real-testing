@@ -4,18 +4,21 @@ import java.text.MessageFormat;
 
 public class InstanceCreationError extends RuntimeException {
 
-    private Object[] args = null;
+    private transient final Object[] args;
 
     public InstanceCreationError(String message) {
         super(message);
+        this.args = null;
     }
 
     public InstanceCreationError(String message, Throwable e) {
         super(message, e);
+        this.args = null;
     }
 
     public InstanceCreationError(Throwable e) {
         super(e);
+        this.args = null;
     }
 
     public InstanceCreationError(String message, Object... args) {
