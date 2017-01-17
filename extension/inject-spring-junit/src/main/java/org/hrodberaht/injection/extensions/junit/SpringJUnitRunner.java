@@ -1,6 +1,7 @@
 package org.hrodberaht.injection.extensions.junit;
 
 import org.hrodberaht.injection.extensions.spring.jpa.SpringEntityManager;
+import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
@@ -98,7 +99,7 @@ public class SpringJUnitRunner extends SpringJUnit4ClassRunner {
             testContext = (TestContext) field.get(contextManager);
             field.set(contextManager, new TestContextLocal(testContext));
         } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+            throw new InjectRuntimeException(e);
         }
     }
 

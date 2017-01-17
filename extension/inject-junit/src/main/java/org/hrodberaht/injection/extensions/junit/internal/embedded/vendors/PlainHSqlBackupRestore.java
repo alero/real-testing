@@ -78,16 +78,20 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore{
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (shouldExecuteLine(line)) {
-                    try{
-                        jdbcTemplate.execute(line);
-                    }catch (Exception e){
-                        LOG.debug("Failed to restore line - "+line);
-                    }
+                    executeLine(jdbcTemplate, line);
                 }
             }
             return fileContents.toString();
         } finally {
             scanner.close();
+        }
+    }
+
+    private void executeLine(JdbcTemplate jdbcTemplate, String line) {
+        try{
+            jdbcTemplate.execute(line);
+        }catch (Exception e){
+            LOG.debug("Failed to restore line - "+line);
         }
     }
 

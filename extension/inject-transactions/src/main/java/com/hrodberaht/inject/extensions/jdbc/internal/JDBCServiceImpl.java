@@ -5,6 +5,9 @@ import com.hrodberaht.inject.extensions.jdbc.InsertOrUpdater;
 import com.hrodberaht.inject.extensions.jdbc.JDBCService;
 import com.hrodberaht.inject.extensions.jdbc.RowIterator;
 import com.hrodberaht.inject.extensions.jdbc.SQLDateUtil;
+import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -32,39 +35,43 @@ import java.util.Date;
  */
 public class JDBCServiceImpl implements JDBCService {
 
-    @Inject
-    Provider<InsertOrUpdater> iouProvider;
+    private static final Logger LOG = LoggerFactory.getLogger(JDBCServiceImpl.class);
 
     @Inject
-    Provider<Connection> connectionProvider;
+    private Provider<InsertOrUpdater> iouProvider;
 
+    @Inject
+    private Provider<Connection> connectionProvider;
+
+    @Override
     public InsertOrUpdater createInsertOrUpdate(String table) {
-        InsertOrUpdater _insertOrUpdater = iouProvider.get();
-        InsertOrUpdaterImpl insertOrUpdater = (InsertOrUpdaterImpl) _insertOrUpdater;
+        InsertOrUpdaterImpl insertOrUpdater = (InsertOrUpdaterImpl) iouProvider.get();
         return insertOrUpdater.table(table);
     }
 
+    @Override
     public Insert createInsert(String table) {
-        InsertOrUpdater _insertOrUpdater = iouProvider.get();
-        InsertOrUpdaterImpl insertOrUpdater = (InsertOrUpdaterImpl) _insertOrUpdater;
+        InsertOrUpdaterImpl insertOrUpdater = (InsertOrUpdaterImpl) iouProvider.get();
         return insertOrUpdater.table(table);
     }
 
+    @Override
     public int insert(Insert insert) {
         return insertOrUpdate((InsertOrUpdater) insert);
     }
 
-    public int insertOrUpdate(InsertOrUpdater _insertOrUpdater) {
+    @Override
+    public int insertOrUpdate(InsertOrUpdater insertOrUpdater) {
         try {
-            if (_insertOrUpdater instanceof InsertOrUpdaterImpl) {
-                InsertOrUpdaterImpl insertOrUpdater = (InsertOrUpdaterImpl) _insertOrUpdater;
+            if (insertOrUpdater instanceof InsertOrUpdaterImpl) {
+                InsertOrUpdaterImpl insertOrUpdaterImpl = (InsertOrUpdaterImpl) insertOrUpdater;
 
                 Connection connection = connectionProvider.get();
                 PreparedStatement pstmt = null;
                 try {
-                    String sql = insertOrUpdater.getPreparedSql();
+                    String sql = insertOrUpdaterImpl.getPreparedSql();
                     pstmt = connection.prepareStatement(sql);
-                    Object[] args = insertOrUpdater.getArgs();
+                    Object[] args = insertOrUpdaterImpl.getArgs();
                     appendArguments(pstmt, args);
                     return pstmt.executeUpdate();
                 } finally {
@@ -74,88 +81,12 @@ public class JDBCServiceImpl implements JDBCService {
         } catch (SQLException e) {
             throw new JDBCException(e);
         }
-        throw new RuntimeException("A custom InsertOrUpdater was used, use InsertOrUpdaterImpl is the instance");
+        throw new InjectRuntimeException("A custom InsertOrUpdater was used, use InsertOrUpdaterImpl is the instance");
 
     }
 
 
-    private void appendArguments(PreparedStatement pstmt, Object... args) throws SQLException {
-        int argumentOrder = 1;
-        for (Object argument : args) {
-            addArgument(pstmt, argumentOrder, argument);
-            argumentOrder++;
-        }
-    }
-
-    private void addArgument(PreparedStatement pstmt, int argumentOrder, Object argument) throws SQLException {
-        if (argument == null) {
-            pstmt.setNull(argumentOrder, java.sql.Types.NULL);
-        } else if (argument instanceof String) {
-            pstmt.setString(argumentOrder, (String) argument);
-        } else if (argument instanceof Long) {
-            pstmt.setLong(argumentOrder, (Long) argument);
-        } else if (argument instanceof Integer) {
-            pstmt.setInt(argumentOrder, (Integer) argument);
-        } else if (argument instanceof java.util.Date) {
-            if (argument instanceof java.sql.Date) {
-                pstmt.setDate(argumentOrder, (java.sql.Date) argument);
-            }else if (argument instanceof Timestamp) {
-                pstmt.setTimestamp(argumentOrder, (java.sql.Timestamp) argument);
-            } else if(argument instanceof java.sql.Time) {
-                pstmt.setTime(argumentOrder, (java.sql.Time) argument);
-            }else {
-                pstmt.setDate(argumentOrder, new java.sql.Date(((Date) argument).getTime()));
-            }
-        } else if (argument instanceof Calendar) {
-            Calendar cal = (Calendar) argument;
-            pstmt.setTimestamp(argumentOrder, SQLDateUtil.getCalendar(cal), cal);
-        } else if (argument instanceof BigDecimal) {
-            pstmt.setBigDecimal(argumentOrder, (BigDecimal) argument);
-        } else if (argument instanceof Byte) {
-            pstmt.setByte(argumentOrder, (Byte) argument);
-        } else if (argument instanceof Double) {
-            pstmt.setDouble(argumentOrder, (Double) argument);
-        } else if (argument instanceof Float) {
-            pstmt.setFloat(argumentOrder, (Float) argument);
-        } else if (argument instanceof Clob) {
-            pstmt.setClob(argumentOrder, (Clob) argument);
-        } else if (argument instanceof Blob) {
-            pstmt.setBlob(argumentOrder, (Blob) argument);
-        } else if (argument.getClass().isArray()) {
-            // byte arrays are the only supported arrays
-            pstmt.setBytes(argumentOrder, (byte[]) argument);
-        } else {
-            pstmt.setObject(argumentOrder, argument);
-        }
-
-    }
-
-
-    public <T> Collection<T> query(String sql, RowIterator<T> rowIterator, Object... args) {
-
-        try {
-            Connection connection = connectionProvider.get();
-            // Prepared statements?
-            PreparedStatement pstmt = null;
-            ResultSet rs = null;
-            Collection<T> queryItems = new ArrayList<T>(50);
-            try {
-                pstmt = prepareAndAppend(sql, connection, args);
-                rs = pstmt.executeQuery();
-                int iteration = 0;
-                while (rs.next()) {
-                    T item = rowIterator.iterate(rs, iteration++);
-                    queryItems.add(item);
-                }
-                return queryItems;
-            } finally {
-                close(pstmt, rs);
-            }
-        } catch (SQLException e) {
-            throw new JDBCException(e);
-        }
-    }
-
+    @Override
     public <T> T querySingle(String sql, RowIterator<T> rowIterator, Object... args) {
         try {
             Connection connection = connectionProvider.get();
@@ -183,6 +114,7 @@ public class JDBCServiceImpl implements JDBCService {
 
     }
 
+    @Override
     public int execute(String sql, Object... args) {
         try {
             Connection connection = connectionProvider.get();
@@ -196,6 +128,87 @@ public class JDBCServiceImpl implements JDBCService {
             }
         } catch (SQLException e) {
             throw new JDBCException(e);
+        }
+    }
+    @Override
+    public <T> Collection<T> query(String sql, RowIterator<T> rowIterator, Object... args) {
+
+        try {
+            Connection connection = connectionProvider.get();
+            // Prepared statements?
+            PreparedStatement pstmt = null;
+            ResultSet rs = null;
+            Collection<T> queryItems = new ArrayList<T>(50);
+            try {
+                pstmt = prepareAndAppend(sql, connection, args);
+                rs = pstmt.executeQuery();
+                int iteration = 0;
+                while (rs.next()) {
+                    T item = rowIterator.iterate(rs, iteration++);
+                    queryItems.add(item);
+                }
+                return queryItems;
+            } finally {
+                close(pstmt, rs);
+            }
+        } catch (SQLException e) {
+            throw new JDBCException(e);
+        }
+    }
+
+    private void addArgument(PreparedStatement pstmt, int argumentOrder, Object argument) throws SQLException {
+        if (argument == null) {
+            pstmt.setNull(argumentOrder, java.sql.Types.NULL);
+        } else if (argument instanceof String) {
+            pstmt.setString(argumentOrder, (String) argument);
+        } else if (argument instanceof Long) {
+            pstmt.setLong(argumentOrder, (Long) argument);
+        } else if (argument instanceof Integer) {
+            pstmt.setInt(argumentOrder, (Integer) argument);
+        } else if (argument instanceof java.util.Date) {
+            addArgumentDate(pstmt, argumentOrder, argument);
+        } else if (argument instanceof Calendar) {
+            Calendar cal = (Calendar) argument;
+            pstmt.setTimestamp(argumentOrder, SQLDateUtil.getCalendar(cal), cal);
+        } else if (argument instanceof BigDecimal) {
+            pstmt.setBigDecimal(argumentOrder, (BigDecimal) argument);
+        } else if (argument instanceof Byte) {
+            pstmt.setByte(argumentOrder, (Byte) argument);
+        } else if (argument instanceof Double) {
+            pstmt.setDouble(argumentOrder, (Double) argument);
+        } else if (argument instanceof Float) {
+            pstmt.setFloat(argumentOrder, (Float) argument);
+        } else if (argument instanceof Clob) {
+            pstmt.setClob(argumentOrder, (Clob) argument);
+        } else if (argument instanceof Blob) {
+            pstmt.setBlob(argumentOrder, (Blob) argument);
+        } else if (argument.getClass().isArray()) {
+            // byte arrays are the only supported arrays
+            pstmt.setBytes(argumentOrder, (byte[]) argument);
+        } else {
+            pstmt.setObject(argumentOrder, argument);
+        }
+
+    }
+
+    private void appendArguments(PreparedStatement pstmt, Object... args) throws SQLException {
+        int argumentOrder = 1;
+        for (Object argument : args) {
+            addArgument(pstmt, argumentOrder, argument);
+            argumentOrder++;
+        }
+    }
+
+
+    private void addArgumentDate(PreparedStatement pstmt, int argumentOrder, Object argument) throws SQLException {
+        if (argument instanceof java.sql.Date) {
+            pstmt.setDate(argumentOrder, (java.sql.Date) argument);
+        }else if (argument instanceof Timestamp) {
+            pstmt.setTimestamp(argumentOrder, (Timestamp) argument);
+        } else if(argument instanceof java.sql.Time) {
+            pstmt.setTime(argumentOrder, (java.sql.Time) argument);
+        }else {
+            pstmt.setDate(argumentOrder, new java.sql.Date(((Date) argument).getTime()));
         }
     }
 
@@ -217,7 +230,7 @@ public class JDBCServiceImpl implements JDBCService {
                 stmt.close();
             }
         } catch (SQLException e) {
-            // ignore, there is nothing we can do
+            LOG.debug("ignore close failure "+e.getMessage());
         }
     }
 
@@ -227,7 +240,7 @@ public class JDBCServiceImpl implements JDBCService {
                 rs.close();
             }
         } catch (SQLException e) {
-            // ignore, there is nothing we can do
+            LOG.debug("ignore close failure "+e.getMessage());
         }
     }
 

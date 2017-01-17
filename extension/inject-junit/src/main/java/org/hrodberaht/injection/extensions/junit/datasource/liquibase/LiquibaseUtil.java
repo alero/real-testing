@@ -6,6 +6,7 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import org.hrodberaht.injection.extensions.junit.internal.embedded.ResourceWatcher;
+import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.spi.DataSourceProxyInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.io.File;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 public class LiquibaseUtil {
@@ -34,7 +36,7 @@ public class LiquibaseUtil {
     public void liquiBaseSchemaCreation(DataSource dataSource, String liquiBaseSchema) throws SQLException, LiquibaseException {
 
         if (!(dataSource instanceof DataSourceProxyInterface)) {
-            throw new RuntimeException("DataSource is not correct for JUnit testing, muse be " + DataSourceProxyInterface.class.getName());
+            throw new InjectRuntimeException("DataSource is not correct for JUnit testing, muse be " + DataSourceProxyInterface.class.getName());
         }
 
         DataSourceProxyInterface dataSourceProxyInterface = (DataSourceProxyInterface) dataSource;
@@ -58,7 +60,7 @@ public class LiquibaseUtil {
                             resultSet.next();
                             resultSet.getString(1);
                             return false;
-                        } catch (Throwable e) {
+                        } catch (Exception e) {
                             return true;
                         }
                     }
@@ -77,7 +79,9 @@ public class LiquibaseUtil {
         } else {
             loadSchemaFromConfig(dataSource, liquiBaseSchema);
             if (tempStore.exists()) {
-                tempStore.delete();
+                if(!tempStore.delete()){
+                    LOG.debug("could not delete "+tempStore.getPath());
+                }
             }
             dataSource.createSnapshot(liquibaseStorageName);
         }

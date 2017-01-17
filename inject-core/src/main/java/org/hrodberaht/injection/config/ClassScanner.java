@@ -8,6 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -50,29 +51,32 @@ public class ClassScanner {
             ArrayList<Class> classes = new ArrayList<Class>(200);
             for (File fileToLoad : filesToLoad) {
                 LOG.debug("findJarFiles fileToLoad = " + fileToLoad);
-                JarFile jarFile = new JarFile(fileToLoad);
-                Enumeration<JarEntry> enumeration = jarFile.entries();
-                while (enumeration.hasMoreElements()) {
-                    JarEntry jarEntry = enumeration.nextElement();
-                    String classPath = jarEntry.getName().replaceAll("/", ".");
-                    if (!jarEntry.isDirectory() && classPath.startsWith(packageName) && classPath.endsWith(".class")) {
-                        String classPathName = classPath.substring(0, classPath.length() - 6);
-                        try {
-                            Class aClass = Class.forName(classPathName);
-                            LOG.debug("jar aClass: " + aClass + " for " + fileToLoad.getName());
-                            classes.add(aClass);
-                        } catch (ClassNotFoundException e) {
-                            LOG.info("jar error lookup: " + classPathName);
-                            throw e;
-                        }
+                try(JarFile jarFile = new JarFile(fileToLoad)) {
+                    Enumeration<JarEntry> enumeration = jarFile.entries();
+                    while (enumeration.hasMoreElements()) {
+                        manageJarEntries(packageName, classes, fileToLoad, enumeration);
                     }
                 }
             }
             return classes;  //To change body of created methods use File | Settings | File Templates.
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+        } catch (IOException | ClassNotFoundException e) {
+            throw new InjectRuntimeException(e);
+        }
+    }
+
+    private void manageJarEntries(String packageName, ArrayList<Class> classes, File fileToLoad, Enumeration<JarEntry> enumeration) throws ClassNotFoundException {
+        JarEntry jarEntry = enumeration.nextElement();
+        String classPath = jarEntry.getName().replaceAll("/", ".");
+        if (!jarEntry.isDirectory() && classPath.startsWith(packageName) && classPath.endsWith(".class")) {
+            String classPathName = classPath.substring(0, classPath.length() - 6);
+            try {
+                Class aClass = Class.forName(classPathName);
+                LOG.debug("jar aClass: " + aClass + " for " + fileToLoad.getName());
+                classes.add(aClass);
+            } catch (ClassNotFoundException e) {
+                LOG.info("jar error lookup: " + classPathName);
+                throw e;
+            }
         }
     }
 
@@ -90,12 +94,12 @@ public class ClassScanner {
      */
 
     private ArrayList<Class> findFiles(String packageName, ClassLoader classLoader) {
-        ArrayList<Class> classes = new ArrayList<Class>();
+        ArrayList<Class> classes = new ArrayList<>();
         try {
             assert classLoader != null;
             String path = packageName.replace('.', '/');
             Enumeration<URL> resources = classLoader.getResources(path);
-            List<File> dirs = new ArrayList<File>();
+            List<File> dirs = new ArrayList<>();
             while (resources.hasMoreElements()) {
                 URL resource = resources.nextElement();
                 dirs.add(new File(resource.getFile().replaceAll("%20", " ")));
@@ -104,9 +108,7 @@ public class ClassScanner {
             for (File directory : dirs) {
                 classes.addAll(findClasses(directory, packageName));
             }
-        } catch (IOException e) {
-            throw new InjectRuntimeException(e);
-        } catch (ClassNotFoundException e) {
+        } catch (IOException | ClassNotFoundException e) {
             throw new InjectRuntimeException(e);
         }
         return classes;
@@ -127,12 +129,13 @@ public class ClassScanner {
         }
         File[] files = directory.listFiles();
         if (files == null) {
-            return null;
+            return Collections.emptyList();
         }
         for (File file : files) {
             if (file.isDirectory()) {
-                assert !file.getName().contains(".");
-                classes.addAll(findClasses(file, packageName + "." + file.getName()));
+                if(!".".contains(file.getName())) {
+                    classes.addAll(findClasses(file, packageName + "." + file.getName()));
+                }
             } else if (file.getName().endsWith(".class")) {
                 classes.add(
                         Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6))

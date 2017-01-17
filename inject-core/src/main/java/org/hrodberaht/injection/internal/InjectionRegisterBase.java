@@ -33,10 +33,6 @@ public abstract class InjectionRegisterBase<T extends InjectionRegister> impleme
 
     protected InjectionContainerManager container = null;
 
-    public InjectionContainerManager getInnerContainer() {
-        return container;
-    }
-
     protected InjectionRegisterBase() {
         this.container = new InjectionContainerManager();
     }
@@ -45,45 +41,47 @@ public abstract class InjectionRegisterBase<T extends InjectionRegister> impleme
         this.container = register.getInnerContainer();
     }
 
-    public abstract T copy();
+    @Override
+    public InjectionContainerManager getInnerContainer() {
+        return container;
+    }
 
-
+    @Override
     public InjectionRegister register(Class<? extends Annotation> qualifier, Class serviceDefinition, Class service) {
         register(qualifier, serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
-
+    @Override
     public InjectionRegister register(Class serviceDefinition, Class service) {
         register(serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
-
+    @Override
     public InjectionRegister register(Class service) {
         register(service, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
-
+    @Override
     public InjectionRegister overrideRegister(Class<? extends Annotation> qualifier, Class serviceDefinition, Class service) {
         overrideRegister(qualifier, serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
-
+    @Override
     public InjectionRegister overrideRegister(Class serviceDefinition, Class service) {
         overrideRegister(serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
-
+    @Override
     public InjectionRegister overrideRegister(Class service) {
         overrideRegister(service, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
-
+    @Override
     public InjectionRegister finalRegister(Class<? extends Annotation> qualifier, Class serviceDefinition, Class service) {
         finalRegister(qualifier, serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
-
-
+    @Override
     public InjectionRegister finalRegister(Class serviceDefinition, Class service) {
         finalRegister(serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;

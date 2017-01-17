@@ -59,10 +59,12 @@ public abstract class RegistrationModuleAnnotation implements RegistrationModule
         return instanceCreatorImplementation;
     }
 
+    @Override
     public Collection<RegistrationInstanceSimple> getRegistrations() {
         return registrations.values();
     }
 
+    @Override
     public List<RegistrationInstanceSimple> getRegistrationsList() {
         return new ArrayList<>(registrations.values());
     }
@@ -75,10 +77,12 @@ public abstract class RegistrationModuleAnnotation implements RegistrationModule
 
     public abstract void registrations();
 
+    @Override
     public void postRegistration(InjectContainer injectContainer) {
         // Not a forced method
     }
 
+    @Override
     public void preRegistration(InjectContainer injectContainer) {
         // Not a forced method
     }

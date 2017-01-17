@@ -1,5 +1,7 @@
 package org.hrodberaht.injection.extensions.cdi.inner;
 
+import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -16,8 +18,6 @@ import java.util.Date;
  * To change this template use File | Settings | File Templates.
  */
 public class DBPool {
-
-    // protected static final LinkedList<Connection> AVAILABLE_CONNECTIONS = new LinkedList<Connection>();
 
     private static InheritableThreadLocal<ConnectionHolder> threadLocal = new InheritableThreadLocal<ConnectionHolder>();
 
@@ -55,15 +55,12 @@ public class DBPool {
                 return connection.connection;
             } else {
                 threadLocal.remove();
-                new Thread() {
-                    @Override
-                    public void run() {
-                        try {
-                            connection.connection.close();
-                        } catch (Throwable e) {
-                        }
+                new Thread(() -> {
+                    try {
+                        connection.connection.close();
+                    } catch (Throwable e) {
                     }
-                }.start();
+                }).start();
             }
         }
 
@@ -112,9 +109,9 @@ public class DBPool {
 
             // return conn;
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new InjectRuntimeException(e);
         } catch (Throwable e) {
-            throw new RuntimeException(e);
+            throw new InjectRuntimeException(e);
         }
     }
 

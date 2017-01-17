@@ -67,7 +67,6 @@ public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<I
         if (springConfigs != null) {
             Stream<String> stringStream = Stream.concat(Stream.of(springConfigs), Stream.of(testSpringConfig));
             config = stringStream.toArray(String[]::new);
-            ;
         }
         context = new ClassPathXmlApplicationContext(config);
         springBeanInjector = new SpringBeanInjector(context);
@@ -135,6 +134,7 @@ public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<I
                 return method.isAnnotationPresent(SpringInject.class) || super.hasInjectAnnotationOnMethod(method);
             }
 
+            @Override
             protected boolean hasPostConstructAnnotation(Method method) {
                 return method.isAnnotationPresent(javax.annotation.PostConstruct.class) || method.isAnnotationPresent(PostConstruct.class);
             }
@@ -147,10 +147,12 @@ public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<I
         springBeanInjector.inject(serviceObject, getActiveContainer());
     }
 
+    @Override
     protected InjectionRegisterScanBase getScanner(InjectionRegister injectionRegister) {
         return new InjectionRegisterScan(injectionRegister);
     }
 
+    @Override
     public abstract InjectContainer createContainer();
 
     public ResourceCreator getResourceCreator() {
