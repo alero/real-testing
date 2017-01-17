@@ -25,9 +25,8 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
     private static final String JDBC_USERNAME = "sa";
 
 
-    private String dbName = null;
-    private ResourceWatcher resourceWatcher;
-
+    private final String dbName;
+    private final ResourceWatcher resourceWatcher;
     private HSQLDriverManager driverManager = null;
 
     private DatasourceBackupRestore datasourceBackupRestore;

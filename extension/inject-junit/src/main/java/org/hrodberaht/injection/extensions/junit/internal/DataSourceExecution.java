@@ -3,7 +3,6 @@ package org.hrodberaht.injection.extensions.junit.internal;
 
 import org.hrodberaht.injection.config.JarUtil;
 import org.hrodberaht.injection.extensions.junit.exception.DataSourceException;
-import org.hrodberaht.injection.extensions.junit.util.SimpleLogger;
 import org.hrodberaht.injection.spi.DataSourceProxyInterface;
 import org.hrodberaht.injection.spi.ResourceCreator;
 
@@ -12,7 +11,6 @@ import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
@@ -23,6 +21,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.jar.JarEntry;
@@ -78,7 +77,7 @@ public class DataSourceExecution {
                 return;
             }
             for (File fileToLoad : filesToLoad) {
-                SimpleLogger.log("findJarFiles fileToLoad = " + fileToLoad);
+                TDDLogger.log("findJarFiles fileToLoad = " + fileToLoad);
                 try(final JarFile jarFile = new JarFile(fileToLoad)) {
                     Enumeration<JarEntry> enumeration = jarFile.entries();
                     while (enumeration.hasMoreElements()) {
@@ -108,7 +107,7 @@ public class DataSourceExecution {
     private List<File> findFiles(final ClassLoader classLoader, final String packageBase) {
         URL url = classLoader.getResource(packageBase);
         if (url == null) {
-            return null;
+            return Collections.EMPTY_LIST;
         }
         String directoryString = url.getFile().replaceAll("%20", " ");
         File directory = new File(directoryString);
@@ -218,13 +217,19 @@ public class DataSourceExecution {
         try {
             String tableName = cleanedName(initiatedTableName);
             String packageName = cleanedName(testPackageName);
-            try (PreparedStatement pstmt = con.prepareStatement("create table " + packageName + tableName + " (  control_it integer )")) {
+            final String query = createQuery(tableName, packageName);
+            try (PreparedStatement pstmt = con.prepareStatement(query)) {
                 pstmt.execute();
             }
             return false;
         } catch (SQLException e) {
+            TDDLogger.log(e.getMessage());
             return true;
         }
+    }
+
+    private String createQuery(String tableName, String packageName) {
+        return "create table \"" + packageName + tableName + "\" (  control_it integer )";
     }
 
     private String cleanedName(String schemaName) {

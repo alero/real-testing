@@ -1,7 +1,6 @@
 package org.hrodberaht.injection.extensions.junit.internal.embedded;
 
 import org.hrodberaht.injection.extensions.junit.internal.ProxyResourceCreator;
-import org.hrodberaht.injection.extensions.junit.internal.embedded.vendors.HsqlBDDataSourceConfigurationMem;
 import org.hrodberaht.injection.extensions.junit.internal.embedded.vendors.HsqlBDDataSourceConfigurationRestorable;
 import org.hrodberaht.injection.spi.DataSourceProxyInterface;
 
@@ -23,7 +22,7 @@ public class DataSourceConfigFactory {
             ProxyResourceCreator.DataSourcePersistence persistence) {
         if (provider == ProxyResourceCreator.DataSourceProvider.HSQLDB) {
             if (persistence == ProxyResourceCreator.DataSourcePersistence.MEM) {
-                return new HsqlBDDataSourceConfigurationMem(dbName);
+                return new HsqlBDDataSourceConfigurationRestorable(dbName, null);
             } else if (persistence == ProxyResourceCreator.DataSourcePersistence.RESTORABLE) {
                 return new HsqlBDDataSourceConfigurationRestorable(dbName, resourceWatcher);
             }
