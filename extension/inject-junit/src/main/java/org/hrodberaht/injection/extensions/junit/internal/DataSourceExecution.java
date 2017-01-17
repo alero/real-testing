@@ -2,6 +2,7 @@ package org.hrodberaht.injection.extensions.junit.internal;
 
 
 import org.hrodberaht.injection.config.JarUtil;
+import org.hrodberaht.injection.extensions.junit.exception.DataSourceException;
 import org.hrodberaht.injection.extensions.junit.util.SimpleLogger;
 import org.hrodberaht.injection.spi.DataSourceProxyInterface;
 import org.hrodberaht.injection.spi.ResourceCreator;
@@ -37,20 +38,20 @@ import java.util.jar.JarFile;
  */
 public class DataSourceExecution {
 
-    public static String SCHEMA_PREFIX = "create_schema";
-    public static String INSERT_SCRIPT_PREFIX = "insert_script";
+    private static final String SCHEMA_PREFIX = "create_schema";
+    private static final String INSERT_SCRIPT_PREFIX = "insert_script";
 
     private final ResourceCreator resourceCreator;
 
 
-    public DataSourceExecution(ResourceCreator resourceCreator) {
+    DataSourceExecution(final ResourceCreator resourceCreator) {
         this.resourceCreator = resourceCreator;
     }
 
     public void addSQLSchemas(final String schemaName, final String packageBase) {
 
-        ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
-        ClassLoader classClassLoader = DataSourceExecution.class.getClassLoader();
+        final ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
+        final ClassLoader classClassLoader = DataSourceExecution.class.getClassLoader();
 
         final List<File> files = new ArrayList<File>();
         List<File> foundFiles = findFiles(threadClassLoader, packageBase);
@@ -78,27 +79,28 @@ public class DataSourceExecution {
             }
             for (File fileToLoad : filesToLoad) {
                 SimpleLogger.log("findJarFiles fileToLoad = " + fileToLoad);
-                final JarFile jarFile = new JarFile(fileToLoad);
-                Enumeration<JarEntry> enumeration = jarFile.entries();
-                while (enumeration.hasMoreElements()) {
-                    final JarEntry jarEntry = enumeration.nextElement();
-                    final String jarName = jarEntry.getName();
-                    if (!jarEntry.isDirectory() && jarName.startsWith(packageBase)
-                            && jarName.endsWith(".sql")) {
-                        TDDLogger.log("DataSourceExecution findJarFiles " + fileToLoad.getName());
-                        java.io.InputStream is = jarFile.getInputStream(jarEntry);
-                        BufferedReader br = new BufferedReader(new InputStreamReader(is));
-                        String strLine;
-                        StringBuffer stringBuffer = new StringBuffer();
-                        while ((strLine = br.readLine()) != null) {
-                            stringBuffer.append(strLine);
+                try(final JarFile jarFile = new JarFile(fileToLoad)) {
+                    Enumeration<JarEntry> enumeration = jarFile.entries();
+                    while (enumeration.hasMoreElements()) {
+                        final JarEntry jarEntry = enumeration.nextElement();
+                        final String jarName = jarEntry.getName();
+                        if (!jarEntry.isDirectory() && jarName.startsWith(packageBase)
+                                && jarName.endsWith(".sql")) {
+                            TDDLogger.log("DataSourceExecution findJarFiles " + fileToLoad.getName());
+                            java.io.InputStream is = jarFile.getInputStream(jarEntry);
+                            BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                            String strLine;
+                            StringBuffer stringBuffer = new StringBuffer();
+                            while ((strLine = br.readLine()) != null) {
+                                stringBuffer.append(strLine);
+                            }
+                            executeStringToSQL(schemaName, stringBuffer);
                         }
-                        executeStringToSQL(schemaName, stringBuffer);
                     }
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Bad file " + packageBase + " with classloader:" + classLoader);
+            throw new DataSourceException("Bad file " + packageBase + " with classloader:" + classLoader);
         }
 
     }
@@ -130,7 +132,7 @@ public class DataSourceExecution {
 
         try (FileInputStream fstream = new FileInputStream(file);
              DataInputStream in = new DataInputStream(fstream);
-             BufferedReader br = new BufferedReader(new InputStreamReader(in));
+             BufferedReader br = new BufferedReader(new InputStreamReader(in))
         ){
 
             String strLine;
@@ -142,7 +144,7 @@ public class DataSourceExecution {
             executeStringToSQL(schemaName, stringBuffer);
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new DataSourceException(e);
         }
     }
 
@@ -169,28 +171,28 @@ public class DataSourceExecution {
             try {
                 runScriptForConnection(stringBuffer, dataSource.getConnection());
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new DataSourceException(e);
             }
         }
     }
 
     private boolean runScriptForConnection(StringBuffer stringBuffer, Connection con) {
-        try (Statement stmt = con.createStatement();) {
+        try (Statement stmt = con.createStatement()) {
             stmt.execute(stringBuffer.toString());
         } catch (SQLIntegrityConstraintViolationException e) {
             // Just skip this, its annoying but cant seem to fix it
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataSourceException(e);
         }
         return true;
     }
 
 
-    public boolean isInitiated(String schemaName, String packageName) {
+    boolean isInitiated(String schemaName, String packageName) {
         return this.isInitiated(packageName, schemaName, packageName);
     }
 
-    public synchronized boolean isInitiated(final String testPackageName, final String schemaName, final String initiatedTableName) {
+    private synchronized boolean isInitiated(final String testPackageName, final String schemaName, final String initiatedTableName) {
         DataSource dataSource = resourceCreator.getDataSource(schemaName);
         if (dataSource == null) {
             throw new IllegalAccessError("schemaName:" + schemaName + " does not exist ");
@@ -207,7 +209,7 @@ public class DataSourceExecution {
             try {
                 return verifyScriptExistence(testPackageName, initiatedTableName, dataSource.getConnection());
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new DataSourceException(e);
             }
         }
     }

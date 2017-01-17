@@ -23,7 +23,6 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
 
     private static final String JDBC_DRIVER = "org.hsqldb.jdbcDriver";
     private static final String JDBC_USERNAME = "sa";
-    private static final String JDBC_PASSWORD = "";
 
 
     private String dbName = null;
@@ -61,7 +60,7 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
         public Connection getConnection() throws SQLException {
             TDDLogger.log("-- Creating Connection HsqlBDDataSourceConfigurationRestorable from mem");
             try {
-                return DriverManager.getConnection(datasourceBackupRestore.jdbcUrl() + dbName, JDBC_USERNAME, JDBC_PASSWORD);
+                return DriverManager.getConnection(datasourceBackupRestore.jdbcUrl() + dbName, JDBC_USERNAME, "");
             }catch (SQLInvalidAuthorizationSpecException e){
                 throw e;
             }

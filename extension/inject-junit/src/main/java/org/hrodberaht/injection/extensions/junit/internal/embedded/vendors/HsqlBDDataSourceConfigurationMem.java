@@ -12,7 +12,6 @@ public class HsqlBDDataSourceConfigurationMem implements DataSourceConfiguration
     public String JDBC_DRIVER = "org.hsqldb.jdbcDriver";
     public String JDBC_URL = "jdbc:hsqldb:mem:test";
     public String JDBC_USERNAME = "sa";
-    public String JDBC_PASSWORD = "";
 
     private String dbName = null;
 
@@ -22,7 +21,7 @@ public class HsqlBDDataSourceConfigurationMem implements DataSourceConfiguration
 
     public Connection initateConnection() throws ClassNotFoundException, SQLException {
         Class.forName(JDBC_DRIVER);
-        return DriverManager.getConnection(JDBC_URL + dbName, JDBC_USERNAME, JDBC_PASSWORD);
+        return DriverManager.getConnection(JDBC_URL + dbName, JDBC_USERNAME, "");
     }
 
     @Override
