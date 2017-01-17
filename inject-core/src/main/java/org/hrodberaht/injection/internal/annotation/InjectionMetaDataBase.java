@@ -31,7 +31,7 @@ public class InjectionMetaDataBase {
         return serviceRegister;
     }
 
-    public InjectionMetaDataBase clone() throws CloneNotSupportedException {
-        return new InjectionMetaDataBase(injectionMetaData.clone(), serviceRegister.clone());
+    public InjectionMetaDataBase copy()  {
+        return new InjectionMetaDataBase(injectionMetaData.copy(), serviceRegister.copy());
     }
 }

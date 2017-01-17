@@ -31,40 +31,40 @@ public class CloneContainerRegistrationUnitT implements PerformanceTests {
         // Prepares and optimizes the clone method
         InjectionRegisterModule registerJava = AnnotationContainerUtil.prepareLargeVolvoRegister();
         for (int i = 0; i < 500; i++) {
-            InjectionRegisterModule registerJavaClone = registerJava.clone();
+            InjectionRegisterModule registerJavaClone = registerJava.copy();
             assertNotNull(registerJavaClone);
         }
     }
 
     @Test
-    public void testCloneJava() throws CloneNotSupportedException {
+    public void testCopyJava() {
         InjectionRegisterJava injectionRegisterJava = new InjectionRegisterJava();
-        InjectionRegisterJava testCloneJava = injectionRegisterJava.clone();
-        assertFalse(testCloneJava == injectionRegisterJava);
+        InjectionRegisterJava testCopyJava = injectionRegisterJava.copy();
+        assertFalse(testCopyJava == injectionRegisterJava);
     }
 
     @Test
-    public void testCloneJavaScan() throws CloneNotSupportedException {
+    public void testCopyJavaScan()  {
         InjectionRegisterScan injectionRegisterJava = new InjectionRegisterScan();
-        InjectionRegisterScan testCloneJava = injectionRegisterJava.clone();
-        assertFalse(testCloneJava == injectionRegisterJava);
+        InjectionRegisterScan testCopyJava = injectionRegisterJava.copy();
+        assertFalse(testCopyJava == injectionRegisterJava);
     }
 
     @Test
-    public void testCloneJavaModule() throws CloneNotSupportedException {
+    public void testCopyJavaModule()  {
         InjectionRegisterModule injectionRegisterJava = new InjectionRegisterModule();
-        InjectionRegisterModule testCloneJava = injectionRegisterJava.clone();
-        assertFalse(testCloneJava == injectionRegisterJava);
+        InjectionRegisterModule testCopyJava = injectionRegisterJava.copy();
+        assertFalse(testCopyJava == injectionRegisterJava);
     }
 
     @Test
-    public void testCloneSingletonService() throws Exception {
+    public void testCopySingletonService()  {
         InjectionRegisterScan registerJava = new InjectionRegisterScan();
         registerJava.scanPackage("org.hrodberaht.inject.testservices.annotated");
 
         CarCreatorSingleton carCreatorSingleton = registerJava.getInjectContainer().get(CarCreatorSingleton.class);
 
-        InjectionRegisterScan registerJavaClone = registerJava.clone();
+        InjectionRegisterScan registerJavaClone = registerJava.copy();
         CarCreatorSingleton carCreatorSingletonClone = registerJavaClone.getInjectContainer().get(CarCreatorSingleton.class);
 
         // TODO: I need a way to store singletons that survive the cloning?
@@ -73,37 +73,37 @@ public class CloneContainerRegistrationUnitT implements PerformanceTests {
     }
 
     @Test(timeout = 500)
-    public void testClonePerformance() throws CloneNotSupportedException {
+    public void testCopyPerformance()  {
 
         TimerUtil timer = new TimerUtil().start();
         InjectionRegisterModule registerJava = AnnotationContainerUtil.prepareLargeVolvoRegister();
         for (int i = 0; i < 1000; i++) {
-            InjectionRegisterModule registerJavaClone = registerJava.clone();
+            InjectionRegisterModule registerJavaClone = registerJava.copy();
             // Some fake logic so the code executes
             if ("".equals(registerJavaClone)) {
                 System.out.println("Just doing something so the JRE wont skip the code");
             }
         }
-        timer.endAndPrint("testClonePerformance");
+        timer.endAndPrint("testCopyPerformance");
     }
 
     @Test(timeout = 500)
-    public void testCloneAndRegisterPerformance() throws CloneNotSupportedException {
+    public void testCopyAndRegisterPerformance() {
         TimerUtil timer = new TimerUtil().start();
         InjectionRegisterModule registerJava = AnnotationContainerUtil.prepareLargeVolvoRegister();
         for (int i = 0; i < 1000; i++) {
-            InjectionRegisterModule registerJavaClone = registerJava.clone();
+            InjectionRegisterModule registerJavaClone = registerJava.copy();
             registerJavaClone.overrideRegister(Car.class, Saab.class);
         }
-        timer.endAndPrint("testCloneAndRegisterPerformance", "Creating 1000 clones large instance module and replacing a service");
+        timer.endAndPrint("testCopyAndRegisterPerformance", "Creating 1000 clones large instance module and replacing a service");
     }
 
     @Test(timeout = 1000)
-    public void testCloneAndRegisterModulePerformance() throws CloneNotSupportedException {
+    public void testCopyAndRegisterModulePerformance() {
         TimerUtil timer = new TimerUtil().start();
         InjectionRegisterModule registerJava = AnnotationContainerUtil.prepareLargeVolvoRegister();
         for (int i = 0; i < 1000; i++) {
-            InjectionRegisterModule registerJavaClone = registerJava.clone();
+            InjectionRegisterModule registerJavaClone = registerJava.copy();
             registerJavaClone.register(new RegistrationModuleAnnotation() {
                 @Override
                 public void registrations() {
@@ -111,7 +111,7 @@ public class CloneContainerRegistrationUnitT implements PerformanceTests {
                 }
             });
         }
-        timer.endAndPrint("testCloneAndRegisterModulePerformance", "Creating 1000 clones large instance module and registering a module");
+        timer.endAndPrint("testCopyAndRegisterModulePerformance", "Creating 1000 clones large instance module and registering a module");
     }
 
     private class TimerUtil {

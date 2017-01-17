@@ -1,7 +1,6 @@
 package com;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.extensions.cdi.CDIApplication;
 import org.hrodberaht.injection.extensions.cdi.CDIContainerConfigBase;
 import org.hrodberaht.injection.extensions.cdi.stream.CDIInjectionRegistryStream;
 import org.hrodberaht.injection.extensions.junit.internal.JunitSQLContainerService;

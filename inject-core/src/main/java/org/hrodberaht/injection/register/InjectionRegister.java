@@ -40,7 +40,7 @@ public interface InjectionRegister {
 
     InjectionRegister register(RegistrationModule... modules);
 
-    InjectionRegister clone();
+    InjectionRegister copy();
 
     void fillModule(Module module);
 }

@@ -28,13 +28,9 @@ public class InjectionRegisterScanSpring extends InjectionRegisterScanBase {
 
 
     @Override
-    public InjectionRegisterScanSpring clone() {
+    public InjectionRegisterScanSpring copy() {
         InjectionRegisterScanSpring clone = new InjectionRegisterScanSpring();
-        try {
-            clone.container = this.container.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
+        clone.container = this.container.copy();
         return clone;
     }
 

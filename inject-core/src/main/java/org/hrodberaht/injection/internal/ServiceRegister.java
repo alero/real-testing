@@ -87,8 +87,8 @@ public class ServiceRegister {
         this.module = module;
     }
 
-    @Override
-    public ServiceRegister clone() {
+
+    public ServiceRegister copy() {
         return new ServiceRegister(this.service, null, this.scope, this.registerType);
     }
 }

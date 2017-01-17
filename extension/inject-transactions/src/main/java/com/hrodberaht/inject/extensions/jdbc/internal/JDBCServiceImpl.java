@@ -1,11 +1,22 @@
 package com.hrodberaht.inject.extensions.jdbc.internal;
 
-import com.hrodberaht.inject.extensions.jdbc.*;
+import com.hrodberaht.inject.extensions.jdbc.Insert;
+import com.hrodberaht.inject.extensions.jdbc.InsertOrUpdater;
+import com.hrodberaht.inject.extensions.jdbc.JDBCService;
+import com.hrodberaht.inject.extensions.jdbc.RowIterator;
+import com.hrodberaht.inject.extensions.jdbc.SQLDateUtil;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
 import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;

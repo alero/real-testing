@@ -1,12 +1,12 @@
 package org.hrodberaht.injection.extensions.junit.ejb3;
 
+import org.hrodberaht.injection.extensions.junit.ContainerContext;
+import org.hrodberaht.injection.extensions.junit.JUnitRunner;
 import org.hrodberaht.injection.extensions.junit.common.SomeData;
 import org.hrodberaht.injection.extensions.junit.ejb3.config.EJBContainerConfigExample;
 import org.hrodberaht.injection.extensions.junit.ejb3.config.MockedInnerModule;
 import org.hrodberaht.injection.extensions.junit.ejb3.service.EJB3InnerServiceInterface;
 import org.hrodberaht.injection.extensions.junit.ejb3.service.EJB3ServiceInterface;
-import org.hrodberaht.injection.extensions.junit.ContainerContext;
-import org.hrodberaht.injection.extensions.junit.JUnitRunner;
 import org.hrodberaht.injection.extensions.junit.util.ContainerLifeCycleTestUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;

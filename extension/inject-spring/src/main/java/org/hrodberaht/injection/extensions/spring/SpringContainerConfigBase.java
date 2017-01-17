@@ -4,7 +4,6 @@ import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.annotation.PostConstruct;
 import org.hrodberaht.injection.config.InjectionRegisterScanBase;
 import org.hrodberaht.injection.config.jpa.JPAContainerConfigBase;
-import org.hrodberaht.injection.extensions.junit.internal.TDDLogger;
 import org.hrodberaht.injection.extensions.spring.config.ContainerAllSpringConfig;
 import org.hrodberaht.injection.extensions.spring.config.ContainerSpringConfig;
 import org.hrodberaht.injection.extensions.spring.instance.SpringBeanInjector;

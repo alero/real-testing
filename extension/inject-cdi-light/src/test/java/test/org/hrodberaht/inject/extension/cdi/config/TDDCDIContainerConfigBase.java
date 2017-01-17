@@ -1,7 +1,6 @@
 package test.org.hrodberaht.inject.extension.cdi.config;
 
 import org.hrodberaht.injection.extensions.cdi.CDIContainerConfigBase;
-import org.hrodberaht.injection.extensions.cdi.stream.CDIInjectionRegistryStream;
 import org.hrodberaht.injection.extensions.junit.internal.JunitSQLContainerService;
 import org.hrodberaht.injection.extensions.junit.internal.ProxyResourceCreator;
 import org.hrodberaht.injection.spi.ResourceCreator;

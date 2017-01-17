@@ -51,13 +51,9 @@ public class InjectionRegisterScan extends InjectionRegisterScanBase<InjectionRe
     }
 
     @Override
-    public InjectionRegisterScan clone() {
+    public InjectionRegisterScan copy() {
         InjectionRegisterScan registerScan = new InjectionRegisterScan();
-        try {
-            registerScan.container = this.container.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
+        registerScan.container = this.container.copy();
         return registerScan;
     }
 
@@ -66,9 +62,9 @@ public class InjectionRegisterScan extends InjectionRegisterScanBase<InjectionRe
     public ScopeContainer.Scope getScope(Class serviceClass) {
         if (serviceClass.isAnnotationPresent(Singleton.class)) {
             return ScopeContainer.Scope.SINGLETON;
-        }if (serviceClass.isAnnotationPresent(ThreadScope.class)) {
+        }else if (serviceClass.isAnnotationPresent(ThreadScope.class)) {
             return ScopeContainer.Scope.THREAD;
-        }if (serviceClass.isAnnotationPresent(InheritableThreadScope.class)) {
+        }else if (serviceClass.isAnnotationPresent(InheritableThreadScope.class)) {
             return ScopeContainer.Scope.INHERITABLE_THREAD;
         }
         return ScopeContainer.Scope.NEW;

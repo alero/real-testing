@@ -38,7 +38,7 @@ public abstract class InjectionRegisterScanBase<T extends InjectionRegisterScanB
 
     private ClassScanner classScanner = new ClassScanner();
 
-    public abstract T clone();
+    public abstract T copy();
 
     public void setInjectContainer(InjectContainer injectContainer) {
         super.container = (InjectionContainerManager) injectContainer;

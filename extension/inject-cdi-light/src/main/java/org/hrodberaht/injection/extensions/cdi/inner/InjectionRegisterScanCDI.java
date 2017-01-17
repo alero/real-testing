@@ -34,14 +34,10 @@ public class InjectionRegisterScanCDI extends InjectionRegisterScanBase {
     }
 
     @Override
-    public InjectionRegisterScanCDI clone() {
-        InjectionRegisterScanCDI clone = new InjectionRegisterScanCDI(super.referedRegister);
-        try {
-            clone.container = this.container.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
-        return clone;
+    public InjectionRegisterScanCDI copy() {
+        InjectionRegisterScanCDI copy = new InjectionRegisterScanCDI(super.referedRegister);
+        copy.container = this.container.copy();
+        return copy;
     }
 
     public boolean isInterfaceAnnotated(Class aClazz) {

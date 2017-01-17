@@ -20,7 +20,7 @@ public interface InjectionRegisterScanInterface {
 
     void setInjectContainer(InjectContainer injectContainer);
 
-    InjectionRegisterScanInterface clone();
+    InjectionRegisterScanInterface copy();
 
 
 }

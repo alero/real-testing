@@ -1,14 +1,11 @@
 package org.hrodberaht.injection.extensions.junit.internal.embedded.vendors;
 
-import org.hrodberaht.injection.config.ClassScanner;
-import org.hrodberaht.injection.extensions.junit.internal.TDDLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Scanner;

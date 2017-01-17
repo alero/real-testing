@@ -1,6 +1,12 @@
 package org.hrodberaht.injection.extensions.junit.ejb.internal;
 
-import javax.naming.*;
+import javax.naming.Binding;
+import javax.naming.Context;
+import javax.naming.Name;
+import javax.naming.NameClassPair;
+import javax.naming.NameParser;
+import javax.naming.NamingEnumeration;
+import javax.naming.NamingException;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;

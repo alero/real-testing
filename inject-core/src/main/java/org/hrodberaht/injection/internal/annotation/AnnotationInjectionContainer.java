@@ -378,7 +378,7 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
         return injectionMetaData.getScope();
     }
 
-    public Object clone(InjectionContainerManager injectionContainerManager) throws CloneNotSupportedException {
+    public AnnotationInjectionContainer copy(InjectionContainerManager injectionContainerManager) {
         AnnotationInjectionContainer annotationInjectionContainer = new AnnotationInjectionContainer(injectionContainerManager);
         annotationInjectionContainer.injectionFinder = this.injectionFinder;
         annotationInjectionContainer.instanceCreator = this.instanceCreator;
@@ -386,7 +386,7 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
         for (InjectionKey injectionKey : this.injectionMetaDataCache.keySet()) {
             InjectionMetaDataBase injectionMetaData = this.injectionMetaDataCache.get(injectionKey);
             if (injectionMetaData.getInjectionMetaData().getScope() == ScopeContainer.Scope.SINGLETON) {
-                annotationInjectionContainer.injectionMetaDataCache.put(injectionKey, injectionMetaData.clone());
+                annotationInjectionContainer.injectionMetaDataCache.put(injectionKey, injectionMetaData.copy());
             } else {
                 annotationInjectionContainer.injectionMetaDataCache.put(injectionKey, injectionMetaData);
             }
@@ -397,7 +397,7 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
             // If the key exists but not the service, it just means we have injected dependencies into it, but do not manage the lifecycle of it
             if(serviceRegister != null){
                 if (serviceRegister.getScope() == ScopeContainer.Scope.SINGLETON) {
-                    annotationInjectionContainer.registeredServices.put(injectionKey, serviceRegister.clone());
+                    annotationInjectionContainer.registeredServices.put(injectionKey, serviceRegister.copy());
                 } else {
                     annotationInjectionContainer.registeredServices.put(injectionKey, serviceRegister);
                 }

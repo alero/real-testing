@@ -1,10 +1,10 @@
 package org.hrodberaht.injection.extensions.junit.spring;
 
+import org.hrodberaht.injection.extensions.junit.ContainerContext;
+import org.hrodberaht.injection.extensions.junit.JUnitRunner;
 import org.hrodberaht.injection.extensions.junit.spring.config.SpringContainerConfigExample;
 import org.hrodberaht.injection.extensions.junit.spring.service.SpringInnerServiceInterface;
 import org.hrodberaht.injection.extensions.junit.spring.service.SpringServiceInterface;
-import org.hrodberaht.injection.extensions.junit.ContainerContext;
-import org.hrodberaht.injection.extensions.junit.JUnitRunner;
 import org.hrodberaht.injection.extensions.junit.util.ContainerLifeCycleTestUtil;
 import org.junit.Ignore;
 import org.junit.Test;

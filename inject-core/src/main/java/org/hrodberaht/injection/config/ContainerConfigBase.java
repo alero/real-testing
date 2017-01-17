@@ -78,7 +78,7 @@ public abstract class ContainerConfigBase<T extends InjectionRegister> implement
         }
         originalRegister = combinedRegister;
         appendTypedResources(originalRegister);
-        activeRegister = originalRegister.clone();
+        activeRegister = originalRegister.copy();
     }
 
     private void scanAndRegister(InjectionRegister combinedRegister, String[] packageName) {
@@ -133,7 +133,7 @@ public abstract class ContainerConfigBase<T extends InjectionRegister> implement
     }
 
     public void cleanActiveContainer() {
-        activeRegister = originalRegister.clone();
+        activeRegister = originalRegister.copy();
     }
 
     public void addResource(String name, Object value) {
@@ -174,7 +174,7 @@ public abstract class ContainerConfigBase<T extends InjectionRegister> implement
         }
         originalRegister = injectionRegisterModule;
         appendTypedResources(originalRegister);
-        activeRegister = originalRegister.clone();
+        activeRegister = originalRegister.copy();
         return activeRegister.getContainer();
     }
 

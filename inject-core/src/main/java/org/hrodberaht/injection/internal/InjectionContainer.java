@@ -14,6 +14,8 @@
 
 package org.hrodberaht.injection.internal;
 
+import org.hrodberaht.injection.internal.annotation.AnnotationInjectionContainer;
+
 import java.lang.annotation.Annotation;
 import java.util.Collection;
 
@@ -37,6 +39,6 @@ public interface InjectionContainer {
 
     Collection<ServiceRegister> getServiceRegister();
 
-    Object clone(InjectionContainerManager injectionContainerManager) throws CloneNotSupportedException;
+    AnnotationInjectionContainer copy(InjectionContainerManager injectionContainerManager);
 
 }

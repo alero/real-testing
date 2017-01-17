@@ -141,11 +141,10 @@ public class InjectionContainerManager implements ScopeContainer, InjectContaine
     public void injectDependencies(Object service) {
         injectionContainer.injectDependencies(service);
     }
-
-    @Override
-    public InjectionContainerManager clone() throws CloneNotSupportedException {
+    
+    public InjectionContainerManager copy() {
         InjectionContainerManager injectionContainerManager = new InjectionContainerManager();
-        injectionContainerManager.injectionContainer = (AnnotationInjectionContainer) this.injectionContainer.clone(injectionContainerManager);
+        injectionContainerManager.injectionContainer = this.injectionContainer.copy(injectionContainerManager);
         return injectionContainerManager;
     }
 }

@@ -2,7 +2,6 @@ package test.com.hrodberaht.inject.extension.jsf;
 
 import com.sun.faces.spi.InjectionProvider;
 import com.sun.faces.spi.InjectionProviderException;
-import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.InjectionRegisterJava;
 import org.junit.BeforeClass;
 import org.junit.Test;

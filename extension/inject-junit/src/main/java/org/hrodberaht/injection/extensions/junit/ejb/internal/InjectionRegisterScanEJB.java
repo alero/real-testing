@@ -31,13 +31,9 @@ public class InjectionRegisterScanEJB extends InjectionRegisterScanBase {
     }
 
     @Override
-    public InjectionRegisterScanEJB clone() {
+    public InjectionRegisterScanEJB copy() {
         InjectionRegisterScanEJB clone = new InjectionRegisterScanEJB(referedRegister);
-        try {
-            clone.container = this.container.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
+        clone.container = this.container.copy();
         return clone;
     }
 

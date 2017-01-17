@@ -1,6 +1,5 @@
 package org.hrodberaht.injection.internal;
 
-import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.Module;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.register.RegistrationModule;
@@ -53,15 +52,10 @@ public class InjectionRegisterModule extends InjectionRegisterBase<InjectionRegi
 
     }
 
-    @Override
-    public InjectionRegisterModule clone() {
+    public InjectionRegisterModule copy(){
         InjectionRegisterModule registerModule = new InjectionRegisterModule();
         registerModule.registeredModules.addAll(this.registeredModules);
-        try {
-            registerModule.container = this.container.clone();
-        } catch (CloneNotSupportedException e) {
-            throw new RuntimeException(e);
-        }
+        registerModule.container = this.container.copy();
         return registerModule;
     }
 

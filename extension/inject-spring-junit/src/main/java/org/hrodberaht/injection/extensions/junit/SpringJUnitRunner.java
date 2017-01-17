@@ -1,6 +1,5 @@
 package org.hrodberaht.injection.extensions.junit;
 
-import org.hrodberaht.injection.extensions.junit.internal.TDDLogger;
 import org.hrodberaht.injection.extensions.spring.jpa.SpringEntityManager;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.model.FrameworkMethod;

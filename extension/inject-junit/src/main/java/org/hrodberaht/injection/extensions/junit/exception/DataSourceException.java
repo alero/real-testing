@@ -1,7 +1,5 @@
 package org.hrodberaht.injection.extensions.junit.exception;
 
-import java.io.IOException;
-
 public class DataSourceException extends RuntimeException {
 
     public DataSourceException(Throwable cause) {

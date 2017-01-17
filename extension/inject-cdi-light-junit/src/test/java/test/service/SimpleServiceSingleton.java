@@ -1,7 +1,6 @@
 package test.service;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Singleton;
 
 
 public class SimpleServiceSingleton {

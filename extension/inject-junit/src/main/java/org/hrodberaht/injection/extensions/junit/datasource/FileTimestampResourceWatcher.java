@@ -1,6 +1,5 @@
 package org.hrodberaht.injection.extensions.junit.datasource;
 
-import org.hrodberaht.injection.extensions.junit.internal.TDDLogger;
 import org.hrodberaht.injection.extensions.junit.internal.embedded.ResourceWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

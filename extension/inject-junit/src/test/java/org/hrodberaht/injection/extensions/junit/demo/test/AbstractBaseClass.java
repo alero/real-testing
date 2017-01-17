@@ -1,8 +1,8 @@
 package org.hrodberaht.injection.extensions.junit.demo.test;
 
-import org.hrodberaht.injection.extensions.junit.demo.test.config.CourseContainerConfigExample;
 import org.hrodberaht.injection.extensions.junit.ContainerContext;
 import org.hrodberaht.injection.extensions.junit.JUnitRunner;
+import org.hrodberaht.injection.extensions.junit.demo.test.config.CourseContainerConfigExample;
 import org.junit.runner.RunWith;
 
 import javax.annotation.PostConstruct;

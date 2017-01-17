@@ -211,8 +211,7 @@ public class InjectionMetaData {
 
     }
 
-    @Override
-    public InjectionMetaData clone() throws CloneNotSupportedException {
+    public InjectionMetaData copy() {
         InjectionMetaData injectionMetaData = new InjectionMetaData(this.serviceClass, this.key, this.instanceCreator);
         injectionMetaData.setConstructor(this.constructor);
         injectionMetaData.setConstructorDependencies(this.constructorDependencies);

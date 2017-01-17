@@ -6,7 +6,11 @@ import org.hrodberaht.injection.internal.annotation.creator.InstanceCreator;
 import org.hrodberaht.injection.register.internal.RegistrationExtended;
 import org.hrodberaht.injection.register.internal.RegistrationInstanceSimple;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Simple Java Utils
