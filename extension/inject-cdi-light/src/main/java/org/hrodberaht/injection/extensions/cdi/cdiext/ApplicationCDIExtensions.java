@@ -94,9 +94,9 @@ public class ApplicationCDIExtensions implements CDIExtensions{
             for (URL resource; resources.hasMoreElements(); ) {
                 resource = resources.nextElement();
                 String path = resource.getFile();
-                LOG.info("evaluating jar-file = " + path);
+                LOG.info("evaluating jar-file = {}", path);
                 if (FileScanningUtil.isJarFile(resource)) {
-                    LOG.info("findJarFiles fileToLoad = " + path);
+                    LOG.info("findJarFiles fileToLoad = {}", path);
                     try(JarFile jarFile = new JarFile(FileScanningUtil.findJarFile(path))) {
                         handleJarEntries(extensionFileName, jarFile);
                     }
@@ -124,9 +124,9 @@ public class ApplicationCDIExtensions implements CDIExtensions{
                     readExtensionsAndRegister(br);
                     br.close();
                 } catch (ClassFormatError e) {
-                    LOG.debug("jar aClass error: " + classPath, e);
+                    LOG.debug("jar aClass error: {}", classPath);
                 } catch (NoClassDefFoundError e) {
-                    throw new CDIException("jar aClass error: " + classPath, e);
+                    throw new CDIException("jar aClass error: " + classPath);
                 }
             }
         }
@@ -138,7 +138,7 @@ public class ApplicationCDIExtensions implements CDIExtensions{
             try {
                 evaluateMethodAndPutToCache(strLine);
             } catch (Exception e) {
-                LOG.debug("readExtensionsAndRegister - hidden error "+e.getMessage());
+                LOG.debug("readExtensionsAndRegister - hidden error : {}", e.getMessage());
             }
         }
     }
