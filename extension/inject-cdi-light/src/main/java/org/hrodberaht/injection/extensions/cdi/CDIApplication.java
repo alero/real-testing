@@ -2,6 +2,8 @@ package org.hrodberaht.injection.extensions.cdi;
 
 import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.Module;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.register.ExtendedModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +22,12 @@ public class CDIApplication  {
 
     public void add(Module module) {
         moduleList.add(module);
+    }
+
+    public void add(ExtendedModule extendedModule){
+        Module moduleForConfig = new Module();
+        new InjectionRegisterModule().register(extendedModule).fillModule(moduleForConfig);
+        moduleList.add(moduleForConfig);
     }
 
     public InjectContainer createContainer() {

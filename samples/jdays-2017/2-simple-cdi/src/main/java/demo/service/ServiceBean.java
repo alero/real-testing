@@ -1,11 +1,10 @@
 package demo.service;
 
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Singleton;
 
-@Component
-public class Service {
+public class ServiceBean {
     private String doSomething = "thing about it";
     @PostConstruct
     public void init(){

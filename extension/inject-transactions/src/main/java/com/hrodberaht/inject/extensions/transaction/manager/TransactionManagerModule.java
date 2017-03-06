@@ -15,9 +15,13 @@ import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.register.ExtendedModule;
 import org.hrodberaht.injection.register.InjectionFactory;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
+import org.hrodberaht.injection.register.internal.RegistrationInstanceSimple;
 
 import javax.persistence.EntityManager;
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Injection Transaction Extension
@@ -41,6 +45,8 @@ public class TransactionManagerModule extends ExtendedModule {
         registration.registrations();
     }
 
+
+
     private void registerServices(RegistrationModuleAnnotation registrationModuleAnnotation, final TransactionManager transactionManager) {
         // the withInstance will automatically create a singleton with that instance
         registrationModuleAnnotation.register(TransactionManager.class).withInstance(transactionManager);
@@ -60,6 +66,23 @@ public class TransactionManagerModule extends ExtendedModule {
                 @Override
                 public Connection getInstance() {
                     return getConnection(transactionManagerJPA);
+                }
+                @Override
+                public Class getInstanceType() {
+                    return Connection.class;
+                }
+                @Override
+                public boolean newObjectOnInstance() {
+                    return false;
+                }
+            };
+            registrationModuleAnnotation.register(Connection.class).withFactory(injectionFactory);
+        }else if(transactionManager instanceof TransactionManagerJDBC){
+            final TransactionManagerJDBC transactionManagerJDBC = (TransactionManagerJDBC)transactionManager;
+            InjectionFactory<Connection> injectionFactory = new InjectionFactory<Connection>(){
+                @Override
+                public Connection getInstance() {
+                    return transactionManagerJDBC.getNativeManager();
                 }
                 @Override
                 public Class getInstanceType() {

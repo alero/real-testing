@@ -37,6 +37,12 @@ public class InjectionRegistryStream<T extends Module> implements InjectionRegis
         return null;
     }
 
+    public InjectionRegistryStream module(AppendModuleFunc scanModuleFunc){
+        injectionRegisterModule.register(scanModuleFunc.module());
+        injectionContainer = injectionRegisterModule.getContainer();
+        return this;
+    }
+
     public InjectionRegistryStream scan(ScanModulesFunc scanModuleFunc) {
         Packaging packaging = new Packaging();
         String[] _packages = scanModuleFunc.scan(packaging);

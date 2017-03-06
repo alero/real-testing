@@ -25,7 +25,6 @@ public class JdbcModule extends ExtendedModule {
         // this registers all needed for the container and the service
         // and does a setup for the AspectJTransactionHandler.        
         registration = new TransactionManagerModule(transactionManager);
-
     }
 
     @Override

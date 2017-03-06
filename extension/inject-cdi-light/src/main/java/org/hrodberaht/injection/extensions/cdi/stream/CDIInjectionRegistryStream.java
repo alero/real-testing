@@ -4,6 +4,7 @@ import org.hrodberaht.injection.config.InjectionRegisterScanBase;
 import org.hrodberaht.injection.config.jpa.JPAContainerConfigBase;
 import org.hrodberaht.injection.extensions.cdi.CDIModule;
 import org.hrodberaht.injection.extensions.cdi.inner.InjectionRegisterScanCDI;
+import org.hrodberaht.injection.stream.AppendModuleFunc;
 import org.hrodberaht.injection.stream.InjectionRegistryStream;
 import org.hrodberaht.injection.stream.RegisterModuleFunc;
 import org.hrodberaht.injection.stream.RegisterResourceFunc;
@@ -26,6 +27,12 @@ public class CDIInjectionRegistryStream<T extends CDIModule> extends InjectionRe
     @Override
     public CDIInjectionRegistryStream scan(ScanModuleFunc scanModuleFunc) {
         super.scan(scanModuleFunc);
+        return this;
+    }
+
+    @Override
+    public CDIInjectionRegistryStream module(AppendModuleFunc scanModuleFunc) {
+        super.module(scanModuleFunc);
         return this;
     }
 
