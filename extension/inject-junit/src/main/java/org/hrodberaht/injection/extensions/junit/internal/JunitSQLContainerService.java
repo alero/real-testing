@@ -1,5 +1,6 @@
 package org.hrodberaht.injection.extensions.junit.internal;
 
+import org.hrodberaht.injection.config.ContainerConfigBase;
 import org.hrodberaht.injection.config.jpa.JPAContainerConfigBase;
 import org.hrodberaht.injection.extensions.junit.util.EntityManagerHolder;
 import org.hrodberaht.injection.internal.InjectionContainerManager;
@@ -18,9 +19,9 @@ public class JunitSQLContainerService {
 
     private static final Logger LOG = LoggerFactory.getLogger(JunitSQLContainerService.class);
 
-    private JPAContainerConfigBase jpaContainerConfigBase;
+    private ContainerConfigBase jpaContainerConfigBase;
 
-    public JunitSQLContainerService(JPAContainerConfigBase jpaContainerConfigBase) {
+    public JunitSQLContainerService(ContainerConfigBase jpaContainerConfigBase) {
         this.jpaContainerConfigBase = jpaContainerConfigBase;
     }
 
@@ -43,7 +44,7 @@ public class JunitSQLContainerService {
     }
 
     public void addSingletonActiveEntityManagers() {
-        Collection<EntityManager> entityManagers = jpaContainerConfigBase.getEntityManagers();
+        Collection<EntityManager> entityManagers = null;//jpaContainerConfigBase.getEntityManagers();
         if(entityManagers != null) {
             jpaContainerConfigBase.getActiveRegister().register(new RegistrationModuleAnnotation() {
                                         @Override

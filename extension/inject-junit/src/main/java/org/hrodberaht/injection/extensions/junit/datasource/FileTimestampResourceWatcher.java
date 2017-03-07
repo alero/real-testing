@@ -24,7 +24,6 @@ public class FileTimestampResourceWatcher implements ResourceWatcher {
     private static final Logger LOG = LoggerFactory.getLogger(FileTimestampResourceWatcher.class);
 
     private File timestampHolder;
-    private String[] resourceFiles;
     private Map<File, FileWatcher> filesToWatch;
     private Map<File, FileWatcher> filesToWatchCache;
 
@@ -34,7 +33,6 @@ public class FileTimestampResourceWatcher implements ResourceWatcher {
 
     public FileTimestampResourceWatcher(File timestampHolder, String... resourceFiles) {
         this.timestampHolder = timestampHolder;
-        this.resourceFiles = resourceFiles;
         if (resourceFiles != null) {
             filesToWatchCache = new HashMap<>(resourceFiles.length);
             prepareFileToWatch(resourceFiles);

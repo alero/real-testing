@@ -20,6 +20,7 @@
         <module>inject-spring</module>
         <module>inject-spring-junit</module>
         <module>inject-junit</module>
+        <module>inject-junit-plugins</module>
         <module>inject-transactions</module>
     </modules>
 

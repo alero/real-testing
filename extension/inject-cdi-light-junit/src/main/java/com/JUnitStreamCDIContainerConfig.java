@@ -27,7 +27,7 @@ public abstract class JUnitStreamCDIContainerConfig implements ContainerConfig {
     private final CDIContainerConfigBase cdiContainerConfigBase;
     private final JunitSQLContainerService junitSQLContainerService;
 
-    public JUnitStreamCDIContainerConfig(ResourceCreator resourceCreator) {
+    private JUnitStreamCDIContainerConfig(ResourceCreator resourceCreator) {
         cdiContainerConfigBase = new CDIContainerConfigBase(resourceCreator) {
             @Override
             public InjectContainer createContainer() {

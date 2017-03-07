@@ -44,6 +44,11 @@ public abstract class ContainerConfigBase<T extends InjectionRegister> implement
         // This is intended for loading modules
     }
 
+    public T getActiveRegister() {
+        return (T) activeRegister;
+    }
+
+
     protected abstract InjectionRegisterScanBase getScanner(InjectionRegister registerModule);
 
     protected InjectContainer createAutoScanContainer(String... packageName) {
@@ -124,9 +129,7 @@ public abstract class ContainerConfigBase<T extends InjectionRegister> implement
         }
     }
 
-    public T getActiveRegister() {
-        return (T) activeRegister;
-    }
+
 
     public InjectContainer getActiveContainer() {
         return activeRegister.getContainer();
