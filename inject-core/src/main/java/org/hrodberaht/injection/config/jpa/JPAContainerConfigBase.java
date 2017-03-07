@@ -36,6 +36,10 @@ public abstract class JPAContainerConfigBase<T extends InjectionRegister> extend
         return getResourceCreator().createEntityManager(schemaName, dataSourceName, dataSource);
     }
 
+    public EntityManager getEntityManager(String entityManagerName) {
+        return resourceInjection.getEntityManager(entityManagerName);
+    }
+
     @Override
     protected ResourceInjection createResourceInjector() {
         return new ResourceInjection();

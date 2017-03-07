@@ -14,5 +14,54 @@
     <artifactId>4-cdi-jpa</artifactId>
     <version>2.1.0-SNAPSHOT</version>
 
-    
+    <dependencies>
+        <dependency>
+            <groupId>org.hrodberaht.inject.extension</groupId>
+            <artifactId>inject-cdi-light-junit</artifactId>
+            <version>2.2.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hrodberaht.inject.extension</groupId>
+            <artifactId>inject-transactions</artifactId>
+            <version>2.2.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>1.8.7</version>
+        </dependency>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjrt</artifactId>
+            <version>1.8.7</version>
+        </dependency>
+        <!-- Damn JPA 2.0 does not exist in maven repos -->
+        <dependency>
+            <groupId>org.hibernate.javax.persistence</groupId>
+            <artifactId>hibernate-jpa-2.0-api</artifactId>
+            <version>1.0.0.Final</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-annotations</artifactId>
+            <version>${hibernate-core-version}</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate-core-version}</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
+
 </project>

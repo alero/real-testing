@@ -74,6 +74,13 @@ public class ResourceInjection {
         return entityManagers.values();
     }
 
+    public EntityManager getEntityManager(String name) {
+        if(entityManagers == null){
+            return null;
+        }
+        return entityManagers.get(name);
+    }
+
     public void addPersistenceContext(String name, EntityManager entityManager) {
         if (entityManagers == null) {
             entityManagers = new HashMap<>();

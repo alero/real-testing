@@ -157,7 +157,7 @@ public class InjectionJUnitTestRunner extends BlockJUnit4ClassRunner {
     @Override
     protected Object createTest() throws Exception {
         Object testInstance = super.createTest();
-        theContainer.injectDependencies(testInstance);
+        theContainer.autowireAndPostConstruct(testInstance);
         return testInstance;
     }
 

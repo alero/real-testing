@@ -1,32 +1,38 @@
+package config;
+
 import com.hrodberaht.inject.extensions.transaction.junit.InjectionContainerCreator;
 import com.hrodberaht.inject.extensions.transaction.junit.TransactionManagedTesting;
 import com.hrodberaht.inject.extensions.transaction.manager.JdbcModule;
 import com.hrodberaht.inject.extensions.transaction.manager.internal.TransactionLogging;
-import config.TDDCDIContainerConfigBase;
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.extensions.cdi.CDIApplication;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
 
 import javax.sql.DataSource;
 
-
+/**
+ * Injection Transaction Extension
+ *
+ * @author Robert Alexandersson
+ *         2010-aug-11 22:58:13
+ * @version 1.0
+ * @since 1.0
+ */
 public class JUnitModuleConfig extends TDDCDIContainerConfigBase implements InjectionContainerCreator, TransactionManagedTesting {
 
-    private CDIApplication cdiApplication = null;
+    public InjectContainer createContainer() {
+        // TransactionLogging.enableLogging = true;
+        InjectionRegisterModule register = new InjectionRegisterModule();
 
-    public JUnitModuleConfig() {
         String name = "jdbc/MyDatasource";
         DataSource dataSource = createDataSource(name);
         addResource(name, dataSource);
 
-        cdiApplication = new CDIApplication(this);
-        cdiApplication.add( new JdbcModule(dataSource));
         super.addSQLSchemas(name, "sql");
-        TransactionLogging.enableLogging = true;
 
+        register.register(new JdbcModule(dataSource));
+        return register.getContainer();
     }
 
-    @Override
-    public InjectContainer createContainer() {
-        return cdiApplication.createContainer();
-    }
+
+
 }

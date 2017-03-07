@@ -14,5 +14,21 @@
     <artifactId>6-cdi-jdbc-mocking</artifactId>
     <version>2.1.0-SNAPSHOT</version>
 
-    
+
+    <dependencies>
+        <dependency>
+            <groupId>org.hrodberaht.inject.extension</groupId>
+            <artifactId>inject-cdi-light-junit</artifactId>
+            <version>2.2.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.enterprise</groupId>
+            <artifactId>cdi-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
+
 </project>

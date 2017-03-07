@@ -27,14 +27,14 @@ public class TransactionManagerJPAImpl extends TransactionManagerBase<EntityMana
     protected static final TransactionScopeHandler entityManagerThread = new TransactionScopeHandler();
     protected static final ThreadLocal<Boolean> requiresNewDisabled = new ThreadLocal<Boolean>();
 
-    private EntityManagerFactory emf = null;
+    private EntityManager em = null;
 
     public TransactionManagerJPAImpl(EntityManagerFactory emf) {
-        this.emf = emf;
+        this.em = emf.createEntityManager();
     }
 
     protected EntityManager createNativeManager() {
-        return emf.createEntityManager();
+        return em;
     }
 
     protected EntityManagerHolder createTransactionHolder(TransactionHolder<EntityManager> holder) {

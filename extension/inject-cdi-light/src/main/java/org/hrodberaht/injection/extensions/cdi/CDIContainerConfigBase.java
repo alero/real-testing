@@ -9,6 +9,7 @@ import org.hrodberaht.injection.extensions.cdi.cdiext.CDIExtensions;
 import org.hrodberaht.injection.extensions.cdi.inner.InjectionRegisterScanCDI;
 import org.hrodberaht.injection.extensions.cdi.inner.JSEResourceCreator;
 import org.hrodberaht.injection.extensions.cdi.stream.CDIInjectionRegistryStream;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
@@ -57,6 +58,16 @@ public abstract class CDIContainerConfigBase extends JPAContainerConfigBase<Inje
         createAutoScanContainerRegister(packageName, combinedRegister);
         cdiExtensions.runAfterBeanDiscovery(combinedRegister, this);
         return activeRegister.getContainer();
+    }
+
+
+    protected InjectContainer createContainer(InjectionRegisterModule module) {
+        final InjectionRegister combinedRegister = module;
+        registerModules(combinedRegister);
+        cdiExtensions.runBeforeBeanDiscovery(combinedRegister, this);
+        appendTypedResources(combinedRegister);
+        cdiExtensions.runAfterBeanDiscovery(combinedRegister, this);
+        return combinedRegister.getContainer();
     }
 
     @Override
@@ -149,14 +160,14 @@ public abstract class CDIContainerConfigBase extends JPAContainerConfigBase<Inje
     }
 
     protected void appendTypedResources(InjectionRegister injectionRegister) {
-        originalRegister.register(new RegistrationModuleAnnotation() {
+        injectionRegister.register(new RegistrationModuleAnnotation() {
             @Override
             public void registrations() {
                 registerInjectionFinder(injectionFinder);
             }
         });
 
-        super.appendTypedResources(originalRegister);
+        super.appendTypedResources(injectionRegister);
     }
 
     protected void injectResources(Object serviceInstance) {
