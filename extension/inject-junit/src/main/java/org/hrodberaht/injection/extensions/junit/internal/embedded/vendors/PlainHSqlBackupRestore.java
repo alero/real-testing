@@ -8,9 +8,11 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
-public class PlainHSqlBackupRestore implements DatasourceBackupRestore{
+public class PlainHSqlBackupRestore implements DatasourceBackupRestore {
 
 
     private static final Logger LOG = LoggerFactory.getLogger(PlainHSqlBackupRestore.class);
@@ -30,7 +32,7 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore{
         LOG.info("PlainHSqlBackupRestore backup to : {}", fileName);
 
 
-        try (final Connection connection = driverManager.getConnection()){
+        try (final Connection connection = driverManager.getConnection()) {
 
             JdbcTemplate jdbcTemplate = new JdbcTemplate(new DataSourceWrapper(connection));
             String backup = "SCRIPT '" + fileName + "'";
@@ -43,7 +45,7 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore{
 
     private String getFilename(String name) {
         String customBackup = System.getProperty("hrodberaht.junit.sql.backupFile");
-        if(customBackup != null) {
+        if (customBackup != null) {
             name = customBackup;
         }
         return name;
@@ -55,7 +57,7 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore{
         final String fileName = getFilename(name);
         LOG.debug("PlainHSqlBackupRestore restore from : " + fileName);
 
-        try (Connection connection = driverManager.getConnection();){
+        try (Connection connection = driverManager.getConnection();) {
 
             JdbcTemplate jdbcTemplate = new JdbcTemplate(new DataSourceWrapper(connection));
             readFile(new File(fileName), jdbcTemplate);
@@ -73,25 +75,45 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore{
     private String readFile(File file, JdbcTemplate jdbcTemplate) throws IOException {
         StringBuilder fileContents = new StringBuilder((int) file.length());
         Scanner scanner = new Scanner(file);
-
+        Map<String, String> restoreRetryMap = new HashMap<>();
         try {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (shouldExecuteLine(line)) {
-                    executeLine(jdbcTemplate, line);
+                    executeLine(jdbcTemplate, line, restoreRetryMap);
                 }
             }
+            retryRestoreMap(jdbcTemplate, restoreRetryMap);
             return fileContents.toString();
         } finally {
             scanner.close();
         }
     }
 
-    private void executeLine(JdbcTemplate jdbcTemplate, String line) {
-        try{
+    private void retryRestoreMap(final JdbcTemplate jdbcTemplate, final Map<String, String> restoreRetryMap) {
+        final Map<String, String> restoreRetryMapAgain = new HashMap<>();
+        restoreRetryMap.keySet().forEach(line -> {
+            if (shouldExecuteLine(line)) {
+                executeLine(jdbcTemplate, line, restoreRetryMapAgain);
+            }
+        });
+
+        if (restoreRetryMapAgain.size() < restoreRetryMap.size()) {
+            retryRestoreMap(jdbcTemplate, restoreRetryMapAgain);
+        } else {
+            restoreRetryMap.keySet().forEach(line ->
+                    LOG.warn("Last - Failed to restore line - " + line)
+            );
+        }
+
+    }
+
+    private void executeLine(JdbcTemplate jdbcTemplate, String line, Map<String, String> restoreRetryMap) {
+        try {
             jdbcTemplate.execute(line);
-        }catch (Exception e){
-            LOG.debug("Failed to restore line - "+line);
+        } catch (Exception e) {
+            LOG.debug("Failed to restore line - " + line);
+            restoreRetryMap.put(line, "failed");
         }
     }
 
