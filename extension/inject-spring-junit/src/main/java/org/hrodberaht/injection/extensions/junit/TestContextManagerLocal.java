@@ -14,17 +14,47 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-class TestContextManagerLocal extends TestContextManager {
+class TestContextManagerLocal  {
 
     private static final Logger LOG = LoggerFactory.getLogger(TestContextManagerLocal.class);
 
     private final SpringJUnitRunner springJUnitRunner;
     private final JUnitRunner jUnitRunner;
+    private final TestContextManager testContextManager;
 
     public TestContextManagerLocal(SpringJUnitRunner springJUnitRunner, JUnitRunner jUnitRunner, Class<?> testClass) {
-        super(testClass);
         this.jUnitRunner = jUnitRunner;
         this.springJUnitRunner = springJUnitRunner;
+        this.testContextManager = new TestContextManager(testClass){
+            @Override
+            public void registerTestExecutionListeners(List<TestExecutionListener> testExecutionListeners) {
+
+
+                final List<TestExecutionListener> listeners = new ArrayList<>();
+                testExecutionListeners
+                        .stream()
+                        .filter(t -> !(t instanceof DependencyInjectionTestExecutionListener))
+                        .collect(Collectors.toList())
+                        .forEach(t -> {
+                                    if (t instanceof TransactionalTestExecutionListener) {
+                                        springJUnitRunner.transactionalTestExecutionListener = new TransactionalTestExecutionListener() {
+                                            @Override
+                                            public void afterTestMethod(TestContext testContext) throws Exception {
+                                                flushEntityManager();
+                                                super.afterTestMethod(testContext);
+                                            }
+                                        };
+                                        listeners.add(springJUnitRunner.transactionalTestExecutionListener);
+                                    } else {
+                                        listeners.add(t);
+                                    }
+                                }
+
+                        );
+
+                super.registerTestExecutionListeners(listeners);
+            }
+        };
     }
 
     private SpringEntityManager getSpringEntityManager() {
@@ -51,35 +81,9 @@ class TestContextManagerLocal extends TestContextManager {
 
             }
         }
-
     }
 
-    @Override
-    public void registerTestExecutionListeners(List<TestExecutionListener> testExecutionListeners) {
-
-
-        final List<TestExecutionListener> listeners = new ArrayList<>();
-        testExecutionListeners
-                .stream()
-                .filter(t -> !(t instanceof DependencyInjectionTestExecutionListener))
-                .collect(Collectors.toList())
-                .forEach(t -> {
-                            if (t instanceof TransactionalTestExecutionListener) {
-                                springJUnitRunner.transactionalTestExecutionListener = new TransactionalTestExecutionListener() {
-                                    @Override
-                                    public void afterTestMethod(TestContext testContext) throws Exception {
-                                        flushEntityManager();
-                                        super.afterTestMethod(testContext);
-                                    }
-                                };
-                                listeners.add(springJUnitRunner.transactionalTestExecutionListener);
-                            } else {
-                                listeners.add(t);
-                            }
-                        }
-
-                );
-
-        super.registerTestExecutionListeners(listeners);
+    public TestContextManager getContextManager() {
+        return testContextManager;
     }
 }

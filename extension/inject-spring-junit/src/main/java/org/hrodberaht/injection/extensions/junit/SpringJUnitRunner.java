@@ -21,7 +21,7 @@ public class SpringJUnitRunner extends SpringJUnit4ClassRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpringJUnitRunner.class);
 
-    private final JUnitRunner jUnitRunner;
+    private JUnitRunner jUnitRunner;
     private TestContext testContext;
     TransactionalTestExecutionListener transactionalTestExecutionListener;
 
@@ -33,7 +33,6 @@ public class SpringJUnitRunner extends SpringJUnit4ClassRunner {
      */
     public SpringJUnitRunner(Class<?> clazz) throws InitializationError {
         super(clazz);
-        jUnitRunner = new JUnitRunner(clazz);
     }
 
     @Override
@@ -57,11 +56,20 @@ public class SpringJUnitRunner extends SpringJUnit4ClassRunner {
 
     @Override
     protected TestContextManager createTestContextManager(Class<?> clazz) {
+        createRunner(clazz);
         TestContextManager contextManager = new TestContextManagerLocal(
                 this, jUnitRunner, clazz
-        );
+        ).getContextManager();
         replaceTestContext(contextManager);
         return contextManager;
+    }
+
+    private void createRunner(Class<?> clazz) {
+        try {
+            jUnitRunner = new JUnitRunner(clazz);
+        } catch (InitializationError e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void replaceTestContext(TestContextManager contextManager) {
