@@ -59,9 +59,10 @@ public class InjectionRegisterModule extends InjectionRegisterBase<InjectionRegi
         return registerModule;
     }
 
-    public void fillModule(Module module) {
+    public Module fillModule(Module module) {
         for(RegistrationModule registrationModule:registeredModules) {
             module.putRegistrations(registrationModule.getRegistrationsList());
         }
+        return module;
     }
 }

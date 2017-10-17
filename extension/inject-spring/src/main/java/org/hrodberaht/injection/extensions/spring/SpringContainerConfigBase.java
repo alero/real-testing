@@ -1,7 +1,6 @@
 package org.hrodberaht.injection.extensions.spring;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.annotation.PostConstruct;
 import org.hrodberaht.injection.config.InjectionRegisterScanBase;
 import org.hrodberaht.injection.config.jpa.JPAContainerConfigBase;
 import org.hrodberaht.injection.extensions.spring.config.ContainerAllSpringConfig;
@@ -21,6 +20,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -132,11 +132,6 @@ public abstract class SpringContainerConfigBase extends JPAContainerConfigBase<I
             @Override
             protected boolean hasInjectAnnotationOnMethod(Method method) {
                 return method.isAnnotationPresent(SpringInject.class) || super.hasInjectAnnotationOnMethod(method);
-            }
-
-            @Override
-            protected boolean hasPostConstructAnnotation(Method method) {
-                return method.isAnnotationPresent(javax.annotation.PostConstruct.class) || method.isAnnotationPresent(PostConstruct.class);
             }
         }
         ));

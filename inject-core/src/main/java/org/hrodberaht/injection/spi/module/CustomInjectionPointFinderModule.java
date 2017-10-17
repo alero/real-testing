@@ -1,5 +1,7 @@
 package org.hrodberaht.injection.spi.module;
 
+import org.hrodberaht.injection.Module;
+import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.internal.annotation.InjectionFinder;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 
@@ -8,7 +10,7 @@ import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
  */
 public class CustomInjectionPointFinderModule extends RegistrationModuleAnnotation {
 
-    private InjectionFinder injectionFinder;
+    private final InjectionFinder injectionFinder;
 
     public CustomInjectionPointFinderModule(InjectionFinder injectionFinder) {
         this.injectionFinder = injectionFinder;

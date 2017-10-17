@@ -10,4 +10,8 @@ public class InjectionStoreFactory {
         return new InjectionRegisterModule();
     }
 
+    public static InjectionRegister getInjectionRegister(InjectionRegister injectionRegister) {
+        return new InjectionRegisterModule(injectionRegister);
+    }
+
 }

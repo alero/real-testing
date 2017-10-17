@@ -1,9 +1,10 @@
 package org.hrodberaht.injection.internal.annotation;
 
-import org.hrodberaht.injection.annotation.PostConstruct;
 import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.spi.ContainerConfig;
+import org.hrodberaht.injection.spi.ContainerConfigBuilder;
 
+import javax.annotation.PostConstruct;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
@@ -14,19 +15,24 @@ import java.util.List;
  * Injection Extension JUnit
  *
  * @author Robert Alexandersson
- *         2010-sep-23 20:34:49
+ * 2010-sep-23 20:34:49
  * @version 1.0
  * @since 1.0
  */
 public class DefaultInjectionPointFinder implements InjectionFinder {
 
     private ContainerConfig containerConfig;
+    private ContainerConfigBuilder containerConfigBuilder;
 
     public DefaultInjectionPointFinder() {
     }
 
     public DefaultInjectionPointFinder(ContainerConfig containerConfig) {
         this.containerConfig = containerConfig;
+    }
+
+    public DefaultInjectionPointFinder(ContainerConfigBuilder containerConfigBuilder) {
+        this.containerConfigBuilder = containerConfigBuilder;
     }
 
     /**
@@ -88,6 +94,10 @@ public class DefaultInjectionPointFinder implements InjectionFinder {
 
     public ContainerConfig getContainerConfig() {
         return containerConfig;
+    }
+
+    public ContainerConfigBuilder getContainerConfigBuilder() {
+        return containerConfigBuilder;
     }
 
     /**

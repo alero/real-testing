@@ -14,8 +14,6 @@
 
 package org.hrodberaht.inject.testservices.annotated;
 
-import org.hrodberaht.injection.annotation.PostConstruct;
-
 import javax.inject.Inject;
 
 /**
@@ -80,7 +78,6 @@ public class Volvo implements Car {
 
     }
 
-    @PostConstruct
     public void init() {
         if (someInformation != null) {
             initText = "Initialized " + someInformation;

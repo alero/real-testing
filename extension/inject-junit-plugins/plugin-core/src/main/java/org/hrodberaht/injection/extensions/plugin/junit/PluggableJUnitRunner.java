@@ -1,11 +1,11 @@
-package org.hrodberaht.injection.extensions.junit;
+package org.hrodberaht.injection.extensions.plugin.junit;
 
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.extensions.junit.internal.TransactionManager;
-import org.hrodberaht.injection.extensions.junit.spi.PluginConfig;
-import org.hrodberaht.injection.extensions.junit.spi.RunnerPlugins;
+import org.hrodberaht.injection.extensions.plugin.junit.spi.PluginConfig;
+import org.hrodberaht.injection.extensions.plugin.junit.spi.RunnerPlugins;
 import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.spi.ContainerConfig;
+import org.hrodberaht.injection.spi.ContainerConfigBuilder;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
@@ -29,7 +29,7 @@ public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger(PluggableJUnitRunner.class);
     private InjectContainer activeContainer = null;
-    private ContainerConfig creator = null;
+    private ContainerConfigBuilder containerConfig = null;
     private RunnerPlugins runnerPlugins = null;
 
     /**
@@ -49,11 +49,11 @@ public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
             for (Annotation annotation : annotations) {
                 if (annotation.annotationType() == ContainerContext.class) {
                     ContainerContext containerContext = (ContainerContext) annotation;
-                    Class<? extends ContainerConfig> transactionClass = containerContext.value();
-                    creator = transactionClass.newInstance();
+                    Class<? extends ContainerConfigBuilder> transactionClass = containerContext.value();
+                    containerConfig = transactionClass.newInstance();
                     runnerPlugins = getRunnerPlugins();
                     runnerPlugins.runInitBeforeContainer();
-                    creator.createContainer();
+                    containerConfig.start();
                     runnerPlugins.runInitAfterContainer();
 
                     LOG.info("Creating creator for thread {}", Thread.currentThread().getName());
@@ -65,8 +65,8 @@ public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
     }
 
     private RunnerPlugins getRunnerPlugins() {
-        if(creator instanceof PluginConfig){
-            return ((PluginConfig)creator).getRunnerPlugins();
+        if(containerConfig instanceof PluginConfig){
+            return ((PluginConfig)containerConfig).getRunnerPlugins();
         }else{
             return new RunnerPlugins();
         }
@@ -101,18 +101,18 @@ public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
 
     protected void afterRunChild() {
         runnerPlugins.runAfterTest();
-        TransactionManager.endTransaction();
-        creator.cleanActiveContainer();
+        // TransactionManager.endTransaction();
+        containerConfig.cleanActiveContainer();
     }
 
     protected void beforeRunChild() {
         runnerPlugins.runBeforeTest();
-        TransactionManager.beginTransaction(creator);
+        // TransactionManager.beginTransaction(creator);
 
         // So that ContainerLifeCycleTestUtil can access the activeContainer and do magic
-        creator.addSingletonActiveRegistry();
+        containerConfig.addSingletonActiveRegistry();
 
-        activeContainer = creator.getActiveRegister().getContainer();
+        activeContainer = containerConfig.getActiveRegister().getContainer();
     }
 
     /**

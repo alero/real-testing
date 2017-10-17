@@ -89,7 +89,7 @@ public class InjectionRegisterJava extends InjectionRegisterBase<InjectionRegist
     }
 
     @Override
-    public void fillModule(Module module) {
+    public Module fillModule(Module module) {
         throw new IllegalAccessError("deprecated use InjectionRegisterModule");
     }
 

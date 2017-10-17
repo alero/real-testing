@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.extensions.junit.spi;
+package org.hrodberaht.injection.extensions.plugin.junit.spi;
 
 import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
 

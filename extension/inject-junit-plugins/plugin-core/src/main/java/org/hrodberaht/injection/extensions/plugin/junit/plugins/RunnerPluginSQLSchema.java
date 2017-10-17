@@ -1,13 +1,12 @@
-package org.hrodberaht.injection.extensions.junit.plugins;
+package org.hrodberaht.injection.extensions.plugin.junit.plugins;
 
-import org.hrodberaht.injection.extensions.junit.internal.JunitSQLContainerService;
-import org.hrodberaht.injection.extensions.junit.spi.Plugin;
+import org.hrodberaht.injection.extensions.plugin.junit.spi.Plugin;
 
 public class RunnerPluginSQLSchema implements Plugin {
 
-    private final JunitSQLContainerService sqlContainerService;
-    public RunnerPluginSQLSchema(JunitSQLContainerService sqlContainerService) {
-        this.sqlContainerService = sqlContainerService;
+
+    public RunnerPluginSQLSchema() {
+
     }
 
     /**
@@ -17,7 +16,7 @@ public class RunnerPluginSQLSchema implements Plugin {
      * The order of the filters are guaranteed to follow create_schema first, insert_script second
      */
     public void loadSchema(String dataSourceName, String classPathRoot){
-        sqlContainerService.addSQLSchemas(dataSourceName, classPathRoot);
+        // sqlContainerService.addSQLSchemas(dataSourceName, classPathRoot);
     }
 
 }

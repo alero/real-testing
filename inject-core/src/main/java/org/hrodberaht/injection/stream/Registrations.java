@@ -1,7 +1,9 @@
 package org.hrodberaht.injection.stream;
 
+import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.register.internal.RegistrationExtended;
 import org.hrodberaht.injection.register.internal.RegistrationInstanceSimple;
+import org.hrodberaht.injection.spi.module.CustomInjectionPointFinderModule;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +14,7 @@ import java.util.List;
 public class Registrations {
 
     private List<RegistrationInstanceSimple> simpleCollection = new ArrayList<>();
+    private List<RegistrationModuleAnnotation> modulesCollection = new ArrayList<>();
 
     public RegistrationExtended register(Class serviceClass) {
         RegistrationInstanceSimple registrationInstanceSimple = new RegistrationInstanceSimple(serviceClass);
@@ -19,7 +22,16 @@ public class Registrations {
         return registrationInstanceSimple;
     }
 
+
     protected List<RegistrationInstanceSimple> registry() {
         return simpleCollection;
+    }
+
+    public List<RegistrationModuleAnnotation> modules() {
+        return modulesCollection;
+    }
+
+    public void register(RegistrationModuleAnnotation moduleAnnotation) {
+        modulesCollection.add(moduleAnnotation);
     }
 }

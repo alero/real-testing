@@ -42,5 +42,5 @@ public interface InjectionRegister {
 
     InjectionRegister copy();
 
-    void fillModule(Module module);
+    Module fillModule(Module module);
 }
