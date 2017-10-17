@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.extensions.plugin.datasource.embedded;
 
-import org.hrodberaht.injection.extensions.plugin.junit.datasource.ProxyResourceCreator;
+import org.hrodberaht.injection.extensions.plugin.test.datasource.ProxyResourceCreator;
 import org.hrodberaht.injection.extensions.plugin.datasource.embedded.vendors.HsqlBDDataSourceConfigurationRestorable;
 import org.hrodberaht.injection.spi.DataSourceProxyInterface;
 

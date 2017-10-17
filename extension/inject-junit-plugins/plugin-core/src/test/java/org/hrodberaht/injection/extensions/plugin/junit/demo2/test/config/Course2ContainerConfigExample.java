@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.extensions.plugin.junit.demo2.test.config;
 
-import org.hrodberaht.injection.extensions.plugin.junit.PluggableContainerConfigBase;
+import org.hrodberaht.injection.extensions.plugin.test.PluggableContainerConfigBase;
 import org.hrodberaht.injection.extensions.plugin.junit.demo2.service.MyResource;
 import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
 

@@ -18,6 +18,7 @@
 
 
     <modules>
+        <module>plugin-jpa</module>
         <module>plugin-liquibase</module>
         <module>plugin-core</module>
     </modules>

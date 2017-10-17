@@ -1,7 +1,7 @@
 package org.hrodberaht.injection.extensions.plugin.junit.datasource.test.config;
 
-import org.hrodberaht.injection.extensions.plugin.junit.PluggableContainerConfigBase;
-import org.hrodberaht.injection.extensions.plugin.junit.plugins.DataSourcePlugin;
+import org.hrodberaht.injection.extensions.plugin.test.PluggableContainerConfigBase;
+import org.hrodberaht.injection.extensions.plugin.test.plugins.DataSourcePlugin;
 import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
 
 import javax.sql.DataSource;

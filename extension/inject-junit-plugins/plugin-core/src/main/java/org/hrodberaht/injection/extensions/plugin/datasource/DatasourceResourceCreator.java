@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.extensions.plugin.datasource;
 
-import org.hrodberaht.injection.extensions.plugin.junit.datasource.DatasourceCreator;
+import org.hrodberaht.injection.extensions.plugin.test.datasource.DatasourceCreator;
 import org.hrodberaht.injection.spi.JavaResourceCreator;
 
 import javax.sql.DataSource;
