@@ -27,6 +27,7 @@ public class Course2ContainerConfigExample extends PluggableContainerConfigBase 
     }
 
 
+
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
         registryBuilder
@@ -34,6 +35,7 @@ public class Course2ContainerConfigExample extends PluggableContainerConfigBase 
             .resource(builder ->
                     builder
                             .resource("myResource", new MyResource("named"))
+                            .resource("myMappedResource", new MyResource("mapped"))
                             .resource(new MyResource("typed"))
 
             )

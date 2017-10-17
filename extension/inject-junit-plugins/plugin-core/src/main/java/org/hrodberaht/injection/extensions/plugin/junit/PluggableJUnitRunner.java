@@ -29,7 +29,7 @@ public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger(PluggableJUnitRunner.class);
     private InjectContainer activeContainer = null;
-    private ContainerConfigBuilder containerConfig = null;
+    private PluggableContainerConfigBase containerConfig = null;
     private RunnerPlugins runnerPlugins = null;
 
     /**
@@ -48,19 +48,27 @@ public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
             Annotation[] annotations = testClass.getAnnotations();
             for (Annotation annotation : annotations) {
                 if (annotation.annotationType() == ContainerContext.class) {
-                    ContainerContext containerContext = (ContainerContext) annotation;
-                    Class<? extends ContainerConfigBuilder> transactionClass = containerContext.value();
-                    containerConfig = transactionClass.newInstance();
-                    runnerPlugins = getRunnerPlugins();
-                    runnerPlugins.runInitBeforeContainer();
-                    containerConfig.start();
-                    runnerPlugins.runInitAfterContainer();
-
-                    LOG.info("Creating creator for thread {}", Thread.currentThread().getName());
+                    createUnitTestContext((ContainerContext) annotation);
                 }
             }
         } catch (InstantiationException | IllegalAccessException e) {
             throw new InjectRuntimeException(e);
+        }
+    }
+
+    private void createUnitTestContext(ContainerContext annotation) throws InstantiationException, IllegalAccessException {
+        ContainerContext containerContext = annotation;
+        Class testConfigClass = containerContext.value();
+        if(PluggableContainerConfigBase.class.isAssignableFrom(testConfigClass)) {
+            containerConfig = (PluggableContainerConfigBase)testConfigClass.newInstance();
+            runnerPlugins = getRunnerPlugins();
+            runnerPlugins.runInitBeforeContainer();
+            containerConfig.start();
+            runnerPlugins.runInitAfterContainer();
+
+            LOG.info("Creating creator for thread {}", Thread.currentThread().getName());
+        }else{
+            throw new IllegalAccessError("Currently the test config class must extrend PluggableContainerConfigBase");
         }
     }
 

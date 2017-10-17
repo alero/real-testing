@@ -2,6 +2,8 @@ package org.hrodberaht.injection.internal;
 
 import org.hrodberaht.injection.internal.annotation.ReflectionUtils;
 import org.hrodberaht.injection.spi.ResourceKey;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
 import javax.persistence.EntityManager;
@@ -18,7 +20,7 @@ import java.util.Map;
  */
 public class ResourceInject {
 
-
+    private static final Logger LOG = LoggerFactory.getLogger(ResourceInject.class);
 
 
     public void injectResources(Map<Class, Object> typedResources, Map<ResourceKey, Object> namedResources, Object serviceInstance) {
@@ -29,12 +31,28 @@ public class ResourceInject {
                 Field field = (Field) member;
                 if (field.isAnnotationPresent(Resource.class)) {
                     Resource resource = field.getAnnotation(Resource.class);
-                    if (!injectNamedResource(namedResources, serviceInstance, field, resource)) {
+                    if(hasNameOrMappedName(resource)){
+                        if(!injectNamedResource(namedResources, serviceInstance, field, resource)){
+                            throw new RuntimeException("No resource found for "+descriptive(field, resource));
+                        }
+                    }else {
                         injectTypedResource(typedResources, serviceInstance, field);
                     }
                 }
             }
         }
+    }
+
+    private String descriptive(Field field, Resource resource) {
+        return hasName(resource) ?
+                "field:'"+field.getName()+"' name:'"+resource.name()+"'" :
+                hasMappedName(resource) ? "field:'"+field.getName()+"' mapped-name:'"+resource.mappedName()+"'" : "no name?";
+    }
+
+
+
+    private boolean hasNameOrMappedName(Resource resource) {
+        return hasName(resource) || hasMappedName(resource);
     }
 
     private boolean injectTypedResource(Map<Class, Object> typedResources, Object serviceInstance, Field field) {
@@ -53,20 +71,27 @@ public class ResourceInject {
         if (namedResources == null) {
             return false;
         }
-        if("".equals(resource.name())){
-            return false;
-        }
         ResourceKey key = ResourceKey.of(resource.name(),field.getType());
         Object value = namedResources.get(key);
         if (value == null) {
             ResourceKey mappedKey = ResourceKey.of(resource.mappedName(),field.getType());
             value = namedResources.get(mappedKey);
+        }else if(hasMappedName(resource)){
+            LOG.debug("using name to inject, mapped name exists though");
         }
         if (value != null) {
             injectResourceValue(serviceInstance, field, value);
             return true;
         }
         return false;
+    }
+
+    private boolean hasName(Resource resource) {
+        return !"".equals(resource.name());
+    }
+
+    private boolean hasMappedName(Resource resource) {
+        return !"".equals(resource.mappedName());
     }
 
     private void injectResourceValue(Object serviceInstance, Field field, Object value) {

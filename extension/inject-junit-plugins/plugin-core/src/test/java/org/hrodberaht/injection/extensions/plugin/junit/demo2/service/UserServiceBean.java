@@ -1,11 +1,9 @@
 package org.hrodberaht.injection.extensions.plugin.junit.demo2.service;
 
-import org.hrodberaht.injection.extensions.plugin.junit.demo2.model.User;
+import org.hrodberaht.injection.extensions.plugin.junit.model.User;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -26,6 +24,9 @@ public class UserServiceBean implements UserService {
 
     @Resource(name = "myResource")
     private MyResource myNamedResource;
+
+    @Resource(mappedName = "myMappedResource")
+    private MyResource myMappedNamedResource;
 
     @PostConstruct
     public void init() {
@@ -52,5 +53,9 @@ public class UserServiceBean implements UserService {
 
     public MyResource getMyNamedResource() {
         return myNamedResource;
+    }
+
+    public MyResource getMyMappedNamedResource() {
+        return myMappedNamedResource;
     }
 }

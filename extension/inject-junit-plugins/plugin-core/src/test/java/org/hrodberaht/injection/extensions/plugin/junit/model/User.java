@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.extensions.plugin.junit.demo2.model;
+package org.hrodberaht.injection.extensions.plugin.junit.model;
 
 /**
  * Qmatic Booking Module

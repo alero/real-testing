@@ -1,18 +1,15 @@
-package org.hrodberaht.injection.extensions.plugin.junit.demo2.test;
+package org.hrodberaht.injection.extensions.plugin.junit.datasource.test;
 
 import org.hrodberaht.injection.extensions.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.extensions.plugin.junit.PluggableJUnitRunner;
-import org.hrodberaht.injection.extensions.plugin.junit.demo2.service.UserService;
-import org.hrodberaht.injection.extensions.plugin.junit.demo2.test.config.Course2ContainerConfigExample;
+import org.hrodberaht.injection.extensions.plugin.junit.datasource.service.UserService;
+import org.hrodberaht.injection.extensions.plugin.junit.datasource.test.config.Course2ContainerConfigExample;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-
 import javax.inject.Inject;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Qmatic Booking Module
@@ -24,25 +21,39 @@ import static org.junit.Assert.assertTrue;
  */
 @ContainerContext(Course2ContainerConfigExample.class)
 @RunWith(PluggableJUnitRunner.class)
-public class TestUserCreation {
+public class TestDatasourceUserCreation {
 
 
     @Inject
     private UserService userService;
 
     @Test
-    public void testNamedResourceExists() throws Exception {
-        assertEquals("named", userService.getMyNamedResource().value());
+    public void testNamedDataSourceExists() throws Exception {
+        assertNotNull(userService.getNamedDataSource());
     }
 
     @Test
-    public void testTypedResourceExists() throws Exception {
-        assertEquals("typed", userService.getMyTypedResource().value());
+    public void testTypedDataSourceExists() throws Exception {
+        assertNotNull(userService.getTypedDataSource());
     }
 
     @Test
     public void testComparePasswordGood() throws Exception {
         assertTrue(userService.loginCompare("dude", "wheremycar"));
+    }
+
+    @Test
+    public void testChangePasswordGood() throws Exception {
+        assertTrue(userService.loginCompare("dude", "wheremycar"));
+        userService.changePassword("dude", "itsgone");
+        assertTrue(userService.loginCompare("dude", "itsgone"));
+    }
+
+    @Test
+    public void testChangePasswordGoodAgain() throws Exception {
+        assertTrue(userService.loginCompare("dude", "wheremycar"));
+        userService.changePassword("dude", "itsgone2");
+        assertTrue(userService.loginCompare("dude", "itsgone2"));
     }
 
     @Test

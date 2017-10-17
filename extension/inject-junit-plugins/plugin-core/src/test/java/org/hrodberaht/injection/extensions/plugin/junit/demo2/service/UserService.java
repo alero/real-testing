@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.extensions.plugin.junit.demo2.service;
 
-import org.hrodberaht.injection.extensions.plugin.junit.demo2.model.User;
+import org.hrodberaht.injection.extensions.plugin.junit.model.User;
 
 /**
  * Qmatic Booking Module
@@ -21,5 +21,7 @@ public interface UserService {
     MyResource getMyTypedResource();
 
     MyResource getMyNamedResource();
+
+    MyResource getMyMappedNamedResource();
 
 }

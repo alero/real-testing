@@ -17,5 +17,5 @@ import java.lang.annotation.*;
 @Target(ElementType.TYPE)
 @Inherited
 public @interface ContainerContext {
-    Class<? extends ContainerConfigBuilder> value();
+    Class<?> value();
 }
