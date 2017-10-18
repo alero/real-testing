@@ -3,7 +3,7 @@ package org.hrodberaht.injection.plugin.junit.datasource;
 
 import org.hrodberaht.injection.config.JarUtil;
 import org.hrodberaht.injection.plugin.datasource.DataSourceException;
-import org.hrodberaht.injection.spi.DataSourceProxyInterface;
+import org.hrodberaht.injection.plugin.datasource.DataSourceProxyInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

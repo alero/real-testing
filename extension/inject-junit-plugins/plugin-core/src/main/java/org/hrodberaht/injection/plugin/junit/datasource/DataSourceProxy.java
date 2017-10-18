@@ -1,9 +1,9 @@
 package org.hrodberaht.injection.plugin.junit.datasource;
 
+import org.hrodberaht.injection.plugin.datasource.DataSourceProxyInterface;
 import org.hrodberaht.injection.plugin.datasource.embedded.DataSourceConfigFactory;
 import org.hrodberaht.injection.plugin.datasource.embedded.DataSourceConfiguration;
-import org.hrodberaht.injection.plugin.datasource.embedded.ResourceWatcher;
-import org.hrodberaht.injection.spi.DataSourceProxyInterface;
+import org.hrodberaht.injection.plugin.junit.ResourceWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,7 +65,7 @@ public class DataSourceProxy implements DataSourceProxyInterface {
     }
 
     @Override
-    public boolean runWithConnectionAndCommit(ConnectionRunner connectionRunner) {
+    public boolean runWithConnectionAndCommit(DataSourceProxyInterface.ConnectionRunner connectionRunner) {
         return dataSourceConfiguration.runWithConnectionAndCommit(connectionRunner);
     }
 

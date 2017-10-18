@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.spi;
+package org.hrodberaht.injection.plugin.datasource;
 
 import java.sql.Connection;
 
@@ -9,7 +9,6 @@ import java.sql.Connection;
  * Time: 14:16
  * To change this template use File | Settings | File Templates.
  */
-@Deprecated
 public interface DataSourceProxyInterface extends javax.sql.DataSource {
 
     void clearDataSource();

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <changeSet id="1" author="robert">
+        <createTable tableName="simple">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(40)"/>
+        </createTable>
+
+        <createSequence sequenceName="simple_seq" cycle="false" incrementBy="1000" startValue="10000"/>
+    </changeSet>
+
+    <changeSet id="2" author="robert">
+        <createTable tableName="versioned">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="version" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="name" type="varchar(40)"/>
+        </createTable>
+
+        <createSequence sequenceName="versioned_seq" cycle="false" incrementBy="1000" startValue="10000"/>
+    </changeSet>
+
+
+    <changeSet id="3" author="robert">
+        <createTable tableName="mama">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(40)"/>
+        </createTable>
+
+        <createTable tableName="baby">
+            <column name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="varchar(40)"/>
+            <column name="mama_id" type="bigint"/>
+        </createTable>
+
+        <createSequence sequenceName="mama_seq" cycle="false" incrementBy="1000" startValue="10000"/>
+        <createSequence sequenceName="baby_seq" cycle="false" incrementBy="1000" startValue="10000"/>
+
+        <addForeignKeyConstraint baseColumnNames="mama_id"
+                                 baseTableName="baby" constraintName="fk_baby_to_mama"
+                                 referencedColumnNames="id" referencedTableName="mama"/>
+    </changeSet>
+
+</databaseChangeLog>

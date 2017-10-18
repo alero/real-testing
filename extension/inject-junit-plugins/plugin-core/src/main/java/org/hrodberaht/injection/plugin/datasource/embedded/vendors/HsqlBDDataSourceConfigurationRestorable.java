@@ -1,8 +1,9 @@
 package org.hrodberaht.injection.plugin.datasource.embedded.vendors;
 
+import org.hrodberaht.injection.plugin.datasource.DataSourceProxyInterface;
 import org.hrodberaht.injection.plugin.datasource.embedded.DataSourceConfiguration;
-import org.hrodberaht.injection.plugin.datasource.embedded.ResourceWatcher;
-import org.hrodberaht.injection.spi.DataSourceProxyInterface;
+import org.hrodberaht.injection.plugin.junit.ResourceWatcher;
+
 import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;

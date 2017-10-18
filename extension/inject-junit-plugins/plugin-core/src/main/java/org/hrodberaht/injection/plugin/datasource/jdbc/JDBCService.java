@@ -1,6 +1,7 @@
 package org.hrodberaht.injection.plugin.datasource.jdbc;
 
 import java.util.Collection;
+import java.util.List;
 
 /**
  * @author Robert Alexandersson
@@ -13,7 +14,7 @@ public interface JDBCService {
     int insertOrUpdate(InsertOrUpdater insertOrUpdater);
     int insert(Insert insert);
 
-    <T> Collection<T> query(String sql, RowIterator<T> rowIterator, Object... args); 
+    <T> List<T> query(String sql, RowIterator<T> rowIterator, Object... args);
     <T> T querySingle(String sql, RowIterator<T> rowIterator, Object... args);
 
 

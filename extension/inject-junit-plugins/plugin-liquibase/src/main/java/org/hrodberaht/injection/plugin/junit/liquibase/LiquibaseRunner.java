@@ -1,38 +1,39 @@
-package org.hrodberaht.injection.extensions.junit.datasource.liquibase;
+package org.hrodberaht.injection.plugin.junit.liquibase;
 
 import liquibase.Liquibase;
 import liquibase.database.core.HsqlDatabase;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
-import org.hrodberaht.injection.extensions.junit.internal.embedded.ResourceWatcher;
 import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
-import org.hrodberaht.injection.spi.DataSourceProxyInterface;
+import org.hrodberaht.injection.plugin.datasource.DataSourceProxyInterface;
+import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCService;
+import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCServiceFactory;
+import org.hrodberaht.injection.plugin.junit.ResourceWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 import javax.sql.DataSource;
 import java.io.File;
 import java.sql.SQLException;
 
-public class LiquibaseUtil {
+class LiquibaseRunner {
 
-    private static final Logger LOG = LoggerFactory.getLogger(LiquibaseUtil.class);
+    private static final Logger LOG = LoggerFactory.getLogger(LiquibaseRunner.class);
 
     private final String verificationQuery;
     private final String liquibaseStorageName;
     private final File tempStore;
     private final ResourceWatcher resourceWatcher;
 
-    public LiquibaseUtil(String verificationQuery, String liquibaseStorageName, ResourceWatcher resourceWatcher) {
+    LiquibaseRunner(String verificationQuery, String liquibaseStorageName, ResourceWatcher resourceWatcher) {
         this.verificationQuery = verificationQuery;
         this.liquibaseStorageName = liquibaseStorageName;
         this.tempStore = new File(this.liquibaseStorageName);
         this.resourceWatcher = resourceWatcher;
     }
 
-    public void liquiBaseSchemaCreation(DataSource dataSource, String liquiBaseSchema) throws SQLException, LiquibaseException {
+    void liquiBaseSchemaCreation(DataSource dataSource, String liquiBaseSchema) throws SQLException, LiquibaseException {
 
         if (!(dataSource instanceof DataSourceProxyInterface)) {
             throw new InjectRuntimeException("DataSource is not correct for JUnit testing, muse be " + DataSourceProxyInterface.class.getName());
@@ -40,35 +41,30 @@ public class LiquibaseUtil {
 
         DataSourceProxyInterface dataSourceProxyInterface = (DataSourceProxyInterface) dataSource;
 
-        Boolean isLoadedAlready = verifyLoading(dataSourceProxyInterface);
-        if (isLoadedAlready) {
+        Boolean isLoaded = isLoaded(dataSourceProxyInterface);
+        if (!isLoaded) {
             loadSchemaDataStore(dataSourceProxyInterface, liquiBaseSchema);
         } else {
             LOG.debug("NOT - RUNNING Liquibase update on schema!");
         }
     }
 
-    private Boolean verifyLoading(DataSourceProxyInterface dataSourceProxyInterface) {
-        Boolean isLoadedAlready;
+    private Boolean isLoaded(DataSourceProxyInterface dataSourceProxyInterface) {
+        Boolean isLoadedAlready = false;
         try {
-            JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSourceProxyInterface);
-            isLoadedAlready = jdbcTemplate.query(verificationQuery
+            JDBCService jdbcService = JDBCServiceFactory.of(dataSourceProxyInterface);
+            isLoadedAlready = jdbcService.querySingle(verificationQuery
                     ,
-                    resultSet -> {
-                        try {
-                            resultSet.next();
-                            resultSet.getString(1);
-                            return false;
-                        } catch (Exception e) {
+                    (rs, iteration) -> {
+                            rs.next();
+                            rs.getString(1);
                             return true;
-                        }
                     }
             );
         } finally {
             dataSourceProxyInterface.clearDataSource();
-
         }
-        return isLoadedAlready;
+        return isLoadedAlready == null ? false : isLoadedAlready;
     }
 
     private void loadSchemaDataStore(DataSourceProxyInterface dataSource, String liquiBaseSchema) throws SQLException, LiquibaseException {

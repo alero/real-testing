@@ -1,8 +1,10 @@
 package org.hrodberaht.injection.plugin.datasource.embedded;
 
+import org.hrodberaht.injection.plugin.datasource.DataSourceProxyInterface;
+import org.hrodberaht.injection.plugin.junit.ResourceWatcher;
 import org.hrodberaht.injection.plugin.junit.datasource.ProxyResourceCreator;
 import org.hrodberaht.injection.plugin.datasource.embedded.vendors.HsqlBDDataSourceConfigurationRestorable;
-import org.hrodberaht.injection.spi.DataSourceProxyInterface;
+
 
 public class DataSourceConfigFactory {
 

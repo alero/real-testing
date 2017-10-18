@@ -1,6 +1,8 @@
 package org.hrodberaht.injection.plugin.datasource.embedded;
 
-import org.hrodberaht.injection.spi.DataSourceProxyInterface;
+
+
+import org.hrodberaht.injection.plugin.datasource.DataSourceProxyInterface;
 
 import java.sql.Connection;
 import java.sql.SQLException;

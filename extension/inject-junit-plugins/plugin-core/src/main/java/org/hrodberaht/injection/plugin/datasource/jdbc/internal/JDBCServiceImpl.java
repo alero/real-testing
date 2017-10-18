@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author Robert Alexandersson
@@ -72,7 +73,6 @@ public class JDBCServiceImpl implements JDBCService {
     @Override
     public <T> T querySingle(String sql, RowIterator<T> rowIterator, Object... args) {
         try {
-
             // Prepared statements?
             PreparedStatement pstmt = null;
             ResultSet rs = null;
@@ -113,12 +113,12 @@ public class JDBCServiceImpl implements JDBCService {
         }
     }
     @Override
-    public <T> Collection<T> query(String sql, RowIterator<T> rowIterator, Object... args) {
+    public <T> List<T> query(String sql, RowIterator<T> rowIterator, Object... args) {
 
         try (Connection connection = dataSource.getConnection()){
             PreparedStatement pstmt = null;
             ResultSet rs = null;
-            Collection<T> queryItems = new ArrayList<T>(50);
+            List<T> queryItems = new ArrayList<T>(50);
             try {
                 pstmt = prepareAndAppend(sql, connection, args);
                 rs = pstmt.executeQuery();

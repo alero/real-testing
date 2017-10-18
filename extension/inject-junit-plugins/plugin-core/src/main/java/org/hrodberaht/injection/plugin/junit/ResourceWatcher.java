@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.plugin.datasource.embedded;
+package org.hrodberaht.injection.plugin.junit;
 
 public interface ResourceWatcher {
 

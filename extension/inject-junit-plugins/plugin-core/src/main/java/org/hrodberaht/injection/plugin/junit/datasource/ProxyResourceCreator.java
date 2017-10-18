@@ -1,14 +1,9 @@
 package org.hrodberaht.injection.plugin.junit.datasource;
 
-import org.hrodberaht.injection.plugin.context.InitialContextFactoryImpl;
-import org.hrodberaht.injection.plugin.datasource.embedded.ResourceWatcher;
+import org.hrodberaht.injection.plugin.junit.ResourceWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +19,14 @@ public class ProxyResourceCreator implements DatasourceCreator{
 
     private static final Logger LOG = LoggerFactory.getLogger(ProxyResourceCreator.class);
 
+    public enum DataSourceProvider {
+        HSQLDB, H2
+    }
+
+    public enum DataSourcePersistence {
+        MEM, RESTORABLE
+    }
+
     final Map<String, DataSourceProxy> DATASOURCES = new HashMap<>();
 
     private final DataSourceProvider provider;
@@ -34,19 +37,12 @@ public class ProxyResourceCreator implements DatasourceCreator{
         this(provider, persistence, null);
     }
 
-    public enum DataSourceProvider {
-        HSQLDB, H2
-    }
-
-    public enum DataSourcePersistence {
-        MEM, RESTORABLE
-    }
-
     public ProxyResourceCreator(DataSourceProvider provider, DataSourcePersistence persistence, ResourceWatcher resourceWatcher) {
         this.provider = provider;
         this.persistence = persistence;
         this.resourceWatcher = resourceWatcher;
     }
+
 
 
     public DataSourceProxy createDataSource(String dataSourceName) {
@@ -64,19 +60,11 @@ public class ProxyResourceCreator implements DatasourceCreator{
     }
 
 
-    public DataSourceProxy createDataSource(String dbName, String dataSourceName) {
-        return createDataSource(dataSourceName);
-    }
-
-    protected DataSourceProxy createDataSourceProxy(String dataSourceName) {
+    private DataSourceProxy createDataSourceProxy(String dataSourceName) {
         return new DataSourceProxy(dataSourceName, provider, persistence, resourceWatcher);
     }
 
-    public DataSourceProxy getDataSource(String dbName) {
-        return DATASOURCES.get(dbName);
-    }
-
-    public boolean hasDataSource(String dataSourceName) {
+    private boolean hasDataSource(String dataSourceName) {
         return DATASOURCES.get(dataSourceName) != null;
     }
 
