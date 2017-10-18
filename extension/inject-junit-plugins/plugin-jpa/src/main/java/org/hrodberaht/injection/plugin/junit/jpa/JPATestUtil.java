@@ -1,4 +1,4 @@
-package plugins;
+package org.hrodberaht.injection.plugin.junit.jpa;
 
 import javax.inject.Inject;
 import javax.persistence.EntityManager;

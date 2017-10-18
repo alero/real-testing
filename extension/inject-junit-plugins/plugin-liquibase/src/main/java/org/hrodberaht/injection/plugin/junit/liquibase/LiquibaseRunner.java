@@ -100,6 +100,7 @@ class LiquibaseRunner {
                         LOG.debug("RUNNING Liquidbase update on schema!");
                         try {
                             HsqlDatabase hsqlDatabase = new HsqlDatabase() {
+                                // This feature exists in a PR against liquibase
                                 public boolean failOnDefferable() {
                                     return false;
                                 }

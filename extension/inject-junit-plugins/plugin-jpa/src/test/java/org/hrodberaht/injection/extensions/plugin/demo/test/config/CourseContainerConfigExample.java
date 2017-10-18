@@ -2,7 +2,7 @@ package org.hrodberaht.injection.extensions.plugin.demo.test.config;
 
 import org.hrodberaht.injection.plugin.junit.PluggableContainerConfigBase;
 import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
-import plugins.JpaPlugin;
+import org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin;
 
 import javax.sql.DataSource;
 
@@ -34,21 +34,24 @@ public class CourseContainerConfigExample extends PluggableContainerConfigBase {
 
     @Override
     protected void register(InjectionRegistryBuilder registryBuilder) {
-        JpaPlugin dataSourcePlugin = activatePlugin(JpaPlugin.class);
+        JpaPlugin jpaPlugin = activatePlugin(JpaPlugin.class);
 
-        DataSource dataSource = dataSourcePlugin.getCreator(DataSource.class).create("MyDataSource");
+        DataSource dataSource = jpaPlugin.getCreator(DataSource.class).create("MyDataSource");
+
 
         // DataSource dataSourceTwo = getCreator(DataSource.class).create("secondDataSource");
 
+        jpaPlugin.createEntityManager("example-jpa");
+
         // Load schema is a custom method located in the plugin code, this creates clean separation
-        dataSourcePlugin
+        jpaPlugin
                 .loadSchema(dataSource, "org.hrodberaht.injection.extensions.plugin.course")
         // .loadSchema(dataSource, "org.hrodberaht.injection.extensions.plugin.course2")
         ;
 
 
         registryBuilder
-                .scan(() -> "org.hrodberaht.injection.extensions.plugin.demo")
+                .scan(() -> "org.hrodberaht.injection.extensions.plugin.demo.service")
                 .resource(builder ->
                         builder
                                 .resource("MyDataSource", DataSource.class, dataSource)

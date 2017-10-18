@@ -19,7 +19,7 @@
     </licenses>
 
     <properties>
-        <hibernate-core-version>3.5.3-Final</hibernate-core-version>
+        <hibernate-core-version>5.2.11.Final</hibernate-core-version>
         <springframework-version>4.2.4.RELEASE</springframework-version>
     </properties>
 
