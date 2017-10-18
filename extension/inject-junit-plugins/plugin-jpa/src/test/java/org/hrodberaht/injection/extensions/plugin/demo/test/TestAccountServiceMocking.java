@@ -5,7 +5,7 @@ import org.hrodberaht.injection.extensions.plugin.demo.model.CustomerAccount;
 import org.hrodberaht.injection.extensions.plugin.demo.service.AccountingService;
 import org.hrodberaht.injection.extensions.plugin.demo.service.CustomerAccountService;
 import org.hrodberaht.injection.extensions.plugin.demo.service.CustomerService;
-import org.hrodberaht.injection.extensions.plugin.test.ContainerLifeCycleTestUtil;
+import org.hrodberaht.injection.plugin.junit.ContainerLifeCycleTestUtil;
 import org.junit.Test;
 import org.mockito.Mockito;
 

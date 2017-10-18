@@ -1,7 +1,7 @@
 package org.hrodberaht.injection.extensions.plugin.junit.datasource.test;
 
-import org.hrodberaht.injection.extensions.plugin.test.ContainerContext;
-import org.hrodberaht.injection.extensions.plugin.test.PluggableJUnitRunner;
+import org.hrodberaht.injection.plugin.junit.ContainerContext;
+import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
 import org.hrodberaht.injection.extensions.plugin.junit.datasource.service.UserService;
 import org.hrodberaht.injection.extensions.plugin.junit.datasource.test.config.Course2ContainerConfigExample;
 import org.junit.Test;
@@ -22,8 +22,7 @@ import static org.junit.Assert.*;
 @ContainerContext(Course2ContainerConfigExample.class)
 @RunWith(PluggableJUnitRunner.class)
 public class TestDatasourceUserCreation {
-
-
+    
     @Inject
     private UserService userService;
 

@@ -5,8 +5,8 @@ import org.hrodberaht.injection.extensions.plugin.demo.model.CustomerAccount;
 import org.hrodberaht.injection.extensions.plugin.demo.service.CustomerAccountService;
 import org.hrodberaht.injection.extensions.plugin.demo.service.CustomerService;
 import org.hrodberaht.injection.extensions.plugin.demo.test.config.CourseContainerConfigExample;
-import org.hrodberaht.injection.extensions.plugin.test.ContainerContext;
-import org.hrodberaht.injection.extensions.plugin.test.PluggableJUnitRunner;
+import org.hrodberaht.injection.plugin.junit.ContainerContext;
+import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

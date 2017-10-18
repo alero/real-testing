@@ -1,20 +1,14 @@
 package org.hrodberaht.injection.extensions.plugin.junit.datasource.service;
 
-import org.hrodberaht.injection.extensions.plugin.datasource.jdbc.InsertOrUpdater;
-import org.hrodberaht.injection.extensions.plugin.datasource.jdbc.JDBCService;
-import org.hrodberaht.injection.extensions.plugin.datasource.jdbc.JDBCServiceFactory;
-import org.hrodberaht.injection.extensions.plugin.datasource.jdbc.RowIterator;
-import org.hrodberaht.injection.extensions.plugin.datasource.jdbc.internal.InsertOrUpdaterImpl;
-import org.hrodberaht.injection.extensions.plugin.datasource.jdbc.internal.JDBCServiceImpl;
+import org.hrodberaht.injection.plugin.datasource.jdbc.InsertOrUpdater;
+import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCService;
+import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCServiceFactory;
 import org.hrodberaht.injection.extensions.plugin.junit.model.User;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
+import javax.inject.Singleton;
 import javax.sql.DataSource;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Qmatic Booking Module
@@ -24,6 +18,7 @@ import java.util.Map;
  * @created 1.0
  * @since 1.0
  */
+@Singleton
 public class UserServiceBean implements UserService {
 
     @Resource

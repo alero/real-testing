@@ -1,6 +1,6 @@
 package plugins;
 
-import org.hrodberaht.injection.extensions.plugin.test.plugins.DataSourcePlugin;
+import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
 
 public class JpaPlugin extends DataSourcePlugin {
 
