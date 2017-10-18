@@ -1,5 +1,6 @@
 package org.hrodberaht.injection.plugin.junit.plugins;
 
+import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.plugin.datasource.DatasourceResourceCreator;
 import org.hrodberaht.injection.plugin.junit.datasource.DatasourceContainerService;
 import org.hrodberaht.injection.plugin.junit.datasource.TransactionManager;
@@ -17,7 +18,7 @@ public class DataSourcePlugin implements RunnerPlugin, ResourcePlugin {
 
     private final DatasourceResourceCreator datasourceResourceCreator = getDatasourceResourceCreator();
     private final List<Class> classList = Arrays.asList(datasourceResourceCreator.getType());
-    public final String DEFAULT_SCHEMA_NAME = "main";
+    private final String DEFAULT_SCHEMA_NAME = "main";
 
     public DataSourcePlugin() {
 
@@ -26,7 +27,7 @@ public class DataSourcePlugin implements RunnerPlugin, ResourcePlugin {
     private TransactionManager transactionManager;
 
 
-    protected DatasourceResourceCreator getDatasourceResourceCreator() {
+    private DatasourceResourceCreator getDatasourceResourceCreator() {
         ProxyResourceCreator proxyResourceCreator = new ProxyResourceCreator(
                 ProxyResourceCreator.DataSourceProvider.HSQLDB,
                 ProxyResourceCreator.DataSourcePersistence.RESTORABLE);
@@ -69,17 +70,17 @@ public class DataSourcePlugin implements RunnerPlugin, ResourcePlugin {
     }
 
     @Override
-    public void afterContainerCreation() {
+    public void afterContainerCreation(InjectContainer injectContainer) {
 
     }
 
     @Override
-    public void beforeMethod() {
+    public void beforeMethod(InjectContainer injectContainer) {
         transactionManager.beginTransaction();
     }
 
     @Override
-    public void afterMethod() {
+    public void afterMethod(InjectContainer injectContainer) {
         transactionManager.endTransaction();
     }
 

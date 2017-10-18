@@ -62,7 +62,7 @@ public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
             runnerPlugins = getRunnerPlugins();
             runnerPlugins.runInitBeforeContainer();
             containerConfig.start();
-            runnerPlugins.runInitAfterContainer();
+            runnerPlugins.runInitAfterContainer(containerConfig.getActiveRegister().getContainer());
 
             LOG.info("Creating creator for thread {}", Thread.currentThread().getName());
         }else{
@@ -71,8 +71,8 @@ public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
     }
 
     private RunnerPlugins getRunnerPlugins() {
-        if(containerConfig instanceof PluginConfig){
-            return ((PluginConfig)containerConfig).getRunnerPlugins();
+        if(containerConfig != null){
+            return containerConfig.getRunnerPlugins();
         }else{
             return new RunnerPlugins();
         }
@@ -105,14 +105,14 @@ public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
         }
     }
 
-    protected void afterRunChild() {
-        runnerPlugins.runAfterTest();
+    private void afterRunChild() {
+        runnerPlugins.runAfterTest(containerConfig.getActiveRegister().getContainer());
         // TransactionManager.endTransaction();
         containerConfig.cleanActiveContainer();
     }
 
-    protected void beforeRunChild() {
-        runnerPlugins.runBeforeTest();
+    private void beforeRunChild() {
+        runnerPlugins.runBeforeTest(containerConfig.getActiveRegister().getContainer());
         // TransactionManager.beginTransaction(creator);
 
         // So that ContainerLifeCycleTestUtil can access the activeContainer and do magic

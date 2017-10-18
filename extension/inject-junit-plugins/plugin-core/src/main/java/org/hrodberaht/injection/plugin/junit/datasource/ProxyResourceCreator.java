@@ -43,8 +43,6 @@ public class ProxyResourceCreator implements DatasourceCreator{
         this.resourceWatcher = resourceWatcher;
     }
 
-
-
     public DataSourceProxy createDataSource(String dataSourceName) {
 
         if (!hasDataSource(dataSourceName)) {
