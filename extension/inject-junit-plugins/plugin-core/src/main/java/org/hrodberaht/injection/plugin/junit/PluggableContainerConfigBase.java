@@ -1,7 +1,9 @@
 package org.hrodberaht.injection.plugin.junit;
 
 import org.hrodberaht.injection.config.ContainerConfig;
+import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.plugin.junit.resources.PluggableResourceFactory;
+import org.hrodberaht.injection.plugin.junit.spi.InjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.spi.Plugin;
 import org.hrodberaht.injection.plugin.junit.spi.PluginConfig;
 import org.hrodberaht.injection.plugin.junit.spi.ResourcePlugin;
@@ -13,12 +15,15 @@ import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.spi.JavaResourceCreator;
 import org.hrodberaht.injection.spi.ResourceFactory;
 import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public abstract class PluggableContainerConfigBase implements PluginConfig {
 
+    private static final Logger LOG = LoggerFactory.getLogger(PluggableContainerConfigBase.class);
     private final RunnerPlugins runnerPlugins = new RunnerPlugins();
     private final ContainerConfigInner containerConfigInner = new ContainerConfigInner(this);
     private final Map<Class<? extends Plugin>, Plugin> activePlugins = new ConcurrentHashMap<>();
@@ -62,6 +67,7 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
 
     private static class ContainerConfigInner extends ContainerConfig{
         private final PluggableContainerConfigBase base;
+        private InjectionPlugin injectionPlugin;
 
         private ContainerConfigInner(PluggableContainerConfigBase base) {
             this.base = base;
@@ -76,15 +82,36 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
             return new ResourceInject();
         }
 
+        @Override
+        protected DefaultInjectionPointFinder createDefaultInjectionPointFinder() {
+            if(injectionPlugin != null){
+                return injectionPlugin.getInjectionFinder(this);
+            }
+            return super.createDefaultInjectionPointFinder();
+        }
+
         private <T extends Plugin> T activatePlugin(Class<T> pluginClass) {
             T plugin = createPlugin(pluginClass);
             base.activePlugins.put(pluginClass, plugin);
             if(plugin instanceof ResourcePlugin){
+                LOG.info("Activating ResourcePlugin {}", plugin.getClass().getSimpleName());
+                ResourcePlugin resourcePlugin = (ResourcePlugin)plugin;
                 PluggableResourceFactory pluggableResourceFactory = (PluggableResourceFactory)resourceFactory;
-                pluggableResourceFactory.addCustomCreator((ResourcePlugin)plugin);
+                pluggableResourceFactory.addCustomCreator(resourcePlugin);
+                resourcePlugin.setPluggableResourceFactory(pluggableResourceFactory);
             }
             if(plugin instanceof RunnerPlugin){
+                LOG.info("Activating RunnerPlugin {}", plugin.getClass().getSimpleName());
                 base.runnerPlugins.addPlugin((RunnerPlugin) plugin);
+            }
+            if(plugin instanceof InjectionPlugin){
+                LOG.info("Activating InjectionPlugin {}", plugin.getClass().getSimpleName());
+                InjectionPlugin injectionPlugin = (InjectionPlugin)plugin;
+                if(this.injectionPlugin == null){
+                    this.injectionPlugin = injectionPlugin;
+                }else{
+                    throw new RuntimeException("There can be only one InjectionPlugin active at once");
+                }
             }
             return plugin;
         }
@@ -131,6 +158,10 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
         @Override
         public void register(InjectionRegistryBuilder registryBuilder) {
             base.register(registryBuilder);
+            if(injectionPlugin != null) {
+                // Once the user has registered all resources needed, we bind it to the selected injection plugin
+                injectionPlugin.setInjectionRegister(registryBuilder.getInjectionRegister());
+            }
         }
     }
 

@@ -32,7 +32,7 @@ public class PluggableResourceFactory implements ResourceFactory {
             if(customCreator.get(aClass) != null){
                 throw new IllegalArgumentException("Only one custom-resource-creater per type is allowed, found two for type: "+aClass.getName());
             }
-            customCreator.put(aClass, resurcePlugin.getCreator(aClass));
+            customCreator.put(aClass, resurcePlugin.getInnerCreator(aClass));
         });
     }
 

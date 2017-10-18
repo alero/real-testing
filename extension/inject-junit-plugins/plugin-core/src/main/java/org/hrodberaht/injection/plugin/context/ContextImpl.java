@@ -1,5 +1,8 @@
 package org.hrodberaht.injection.plugin.context;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.naming.*;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -9,6 +12,8 @@ import java.util.Map;
  * @author Robert Alexandersson
  */
 public class ContextImpl implements Context {
+
+    private static final Logger LOG = LoggerFactory.getLogger(ContextImpl.class);
 
     Map<String, Object> namedContextItems = new HashMap<>();
 
@@ -22,26 +27,32 @@ public class ContextImpl implements Context {
     }
     @Override
     public void bind(Name name, Object obj) throws NamingException {
+        LOG.info("bind name: {}", name.get(0));
         namedContextItems.put(name.get(0), obj);
     }
     @Override
     public void bind(String name, Object obj) throws NamingException {
+        LOG.info("bind name: {}", name);
         namedContextItems.put(name, obj);
     }
     @Override
     public void rebind(Name name, Object obj) throws NamingException {
+        LOG.info("rebind name: {}", name.get(0));
         namedContextItems.put(name.get(0), obj);
     }
     @Override
     public void rebind(String name, Object obj) throws NamingException {
+        LOG.info("rebind name: {}", name);
         namedContextItems.put(name, obj);
     }
     @Override
     public void unbind(Name name) throws NamingException {
+        LOG.info("unbind name: {}", name.get(0));
         namedContextItems.remove(name.get(0));
     }
     @Override
     public void unbind(String name) throws NamingException {
+        LOG.info("unbind name: {}", name);
         namedContextItems.remove(name);
     }
     @Override

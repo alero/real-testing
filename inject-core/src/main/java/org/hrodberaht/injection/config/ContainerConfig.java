@@ -30,7 +30,6 @@ public abstract class ContainerConfig<T extends InjectionRegister> implements Co
 
     protected InjectionRegister originalRegister = null;
     protected InjectionRegister activeRegister = null;
-    private DefaultInjectionPointFinder defaultInjectionPointFinder = createDefaultInjectionPointFinder();
 
     protected ResourceFactory resourceFactory = createResourceFactory();
 
@@ -52,7 +51,9 @@ public abstract class ContainerConfig<T extends InjectionRegister> implements Co
         InjectionRegistryBuilder combinedRegister = new InjectionRegistryBuilder(this);
         register(combinedRegister);
         combinedRegister.register(
-                registrations -> registrations.register(new CustomInjectionPointFinderModule(defaultInjectionPointFinder))
+                registrations -> registrations.register(
+                        new CustomInjectionPointFinderModule(createDefaultInjectionPointFinder())
+                )
         );
         originalRegister = combinedRegister.build();
         appendResources(originalRegister);
@@ -93,17 +94,6 @@ public abstract class ContainerConfig<T extends InjectionRegister> implements Co
     }
 
     protected DefaultInjectionPointFinder createDefaultInjectionPointFinder() {
-        return new DefaultInjectionPointFinder(this) {
-
-            @Override
-            public void extendedInjection(Object service) {
-                ContainerConfigBuilder containerConfig = (ContainerConfigBuilder)getContainerConfigBuilder();
-                if (containerConfig != null) {
-                    containerConfig.injectResources(service);
-                } else {
-                    throw new RuntimeException("Failed to find container, it was null");
-                }
-            }
-        };
+        return new DefaultInjectionPointFinder(this);
     }
 }

@@ -21,5 +21,6 @@
         <module>plugin-jpa</module>
         <module>plugin-liquibase</module>
         <module>plugin-core</module>
+        <module>plugin-spring</module>
     </modules>
 </project>

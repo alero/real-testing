@@ -29,11 +29,15 @@ public class InjectionRegistryBuilder<T extends Module> implements InjectionRegi
     public InjectionRegistryBuilder() {
     }
 
+    public InjectionRegister getInjectionRegister() {
+        return injectionRegisterModule;
+    }
+
     public InjectContainer getContainer() {
         return injectionContainer;
     }
 
-    public InjectionRegisterScanBase getCustomScanner(){
+    protected InjectionRegisterScanBase getCustomScanner(){
         return null;
     }
 

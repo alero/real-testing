@@ -4,6 +4,7 @@ import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.plugin.datasource.DatasourceResourceCreator;
 import org.hrodberaht.injection.plugin.junit.datasource.DatasourceContainerService;
 import org.hrodberaht.injection.plugin.junit.datasource.TransactionManager;
+import org.hrodberaht.injection.plugin.junit.resources.PluggableResourceFactory;
 import org.hrodberaht.injection.plugin.junit.spi.Plugin;
 import org.hrodberaht.injection.plugin.junit.spi.ResourcePlugin;
 import org.hrodberaht.injection.plugin.junit.datasource.ProxyResourceCreator;
@@ -20,12 +21,8 @@ public class DataSourcePlugin implements RunnerPlugin, ResourcePlugin {
     private final List<Class> classList = Arrays.asList(datasourceResourceCreator.getType());
     private final String DEFAULT_SCHEMA_NAME = "main";
 
-    public DataSourcePlugin() {
-
-    }
-
+    private PluggableResourceFactory pluggableResourceFactory;
     private TransactionManager transactionManager;
-
 
     private DatasourceResourceCreator getDatasourceResourceCreator() {
         ProxyResourceCreator proxyResourceCreator = new ProxyResourceCreator(
@@ -61,7 +58,17 @@ public class DataSourcePlugin implements RunnerPlugin, ResourcePlugin {
 
     @Override
     public <T> JavaResourceCreator<T> getCreator(Class<T> aClass) {
+        return pluggableResourceFactory.getCreator(aClass);
+    }
+
+    @Override
+    public <T> JavaResourceCreator<T> getInnerCreator(Class<T> aClass) {
         return (JavaResourceCreator<T>) datasourceResourceCreator;
+    }
+
+    @Override
+    public void setPluggableResourceFactory(PluggableResourceFactory pluggableResourceFactory) {
+        this.pluggableResourceFactory = pluggableResourceFactory;
     }
 
     @Override
