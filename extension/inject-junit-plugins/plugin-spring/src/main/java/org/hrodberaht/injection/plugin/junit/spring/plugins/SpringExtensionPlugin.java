@@ -20,12 +20,17 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
-public class SpringPlugin implements InjectionPlugin {
+/**
+ * The SpringExtensionPlugin will start a Spring Container and use it internally as bridge.
+ * It currently can not automatically wire @Inject fields over to spring, so use @Autowired in the testclasses to get the bridge working.
+ * This limitation will be fixed in a future release, coming soon.
+ *
+ */
+public class SpringExtensionPlugin implements InjectionPlugin {
 
+    private static final Logger LOG = LoggerFactory.getLogger(SpringExtensionPlugin.class);
+    private static final Map<Class, SpringExtensionPlugin> CACHE = new ConcurrentHashMap<>();
 
-    private static final Logger LOG = LoggerFactory.getLogger(SpringPlugin.class);
-
-    private static final Map<Class, SpringPlugin> CACHE = new ConcurrentHashMap<>();
     private ApplicationContext context;
     private SpringBeanInjector springBeanInjector;
     private boolean enableJPA = false;
@@ -52,7 +57,7 @@ public class SpringPlugin implements InjectionPlugin {
     }
 
     public void loadConfig(Class... springConfigs) {
-        SpringPlugin configBase = CACHE.get(this.getClass());
+        SpringExtensionPlugin configBase = CACHE.get(this.getClass());
         if(configBase != null && enabledCache){
             LOG.debug("SpringContainerConfigBase - Using cached SpringApplication for "+this.getClass());
             context = configBase.context;
@@ -82,19 +87,18 @@ public class SpringPlugin implements InjectionPlugin {
         }
     }
 
-
     private static class SpringInjectionPointFinder extends DefaultInjectionPointFinder{
-        private final SpringPlugin springPlugin;
+        private final SpringExtensionPlugin springExtensionPlugin;
 
-        private SpringInjectionPointFinder(SpringPlugin springPlugin, ContainerConfigBuilder containerConfigBuilder) {
+        private SpringInjectionPointFinder(SpringExtensionPlugin springExtensionPlugin, ContainerConfigBuilder containerConfigBuilder) {
             super(containerConfigBuilder);
-            this.springPlugin = springPlugin;
+            this.springExtensionPlugin = springExtensionPlugin;
         }
 
         @Override
         public void extendedInjection(Object service) {
             super.extendedInjection(service);
-            springPlugin.springBeanInjector.inject(service, springPlugin.injectionRegister.getContainer());
+            springExtensionPlugin.springBeanInjector.inject(service, springExtensionPlugin.injectionRegister.getContainer());
         }
 
         @Override

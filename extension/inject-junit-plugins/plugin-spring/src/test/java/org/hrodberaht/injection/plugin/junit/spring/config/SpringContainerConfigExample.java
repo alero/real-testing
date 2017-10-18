@@ -1,10 +1,8 @@
 package org.hrodberaht.injection.plugin.junit.spring.config;
 
-import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.plugin.junit.PluggableContainerConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
-import org.hrodberaht.injection.plugin.junit.spring.plugins.SpringPlugin;
-import org.hrodberaht.injection.spi.ResourceCreator;
+import org.hrodberaht.injection.plugin.junit.spring.plugins.SpringExtensionPlugin;
 import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
 
 import javax.sql.DataSource;
@@ -30,7 +28,7 @@ public class SpringContainerConfigExample extends PluggableContainerConfigBase{
         dataSourcePlugin.loadSchema(dataSource, "sql");
         dataSourcePlugin.loadSchema(dataSource, "sql/insert");
 
-        activatePlugin(SpringPlugin.class).loadConfig(
+        activatePlugin(SpringExtensionPlugin.class).loadConfig(
                 "/META-INF/spring-config.xml"
         );
 

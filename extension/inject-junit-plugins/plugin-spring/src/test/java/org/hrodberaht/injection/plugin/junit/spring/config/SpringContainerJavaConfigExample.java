@@ -2,7 +2,7 @@ package org.hrodberaht.injection.plugin.junit.spring.config;
 
 import org.hrodberaht.injection.plugin.junit.PluggableContainerConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
-import org.hrodberaht.injection.plugin.junit.spring.plugins.SpringPlugin;
+import org.hrodberaht.injection.plugin.junit.spring.plugins.SpringExtensionPlugin;
 import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
 
 import javax.sql.DataSource;
@@ -46,7 +46,7 @@ public class SpringContainerJavaConfigExample extends PluggableContainerConfigBa
         dataSourcePlugin.loadSchema(dataSource, "sql");
         dataSourcePlugin.loadSchema(dataSource, "sql/insert");
 
-        activatePlugin(SpringPlugin.class).loadConfig(SpringConfigJavaSample.class);
+        activatePlugin(SpringExtensionPlugin.class).loadConfig(SpringConfigJavaSample.class);
 
         registryBuilder.scan(() -> _package);
     }

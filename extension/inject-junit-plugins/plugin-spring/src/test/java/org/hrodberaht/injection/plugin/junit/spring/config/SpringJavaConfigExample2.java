@@ -3,12 +3,10 @@ package org.hrodberaht.injection.plugin.junit.spring.config;
 
 import org.hrodberaht.injection.plugin.junit.PluggableContainerConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
-import org.hrodberaht.injection.plugin.junit.spring.plugins.SpringPlugin;
+import org.hrodberaht.injection.plugin.junit.spring.plugins.SpringExtensionPlugin;
 import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
 
 import javax.sql.DataSource;
-
-import static org.hrodberaht.injection.plugin.junit.spring.config.SpringContainerConfigExample._package;
 
 /**
  * Unit Test JUnit (using @Inject)
@@ -48,7 +46,7 @@ public class SpringJavaConfigExample2 extends PluggableContainerConfigBase {
         dataSourcePlugin.loadSchema(dataSource, "sql");
         dataSourcePlugin.loadSchema(dataSource, "sql/insert");
 
-        activatePlugin(SpringPlugin.class).loadConfig(SpringConfigJavaSample2.class);
+        activatePlugin(SpringExtensionPlugin.class).loadConfig(SpringConfigJavaSample2.class);
 
     }
 }

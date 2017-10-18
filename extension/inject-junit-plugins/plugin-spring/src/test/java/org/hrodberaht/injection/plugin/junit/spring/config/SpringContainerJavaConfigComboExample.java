@@ -3,7 +3,7 @@ package org.hrodberaht.injection.plugin.junit.spring.config;
 import org.hrodberaht.injection.plugin.junit.PluggableContainerConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
 import org.hrodberaht.injection.plugin.junit.spring.beans.incubator.SpringBeanReplacementProxy;
-import org.hrodberaht.injection.plugin.junit.spring.plugins.SpringPlugin;
+import org.hrodberaht.injection.plugin.junit.spring.plugins.SpringExtensionPlugin;
 import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
 
 import javax.sql.DataSource;
@@ -30,7 +30,7 @@ public class SpringContainerJavaConfigComboExample extends PluggableContainerCon
         dataSourcePlugin.loadSchema(dataSource, "sql");
         dataSourcePlugin.loadSchema(dataSource, "sql/insert");
 
-        activatePlugin(SpringPlugin.class).loadConfig(
+        activatePlugin(SpringExtensionPlugin.class).loadConfig(
                 SpringConfigJavaComboSample.class,
                 SpringBeanReplacementProxy.class);
 
