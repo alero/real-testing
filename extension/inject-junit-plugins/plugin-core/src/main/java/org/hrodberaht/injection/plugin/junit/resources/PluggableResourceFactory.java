@@ -1,5 +1,7 @@
 package org.hrodberaht.injection.plugin.junit.resources;
 
+import org.hrodberaht.injection.plugin.context.ContextManager;
+import org.hrodberaht.injection.plugin.context.InitialContextFactoryImpl;
 import org.hrodberaht.injection.plugin.junit.spi.ResourcePlugin;
 import org.hrodberaht.injection.spi.JavaResourceCreator;
 import org.hrodberaht.injection.spi.ResourceFactory;
@@ -7,17 +9,23 @@ import org.hrodberaht.injection.spi.ResourceKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class PluggableResourceFactory implements ResourceFactory {
 
 
+
     private static final Logger LOG = LoggerFactory.getLogger(PluggableResourceFactory.class);
 
-    private Map<Class, Object> typedMap = new ConcurrentHashMap<>();
-    private Map<ResourceKey, Object> namedMap = new ConcurrentHashMap<>();
-    private Map<Class, JavaResourceCreator> customCreator = new ConcurrentHashMap<>();
+    private final Map<Class, Object> typedMap = new ConcurrentHashMap<>();
+    private final Map<ResourceKey, Object> namedMap = new ConcurrentHashMap<>();
+    private final Map<Class, JavaResourceCreator> customCreator = new ConcurrentHashMap<>();
+    private final ContextManager contextManager = new ContextManager();
 
     public void addCustomCreator(ResourcePlugin resurcePlugin){
         resurcePlugin.getCustomTypes().forEach(aClass -> {
@@ -27,6 +35,8 @@ public class PluggableResourceFactory implements ResourceFactory {
             customCreator.put(aClass, resurcePlugin.getCreator(aClass));
         });
     }
+
+
 
     public Map<Class, Object> getTypedMap() {
         return typedMap;
@@ -47,7 +57,7 @@ public class PluggableResourceFactory implements ResourceFactory {
                 public T create(String name) {
                     ResourceKey key = ResourceKey.of(name, type);
                     T instance = javaResourceCreator.create(name);
-                    namedMap.put(key, instance);
+                    registerInstance(instance, key);
                     return instance;
                 }
 
@@ -61,7 +71,7 @@ public class PluggableResourceFactory implements ResourceFactory {
                 @Override
                 public T create(String name, T instance) {
                     ResourceKey key = ResourceKey.of(name, type);
-                    namedMap.put(key, instance);
+                    registerInstance(instance, key);
                     return instance;
                 }
 
@@ -81,7 +91,7 @@ public class PluggableResourceFactory implements ResourceFactory {
                     throw new RuntimeException("key value already registered for "+key.toString());
                 }
                 T instance = getInstance();
-                namedMap.put(key, instance);
+                registerInstance(instance, key);
                 return instance;
             }
 
@@ -109,7 +119,7 @@ public class PluggableResourceFactory implements ResourceFactory {
                 if(namedMap.get(key) != null){
                     throw new RuntimeException("instance is already registered for "+key.toString());
                 }
-                namedMap.put(key, instance);
+                registerInstance(instance, key);
                 return instance;
             }
 
@@ -122,6 +132,19 @@ public class PluggableResourceFactory implements ResourceFactory {
                 return instance;
             }
         };
+    }
+
+    private <T> void registerInstance(T instance, ResourceKey key) {
+        namedMap.put(key, instance);
+        putToContext(key, instance);
+    }
+
+    private <T> void putToContext(ResourceKey key, T instance) {
+        contextManager.bind(asContextName(key), instance);
+    }
+
+    private String asContextName(ResourceKey key) {
+        return key.getType().getSimpleName()+"/"+key.getName();
     }
 
 }

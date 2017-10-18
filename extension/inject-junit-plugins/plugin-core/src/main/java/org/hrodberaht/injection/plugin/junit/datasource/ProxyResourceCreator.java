@@ -32,7 +32,6 @@ public class ProxyResourceCreator implements DatasourceCreator{
 
     public ProxyResourceCreator(DataSourceProvider provider, DataSourcePersistence persistence) {
         this(provider, persistence, null);
-        initContext();
     }
 
     public enum DataSourceProvider {
@@ -55,7 +54,6 @@ public class ProxyResourceCreator implements DatasourceCreator{
         if (!hasDataSource(dataSourceName)) {
             DataSourceProxy dataSourceProxy = createDataSourceProxy(dataSourceName);
             DATASOURCES.put(dataSourceName, dataSourceProxy);
-            registerDataSourceInContext(dataSourceName, dataSourceProxy);
             LOG.info("Created dataSourceProxy " + dataSourceProxy);
             return dataSourceProxy;
         }
@@ -83,17 +81,7 @@ public class ProxyResourceCreator implements DatasourceCreator{
     }
 
 
-    private void registerDataSourceInContext(String dataSourceName, DataSource dataSource) {
 
-        try {
-            Context context = new InitialContext();
-            context.bind(dataSourceName, dataSource);
-        } catch (NamingException e) {
-            throw new RuntimeException(e);
-        }
-    }
-    private void initContext() {
-        System.setProperty(Context.INITIAL_CONTEXT_FACTORY, InitialContextFactoryImpl.class.getName());
-    }
+
 
 }
