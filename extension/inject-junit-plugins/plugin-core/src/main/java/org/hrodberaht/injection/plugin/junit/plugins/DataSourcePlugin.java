@@ -3,11 +3,10 @@ package org.hrodberaht.injection.plugin.junit.plugins;
 import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.plugin.datasource.DatasourceResourceCreator;
 import org.hrodberaht.injection.plugin.junit.datasource.DatasourceContainerService;
+import org.hrodberaht.injection.plugin.junit.datasource.ProxyResourceCreator;
 import org.hrodberaht.injection.plugin.junit.datasource.TransactionManager;
 import org.hrodberaht.injection.plugin.junit.resources.PluggableResourceFactory;
-import org.hrodberaht.injection.plugin.junit.spi.Plugin;
 import org.hrodberaht.injection.plugin.junit.spi.ResourcePlugin;
-import org.hrodberaht.injection.plugin.junit.datasource.ProxyResourceCreator;
 import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugin;
 import org.hrodberaht.injection.spi.JavaResourceCreator;
 

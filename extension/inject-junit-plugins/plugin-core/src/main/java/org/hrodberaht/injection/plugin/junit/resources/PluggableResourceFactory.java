@@ -1,7 +1,6 @@
 package org.hrodberaht.injection.plugin.junit.resources;
 
 import org.hrodberaht.injection.plugin.context.ContextManager;
-import org.hrodberaht.injection.plugin.context.InitialContextFactoryImpl;
 import org.hrodberaht.injection.plugin.junit.spi.ResourcePlugin;
 import org.hrodberaht.injection.spi.JavaResourceCreator;
 import org.hrodberaht.injection.spi.ResourceFactory;
@@ -9,10 +8,6 @@ import org.hrodberaht.injection.spi.ResourceKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

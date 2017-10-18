@@ -1,6 +1,5 @@
 package org.hrodberaht.injection.plugin.datasource.jdbc;
 
-import java.util.Collection;
 import java.util.List;
 
 /**

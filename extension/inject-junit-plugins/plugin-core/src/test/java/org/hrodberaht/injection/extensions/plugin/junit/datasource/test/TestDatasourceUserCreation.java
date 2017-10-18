@@ -1,15 +1,17 @@
 package org.hrodberaht.injection.extensions.plugin.junit.datasource.test;
 
-import org.hrodberaht.injection.plugin.junit.ContainerContext;
-import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
 import org.hrodberaht.injection.extensions.plugin.junit.datasource.service.UserService;
 import org.hrodberaht.injection.extensions.plugin.junit.datasource.test.config.Course2ContainerConfigExample;
+import org.hrodberaht.injection.plugin.junit.ContainerContext;
+import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Qmatic Booking Module

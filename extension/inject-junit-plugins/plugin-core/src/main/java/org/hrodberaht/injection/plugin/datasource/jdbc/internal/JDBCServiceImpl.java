@@ -1,16 +1,26 @@
 package org.hrodberaht.injection.plugin.datasource.jdbc.internal;
 
-import org.hrodberaht.injection.plugin.datasource.jdbc.*;
 import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
+import org.hrodberaht.injection.plugin.datasource.jdbc.Insert;
+import org.hrodberaht.injection.plugin.datasource.jdbc.InsertOrUpdater;
+import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCService;
+import org.hrodberaht.injection.plugin.datasource.jdbc.RowIterator;
+import org.hrodberaht.injection.plugin.datasource.jdbc.SQLDateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.math.BigDecimal;
-import java.sql.*;
+import java.sql.Blob;
+import java.sql.Clob;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 

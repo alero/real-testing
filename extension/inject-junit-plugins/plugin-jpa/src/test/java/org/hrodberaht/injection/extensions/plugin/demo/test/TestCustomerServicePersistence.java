@@ -5,9 +5,9 @@ import org.hrodberaht.injection.extensions.plugin.demo.service.CustomerService;
 import org.hrodberaht.injection.extensions.plugin.demo.test.config.CourseContainerConfigExample;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
-import plugins.JPATestUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import plugins.JPATestUtil;
 
 import javax.inject.Inject;
 

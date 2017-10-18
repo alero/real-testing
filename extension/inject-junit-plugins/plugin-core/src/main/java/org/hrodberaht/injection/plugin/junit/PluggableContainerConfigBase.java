@@ -1,6 +1,7 @@
 package org.hrodberaht.injection.plugin.junit;
 
 import org.hrodberaht.injection.config.ContainerConfig;
+import org.hrodberaht.injection.internal.ResourceInject;
 import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.plugin.junit.resources.PluggableResourceFactory;
 import org.hrodberaht.injection.plugin.junit.spi.InjectionPlugin;
@@ -9,7 +10,6 @@ import org.hrodberaht.injection.plugin.junit.spi.PluginConfig;
 import org.hrodberaht.injection.plugin.junit.spi.ResourcePlugin;
 import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugin;
 import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugins;
-import org.hrodberaht.injection.internal.ResourceInject;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.spi.JavaResourceCreator;

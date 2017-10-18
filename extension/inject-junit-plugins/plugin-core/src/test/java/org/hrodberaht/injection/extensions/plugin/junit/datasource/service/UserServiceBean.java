@@ -1,9 +1,9 @@
 package org.hrodberaht.injection.extensions.plugin.junit.datasource.service;
 
+import org.hrodberaht.injection.extensions.plugin.junit.model.User;
 import org.hrodberaht.injection.plugin.datasource.jdbc.InsertOrUpdater;
 import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCService;
 import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCServiceFactory;
-import org.hrodberaht.injection.extensions.plugin.junit.model.User;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;

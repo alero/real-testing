@@ -14,7 +14,8 @@ import javax.sql.DataSource;
 import java.nio.file.Paths;
 import java.util.List;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 @ContainerContext(ContainerConfigExample.class)
 @RunWith(PluggableJUnitRunner.class)
