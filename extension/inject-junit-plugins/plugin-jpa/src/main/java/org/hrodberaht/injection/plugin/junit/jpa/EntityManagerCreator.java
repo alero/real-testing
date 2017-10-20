@@ -23,12 +23,12 @@ public class EntityManagerCreator {
         if(entityManagerMap.get(name) == null){
 
             EntityManager entityManager = Persistence.createEntityManagerFactory(name).createEntityManager();
-            LOG.debug("Created entity manager " + entityManager);
+            LOG.info("Created entity manager " + entityManager);
             entityManagerMap.put(name, entityManager);
             return entityManager;
         }
         EntityManager entityManager = entityManagerMap.get(name);
-        LOG.debug("Reused entity manager " + entityManager);
+        LOG.info("Reused entity manager " + entityManager);
         return entityManager;
     }
 
