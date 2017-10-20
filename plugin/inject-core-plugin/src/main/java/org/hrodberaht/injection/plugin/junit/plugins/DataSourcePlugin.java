@@ -105,14 +105,14 @@ public class DataSourcePlugin implements RunnerPlugin, ResourcePlugin {
 
     /**
      * This is useful if there is a need to run any code before the actual tests are executed
-     * @param runnable
+     * @param runnable the runnable to be added to run before tests start, comparable to @BeforeClass but with a but more state from JUnit
      */
-    public DataSourcePlugin runBeforeSuite(Runnable runnable) {
+    public DataSourcePlugin addBeforeSuite(Runnable runnable) {
         this.beforeSuite.add(runnable);
         return this;
     }
 
-    public <T> T inject(Class<T> aClass) {
+    public <T> T getService(Class<T> aClass) {
         return injectContainer.get(aClass);
     }
 }
