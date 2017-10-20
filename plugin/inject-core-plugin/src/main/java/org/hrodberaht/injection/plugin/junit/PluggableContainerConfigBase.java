@@ -58,7 +58,7 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
     }
 
 
-    void addSingletonActiveRegistry() {
+    void beforeRunChild() {
         containerConfigInner.addSingletonActiveRegistry();
     }
 

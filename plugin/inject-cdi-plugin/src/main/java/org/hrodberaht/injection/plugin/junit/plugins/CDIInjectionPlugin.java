@@ -15,7 +15,7 @@ import java.lang.reflect.Method;
 
 public class CDIInjectionPlugin implements InjectionPlugin, RunnerPlugin {
 
-    private static final CDIExtensions cdiExtensions = new ApplicationCDIExtensions();
+    private final CDIExtensions cdiExtensions = new ApplicationCDIExtensions();
     private InjectionRegister injectionRegister;
 
     @Override
@@ -30,7 +30,7 @@ public class CDIInjectionPlugin implements InjectionPlugin, RunnerPlugin {
 
     @Override
     public LifeCycle getLifeCycle() {
-        return LifeCycle.NEW;
+        return LifeCycle.SINGLETON;
     }
 
 

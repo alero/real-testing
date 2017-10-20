@@ -14,11 +14,20 @@ import java.util.List;
  * @since 1.0
  */
 public interface InjectionFinder {
-    List<InjectionPoint> findInjectionPoints(Class service, AnnotationInjection annotationInjection);
 
-    Method findPostConstruct(Class serviceClass);
+    enum InjectionType{ EXTENDED, OVERRIDDEN }
 
-    void extendedInjection(Object service);
+    List<InjectionPoint> findInjectionPoints(Class instanceClass, AnnotationInjection annotationInjection);
+
+    Method findPostConstruct(Class instanceClass);
+
+    Object extendedInjection(Object instanc);
 
     ContainerConfig getContainerConfig();
+
+    default InjectionType getInjectionType(){
+        return InjectionType.EXTENDED;
+    }
+
+
 }

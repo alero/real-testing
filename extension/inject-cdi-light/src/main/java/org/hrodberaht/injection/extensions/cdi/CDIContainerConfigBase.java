@@ -149,13 +149,14 @@ public abstract class CDIContainerConfigBase extends JPAContainerConfigBase<Inje
             }
 
             @Override
-            public void extendedInjection(Object service) {
+            public Object extendedInjection(Object service) {
                 CDIContainerConfigBase config = (CDIContainerConfigBase) getContainerConfig();
                 if (config != null) {
                     config.injectResources(service);
                 } else {
                     // System.out.println("DefaultInjectionPointFinder NOT injecting resources due to config value null");
                 }
+                return service;
             }
         };
     }

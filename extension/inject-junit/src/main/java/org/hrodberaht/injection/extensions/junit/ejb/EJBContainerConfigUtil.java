@@ -38,9 +38,10 @@ public class EJBContainerConfigUtil {
                     }
 
                     @Override
-                    public void extendedInjection(Object service) {
+                    public Object extendedInjection(Object service) {
                         TDDEJBContainerConfigBase config = (TDDEJBContainerConfigBase) getContainerConfig();
                         config.injectResources(service);
+                        return service;
                     }
                 }
         ));

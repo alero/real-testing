@@ -95,9 +95,10 @@ public class SpringExtensionPlugin implements InjectionPlugin {
         }
 
         @Override
-        public void extendedInjection(Object service) {
+        public Object extendedInjection(Object service) {
             super.extendedInjection(service);
             springExtensionPlugin.springBeanInjector.inject(service, springExtensionPlugin.injectionRegister.getContainer());
+            return service;
         }
 
         @Override

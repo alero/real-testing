@@ -313,7 +313,7 @@ public class AnnotationInjection {
 
     private Object autowireAndPostConstruct(InjectionMetaData injectionMetaData, Object service) {
         autoWireBean(service, injectionMetaData);
-        injectionFinder.extendedInjection(service);
+        service = injectionFinder.extendedInjection(service);
         Method postConstruct = injectionMetaData.getPostConstruct();
         if (postConstruct != null) {
             ReflectionUtils.invoke(postConstruct, service);

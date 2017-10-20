@@ -15,20 +15,19 @@ public class ChainableInjectionPointProvider implements InjectionFinder {
         this.injectionFinder = injectionFinder;
     }
 
-
     @Override
-    public List<InjectionPoint> findInjectionPoints(Class service, AnnotationInjection annotationInjection) {
-        return injectionFinder.findInjectionPoints(service, annotationInjection);
+    public List<InjectionPoint> findInjectionPoints(Class instanceClass, AnnotationInjection annotationInjection) {
+        return injectionFinder.findInjectionPoints(instanceClass, annotationInjection);
     }
 
     @Override
-    public Method findPostConstruct(Class serviceClass) {
-        return injectionFinder.findPostConstruct(serviceClass);
+    public Method findPostConstruct(Class instanceClass) {
+        return injectionFinder.findPostConstruct(instanceClass);
     }
 
     @Override
-    public void extendedInjection(Object service) {
-        injectionFinder.extendedInjection(service);
+    public Object extendedInjection(Object instance) {
+        return injectionFinder.extendedInjection(instance);
     }
 
     @Override

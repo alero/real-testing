@@ -18,9 +18,11 @@
     <modules>
         <module>inject-core-plugin</module>
         <module>inject-jpa-plugin</module>
+        <module>inject-guice-plugin</module>
         <module>inject-liquibase-plugin</module>
         <module>inject-spring-plugin</module>
         <module>inject-cdi-plugin</module>
+        <module>inject-cdi-junittest-service</module>
     </modules>
     
 </project>

@@ -115,7 +115,7 @@ public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
         // TransactionManager.beginTransaction(creator);
 
         // So that ContainerLifeCycleTestUtil can access the activeContainer and do magic
-        containerConfig.addSingletonActiveRegistry();
+        containerConfig.beforeRunChild();
 
         activeContainer = containerConfig.getActiveRegister().getContainer();
     }

@@ -35,7 +35,8 @@ public class CustomInjectionPointFinder extends DefaultInjectionPointFinder {
     }
 
     @Override
-    public void extendedInjection(Object service) {
+    public Object extendedInjection(Object service) {
         ExtendedResourceInjection.injectText(service, "Text");
+        return service;
     }
 }

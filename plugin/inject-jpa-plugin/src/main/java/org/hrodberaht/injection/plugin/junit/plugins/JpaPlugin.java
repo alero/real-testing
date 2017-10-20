@@ -24,9 +24,10 @@ public class JpaPlugin extends DataSourcePlugin {
     public ChainableInjectionPointProvider getInjectionProvider(InjectionFinder injectionFinder) {
         return new ChainableInjectionPointProvider(injectionFinder) {
             @Override
-            public void extendedInjection(Object service) {
+            public Object extendedInjection(Object service) {
                 super.extendedInjection(service);
                 entityManagerInjection.injectResources(service);
+                return service;
             }
         };
     }
