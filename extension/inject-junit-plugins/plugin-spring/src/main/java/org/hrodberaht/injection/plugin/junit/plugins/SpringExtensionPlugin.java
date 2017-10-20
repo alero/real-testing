@@ -24,7 +24,6 @@ import java.util.stream.Stream;
  * The SpringExtensionPlugin will start a Spring Container and use it internally as bridge.
  * It currently can not automatically wire @Inject fields over to spring, so use @Autowired in the testclasses to get the bridge working.
  * This limitation will be fixed in a future release, coming soon.
- *
  */
 public class SpringExtensionPlugin implements InjectionPlugin {
 
@@ -58,12 +57,12 @@ public class SpringExtensionPlugin implements InjectionPlugin {
 
     public void loadConfig(Class... springConfigs) {
         SpringExtensionPlugin configBase = CACHE.get(this.getClass());
-        if(configBase != null && enabledCache){
-            LOG.debug("SpringContainerConfigBase - Using cached SpringApplication for "+this.getClass());
+        if (configBase != null && enabledCache) {
+            LOG.debug("SpringContainerConfigBase - Using cached SpringApplication for " + this.getClass());
             context = configBase.context;
             springBeanInjector = configBase.springBeanInjector;
-        }else {
-            LOG.debug("SpringContainerConfigBase - Creating SpringApplication for "+this.getClass());
+        } else {
+            LOG.debug("SpringContainerConfigBase - Creating SpringApplication for " + this.getClass());
             validateEmptyContext(context);
             Class[] config = new Class[]{getContainerSpringConfigClass()};
             if (springConfigs != null) {
@@ -87,7 +86,7 @@ public class SpringExtensionPlugin implements InjectionPlugin {
         }
     }
 
-    private static class SpringInjectionPointFinder extends DefaultInjectionPointFinder{
+    private static class SpringInjectionPointFinder extends DefaultInjectionPointFinder {
         private final SpringExtensionPlugin springExtensionPlugin;
 
         private SpringInjectionPointFinder(SpringExtensionPlugin springExtensionPlugin, ContainerConfigBuilder containerConfigBuilder) {

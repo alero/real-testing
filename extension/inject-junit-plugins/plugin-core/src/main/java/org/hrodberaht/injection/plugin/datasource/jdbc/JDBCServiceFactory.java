@@ -10,7 +10,7 @@ import javax.sql.DataSource;
  */
 public class JDBCServiceFactory {
 
-    public static JDBCService of(DataSource dataSource){
+    public static JDBCService of(DataSource dataSource) {
         return new JDBCServiceImpl(new InsertOrUpdaterImpl(), dataSource);
     }
 

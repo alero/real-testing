@@ -19,19 +19,19 @@ import java.lang.annotation.Annotation;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-10 20:29:06
+ * 2010-aug-10 20:29:06
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        TransactionAttribute will enable the class or a method to be "TestCase-Transactional"
- *        The no need for a type, they will all be REQUIRED with rollback as the end call.
- *        The BEGIN/ROLLBACK will always be enforced if the test is classified as "TestCase-Transactional"
- *        <p/>
- *        TIP1: To make an entire class transactional use @TransactionAttribute as a class type annotation
- *        TIP1a: If the class is transactional, to disable a single test to be non transactional
- *        use the @TransactionDisabled annotation for that method.
- *        <p/>
- *        TIP2: To enable transaction support for a single method just use the @TransactionAttribute for that method.
+ * <p/>
+ * TransactionAttribute will enable the class or a method to be "TestCase-Transactional"
+ * The no need for a type, they will all be REQUIRED with rollback as the end call.
+ * The BEGIN/ROLLBACK will always be enforced if the test is classified as "TestCase-Transactional"
+ * <p/>
+ * TIP1: To make an entire class transactional use @TransactionAttribute as a class type annotation
+ * TIP1a: If the class is transactional, to disable a single test to be non transactional
+ * use the @TransactionDisabled annotation for that method.
+ * <p/>
+ * TIP2: To enable transaction support for a single method just use the @TransactionAttribute for that method.
  */
 public class InjectionJUnitTestRunner extends BlockJUnit4ClassRunner {
 
@@ -45,8 +45,7 @@ public class InjectionJUnitTestRunner extends BlockJUnit4ClassRunner {
     /**
      * Creates a BlockJUnit4ClassRunner to run {@code klass}
      *
-     * @throws org.junit.runners.model.InitializationError
-     *          if the test class is malformed.
+     * @throws org.junit.runners.model.InitializationError if the test class is malformed.
      */
     public InjectionJUnitTestRunner(Class<?> klass) throws InitializationError {
         super(klass);
@@ -63,7 +62,7 @@ public class InjectionJUnitTestRunner extends BlockJUnit4ClassRunner {
                     Class<? extends InjectionContainerCreator> transactionClass = transactionContainer.value();
                     InjectionContainerCreator creator = transactionClass.newInstance();
                     theContainer = creator.createContainer();
-                    if(TransactionManagedTesting.class.isAssignableFrom(creator.getClass())) {
+                    if (TransactionManagedTesting.class.isAssignableFrom(creator.getClass())) {
                         verifyContainerTransactions(theContainer, creator);
                         transactionManagerIsPresent = true;
                     }
@@ -95,13 +94,13 @@ public class InjectionJUnitTestRunner extends BlockJUnit4ClassRunner {
     protected void runChild(FrameworkMethod frameworkMethod, RunNotifier notifier) {
         boolean hasTransaction = hasTransaction(frameworkMethod);
         // Need to re-init the TransactionAspect (Junit and AspectJ does not play well)
-        if(transactionManagerIsPresent) {
+        if (transactionManagerIsPresent) {
             injectTransactionHandler();
         }
 
         try {
-            TransactionLogging.log ("---  InjectionJUnitTestRunner: " +
-                    " running child {0} in thread {1}",frameworkMethod.getName(), Thread.currentThread());
+            TransactionLogging.log("---  InjectionJUnitTestRunner: " +
+                    " running child {0} in thread {1}", frameworkMethod.getName(), Thread.currentThread());
             if (disableRequiresNewTransaction) {
                 ((TransactionManagerTest) transactionManager).disableRequiresNew();
             }
@@ -137,14 +136,14 @@ public class InjectionJUnitTestRunner extends BlockJUnit4ClassRunner {
             notifier.fireTestFinished(description);
         }
         TransactionLogging.log("---  InjectionJUnitTestRunner: " +
-                " done running child {0} in thread {1}",frameworkMethod.getName(), Thread.currentThread());
+                " done running child {0} in thread {1}", frameworkMethod.getName(), Thread.currentThread());
     }
 
     private void injectTransactionHandler() {
-        if(System.getProperty("injectMethod.transactionManager.junitregistration") == null){
-            try{
+        if (System.getProperty("injectMethod.transactionManager.junitregistration") == null) {
+            try {
                 TransactionManagerUtil.registerTransactionManager(theContainer);
-            }catch (InjectRuntimeException ignore){
+            } catch (InjectRuntimeException ignore) {
                 // don't care if the transaction manager is not registered
             }
         }
@@ -186,11 +185,11 @@ public class InjectionJUnitTestRunner extends BlockJUnit4ClassRunner {
             transactionManager = theContainer.get(TransactionManager.class);
             TransactionLogging.log(
                     "TransactionManager ({0}) " +
-                    "successfully wired from creator: {1}", transactionManager.getClass().getSimpleName(), creator.getClass().getSimpleName());
+                            "successfully wired from creator: {1}", transactionManager.getClass().getSimpleName(), creator.getClass().getSimpleName());
 
         } catch (InjectRuntimeException exception) {
             TransactionLogging.log("InjectionJUnitTestRunner: " +
-                    "TransactionManager not wired for Container from creator: {0}",creator.getClass().getName());
+                    "TransactionManager not wired for Container from creator: {0}", creator.getClass().getName());
             exception.printStackTrace(System.err);
         }
     }

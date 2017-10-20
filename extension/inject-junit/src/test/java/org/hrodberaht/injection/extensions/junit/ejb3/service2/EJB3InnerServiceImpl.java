@@ -7,7 +7,7 @@ import javax.ejb.Stateless;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 19:29:52
+ * 2010-okt-11 19:29:52
  * @version 1.0
  * @since 1.0
  */

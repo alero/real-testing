@@ -7,7 +7,7 @@ import javax.persistence.Id;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-10 18:32:03
+ * 2010-aug-10 18:32:03
  * @version 1.0
  * @since 1.0
  */
@@ -19,7 +19,7 @@ public class AnEntity {
     private String value;
 
     // For JPA
-    public AnEntity(){
+    public AnEntity() {
     }
 
     public AnEntity(String name, String value) {

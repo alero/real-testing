@@ -19,7 +19,7 @@ import static org.junit.Assert.assertNull;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 19:31:30
+ * 2010-okt-11 19:31:30
  * @version 1.0
  * @since 1.0
  */
@@ -41,7 +41,7 @@ public class TestCDIServiceContextContainerTool {
         String somethingDeep = anInterface.findSomethingDeep(12L);
         assertEquals("initialized", somethingDeep);
 
-        containerLifeCycleTestUtil.registerServiceInstance(CDIServiceInterface.class, new CDIServiceInterface(){
+        containerLifeCycleTestUtil.registerServiceInstance(CDIServiceInterface.class, new CDIServiceInterface() {
 
             @Override
             public String findSomething(long l) {

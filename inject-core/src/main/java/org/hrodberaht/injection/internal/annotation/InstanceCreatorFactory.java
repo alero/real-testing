@@ -7,7 +7,7 @@ import org.hrodberaht.injection.internal.annotation.creator.InstanceCreatorDefau
  * Simple Java Utils
  *
  * @author Robert Alexandersson
- *         2010-jul-15 22:54:16
+ * 2010-jul-15 22:54:16
  * @version 1.0
  * @since 1.0
  */

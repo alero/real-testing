@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 public class ContainerJPASpringConfig {
 
     @Bean
-    public SpringEntityManager springEntityManager(){
+    public SpringEntityManager springEntityManager() {
         return new SpringEntityManager();
     }
 }

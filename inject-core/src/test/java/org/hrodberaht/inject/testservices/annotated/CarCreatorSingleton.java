@@ -7,7 +7,7 @@ import java.util.Date;
  * Qmatic Booking Module
  *
  * @author Robert Alexandersson
- *         2011-04-04 22:18
+ * 2011-04-04 22:18
  * @created 1.0
  * @since 1.0
  */

@@ -12,7 +12,7 @@ import javax.persistence.Persistence;
  * Inject Transactions
  *
  * @author Robert Alexandersson
- *         2010-sep-28 18:24:29
+ * 2010-sep-28 18:24:29
  * @version 1.0
  * @since 1.0
  */

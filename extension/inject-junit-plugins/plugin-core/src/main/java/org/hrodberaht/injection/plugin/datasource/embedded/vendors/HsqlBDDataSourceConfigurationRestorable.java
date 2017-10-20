@@ -52,7 +52,7 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
             LOG.debug("-- Creating Connection HsqlBDDataSourceConfigurationRestorable from mem");
             try {
                 return DriverManager.getConnection(datasourceBackupRestore.jdbcUrl() + dbName, JDBC_USERNAME, "");
-            }catch (SQLInvalidAuthorizationSpecException e){
+            } catch (SQLInvalidAuthorizationSpecException e) {
                 throw e;
             }
         }
@@ -61,6 +61,7 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
     /**
      * See http://hsqldb.org/doc/guide/management-chapt.html#mtc_online_backup
      * Need to create and restore the snapshot better ....
+     *
      * @param name
      */
 

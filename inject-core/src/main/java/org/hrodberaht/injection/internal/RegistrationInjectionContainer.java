@@ -20,7 +20,7 @@ import org.hrodberaht.injection.register.RegistrationModule;
  * Simple Java Utils - Container
  *
  * @author Robert Alexandersson
- *         2010-maj-29 12:48:43
+ * 2010-maj-29 12:48:43
  * @version 1.0
  * @since 1.0
  */

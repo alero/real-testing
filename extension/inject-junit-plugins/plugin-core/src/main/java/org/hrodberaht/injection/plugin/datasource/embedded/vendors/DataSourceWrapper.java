@@ -8,7 +8,7 @@ import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
-class DataSourceWrapper implements javax.sql.DataSource{
+class DataSourceWrapper implements javax.sql.DataSource {
 
     private final Connection connection;
     private final Connection proxy;

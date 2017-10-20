@@ -24,7 +24,7 @@ public interface DataSourceProxyInterface extends javax.sql.DataSource {
 
     boolean runWithConnectionAndCommit(ConnectionRunner connectionRunner) throws Exception;
 
-    interface ConnectionRunner{
+    interface ConnectionRunner {
         boolean run(Connection con) throws Exception;
     }
 

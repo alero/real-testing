@@ -8,7 +8,7 @@ import java.lang.annotation.Annotation;
  * Immutable, must stay this way as hashcode relies on this
  *
  * @author Robert Alexandersson
- *         2010-jun-03 19:57:23
+ * 2010-jun-03 19:57:23
  * @version 1.0
  * @since 1.0
  */

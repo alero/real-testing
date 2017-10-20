@@ -2,7 +2,6 @@ package test.com.hrodberaht.inject.extension.transaction;
 
 import com.hrodberaht.inject.extensions.transaction.junit.InjectionContainerContext;
 import com.hrodberaht.inject.extensions.transaction.junit.InjectionJUnitTestRunner;
-import org.hsqldb.jdbc.JDBCBlob;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import test.com.hrodberaht.inject.extension.transaction.example.AdvanceModel;
@@ -12,7 +11,6 @@ import test.com.hrodberaht.inject.extension.transaction.example.ModuleContainerF
 import javax.ejb.TransactionAttribute;
 import javax.inject.Inject;
 import java.math.BigDecimal;
-import java.sql.Blob;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -29,14 +27,14 @@ import static org.junit.Assert.assertTrue;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-06 18:33:12
+ * 2010-aug-06 18:33:12
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        To run these tests with load time weaving add the weaver to the JRE like this.
- *        -javaagent:C:/Users/Robert/.m2/repository/org/aspectj/aspectjweaver/1.7.1/aspectjweaver-1.7.1.jar
- *        If the path contains a space do it like this
- *        -javaagent:"C:\Users\alexbrob\.m2\repository\org\aspectj\aspectjweaver\1.7.1\aspectjweaver-1.7.1.jar"
+ * <p/>
+ * To run these tests with load time weaving add the weaver to the JRE like this.
+ * -javaagent:C:/Users/Robert/.m2/repository/org/aspectj/aspectjweaver/1.7.1/aspectjweaver-1.7.1.jar
+ * If the path contains a space do it like this
+ * -javaagent:"C:\Users\alexbrob\.m2\repository\org\aspectj\aspectjweaver\1.7.1\aspectjweaver-1.7.1.jar"
  */
 @InjectionContainerContext(ModuleContainerForJDBCHelperTests.class)
 @RunWith(InjectionJUnitTestRunner.class)
@@ -46,7 +44,7 @@ public class JDBCHelperClassesUnitT {
 
     @Inject
     private JDBCHelperApplication application;
-    
+
 
     @Test
     public void testCreateDataModel() throws ParseException {

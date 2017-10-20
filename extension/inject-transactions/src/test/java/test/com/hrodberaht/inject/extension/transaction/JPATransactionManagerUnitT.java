@@ -27,14 +27,14 @@ import static org.junit.Assert.assertTrue;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-06 18:33:12
+ * 2010-aug-06 18:33:12
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        To run these tests with load time weaving add the weaver to the JRE like this.
- *        -javaagent:C:/Users/Robert/.m2/repository/org/aspectj/aspectjweaver/1.7.1/aspectjweaver-1.7.1.jar
- *        If the path contains a space do it like this
- *        -javaagent:"C:\Users\Robert Work\.m2\repository\org\aspectj\aspectjweaver\1.7.1\aspectjweaver-1.7.1.jar"
+ * <p/>
+ * To run these tests with load time weaving add the weaver to the JRE like this.
+ * -javaagent:C:/Users/Robert/.m2/repository/org/aspectj/aspectjweaver/1.7.1/aspectjweaver-1.7.1.jar
+ * If the path contains a space do it like this
+ * -javaagent:"C:\Users\Robert Work\.m2\repository\org\aspectj\aspectjweaver\1.7.1\aspectjweaver-1.7.1.jar"
  */
 @InjectionContainerContext(ModuleContainerForTests.class)
 @RunWith(InjectionJUnitTestRunner.class)
@@ -144,7 +144,7 @@ public class JPATransactionManagerUnitT {
         person.setName("Dude");
         application.createPerson(person);
         transactionManager.getNativeManager().flush();
-        
+
         Person foundPerson = application.findPersonNative(person.getId());
 
         assertEquals(foundPerson.getName(), person.getName());

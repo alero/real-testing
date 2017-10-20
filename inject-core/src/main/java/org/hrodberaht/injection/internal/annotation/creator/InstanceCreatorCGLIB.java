@@ -12,7 +12,7 @@ import java.util.Map;
  * all usage is direct and this means that this class can be loaded without cglib present.
  *
  * @author Robert Alexandersson
- *         2010-jun-05 23:25:22
+ * 2010-jun-05 23:25:22
  * @version 1.0
  * @since 1.0
  */

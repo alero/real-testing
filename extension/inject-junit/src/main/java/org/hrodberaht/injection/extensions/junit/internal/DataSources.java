@@ -7,7 +7,7 @@ import java.util.Collection;
  * Inject extension TDD
  *
  * @author Robert Alexandersson
- *         2011-02-05 19:32
+ * 2011-02-05 19:32
  * @created 1.0
  * @since 1.0
  */

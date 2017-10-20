@@ -6,12 +6,11 @@ import org.hrodberaht.injection.internal.ScopeContainer;
 import org.hrodberaht.injection.register.InjectionRegister;
 
 
-
 /**
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 19:45:53
+ * 2010-okt-11 19:45:53
  * @version 1.0
  * @since 1.0
  */
@@ -48,7 +47,6 @@ public class InjectionRegisterScanCDI extends InjectionRegisterScanBase {
     public boolean isServiceAnnotated(Class aClazz) {
         return false;
     }
-
 
 
     public ScopeContainer.Scope getScope(Class serviceClass) {

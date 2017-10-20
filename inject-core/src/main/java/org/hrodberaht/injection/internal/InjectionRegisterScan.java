@@ -28,10 +28,9 @@ import javax.inject.Singleton;
  * @author Robert Alexandersson
  * @version 1.0
  * @since 1.0
- *
+ * <p>
  * Use the InjectionRegisterModule for all variations, will be removed
  * {@link InjectionRegisterModule}
- *
  */
 @Deprecated
 public class InjectionRegisterScan extends InjectionRegisterScanBase<InjectionRegisterScan> {
@@ -62,9 +61,9 @@ public class InjectionRegisterScan extends InjectionRegisterScanBase<InjectionRe
     public ScopeContainer.Scope getScope(Class serviceClass) {
         if (serviceClass.isAnnotationPresent(Singleton.class)) {
             return ScopeContainer.Scope.SINGLETON;
-        }else if (serviceClass.isAnnotationPresent(ThreadScope.class)) {
+        } else if (serviceClass.isAnnotationPresent(ThreadScope.class)) {
             return ScopeContainer.Scope.THREAD;
-        }else if (serviceClass.isAnnotationPresent(InheritableThreadScope.class)) {
+        } else if (serviceClass.isAnnotationPresent(InheritableThreadScope.class)) {
             return ScopeContainer.Scope.INHERITABLE_THREAD;
         }
         return ScopeContainer.Scope.NEW;

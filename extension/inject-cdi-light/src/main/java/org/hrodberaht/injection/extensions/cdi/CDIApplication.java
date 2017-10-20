@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by alexbrob on 2016-03-31.
  */
-public class CDIApplication  {
+public class CDIApplication {
 
     private List<Module> moduleList = new ArrayList<>();
     private CDIContainerConfigBase containerConfigBase;
@@ -24,7 +24,7 @@ public class CDIApplication  {
         moduleList.add(module);
     }
 
-    public void add(ExtendedModule extendedModule){
+    public void add(ExtendedModule extendedModule) {
         Module moduleForConfig = new Module();
         new InjectionRegisterModule().register(extendedModule).fillModule(moduleForConfig);
         moduleList.add(moduleForConfig);

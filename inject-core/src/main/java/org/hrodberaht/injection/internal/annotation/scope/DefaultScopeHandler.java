@@ -6,7 +6,7 @@ import org.hrodberaht.injection.internal.InjectionContainerManager;
  * Simple Java Utils - Container
  *
  * @author Robert Alexandersson
- *         2010-jun-06 02:45:49
+ * 2010-jun-06 02:45:49
  * @version 1.0
  * @since 1.0
  */

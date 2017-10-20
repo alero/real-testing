@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
  * Inject extension TDD
  *
  * @author Robert Alexandersson
- *         2011-05-03 21:42
+ * 2011-05-03 21:42
  * @created 1.0
  * @since 1.0
  */

@@ -31,7 +31,7 @@ public class InjectionMetaDataBase {
         return serviceRegister;
     }
 
-    public InjectionMetaDataBase copy()  {
+    public InjectionMetaDataBase copy() {
         return new InjectionMetaDataBase(injectionMetaData.copy(), serviceRegister.copy());
     }
 }

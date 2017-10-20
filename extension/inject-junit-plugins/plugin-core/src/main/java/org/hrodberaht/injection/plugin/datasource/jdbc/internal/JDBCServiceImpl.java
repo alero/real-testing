@@ -58,7 +58,7 @@ public class JDBCServiceImpl implements JDBCService {
 
     @Override
     public int insertOrUpdate(InsertOrUpdater insertOrUpdater) {
-        try (Connection connection = dataSource.getConnection()){
+        try (Connection connection = dataSource.getConnection()) {
             if (insertOrUpdater instanceof InsertOrUpdaterImpl) {
                 InsertOrUpdaterImpl insertOrUpdaterImpl = (InsertOrUpdaterImpl) insertOrUpdater;
                 PreparedStatement pstmt = null;
@@ -86,7 +86,7 @@ public class JDBCServiceImpl implements JDBCService {
             // Prepared statements?
             PreparedStatement pstmt = null;
             ResultSet rs = null;
-            try (Connection connection = dataSource.getConnection()){
+            try (Connection connection = dataSource.getConnection()) {
                 pstmt = prepareAndAppend(sql, connection, args);
                 rs = pstmt.executeQuery();
                 if (rs.next()) {
@@ -109,7 +109,7 @@ public class JDBCServiceImpl implements JDBCService {
 
     @Override
     public int execute(String sql, Object... args) {
-        try (Connection connection = dataSource.getConnection()){
+        try (Connection connection = dataSource.getConnection()) {
             // Prepared statements?
             PreparedStatement pstmt = null;
             try {
@@ -122,10 +122,11 @@ public class JDBCServiceImpl implements JDBCService {
             throw new JDBCException(e);
         }
     }
+
     @Override
     public <T> List<T> query(String sql, RowIterator<T> rowIterator, Object... args) {
 
-        try (Connection connection = dataSource.getConnection()){
+        try (Connection connection = dataSource.getConnection()) {
             PreparedStatement pstmt = null;
             ResultSet rs = null;
             List<T> queryItems = new ArrayList<T>(50);
@@ -193,11 +194,11 @@ public class JDBCServiceImpl implements JDBCService {
     private void addArgumentDate(PreparedStatement pstmt, int argumentOrder, Object argument) throws SQLException {
         if (argument instanceof java.sql.Date) {
             pstmt.setDate(argumentOrder, (java.sql.Date) argument);
-        }else if (argument instanceof Timestamp) {
+        } else if (argument instanceof Timestamp) {
             pstmt.setTimestamp(argumentOrder, (Timestamp) argument);
-        } else if(argument instanceof java.sql.Time) {
+        } else if (argument instanceof java.sql.Time) {
             pstmt.setTime(argumentOrder, (java.sql.Time) argument);
-        }else {
+        } else {
             pstmt.setDate(argumentOrder, new java.sql.Date(((Date) argument).getTime()));
         }
     }
@@ -220,7 +221,7 @@ public class JDBCServiceImpl implements JDBCService {
                 stmt.close();
             }
         } catch (SQLException e) {
-            LOG.debug("ignore close failure "+e.getMessage());
+            LOG.debug("ignore close failure " + e.getMessage());
         }
     }
 
@@ -230,7 +231,7 @@ public class JDBCServiceImpl implements JDBCService {
                 rs.close();
             }
         } catch (SQLException e) {
-            LOG.debug("ignore close failure "+e.getMessage());
+            LOG.debug("ignore close failure " + e.getMessage());
         }
     }
 

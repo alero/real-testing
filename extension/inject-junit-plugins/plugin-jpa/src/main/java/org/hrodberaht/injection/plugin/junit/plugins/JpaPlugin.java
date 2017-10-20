@@ -22,7 +22,7 @@ public class JpaPlugin extends DataSourcePlugin {
 
     @Override
     public ChainableInjectionPointProvider getInjectionProvider(InjectionFinder injectionFinder) {
-        return new ChainableInjectionPointProvider(injectionFinder){
+        return new ChainableInjectionPointProvider(injectionFinder) {
             @Override
             public void extendedInjection(Object service) {
                 super.extendedInjection(service);

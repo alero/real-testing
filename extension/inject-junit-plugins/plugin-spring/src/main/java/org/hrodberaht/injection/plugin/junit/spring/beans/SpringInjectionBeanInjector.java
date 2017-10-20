@@ -23,7 +23,7 @@ public class SpringInjectionBeanInjector implements BeanPostProcessor {
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        if(!postProcessBeforeInitBeans.containsKey(beanName)
+        if (!postProcessBeforeInitBeans.containsKey(beanName)
                 && containsSpringInjectionAnnotation(bean)) {
             // System.out.println("ADDED bean: " + bean.getClass().getName());
             postProcessBeforeInitBeans.put(beanName, bean);
@@ -35,17 +35,18 @@ public class SpringInjectionBeanInjector implements BeanPostProcessor {
     private boolean containsSpringInjectionAnnotation(Object bean) {
 
         List<Member> members = ReflectionUtils.findMembers(bean.getClass());
-        for(Member member:members){
-            if(member instanceof Field) {
+        for (Member member : members) {
+            if (member instanceof Field) {
                 Field field = (Field) member;
                 SpringInject annotation = field.getAnnotation(SpringInject.class);
-                if(annotation != null){
+                if (annotation != null) {
                     return true;
                 }
-            }if(member instanceof Method) {
+            }
+            if (member instanceof Method) {
                 Method method = (Method) member;
                 SpringInject annotation = method.getAnnotation(SpringInject.class);
-                if(annotation != null){
+                if (annotation != null) {
                     return true;
                 }
             }
@@ -59,8 +60,8 @@ public class SpringInjectionBeanInjector implements BeanPostProcessor {
     }
 
     public void autowireInjection(Object springBean, String springBeanName, InjectContainer injectContainer) {
-        if(springBeanName != null){
-            if(postProcessBeforeInitBeans.containsKey(springBeanName)){
+        if (springBeanName != null) {
+            if (postProcessBeforeInitBeans.containsKey(springBeanName)) {
                 injectContainer.injectDependencies(springBean);
             }
         }

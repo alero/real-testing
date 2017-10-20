@@ -12,7 +12,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 /**
  * Created by alexbrob on 2016-04-01.
  */
-@Target({ METHOD, CONSTRUCTOR, FIELD })
+@Target({METHOD, CONSTRUCTOR, FIELD})
 @Retention(RUNTIME)
 @Documented
 public @interface SpringInject {

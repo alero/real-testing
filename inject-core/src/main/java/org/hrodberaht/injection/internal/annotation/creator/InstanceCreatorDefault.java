@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
  * Simple Java Utils - Container
  *
  * @author Robert Alexandersson
- *         2010-jun-06 00:18:20
+ * 2010-jun-06 00:18:20
  * @version 1.0
  * @since 1.0
  */
@@ -29,7 +29,7 @@ public class InstanceCreatorDefault implements InstanceCreator {
             throw new InstanceCreationError(e);
         } catch (IllegalArgumentException e) {
             throw new InstanceCreationError(e);
-        } catch (NullPointerException e){
+        } catch (NullPointerException e) {
             throw new InstanceCreationError(e);
         }
     }

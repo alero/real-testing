@@ -11,17 +11,16 @@ import java.util.Map;
 public class RunnerPlugins {
 
 
-
     private Map<Class, RunnerPlugin> runnerPlugins = new HashMap<>();
 
-    public void addPlugin(RunnerPlugin runnerPlugin){
-        if(runnerPlugins.get(runnerPlugin.getClass()) != null){
+    public void addPlugin(RunnerPlugin runnerPlugin) {
+        if (runnerPlugins.get(runnerPlugin.getClass()) != null) {
             throw new InjectRuntimeException("Can not register plugin several times");
         }
         runnerPlugins.put(runnerPlugin.getClass(), runnerPlugin);
     }
 
-    public void runInitBeforeContainer(){
+    public void runInitBeforeContainer() {
         runnerPlugins.forEach((aClass, runnerPlugin) -> runnerPlugin.beforeContainerCreation());
     }
 
@@ -29,11 +28,11 @@ public class RunnerPlugins {
         runnerPlugins.forEach((aClass, runnerPlugin) -> runnerPlugin.afterContainerCreation(injectContainer));
     }
 
-    public void runBeforeTest(InjectContainer injectContainer){
+    public void runBeforeTest(InjectContainer injectContainer) {
         runnerPlugins.forEach((aClass, runnerPlugin) -> runnerPlugin.beforeMethod(injectContainer));
     }
 
-    public void runAfterTest(InjectContainer injectContainer){
+    public void runAfterTest(InjectContainer injectContainer) {
         runnerPlugins.forEach((aClass, runnerPlugin) -> runnerPlugin.afterMethod(injectContainer));
     }
 }

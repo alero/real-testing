@@ -26,7 +26,7 @@ public class LiquibasePluginTest {
     private JDBCService jdbcService;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         jdbcService = JDBCServiceFactory.of(dataSource);
     }
 

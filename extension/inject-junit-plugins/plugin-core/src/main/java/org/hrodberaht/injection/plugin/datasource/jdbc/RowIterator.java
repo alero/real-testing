@@ -9,5 +9,5 @@ import java.sql.SQLException;
 public interface RowIterator<T> {
 
     T iterate(ResultSet rs, int iteration) throws SQLException;
-    
+
 }

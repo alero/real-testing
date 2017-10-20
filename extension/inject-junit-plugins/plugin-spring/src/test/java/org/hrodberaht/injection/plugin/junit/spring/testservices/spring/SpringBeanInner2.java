@@ -13,7 +13,7 @@ public class SpringBeanInner2 {
     @Autowired
     private SpringBean springBean;
 
-    public String getName(){
+    public String getName() {
         return "SpringBeanInnerName";
     }
 

@@ -37,7 +37,7 @@ import static org.junit.Assert.assertTrue;
  * Simple Java Utils
  *
  * @author Robert Alexandersson
- *         2010-maj-29 17:02:46
+ * 2010-maj-29 17:02:46
  * @version 1.0
  * @since 1.0
  */
@@ -60,8 +60,6 @@ public class AnnotationContainerUnitTForExternalManagedBeans {
         assertTrue(spareTire instanceof SpareTire);
 
         assertTrue(vindShield instanceof SpareVindShield);
-
-
 
 
         Volvo aCar = (Volvo) container.get(Car.class);

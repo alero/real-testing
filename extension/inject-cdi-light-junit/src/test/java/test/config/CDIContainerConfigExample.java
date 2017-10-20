@@ -15,7 +15,7 @@ import javax.sql.DataSource;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 19:37:42
+ * 2010-okt-11 19:37:42
  * @version 1.0
  * @since 1.0
  */
@@ -33,12 +33,12 @@ public class CDIContainerConfigExample extends JUnitStreamCDIContainerConfig {
     @Override
     protected void registerStream(CDIInjectionRegistryStream stream) {
         stream
-            .register(registrations -> {
-                registrations.register(CDIServiceInterface.class).with(CDIServiceInterfaceImpl.class);
-                registrations.register(SimpleServiceSingleton.class).scopeAs(ScopeContainer.Scope.SINGLETON);
-                registrations.register(SimpleServiceSingletonAnnotated.class);
-                registrations.register(SimpleService.class);
-            });
+                .register(registrations -> {
+                    registrations.register(CDIServiceInterface.class).with(CDIServiceInterfaceImpl.class);
+                    registrations.register(SimpleServiceSingleton.class).scopeAs(ScopeContainer.Scope.SINGLETON);
+                    registrations.register(SimpleServiceSingletonAnnotated.class);
+                    registrations.register(SimpleService.class);
+                });
     }
 
 

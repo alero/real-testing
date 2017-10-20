@@ -16,7 +16,7 @@ import java.sql.SQLException;
  * Qmatic Booking Module
  *
  * @author Robert Alexandersson
- *         2011-05-08 01:53
+ * 2011-05-08 01:53
  * @created 1.0
  * @since 1.0
  */

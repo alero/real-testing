@@ -5,7 +5,7 @@ package javax.xml.rpc.handler;
  * Most projects will use this with test-scope hopefully that's enough ...
  *
  * @author Robert Alexandersson
- *         2011-04-04 23:27
+ * 2011-04-04 23:27
  * @created 1.0
  * @since 1.0
  */

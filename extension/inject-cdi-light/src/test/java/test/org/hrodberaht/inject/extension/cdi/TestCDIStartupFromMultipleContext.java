@@ -17,7 +17,7 @@ import static org.junit.Assert.assertNotNull;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 19:31:30
+ * 2010-okt-11 19:31:30
  * @version 1.0
  * @since 1.0
  */

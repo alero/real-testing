@@ -29,7 +29,7 @@ import java.util.Date;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-21 22:14:33
+ * 2010-aug-21 22:14:33
  * @version 1.0
  * @since 1.0
  */
@@ -130,6 +130,7 @@ public class JDBCServiceImpl implements JDBCService {
             throw new JDBCException(e);
         }
     }
+
     @Override
     public <T> Collection<T> query(String sql, RowIterator<T> rowIterator, Object... args) {
 
@@ -203,11 +204,11 @@ public class JDBCServiceImpl implements JDBCService {
     private void addArgumentDate(PreparedStatement pstmt, int argumentOrder, Object argument) throws SQLException {
         if (argument instanceof java.sql.Date) {
             pstmt.setDate(argumentOrder, (java.sql.Date) argument);
-        }else if (argument instanceof Timestamp) {
+        } else if (argument instanceof Timestamp) {
             pstmt.setTimestamp(argumentOrder, (Timestamp) argument);
-        } else if(argument instanceof java.sql.Time) {
+        } else if (argument instanceof java.sql.Time) {
             pstmt.setTime(argumentOrder, (java.sql.Time) argument);
-        }else {
+        } else {
             pstmt.setDate(argumentOrder, new java.sql.Date(((Date) argument).getTime()));
         }
     }
@@ -230,7 +231,7 @@ public class JDBCServiceImpl implements JDBCService {
                 stmt.close();
             }
         } catch (SQLException e) {
-            LOG.debug("ignore close failure "+e.getMessage());
+            LOG.debug("ignore close failure " + e.getMessage());
         }
     }
 
@@ -240,7 +241,7 @@ public class JDBCServiceImpl implements JDBCService {
                 rs.close();
             }
         } catch (SQLException e) {
-            LOG.debug("ignore close failure "+e.getMessage());
+            LOG.debug("ignore close failure " + e.getMessage());
         }
     }
 

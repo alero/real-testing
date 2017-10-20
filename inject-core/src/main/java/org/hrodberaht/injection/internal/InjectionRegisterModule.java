@@ -12,7 +12,7 @@ import java.util.Collection;
  * Simple Java Utils
  *
  * @author Robert Alexandersson
- *         2010-aug-01 16:35:23
+ * 2010-aug-01 16:35:23
  * @version 1.0
  * @since 1.0
  */
@@ -52,7 +52,7 @@ public class InjectionRegisterModule extends InjectionRegisterBase<InjectionRegi
 
     }
 
-    public InjectionRegisterModule copy(){
+    public InjectionRegisterModule copy() {
         InjectionRegisterModule registerModule = new InjectionRegisterModule();
         registerModule.registeredModules.addAll(this.registeredModules);
         registerModule.container = this.container.copy();
@@ -60,7 +60,7 @@ public class InjectionRegisterModule extends InjectionRegisterBase<InjectionRegi
     }
 
     public Module fillModule(Module module) {
-        for(RegistrationModule registrationModule:registeredModules) {
+        for (RegistrationModule registrationModule : registeredModules) {
             module.putRegistrations(registrationModule.getRegistrationsList());
         }
         return module;

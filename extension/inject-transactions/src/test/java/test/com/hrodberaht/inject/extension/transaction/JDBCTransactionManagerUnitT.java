@@ -25,13 +25,13 @@ import static org.junit.Assert.assertEquals;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-06 18:33:12
+ * 2010-aug-06 18:33:12
  * @version 1.0
  * @since 1.0
- *        <p/>
- *        To run these tests with load time weaving add the weaver to the JRE like this.
- *        -javaagent:"C:\Users\alexbrob\.m2\repository\org\aspectj\aspectjweaver\1.8.3\aspectjweaver-1.8.3.jar"
- *        -javaagent:${settings.localRepository}\org\aspectj\aspectjweaver\1.8.3\aspectjweaver-1.8.3.jar
+ * <p/>
+ * To run these tests with load time weaving add the weaver to the JRE like this.
+ * -javaagent:"C:\Users\alexbrob\.m2\repository\org\aspectj\aspectjweaver\1.8.3\aspectjweaver-1.8.3.jar"
+ * -javaagent:${settings.localRepository}\org\aspectj\aspectjweaver\1.8.3\aspectjweaver-1.8.3.jar
  */
 @InjectionContainerContext(ModuleContainerForJDBCTests.class)
 @RunWith(InjectionJUnitTestRunner.class)
@@ -91,8 +91,6 @@ public class JDBCTransactionManagerUnitT {
         assertEquals(foundPerson.getName(), person.getName());
 
     }
-
-
 
 
     @Test
@@ -156,7 +154,6 @@ public class JDBCTransactionManagerUnitT {
         assertEquals(foundPerson.getName(), person.getName());
 
     }
-
 
 
 }

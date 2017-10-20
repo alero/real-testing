@@ -8,7 +8,7 @@ import org.hrodberaht.injection.spi.ContainerConfig;
 import java.lang.reflect.Method;
 import java.util.List;
 
-public class ChainableInjectionPointProvider implements InjectionFinder{
+public class ChainableInjectionPointProvider implements InjectionFinder {
     private final InjectionFinder injectionFinder;
 
     public ChainableInjectionPointProvider(InjectionFinder injectionFinder) {

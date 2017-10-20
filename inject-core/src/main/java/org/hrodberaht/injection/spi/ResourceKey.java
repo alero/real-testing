@@ -13,7 +13,7 @@ public class ResourceKey {
         return type;
     }
 
-    public static ResourceKey of(String name, Class type){
+    public static ResourceKey of(String name, Class type) {
         return new ResourceKey(name, type);
     }
 

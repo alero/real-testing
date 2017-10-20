@@ -54,7 +54,7 @@ import static org.junit.Assert.assertTrue;
  * Simple Java Utils
  *
  * @author Robert Alexandersson
- *         2010-maj-29 17:02:46
+ * 2010-maj-29 17:02:46
  * @version 1.0
  * @since 1.0
  */
@@ -203,10 +203,7 @@ public class AnnotationContainerUnitT {
         registerJava.register(new CustomInstanceCreatorModule(instanceCreator));
 
 
-
         InjectContainer container = registerJava.getContainer();
-
-
 
 
         Volvo aCar = (Volvo) container.get(Car.class);
@@ -331,9 +328,6 @@ public class AnnotationContainerUnitT {
         assertTrue(testingServiceInterface != null);
 
     }
-
-
-
 
 
     @Test

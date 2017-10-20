@@ -10,7 +10,7 @@ import javax.sql.DataSource;
  * Inject extension TDD
  *
  * @author Robert Alexandersson
- *         2011-05-03 20:31
+ * 2011-05-03 20:31
  * @created 1.0
  * @since 1.0
  */
@@ -28,20 +28,20 @@ public class Course2ContainerConfigExample extends PluggableContainerConfigBase 
 
         // Load schema is a custom method located in the plugin code, this creates clean separation
         dataSourcePlugin
-            .loadSchema(dataSource, "org.hrodberaht.injection.extensions.plugin.course2")
-            // .loadSchema(dataSource, "org.hrodberaht.injection.extensions.plugin.course2")
-            ;
+                .loadSchema(dataSource, "org.hrodberaht.injection.extensions.plugin.course2")
+        // .loadSchema(dataSource, "org.hrodberaht.injection.extensions.plugin.course2")
+        ;
 
 
         registryBuilder
-            .scan(() -> "org.hrodberaht.injection.extensions.plugin.junit.datasource.service")
-            .resource(builder ->
-                builder
-                    // .bindPluginResources()
-                    .resource("MyDataSource", DataSource.class, dataSource)
-                    .resource( DataSource.class, dataSource)
+                .scan(() -> "org.hrodberaht.injection.extensions.plugin.junit.datasource.service")
+                .resource(builder ->
+                        builder
+                                // .bindPluginResources()
+                                .resource("MyDataSource", DataSource.class, dataSource)
+                                .resource(DataSource.class, dataSource)
 
-            )
+                )
         ;
     }
 

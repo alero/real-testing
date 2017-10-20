@@ -17,14 +17,14 @@ import static org.junit.Assert.assertTrue;
  * Qmatic Booking Module
  *
  * @author Robert Alexandersson
- *         2011-05-08 01:50
+ * 2011-05-08 01:50
  * @created 1.0
  * @since 1.0
  */
 @ContainerContext(Course2ContainerConfigExample.class)
 @RunWith(PluggableJUnitRunner.class)
 public class TestDatasourceUserCreation {
-    
+
     @Inject
     private UserService userService;
 

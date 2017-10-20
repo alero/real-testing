@@ -18,7 +18,7 @@ import java.lang.annotation.Annotation;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 19:32:34
+ * 2010-okt-11 19:32:34
  * @version 1.0
  * @since 1.0
  */
@@ -56,23 +56,23 @@ public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
     private void createUnitTestContext(ContainerContext annotation) throws InstantiationException, IllegalAccessException {
         ContainerContext containerContext = annotation;
         Class testConfigClass = containerContext.value();
-        if(PluggableContainerConfigBase.class.isAssignableFrom(testConfigClass)) {
-            containerConfig = (PluggableContainerConfigBase)testConfigClass.newInstance();
+        if (PluggableContainerConfigBase.class.isAssignableFrom(testConfigClass)) {
+            containerConfig = (PluggableContainerConfigBase) testConfigClass.newInstance();
             runnerPlugins = getRunnerPlugins();
             runnerPlugins.runInitBeforeContainer();
             containerConfig.start();
             runnerPlugins.runInitAfterContainer(containerConfig.getActiveRegister().getContainer());
 
             LOG.info("Creating creator for thread {}", Thread.currentThread().getName());
-        }else{
+        } else {
             throw new IllegalAccessError("Currently the test config class must extrend PluggableContainerConfigBase");
         }
     }
 
     private RunnerPlugins getRunnerPlugins() {
-        if(containerConfig != null){
+        if (containerConfig != null) {
             return containerConfig.getRunnerPlugins();
-        }else{
+        } else {
             return new RunnerPlugins();
         }
     }
@@ -97,7 +97,7 @@ public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
                 afterRunChild();
             }
         } catch (Throwable e) {
-            LOG.error("Fatal test error :"+frameworkMethod.getName(), e);
+            LOG.error("Fatal test error :" + frameworkMethod.getName(), e);
             Description description = describeChild(frameworkMethod);
             notifier.fireTestFailure(new Failure(description, e));
             notifier.fireTestFinished(description);

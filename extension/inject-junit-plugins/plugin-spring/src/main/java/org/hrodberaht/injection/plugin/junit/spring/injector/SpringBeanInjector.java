@@ -43,19 +43,19 @@ public class SpringBeanInjector {
     }
 
 
-    public void inject(Object serviceObject, InjectContainer injectContainer){
+    public void inject(Object serviceObject, InjectContainer injectContainer) {
         Class serviceClass = serviceObject.getClass();
         // Inject spring bean members
 
         InjectionKey injectionKey = new InjectionKey(serviceObject.getClass(), false);
         InjectionMetaData injectionMetaData = dataMap.get(injectionKey);
-        if(injectionMetaData == null){
+        if (injectionMetaData == null) {
             injectionMetaData = createMetaDataAndInject(injectionKey, serviceObject, serviceClass);
             dataMap.put(injectionKey, injectionMetaData);
         }
 
-        for(InjectionPoint injectionPoint:injectionMetaData.getInjectionPoints()){
-            SpringInjectionPoint springInjectionPoint = (SpringInjectionPoint)injectionPoint;
+        for (InjectionPoint injectionPoint : injectionMetaData.getInjectionPoints()) {
+            SpringInjectionPoint springInjectionPoint = (SpringInjectionPoint) injectionPoint;
             try {
                 Object springBean = getBean(springInjectionPoint);
                 springInjectionBeanInjector.autowireInjection(springBean,
@@ -65,9 +65,9 @@ public class SpringBeanInjector {
                 } else if (springInjectionPoint.getType() == InjectionPoint.InjectionPointType.METHOD) {
                     springInjectionPoint.injectMethod(serviceObject, springBean);
                 }
-            }catch (NoSuchBeanDefinitionException e){
+            } catch (NoSuchBeanDefinitionException e) {
                 // TODO: why do we need to do it like this? should there be a switch to enable "errors" as default?
-                String message = "No bean found of type: "+springInjectionPoint.getDisplayName()+ " for service: "+serviceClass.getName();
+                String message = "No bean found of type: " + springInjectionPoint.getDisplayName() + " for service: " + serviceClass.getName();
                 LOG.warn(message);
                 // throw new RuntimeException(message, e);
             }
@@ -75,7 +75,7 @@ public class SpringBeanInjector {
     }
 
     private Object getBean(SpringInjectionPoint springInjectionPoint) {
-        if(springInjectionPoint.getInterfaceClass() != null){
+        if (springInjectionPoint.getInterfaceClass() != null) {
             return context.getBean(springInjectionPoint.getInterfaceClass());
         }
         return context.getBean(springInjectionPoint.getName());
@@ -84,13 +84,13 @@ public class SpringBeanInjector {
     private InjectionMetaData createMetaDataAndInject(InjectionKey injectionKey, Object serviceObject, Class serviceClass) {
         InjectionMetaData injectionMetaData = new InjectionMetaData(serviceClass, injectionKey, null);
         List<Member> members = ReflectionUtils.findMembers(serviceClass);
-        for(Member member:members){
-            if(member instanceof Field){
+        for (Member member : members) {
+            if (member instanceof Field) {
                 Field field = (Field) member;
                 Qualifier qualifier = field.getAnnotation(Qualifier.class);
-                if(qualifier == null){
+                if (qualifier == null) {
                     Autowired autowired = field.getAnnotation(Autowired.class);
-                    if(autowired != null){
+                    if (autowired != null) {
                         Class type = field.getType();
                         Annotation stereotype = getStereotype(type);
                         if (stereotype != null) {
@@ -98,19 +98,19 @@ public class SpringBeanInjector {
                             if (stereotypeValue.isEmpty()) {
                                 String beanName = type.getSimpleName().substring(0, 1).toLowerCase() + type.getSimpleName().substring(1);
                                 createFieldInjectionPointAndAddToMetaData(field, beanName, injectionMetaData);
-                            }else{
+                            } else {
                                 String beanName = stereotypeValue;
                                 createFieldInjectionPointAndAddToMetaData(field, beanName, injectionMetaData);
                             }
-                        }else if(type.isInterface()){
+                        } else if (type.isInterface()) {
                             createFieldInjectionPointAndAddToMetaData(field, type, injectionMetaData);
-                        }else if(!type.isAnonymousClass() && !type.isMemberClass() ){
+                        } else if (!type.isAnonymousClass() && !type.isMemberClass()) {
                             createFieldInjectionPointAndAddToMetaData(field, type, injectionMetaData);
                         }
                     }
-                }else{
+                } else {
                     Autowired autowired = field.getAnnotation(Autowired.class);
-                    if(autowired != null){
+                    if (autowired != null) {
                         // Class type = field.getType();
                         // Annotation stereotype = getStereotype(type);
 
@@ -119,12 +119,12 @@ public class SpringBeanInjector {
 
                     }
                 }
-            }else if(member instanceof Method){
+            } else if (member instanceof Method) {
                 Method method = (Method) member;
                 Type[] types = method.getGenericParameterTypes();
-                for(Type type:types) {
-                    if(type instanceof Class) {
-                        Class typeClass = (Class)type;
+                for (Type type : types) {
+                    if (type instanceof Class) {
+                        Class typeClass = (Class) type;
                         Annotation stereoType = getStereotype(typeClass);
                         if (stereoType != null) {
                             String stereoTypeValue = getStereotypeValue(typeClass);

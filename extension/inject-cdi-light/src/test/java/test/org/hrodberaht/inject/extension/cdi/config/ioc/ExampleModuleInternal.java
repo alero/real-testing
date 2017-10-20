@@ -14,11 +14,11 @@ public class ExampleModuleInternal {
     private CDIModule module;
 
     public ExampleModuleInternal(CDIContainerConfigBase configBase) {
-        module =  new CDIInjectionRegistryStream(configBase)
+        module = new CDIInjectionRegistryStream(configBase)
                 .scan(() -> "test.org.hrodberaht.inject.extension.cdi.service2")
                 .resource(e -> {
-                        e.createDataSource(DATASOURCE);
-                    }
+                            e.createDataSource(DATASOURCE);
+                        }
                 )
                 .getModule();
     }

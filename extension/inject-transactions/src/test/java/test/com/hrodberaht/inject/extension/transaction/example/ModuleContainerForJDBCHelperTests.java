@@ -21,7 +21,7 @@ import java.util.logging.Logger;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-11 22:58:13
+ * 2010-aug-11 22:58:13
  * @version 1.0
  * @since 1.0
  */
@@ -43,7 +43,7 @@ public class ModuleContainerForJDBCHelperTests implements InjectionContainerCrea
         // Create the JdbcModule for a data-source
         DataSource dataSource = getDataSource(entityManagerFactory);
         register.register(new JdbcModule(dataSource));
-        
+
         InjectContainer injectContainer = register.getContainer();
         container = injectContainer;
         return injectContainer;
@@ -61,7 +61,7 @@ public class ModuleContainerForJDBCHelperTests implements InjectionContainerCrea
                 String url = "javax.persistence.jdbc.url";
                 String user = "javax.persistence.jdbc.user";
                 String password = "javax.persistence.jdbc.password";
-                if("OpenJPA".equals(props.get("VendorName"))){
+                if ("OpenJPA".equals(props.get("VendorName"))) {
                     driver = "openjpa.ConnectionDriverName";
                     url = "openjpa.ConnectionURL";
                     user = "openjpa.ConnectionUserName";

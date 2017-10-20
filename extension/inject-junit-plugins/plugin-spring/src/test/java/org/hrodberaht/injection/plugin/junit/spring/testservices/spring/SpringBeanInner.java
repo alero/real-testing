@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 /**
  * Created by alexbrob on 2016-03-29.
  */
-@Component (value = "SpringBeanInnerNamed")
+@Component(value = "SpringBeanInnerNamed")
 public class SpringBeanInner {
 
     private AnyServiceInner anyServiceInner;
@@ -16,7 +16,7 @@ public class SpringBeanInner {
     @Autowired
     private SpringBeanInner2 springBeanInner2;
 
-    public String getName(){
+    public String getName() {
         return "SpringBeanInnerName";
     }
 

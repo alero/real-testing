@@ -16,7 +16,7 @@ import java.util.Date;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-10 18:32:03
+ * 2010-aug-10 18:32:03
  * @version 1.0
  * @since 1.0
  */
@@ -28,14 +28,14 @@ public class AdvanceModel {
 
     private String name;
     private Date aDate;
-    
+
     @Temporal(value = TemporalType.TIMESTAMP)
     private Calendar aCalendar;
 
     private java.sql.Date sqlDate;
-    private java.sql.Time sqlTime;        
+    private java.sql.Time sqlTime;
     private Timestamp sqlTimestamp;
-    
+
 
     // Primitives
     private Long longObject;

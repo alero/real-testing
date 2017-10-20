@@ -15,11 +15,10 @@ import javax.sql.DataSource;
 
 /**
  * Support for CDI - light testing
- *
+ * <p>
  * Beans can be wired with @Inject, @Resource, @PersistenceContext, @EJB
- *
+ * <p>
  * Scope of the beans can be managed as Singleton using @Singleton, @ApplicationScoped, @Stateful all other will be managed as stateless
- *
  */
 public abstract class JUnitStreamCDIContainerConfig implements ContainerConfig {
 
@@ -33,8 +32,8 @@ public abstract class JUnitStreamCDIContainerConfig implements ContainerConfig {
             public InjectContainer createContainer() {
                 CDIInjectionRegistryStream registryStream = stream();
                 registerStream(registryStream);
-                for(RegistrationInstanceSimple instanceSimple:registryStream.getModule().getRegistrationsList()) {
-                    if(instanceSimple.getScope() == null){
+                for (RegistrationInstanceSimple instanceSimple : registryStream.getModule().getRegistrationsList()) {
+                    if (instanceSimple.getScope() == null) {
                         instanceSimple.scopeAs(registryStream.getCustomScanner().getScope(instanceSimple.getService()));
                     }
                 }
@@ -59,12 +58,14 @@ public abstract class JUnitStreamCDIContainerConfig implements ContainerConfig {
 
     /**
      * Register all resources to the stream and the JUnit test will automatically find them
+     *
      * @param cdiInjectionRegistryStream
      */
     protected abstract void registerStream(CDIInjectionRegistryStream cdiInjectionRegistryStream);
 
     /**
      * Creates a managed datasource that can be used in the container and tests. Can be reached as @Inject
+     *
      * @param dataSourceName
      * @return the managed data-source connected to a clean junit runner managed memory database
      */
@@ -74,8 +75,9 @@ public abstract class JUnitStreamCDIContainerConfig implements ContainerConfig {
 
     /**
      * Creates a registration for a object that can be injected with @Resource
+     *
      * @param dataSourceName the data-source name
-     * @param dataSource the data-source
+     * @param dataSource     the data-source
      */
     protected final void addResource(String dataSourceName, Object dataSource) {
         cdiContainerConfigBase.addResource(dataSourceName, dataSource);
@@ -83,21 +85,23 @@ public abstract class JUnitStreamCDIContainerConfig implements ContainerConfig {
 
     /**
      * Creates a JUnit runner managed EntityManager (cleans the managed automatically between test runs and flushes to ensure SQL is executed)
-     * @param schemaName the name of the persistence unit
+     *
+     * @param schemaName     the name of the persistence unit
      * @param dataSourceName the data-source name
-     * @param dataSource the data-source
+     * @param dataSource     the data-source
      * @return
      */
-    protected final EntityManager createEntityManager(String schemaName, String dataSourceName, DataSource dataSource){
+    protected final EntityManager createEntityManager(String schemaName, String dataSourceName, DataSource dataSource) {
         return cdiContainerConfigBase.createEntityManager(schemaName, dataSourceName, dataSource);
     }
 
     /**
      * Add the EntityManager so it can be Injected as CDi expects it to work via the @PersistenceContext
+     *
      * @param entityManagerName name of the PersistenceContext
-     * @param entityManager the object bound to it
+     * @param entityManager     the object bound to it
      */
-    protected final void addPersistenceContext(String entityManagerName, EntityManager entityManager){
+    protected final void addPersistenceContext(String entityManagerName, EntityManager entityManager) {
         cdiContainerConfigBase.addPersistenceContext(entityManagerName, entityManager);
     }
 

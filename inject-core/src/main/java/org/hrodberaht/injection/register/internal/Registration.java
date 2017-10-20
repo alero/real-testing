@@ -9,7 +9,7 @@ import java.lang.annotation.Annotation;
  * Simple Java Utils
  *
  * @author Robert Alexandersson
- *         2010-jun-17 20:22:48
+ * 2010-jun-17 20:22:48
  * @version 1.0
  * @since 1.0
  */
@@ -30,6 +30,7 @@ public interface Registration {
     /**
      * Register the instance as singleton,
      * injects deeper dependencies via the container
+     *
      * @param aSingleton the instance to register as singleton
      * @return the builder
      */
@@ -38,6 +39,7 @@ public interface Registration {
     /**
      * Register the factory as the instance provider (internally no singleton is created),
      * injects nothing deeper into the service (lifecycle is managed via the factory)
+     *
      * @param aFactory a manually created factory
      * @return the builder
      */
@@ -56,7 +58,7 @@ public interface Registration {
     /**
      * Register the variable factory as the instance provider (internally no singleton is created),
      * injects nothing deeper into the service (lifecycle is managed via the factory)
-     *
+     * <p>
      * Using a variable provider factory means using the custom annotation
      * {@link org.hrodberaht.injection.annotation.VariableProvider}
      *

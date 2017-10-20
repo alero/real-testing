@@ -13,7 +13,7 @@ import static org.junit.Assert.assertTrue;
  * Injection Extension Web
  *
  * @author Robert Alexandersson
- *         2010-jul-28 01:30:53
+ * 2010-jul-28 01:30:53
  * @version 1.0
  * @since 1.0
  */
@@ -22,7 +22,7 @@ public class InjectionWebInContainerTest {
 
     @BeforeClass
     public static void beforeClass() {
-        
+
     }
 
     @Test
@@ -48,10 +48,10 @@ public class InjectionWebInContainerTest {
     @Test
     public void testJsfInjectionContainerBaseClassInheritance() throws InjectionProviderException {
 
- 
+
         // This is basically what JSF will do
         InjectionProvider injectionProvider = new JsfInjectionProvider();
-        WebInjectBean bean = new WebInjectBean();        
+        WebInjectBean bean = new WebInjectBean();
         injectionProvider.inject(bean);
 
         assertNotNull(bean.getServiceInject());

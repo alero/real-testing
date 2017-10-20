@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 19:34:24
+ * 2010-okt-11 19:34:24
  * @version 1.0
  * @since 1.0
  */

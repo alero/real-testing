@@ -9,12 +9,12 @@ import java.lang.annotation.Target;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-10 18:22:00
+ * 2010-aug-10 18:22:00
  * @version 1.0
  * @since 1.0
  */
-@Target({ElementType.TYPE,ElementType.METHOD})
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TransactionAttribute {
-  TransactionAttributeType value() default javax.ejb.TransactionAttributeType.REQUIRED;
+    TransactionAttributeType value() default javax.ejb.TransactionAttributeType.REQUIRED;
 }

@@ -16,7 +16,7 @@ import javax.sql.DataSource;
 @ApplicationScoped
 public class AnotherInterfaceImplementation implements AnotherInterface {
 
-    @Resource( name = DataSourceNames.SAMPLE)
+    @Resource(name = DataSourceNames.SAMPLE)
     DataSource dataSource;
 
     @PersistenceContext(unitName = "example-jpa")

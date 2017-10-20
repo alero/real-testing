@@ -13,7 +13,9 @@ import javax.sql.DataSource;
 public interface AnotherInterface {
 
     String what();
+
     DataSource getDataSource();
+
     EntityManager getEntityManager();
 
 }

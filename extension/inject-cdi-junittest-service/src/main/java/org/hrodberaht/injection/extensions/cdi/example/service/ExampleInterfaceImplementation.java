@@ -9,7 +9,7 @@ import javax.inject.Inject;
  * Time: 10:53
  * To change this template use File | Settings | File Templates.
  */
-public class ExampleInterfaceImplementation implements ExampleInterface{
+public class ExampleInterfaceImplementation implements ExampleInterface {
 
     @Inject
     private AnotherInterface anotherInterface;

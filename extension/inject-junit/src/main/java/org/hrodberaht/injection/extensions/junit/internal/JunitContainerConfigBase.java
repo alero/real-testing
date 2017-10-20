@@ -48,7 +48,7 @@ public abstract class JunitContainerConfigBase<T extends InjectionRegisterScanBa
 
     private void addSingletonActiveEntityManagers() {
         Collection<EntityManager> entityManagers = getEntityManagers();
-        if(entityManagers != null) {
+        if (entityManagers != null) {
             activeRegister.register(new RegistrationModuleAnnotation() {
                                         @Override
                                         public void registrations() {

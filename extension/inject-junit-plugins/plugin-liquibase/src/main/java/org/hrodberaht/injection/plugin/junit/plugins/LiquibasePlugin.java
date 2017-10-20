@@ -11,7 +11,7 @@ public class LiquibasePlugin extends DataSourcePlugin implements Plugin {
 
     private String name = "main";
 
-    public LiquibasePlugin name(String name){
+    public LiquibasePlugin name(String name) {
         this.name = name;
         return this;
     }
@@ -19,11 +19,10 @@ public class LiquibasePlugin extends DataSourcePlugin implements Plugin {
     /**
      * The liquibaseSchema should point to a single "master" loader file for the liquibase schema that exists in the
      *
-     *
      * @param liquibaseSchema the classpath location of the  liquibase schema, sample""
-     * @param watchers a list of files that will be watched for change between runs and keep the snapshot store up to date
+     * @param watchers        a list of files that will be watched for change between runs and keep the snapshot store up to date
      */
-    public LiquibasePlugin load(DataSource dataSource, String liquibaseSchema, String... watchers){
+    public LiquibasePlugin load(DataSource dataSource, String liquibaseSchema, String... watchers) {
         String query = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = 'DATABASECHANGELOG'";
         LiquibaseManager liquibaseManager = new LiquibaseManager(name, query);
         try {

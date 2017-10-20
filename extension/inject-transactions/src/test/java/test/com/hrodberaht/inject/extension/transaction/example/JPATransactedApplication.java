@@ -20,7 +20,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-10 18:29:58
+ * 2010-aug-10 18:29:58
  * @version 1.0
  * @since 1.0
  */

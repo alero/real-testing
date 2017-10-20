@@ -24,7 +24,7 @@ import java.lang.reflect.Method;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 19:35:27
+ * 2010-okt-11 19:35:27
  * @version 1.0
  * @since 1.0
  */
@@ -48,6 +48,7 @@ public abstract class CDIContainerConfigBase extends JPAContainerConfigBase<Inje
 
     /**
      * Will be removed before the 2.0 final release
+     *
      * @param packageName
      * @return the container
      */
@@ -80,17 +81,17 @@ public abstract class CDIContainerConfigBase extends JPAContainerConfigBase<Inje
         return activeRegister.getContainer();
     }
 
-    public void runBeforeBeanDiscovery(){
+    public void runBeforeBeanDiscovery() {
         // null as active registry is important
         // its before discovery nothing can be registered in the IoC Container, do not change this
         cdiExtensions.runBeforeBeanDiscovery(null, this);
     }
 
-    protected CDIInjectionRegistryStream stream(){
+    protected CDIInjectionRegistryStream stream() {
         return new CDIInjectionRegistryStream(this);
     }
 
-    public void runAfterBeanDiscovery(){
+    public void runAfterBeanDiscovery() {
         cdiExtensions.runAfterBeanDiscovery(activeRegister, this);
     }
 

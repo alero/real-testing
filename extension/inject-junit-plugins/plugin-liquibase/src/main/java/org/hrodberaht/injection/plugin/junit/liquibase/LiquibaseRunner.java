@@ -56,9 +56,9 @@ class LiquibaseRunner {
             isLoadedAlready = jdbcService.querySingle(verificationQuery
                     ,
                     (rs, iteration) -> {
-                            rs.next();
-                            rs.getString(1);
-                            return true;
+                        rs.next();
+                        rs.getString(1);
+                        return true;
                     }
             );
         } finally {

@@ -12,13 +12,19 @@ import static org.junit.Assert.assertEquals;
 @ContainerContext(JUnitModuleConfig.class)
 @RunWith(JUnitRunner.class)
 public class TestCDIService {
-    @Inject private Service aService;
-    @Test public void testDoing(){
+    @Inject
+    private Service aService;
+
+    @Test
+    public void testDoing() {
         assertEquals("done", aService.doIt());
     }
 
-    @Inject private ServiceBean serviceBean;
-    @Test public void testDoingOnBean(){
+    @Inject
+    private ServiceBean serviceBean;
+
+    @Test
+    public void testDoingOnBean() {
         assertEquals("done", serviceBean.doIt());
     }
 }

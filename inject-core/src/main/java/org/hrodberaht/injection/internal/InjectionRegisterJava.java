@@ -25,11 +25,10 @@ import org.hrodberaht.injection.register.RegistrationModule;
  * @author Robert Alexandersson
  * @version 1.0
  * @since 1.0
- *
- *
+ * <p>
+ * <p>
  * Use the InjectionRegisterModule for all variations, will be removed
  * {@link InjectionRegisterModule}
- *
  */
 @Deprecated
 public class InjectionRegisterJava extends InjectionRegisterBase<InjectionRegister> {

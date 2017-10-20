@@ -23,7 +23,7 @@ import java.util.Map;
  * Simple Java Utils - Container
  *
  * @author Robert Alexandersson
- *         2010-maj-29 15:25:40
+ * 2010-maj-29 15:25:40
  * @version 1.0
  * @since 1.0
  */
@@ -73,7 +73,7 @@ public class InjectionCacheHandler {
 
     private InjectionMetaData nullSageGetInjectionMetaData(InjectionMetaData injectionMetaData) {
         InjectionMetaDataBase injectionMetaDataBase = injectionMetaDataCache.get(injectionMetaData.getKey());
-        if(injectionMetaDataBase != null){
+        if (injectionMetaDataBase != null) {
             return injectionMetaDataBase.getInjectionMetaData();
         }
         return null;

@@ -9,7 +9,7 @@ import test.org.hrodberaht.inject.extension.cdi.config.ioc.ExampleModuleInternal
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 19:37:42
+ * 2010-okt-11 19:37:42
  * @version 1.0
  * @since 1.0
  */

@@ -16,7 +16,7 @@ public class ContainerConfigExample extends PluggableContainerConfigBase {
         liquibasePlugin.load(dataSource, "db.changelog-test.xml");
 
         registryBuilder.resource(builder ->
-           builder.resource(DataSource.class, dataSource)
+                builder.resource(DataSource.class, dataSource)
         );
     }
 }

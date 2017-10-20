@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
  * Simple Java Utils
  *
  * @author Robert Alexandersson
- *         2010-jun-06 03:14:13
+ * 2010-jun-06 03:14:13
  * @version 1.0
  * @since 1.0
  */

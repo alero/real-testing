@@ -11,7 +11,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Scanner;
 
-public class PlainHSqlBackupRestore implements DatasourceBackupRestore{
+public class PlainHSqlBackupRestore implements DatasourceBackupRestore {
 
 
     private static final Logger LOG = LoggerFactory.getLogger(PlainHSqlBackupRestore.class);
@@ -31,7 +31,7 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore{
         LOG.info("PlainHSqlBackupRestore backup to : {}", fileName);
 
 
-        try (final Connection connection = driverManager.getConnection()){
+        try (final Connection connection = driverManager.getConnection()) {
 
             JDBCService jdbcTemplate = createJdbcService(connection);
             String backup = "SCRIPT '" + fileName + "'";
@@ -48,7 +48,7 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore{
 
     private String getFilename(String name) {
         String customBackup = System.getProperty("hrodberaht.junit.sql.backupFile");
-        if(customBackup != null) {
+        if (customBackup != null) {
             name = customBackup;
         }
         return name;
@@ -60,7 +60,7 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore{
         final String fileName = getFilename(name);
         LOG.debug("PlainHSqlBackupRestore restore from : " + fileName);
 
-        try (Connection connection = driverManager.getConnection();){
+        try (Connection connection = driverManager.getConnection();) {
 
             JDBCService jdbcTemplate = createJdbcService(connection);
             readFile(new File(fileName), jdbcTemplate);
@@ -93,10 +93,10 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore{
     }
 
     private void executeLine(JDBCService jdbcTemplate, String line) {
-        try{
+        try {
             jdbcTemplate.execute(line);
-        }catch (Exception e){
-            LOG.debug("Failed to restore line - "+line);
+        } catch (Exception e) {
+            LOG.debug("Failed to restore line - " + line);
         }
     }
 

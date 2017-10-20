@@ -1,6 +1,5 @@
 package org.hrodberaht.injection.spi;
 
-import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.register.InjectionRegister;
 
 

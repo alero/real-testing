@@ -8,7 +8,7 @@ import javax.ejb.Local;
  * Inject extension TDD
  *
  * @author Robert Alexandersson
- *         2011-05-03 21:43
+ * 2011-05-03 21:43
  * @created 1.0
  * @since 1.0
  */

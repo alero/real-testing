@@ -20,7 +20,7 @@ import static org.junit.Assert.assertNotNull;
  * Injection Extension JUnit
  *
  * @author Robert Alexandersson
- *         2010-okt-18 20:45:45
+ * 2010-okt-18 20:45:45
  * @version 1.0
  * @since 1.0
  */
@@ -44,21 +44,21 @@ public class CloneContainerRegistrationUnitT implements PerformanceTests {
     }
 
     @Test
-    public void testCopyJavaScan()  {
+    public void testCopyJavaScan() {
         InjectionRegisterScan injectionRegisterJava = new InjectionRegisterScan();
         InjectionRegisterScan testCopyJava = injectionRegisterJava.copy();
         assertFalse(testCopyJava == injectionRegisterJava);
     }
 
     @Test
-    public void testCopyJavaModule()  {
+    public void testCopyJavaModule() {
         InjectionRegisterModule injectionRegisterJava = new InjectionRegisterModule();
         InjectionRegisterModule testCopyJava = injectionRegisterJava.copy();
         assertFalse(testCopyJava == injectionRegisterJava);
     }
 
     @Test
-    public void testCopySingletonService()  {
+    public void testCopySingletonService() {
         InjectionRegisterScan registerJava = new InjectionRegisterScan();
         registerJava.scanPackage("org.hrodberaht.inject.testservices.annotated");
 
@@ -73,7 +73,7 @@ public class CloneContainerRegistrationUnitT implements PerformanceTests {
     }
 
     @Test(timeout = 500)
-    public void testCopyPerformance()  {
+    public void testCopyPerformance() {
 
         TimerUtil timer = new TimerUtil().start();
         InjectionRegisterModule registerJava = AnnotationContainerUtil.prepareLargeVolvoRegister();

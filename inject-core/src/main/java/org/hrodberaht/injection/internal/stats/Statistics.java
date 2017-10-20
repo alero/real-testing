@@ -6,7 +6,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * Simple Java Utils
  *
  * @author Robert Alexandersson
- *         2010-aug-04 22:36:08
+ * 2010-aug-04 22:36:08
  * @version 1.0
  * @since 1.0
  */

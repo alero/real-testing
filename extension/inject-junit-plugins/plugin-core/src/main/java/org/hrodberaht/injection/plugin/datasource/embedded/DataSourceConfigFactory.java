@@ -13,7 +13,7 @@ public class DataSourceConfigFactory {
     private String dbName;
 
     public DataSourceConfigFactory(DataSourceProxyInterface dataSourceProxyInterface,
-                                   ResourceWatcher resourceWatcher,  String dbName) {
+                                   ResourceWatcher resourceWatcher, String dbName) {
         this.dataSourceProxyInterface = dataSourceProxyInterface;
         this.resourceWatcher = resourceWatcher;
         this.dbName = dbName;

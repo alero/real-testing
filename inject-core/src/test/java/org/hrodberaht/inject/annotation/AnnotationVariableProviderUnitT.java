@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
  * Injection Extension JUnit
  *
  * @author Robert Alexandersson
- *         2010-sep-26 21:32:07
+ * 2010-sep-26 21:32:07
  * @version 1.0
  * @since 1.0
  */

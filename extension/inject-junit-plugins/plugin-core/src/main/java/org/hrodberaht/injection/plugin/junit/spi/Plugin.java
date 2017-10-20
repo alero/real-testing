@@ -4,6 +4,6 @@ public interface Plugin {
 
     LifeCycle getLifeCycle();
 
-    enum LifeCycle { SINGLETON, NEW }
+    enum LifeCycle {SINGLETON, NEW}
 
 }

@@ -9,7 +9,7 @@ import java.util.List;
  * Injection Extension JUnit
  *
  * @author Robert Alexandersson
- *         2010-sep-23 20:33:47
+ * 2010-sep-23 20:33:47
  * @version 1.0
  * @since 1.0
  */

@@ -7,7 +7,7 @@ import java.rmi.RemoteException;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 22:04:21
+ * 2010-okt-11 22:04:21
  * @version 1.0
  * @since 1.0
  */

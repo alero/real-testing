@@ -14,7 +14,7 @@ import static org.hrodberaht.injection.plugin.junit.spring.config.SpringContaine
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 19:37:42
+ * 2010-okt-11 19:37:42
  * @version 2.0
  * @since 2.0
  */

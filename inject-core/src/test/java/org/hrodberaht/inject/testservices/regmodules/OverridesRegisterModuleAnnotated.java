@@ -9,7 +9,7 @@ import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
  * Simple Java Utils
  *
  * @author Robert Alexandersson
- *         2010-aug-01 16:32:48
+ * 2010-aug-01 16:32:48
  * @version 1.0
  * @since 1.0
  */

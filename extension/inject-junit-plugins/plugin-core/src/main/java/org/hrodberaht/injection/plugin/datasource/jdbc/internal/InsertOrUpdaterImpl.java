@@ -9,7 +9,7 @@ import java.util.Map;
  * @author Robert Alexandersson
  */
 public class InsertOrUpdaterImpl implements InsertOrUpdater {
-    
+
     private Map<String, Object> where = new HashMap<String, Object>();
     private Map<String, Object> fields = new HashMap<String, Object>();
     private String table;

@@ -42,6 +42,7 @@ public class InjectionRegisterUnitT {
                 this.register(ATestingServiceInterface.class).with(ATestingService.class);
                 this.register(BTestingServiceInnerInterface.class).with(BTestingServiceInner.class);
             }
+
             @Override
             public void scan() {
                 this.scanAndRegister("org.hrodberaht.inject.testservices.annotated");
@@ -50,29 +51,28 @@ public class InjectionRegisterUnitT {
 
         InjectContainer injectionContainer =
                 new InjectionRegistryPlain()
-                .register(largeScanModule)
-                .register(scanModule)
-                .getContainer();
+                        .register(largeScanModule)
+                        .register(scanModule)
+                        .getContainer();
 
         assertTheContainer(injectionContainer);
     }
 
 
-
     @Test
     public void moduleRegistrationLambda() throws Exception {
         InjectContainer injectionContainer =
-            new InjectionRegistryStream()
-                    .scan(() -> "org.hrodberaht.inject.testservices.largepackage")
-                    .register(
-                            e -> {
-                                e.register(AnyService.class).with(AnyServiceDoSomethingImpl.class);
-                                e.register(ATestingServiceInterface.class).with(ATestingService.class);
-                                e.register(BTestingServiceInnerInterface.class).with(BTestingServiceInner.class);
-                            }
-                    )
-                    .scan(() -> "org.hrodberaht.inject.testservices.annotated")
-            .getContainer();
+                new InjectionRegistryStream()
+                        .scan(() -> "org.hrodberaht.inject.testservices.largepackage")
+                        .register(
+                                e -> {
+                                    e.register(AnyService.class).with(AnyServiceDoSomethingImpl.class);
+                                    e.register(ATestingServiceInterface.class).with(ATestingService.class);
+                                    e.register(BTestingServiceInnerInterface.class).with(BTestingServiceInner.class);
+                                }
+                        )
+                        .scan(() -> "org.hrodberaht.inject.testservices.annotated")
+                        .getContainer();
 
         assertTheContainer(injectionContainer);
 
@@ -136,7 +136,7 @@ public class InjectionRegisterUnitT {
                                 }
                         )
                         .scan(() -> "org.hrodberaht.inject.testservices.annotated")
-                    .getModule();
+                        .getModule();
 
         Module moduleTwo =
                 new InjectionRegistryStream()

@@ -16,7 +16,7 @@ public class EntityManagerHolder {
 
 
     public void begin(Collection<EntityManager> managers) {
-        if(managers != null) {
+        if (managers != null) {
             MANAGERS.set(new EntityManagers(managers));
             for (EntityManager entityManager : managers) {
                 if (entityManager != null) {
@@ -31,7 +31,7 @@ public class EntityManagerHolder {
 
     public void end() {
         EntityManagers entityManagers = MANAGERS.get();
-        if(entityManagers != null) {
+        if (entityManagers != null) {
             for (EntityManager entityManager : entityManagers.entityManagers) {
                 if (entityManager != null) {
 
@@ -48,7 +48,7 @@ public class EntityManagerHolder {
         return MANAGERS.get().entityManagers;
     }
 
-    private class EntityManagers{
+    private class EntityManagers {
         private Collection<EntityManager> entityManagers;
 
         public EntityManagers(Collection<EntityManager> managers) {

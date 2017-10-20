@@ -12,7 +12,7 @@ import java.util.List;
  * Inject extension TDD
  *
  * @author Robert Alexandersson
- *         2011-02-05 19:26
+ * 2011-02-05 19:26
  * @created 1.0
  * @since 1.0
  */

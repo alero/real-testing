@@ -13,7 +13,6 @@ import org.hrodberaht.injection.spi.ResourceCreator;
 public class TestConfig extends ContainerConfigBase {
 
 
-
     @Override
     protected ResourceCreator createResourceCreator() {
         return null;

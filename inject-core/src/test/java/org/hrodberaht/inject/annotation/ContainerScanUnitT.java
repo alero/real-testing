@@ -39,7 +39,7 @@ import static org.junit.Assert.assertTrue;
  * Simple Java Utils
  *
  * @author Robert Alexandersson
- *         2010-maj-29 17:02:46
+ * 2010-maj-29 17:02:46
  * @version 1.0
  * @since 1.0
  */
@@ -155,10 +155,10 @@ public class ContainerScanUnitT {
         register.scanPackage("org.hrodberaht.inject.testservices.simple");
 
         InjectContainer container = register.getContainer();
-        try{
+        try {
             AnyService anyService = container.get(AnyService.class);
             assertEquals("not here", null);
-        }catch (InjectRuntimeException e){
+        } catch (InjectRuntimeException e) {
             assertNotNull(container);
         }
 

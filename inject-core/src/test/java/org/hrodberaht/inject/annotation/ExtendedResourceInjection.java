@@ -12,7 +12,7 @@ import java.util.List;
  * Qmatic Booking Module
  *
  * @author Robert Alexandersson
- *         2011-04-04 21:23
+ * 2011-04-04 21:23
  * @created 1.0
  * @since 1.0
  */

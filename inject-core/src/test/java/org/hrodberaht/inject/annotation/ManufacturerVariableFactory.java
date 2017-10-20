@@ -12,7 +12,7 @@ import org.hrodberaht.injection.register.VariableInjectionFactory;
  * Injection Extension JUnit
  *
  * @author Robert Alexandersson
- *         2010-sep-26 21:53:03
+ * 2010-sep-26 21:53:03
  * @version 1.0
  * @since 1.0
  */

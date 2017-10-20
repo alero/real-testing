@@ -1,8 +1,8 @@
 package org.hrodberaht.injection.extensions.plugin.demo.test.config;
 
 import org.hrodberaht.injection.plugin.junit.PluggableContainerConfigBase;
-import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin;
+import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
 
 import javax.sql.DataSource;
 
@@ -10,7 +10,7 @@ import javax.sql.DataSource;
  * Inject extension TDD
  *
  * @author Robert Alexandersson
- *         2011-05-03 20:31
+ * 2011-05-03 20:31
  * @created 1.0
  * @since 1.0
  */

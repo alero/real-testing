@@ -5,7 +5,7 @@ import org.hrodberaht.injection.register.RegistrationModuleAnnotationScanner;
 /**
  * Created by alexbrob on 2016-03-30.
  */
-public class Module extends RegistrationModuleAnnotationScanner{
+public class Module extends RegistrationModuleAnnotationScanner {
 
     private InjectContainer injectionContainer;
 

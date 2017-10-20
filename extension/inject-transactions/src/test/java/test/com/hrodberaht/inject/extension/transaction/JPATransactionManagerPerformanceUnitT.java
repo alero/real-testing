@@ -21,18 +21,18 @@ import java.util.Date;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
-/**
+ * /**
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-11 22:58:13
+ * 2010-aug-11 22:58:13
  * @version 1.0
  * @since 1.0
- *  <p/>
- *  To run these tests with load time weaving add the weaver to the JRE like this.
- *  -javaagent:C:/Users/Robert/.m2/repository/org/aspectj/aspectjweaver/1.7.1/aspectjweaver-1.7.1.jar
- *   If the path contains a space do it like this
- *  -javaagent:"C:\Users\alexbrob\.m2\repository\org\aspectj\aspectjweaver\1.7.1\aspectjweaver-1.7.1.jar"
+ * <p/>
+ * To run these tests with load time weaving add the weaver to the JRE like this.
+ * -javaagent:C:/Users/Robert/.m2/repository/org/aspectj/aspectjweaver/1.7.1/aspectjweaver-1.7.1.jar
+ * If the path contains a space do it like this
+ * -javaagent:"C:\Users\alexbrob\.m2\repository\org\aspectj\aspectjweaver\1.7.1\aspectjweaver-1.7.1.jar"
  */
 
 @InjectionContainerContext(ModuleContainerForTests.class)
@@ -68,8 +68,8 @@ public class JPATransactionManagerPerformanceUnitT {
     private void performTest() {
         JPATransactedApplication.performanceCount = new AtomicLong(0L);
         final int threadCount = 500, iterations = 2000;
-        long sleepTime = iterations* JPATransactedApplication.performanceSleeptime;
-        System.out.println("Estimated sleep-time = "+(sleepTime)+ "ms");
+        long sleepTime = iterations * JPATransactedApplication.performanceSleeptime;
+        System.out.println("Estimated sleep-time = " + (sleepTime) + "ms");
         Date startDate = new Date();
 
         final InjectContainer container = ModuleContainerForTests.container;
@@ -93,24 +93,24 @@ public class JPATransactionManagerPerformanceUnitT {
             waitForIt(thread);
         }
 
-        System.out.println("Begun transactions: "+ StatisticsJPA.getBeginCount());
-        System.out.println("Closed transactions: "+ StatisticsJPA.getCloseCount());
+        System.out.println("Begun transactions: " + StatisticsJPA.getBeginCount());
+        System.out.println("Closed transactions: " + StatisticsJPA.getCloseCount());
 
-        System.out.println("Committed transactions: "+StatisticsJPA.getCommitCount());
-        System.out.println("Rollback transactions: "+StatisticsJPA.getRollbackCount());
+        System.out.println("Committed transactions: " + StatisticsJPA.getCommitCount());
+        System.out.println("Rollback transactions: " + StatisticsJPA.getRollbackCount());
 
-        System.out.println("Nr of Calls: "+ JPATransactedApplication.performanceCount.longValue());
+        System.out.println("Nr of Calls: " + JPATransactedApplication.performanceCount.longValue());
 
         Date endDate = new Date();
-        long execTime = endDate.getTime()-startDate.getTime();
-        long adjustedTime = execTime-sleepTime;
-        System.out.println("Transaction overhead time "+(adjustedTime)+"ms " +
-                "for "+ JPATransactedApplication.performanceCount.longValue()+ " calls" +
-                " creating " + StatisticsJPA.getBeginCount()+ " transactions"
+        long execTime = endDate.getTime() - startDate.getTime();
+        long adjustedTime = execTime - sleepTime;
+        System.out.println("Transaction overhead time " + (adjustedTime) + "ms " +
+                "for " + JPATransactedApplication.performanceCount.longValue() + " calls" +
+                " creating " + StatisticsJPA.getBeginCount() + " transactions"
         );
 
-        System.out.println("Transaction/ms "+(StatisticsJPA.getBeginCount()/adjustedTime));
-        System.out.println("Calls/ms "+(JPATransactedApplication.performanceCount.longValue()/adjustedTime));
+        System.out.println("Transaction/ms " + (StatisticsJPA.getBeginCount() / adjustedTime));
+        System.out.println("Calls/ms " + (JPATransactedApplication.performanceCount.longValue() / adjustedTime));
     }
 
     private void waitForIt(Thread thread) {

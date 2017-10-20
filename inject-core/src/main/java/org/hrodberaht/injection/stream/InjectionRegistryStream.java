@@ -33,11 +33,11 @@ public class InjectionRegistryStream<T extends Module> implements InjectionRegis
         return injectionContainer;
     }
 
-    public InjectionRegisterScanBase getCustomScanner(){
+    public InjectionRegisterScanBase getCustomScanner() {
         return null;
     }
 
-    public InjectionRegistryStream module(AppendModuleFunc scanModuleFunc){
+    public InjectionRegistryStream module(AppendModuleFunc scanModuleFunc) {
         injectionRegisterModule.register(scanModuleFunc.module());
         injectionContainer = injectionRegisterModule.getContainer();
         return this;
@@ -66,7 +66,7 @@ public class InjectionRegistryStream<T extends Module> implements InjectionRegis
         return this;
     }
 
-    public InjectionRegistryStream scan(ScanModuleFunc scanModuleFunc){
+    public InjectionRegistryStream scan(ScanModuleFunc scanModuleFunc) {
         String _packages = scanModuleFunc.scan();
         Module module = new Module() {
             @Override
@@ -77,7 +77,7 @@ public class InjectionRegistryStream<T extends Module> implements InjectionRegis
             @Override
             public InjectionRegisterScanBase getScanner() {
                 InjectionRegisterScanBase registerScan = getCustomScanner();
-                if(registerScan != null){
+                if (registerScan != null) {
                     return registerScan;
                 }
                 return super.getScanner();
@@ -88,7 +88,7 @@ public class InjectionRegistryStream<T extends Module> implements InjectionRegis
         return this;
     }
 
-    public InjectionRegistryStream register(RegisterModuleFunc scanModuleFunc){
+    public InjectionRegistryStream register(RegisterModuleFunc scanModuleFunc) {
         Registrations registrations = new Registrations();
         scanModuleFunc.register(registrations);
         List<RegistrationInstanceSimple> register = registrations.registry();
@@ -104,13 +104,13 @@ public class InjectionRegistryStream<T extends Module> implements InjectionRegis
     }
 
     public InjectionRegistryStream resource(RegisterResourceFunc registerResourceFunc) {
-        if(configBase == null){
+        if (configBase == null) {
             throw new IllegalAccessError("ContainerConfigBase needed for resources");
         }
         InjectionResources registrations = new InjectionResources();
         registerResourceFunc.createResource(registrations);
 
-        for(ResourceEntityManager resourceEntityManager:registrations.getEntityManagers()) {
+        for (ResourceEntityManager resourceEntityManager : registrations.getEntityManagers()) {
             String dataSourceName = resourceEntityManager.getResourceDataSource().getName();
             DataSource dataSource = createRegisterDataSource(resourceEntityManager.getResourceDataSource());
 
@@ -121,7 +121,7 @@ public class InjectionRegistryStream<T extends Module> implements InjectionRegis
 
         }
 
-        for(ResourceDataSource resourceDataSource:registrations.getDataSources()) {
+        for (ResourceDataSource resourceDataSource : registrations.getDataSources()) {
             createRegisterDataSource(resourceDataSource);
         }
 
@@ -153,7 +153,7 @@ public class InjectionRegistryStream<T extends Module> implements InjectionRegis
         return (T) module;
     }
 
-    protected T createModuleContainer(){
+    protected T createModuleContainer() {
         return (T) new Module(injectionContainer);
     }
 }

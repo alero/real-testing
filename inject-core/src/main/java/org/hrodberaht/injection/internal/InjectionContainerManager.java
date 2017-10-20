@@ -25,7 +25,7 @@ import java.util.Collection;
  * Simple Java Utils - Container - Container
  *
  * @author Robert Alexandersson
- *         2010-mar-27 14:05:34
+ * 2010-mar-27 14:05:34
  * @version 1.0
  * @since 1.0
  */
@@ -141,7 +141,7 @@ public class InjectionContainerManager implements ScopeContainer, InjectContaine
     public void injectDependencies(Object service) {
         injectionContainer.injectDependencies(service);
     }
-    
+
     public InjectionContainerManager copy() {
         InjectionContainerManager injectionContainerManager = new InjectionContainerManager();
         injectionContainerManager.injectionContainer = this.injectionContainer.copy(injectionContainerManager);

@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 19:31:30
+ * 2010-okt-11 19:31:30
  * @version 1.0
  * @since 1.0
  */
@@ -50,26 +50,26 @@ public class TestCDIServiceContext {
 
         assertTrue(
                 containerLifeCycleTestUtil.getService(CDIServiceInterface.class)
-                    ==
-                containerLifeCycleTestUtil.getService(CDIServiceInterface.class)
+                        ==
+                        containerLifeCycleTestUtil.getService(CDIServiceInterface.class)
         );
 
         assertTrue(
                 containerLifeCycleTestUtil.getService(CDIServiceInterface.class).getLoadedPostContainer()
-                    ==
-                containerLifeCycleTestUtil.getService(CDIServiceInterface.class).getLoadedPostContainer()
+                        ==
+                        containerLifeCycleTestUtil.getService(CDIServiceInterface.class).getLoadedPostContainer()
         );
 
         assertTrue(
                 containerLifeCycleTestUtil.getService(SimpleServiceSingleton.class)
-                    ==
-                containerLifeCycleTestUtil.getService(SimpleServiceSingleton.class)
+                        ==
+                        containerLifeCycleTestUtil.getService(SimpleServiceSingleton.class)
         );
 
         assertFalse(
                 containerLifeCycleTestUtil.getService(SimpleService.class)
-                    ==
-                containerLifeCycleTestUtil.getService(SimpleService.class)
+                        ==
+                        containerLifeCycleTestUtil.getService(SimpleService.class)
         );
 
     }

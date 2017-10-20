@@ -20,7 +20,7 @@ import java.util.Map;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 20:38:41
+ * 2010-okt-11 20:38:41
  * @version 1.0
  * @since 1.0
  */

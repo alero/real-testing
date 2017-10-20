@@ -23,7 +23,7 @@ import javax.inject.Provider;
  * Simple Java Utils - Container
  *
  * @author Robert Alexandersson
- *         2010-maj-29 00:46:09
+ * 2010-maj-29 00:46:09
  * @version 1.0
  * @since 1.0
  */

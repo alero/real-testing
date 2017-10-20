@@ -112,13 +112,13 @@ public class DataSourceExecution {
 
     private List<File> findFiles(final ClassLoader classLoader, final String packageBase) {
         String classLoadingCompatible = stabilize(packageBase);
-        LOG.info("loading resources from "+classLoadingCompatible);
+        LOG.info("loading resources from " + classLoadingCompatible);
         URL url = classLoader.getResource(classLoadingCompatible);
         if (url == null) {
-            LOG.info("found no resources at "+classLoadingCompatible);
+            LOG.info("found no resources at " + classLoadingCompatible);
             return Collections.emptyList();
         }
-        LOG.info("found some resources at "+classLoadingCompatible);
+        LOG.info("found some resources at " + classLoadingCompatible);
         String directoryString = url.getFile().replaceAll("%20", " ");
         File directory = new File(directoryString);
         File[] files = directory.listFiles();

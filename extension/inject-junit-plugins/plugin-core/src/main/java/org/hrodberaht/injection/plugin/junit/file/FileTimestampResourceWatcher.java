@@ -52,9 +52,9 @@ public class FileTimestampResourceWatcher implements ResourceWatcher {
         } else {
             try (Stream<String> stream = Files.lines(Paths.get(timestampHolder.getPath()))) {
                 stream.forEach(line -> {
-                        FileWatcher fileWatcher = FileWatcher.readString(line);
-                        filesToWatchCache.put(fileWatcher.getFile(), fileWatcher);
-                    }
+                            FileWatcher fileWatcher = FileWatcher.readString(line);
+                            filesToWatchCache.put(fileWatcher.getFile(), fileWatcher);
+                        }
                 );
                 if (!compareEquals(filesToWatch, filesToWatchCache)) {
                     LOG.debug("Syncing on changed sourcefile");
@@ -93,7 +93,7 @@ public class FileTimestampResourceWatcher implements ResourceWatcher {
     private boolean compareEquals(Map<File, FileWatcher> filesToWatch, Map<File, FileWatcher> filesToWatchCache) {
         for (Map.Entry<File, FileWatcher> file : filesToWatch.entrySet()) {
             FileWatcher fileWatcher = filesToWatchCache.get(file.getKey());
-            if(fileWatcher == null){
+            if (fileWatcher == null) {
                 return false;
             }
             if (!fileWatcher.equals(file.getValue())) {

@@ -5,7 +5,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Persistence;
-import javax.sql.DataSource;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,7 +19,7 @@ public class EntityManagerCreator {
 
     public EntityManager createEntityManager(String name) {
 
-        if(entityManagerMap.get(name) == null){
+        if (entityManagerMap.get(name) == null) {
 
             EntityManager entityManager = Persistence.createEntityManagerFactory(name).createEntityManager();
             LOG.info("Created entity manager " + entityManager);

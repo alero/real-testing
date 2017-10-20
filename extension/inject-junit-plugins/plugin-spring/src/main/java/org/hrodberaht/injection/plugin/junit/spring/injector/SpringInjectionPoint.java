@@ -36,10 +36,10 @@ public class SpringInjectionPoint extends InjectionPoint {
         return interfaceClass;
     }
 
-    public String getDisplayName(){
-        if(interfaceClass != null){
-            return "type:"+interfaceClass.getName();
+    public String getDisplayName() {
+        if (interfaceClass != null) {
+            return "type:" + interfaceClass.getName();
         }
-        return "name:"+name;
+        return "name:" + name;
     }
 }

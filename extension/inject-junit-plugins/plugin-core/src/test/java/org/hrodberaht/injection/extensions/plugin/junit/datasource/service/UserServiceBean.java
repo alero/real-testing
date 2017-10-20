@@ -37,10 +37,10 @@ public class UserServiceBean implements UserService {
 
     public User find(String userName) {
 
-            return jdbcService.querySingle(
-                    "select * from user where username = ?",
-                    (rs, iteration) -> new User(rs.getString("username"), rs.getString("password")),
-                    userName);
+        return jdbcService.querySingle(
+                "select * from user where username = ?",
+                (rs, iteration) -> new User(rs.getString("username"), rs.getString("password")),
+                userName);
 
     }
 

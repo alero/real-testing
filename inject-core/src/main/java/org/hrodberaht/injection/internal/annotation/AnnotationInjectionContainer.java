@@ -44,7 +44,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * Simple Java Utils - Container
  *
  * @author Robert Alexandersson
- *         2010-maj-29 12:38:22
+ * 2010-maj-29 12:38:22
  * @version 1.0
  * @since 1.0
  */
@@ -142,11 +142,11 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
         LOG.debug("Putting service into registry for key={}", key);
         RegistrationInstanceSimple registrationInstanceSimple =
                 (RegistrationInstanceSimple)
-                new RegistrationInstanceSimple(key.getServiceDefinition())
-                .with(service)
-                .annotated(key.getAnnotation())
-                .registerTypeAs(type)
-                .scopeAs(scope);
+                        new RegistrationInstanceSimple(key.getServiceDefinition())
+                                .with(service)
+                                .annotated(key.getAnnotation())
+                                .registerTypeAs(type)
+                                .scopeAs(scope);
 
         createAnStoreRegistration(registrationInstanceSimple, key, null);
     }
@@ -299,10 +299,10 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
                                                       RegistrationModuleAnnotation aModule) {
         InjectionMetaData injectionMetaData = createInjectionMetaData(instance, key);
         ServiceRegister register;
-        if(aModule != null){
+        if (aModule != null) {
             register = createServiceRegister(instance, injectionMetaData, false);
             register.setModule(aModule);
-        }else {
+        } else {
             register = createServiceRegister(instance, injectionMetaData, true);
         }
         putServiceIntoRegister(key, register);
@@ -316,13 +316,13 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
         // Validate the MetaDataCache
         AnnotationInjection annotationInjection = new AnnotationInjection(injectionMetaDataCache, container, this);
         InjectionMetaData injectionMetaDataCache = annotationInjection.getInjectionCacheHandler().find(injectionMetaData);
-        if(injectionMetaDataCache != injectionMetaData){
+        if (injectionMetaDataCache != injectionMetaData) {
             throw new InjectRuntimeException("InjectionMetaData not cached correctly");
         }
 
         // Validate the ServiceRegister cache
         ServiceRegister serviceRegisterCache = registeredServices.get(key);
-        if(serviceRegisterCache != register){
+        if (serviceRegisterCache != register) {
             throw new InjectRuntimeException("ServiceRegister not cached correctly");
         }
 
@@ -395,7 +395,7 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
         for (InjectionKey injectionKey : this.registeredServices.keySet()) {
             ServiceRegister serviceRegister = this.registeredServices.get(injectionKey);
             // If the key exists but not the service, it just means we have injected dependencies into it, but do not manage the lifecycle of it
-            if(serviceRegister != null){
+            if (serviceRegister != null) {
                 if (serviceRegister.getScope() == ScopeContainer.Scope.SINGLETON) {
                     annotationInjectionContainer.registeredServices.put(injectionKey, serviceRegister.copy());
                 } else {

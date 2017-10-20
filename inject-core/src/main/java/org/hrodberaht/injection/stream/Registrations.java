@@ -3,7 +3,6 @@ package org.hrodberaht.injection.stream;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.register.internal.RegistrationExtended;
 import org.hrodberaht.injection.register.internal.RegistrationInstanceSimple;
-import org.hrodberaht.injection.spi.module.CustomInjectionPointFinderModule;
 
 import java.util.ArrayList;
 import java.util.List;

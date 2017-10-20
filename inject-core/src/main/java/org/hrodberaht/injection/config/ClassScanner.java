@@ -51,7 +51,7 @@ public class ClassScanner {
             ArrayList<Class> classes = new ArrayList<Class>(200);
             for (File fileToLoad : filesToLoad) {
                 LOG.debug("findJarFiles fileToLoad = " + fileToLoad);
-                try(JarFile jarFile = new JarFile(fileToLoad)) {
+                try (JarFile jarFile = new JarFile(fileToLoad)) {
                     Enumeration<JarEntry> enumeration = jarFile.entries();
                     while (enumeration.hasMoreElements()) {
                         manageJarEntries(packageName, classes, fileToLoad, enumeration);
@@ -133,7 +133,7 @@ public class ClassScanner {
         }
         for (File file : files) {
             if (file.isDirectory()) {
-                if(!".".contains(file.getName())) {
+                if (!".".contains(file.getName())) {
                     classes.addAll(findClasses(file, packageName + "." + file.getName()));
                 }
             } else if (file.getName().endsWith(".class")) {

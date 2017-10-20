@@ -21,7 +21,7 @@ import junit.framework.TestCase;
  * Simple Java Utils - Injection
  *
  * @author Robert Alexandersson
- *         2010-maj-28 19:27:43
+ * 2010-maj-28 19:27:43
  * @version 1.0
  * @since 1.0
  */

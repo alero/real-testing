@@ -8,8 +8,6 @@ import org.hrodberaht.injection.config.InjectionRegisterScanBase;
 import org.hrodberaht.injection.config.InjectionStoreFactory;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.register.internal.RegistrationInstanceSimple;
-import org.hrodberaht.injection.spi.ResourceKey;
-import sun.misc.Resource;
 
 import java.util.List;
 
@@ -37,11 +35,11 @@ public class InjectionRegistryBuilder<T extends Module> implements InjectionRegi
         return injectionContainer;
     }
 
-    protected InjectionRegisterScanBase getCustomScanner(){
+    protected InjectionRegisterScanBase getCustomScanner() {
         return null;
     }
 
-    public InjectionRegistryBuilder module(AppendModuleFunc scanModuleFunc){
+    public InjectionRegistryBuilder module(AppendModuleFunc scanModuleFunc) {
         injectionRegisterModule.register(scanModuleFunc.module());
         injectionContainer = injectionRegisterModule.getContainer();
         return this;
@@ -70,7 +68,7 @@ public class InjectionRegistryBuilder<T extends Module> implements InjectionRegi
         return this;
     }
 
-    public InjectionRegistryBuilder scan(ScanModuleFunc scanModuleFunc){
+    public InjectionRegistryBuilder scan(ScanModuleFunc scanModuleFunc) {
         String _packages = scanModuleFunc.scan();
         Module module = new Module() {
             @Override
@@ -81,7 +79,7 @@ public class InjectionRegistryBuilder<T extends Module> implements InjectionRegi
             @Override
             public InjectionRegisterScanBase getScanner() {
                 InjectionRegisterScanBase registerScan = getCustomScanner();
-                if(registerScan != null){
+                if (registerScan != null) {
                     return registerScan;
                 }
                 return super.getScanner();
@@ -92,7 +90,7 @@ public class InjectionRegistryBuilder<T extends Module> implements InjectionRegi
         return this;
     }
 
-    public InjectionRegistryBuilder register(RegisterModuleFunc scanModuleFunc){
+    public InjectionRegistryBuilder register(RegisterModuleFunc scanModuleFunc) {
         Registrations registrations = new Registrations();
         scanModuleFunc.register(registrations);
         List<RegistrationInstanceSimple> register = registrations.registry();
@@ -112,7 +110,7 @@ public class InjectionRegistryBuilder<T extends Module> implements InjectionRegi
     }
 
     public InjectionRegistryBuilder resource(ResourceFunc registerResourceFunc) {
-        if(configBase == null){
+        if (configBase == null) {
             throw new IllegalAccessError("ContainerConfigBase needed for resources");
         }
         ResourcesBuilder registrations = new ResourcesBuilder();
@@ -135,7 +133,7 @@ public class InjectionRegistryBuilder<T extends Module> implements InjectionRegi
         registrations.getNamedInstances().entrySet().forEach(
                 entry -> configBase.getResourceFactory()
                         .getCreator(entry.getKey().getType())
-                            .create(entry.getKey().getName(), entry.getValue())
+                        .create(entry.getKey().getName(), entry.getValue())
         );
 
         registrations.getTypedInstances().entrySet().forEach(
@@ -146,25 +144,26 @@ public class InjectionRegistryBuilder<T extends Module> implements InjectionRegi
 
         return this;
     }
-/*
-    private DataSource createRegisterDataSource(ResourceDataSource resourceDataSource) {
-        String dataSourceName = resourceDataSource.getName();
-        // Makes it possible to define the same datasource in many multiple junit runners
-        if (!configBase.hasDataSource(dataSourceName)) {
-            DataSource dataSource = configBase.createDataSource(dataSourceName);
-            configBase.addResource(dataSourceName, dataSource);
-            return dataSource;
+
+    /*
+        private DataSource createRegisterDataSource(ResourceDataSource resourceDataSource) {
+            String dataSourceName = resourceDataSource.getName();
+            // Makes it possible to define the same datasource in many multiple junit runners
+            if (!configBase.hasDataSource(dataSourceName)) {
+                DataSource dataSource = configBase.createDataSource(dataSourceName);
+                configBase.addResource(dataSourceName, dataSource);
+                return dataSource;
+            }
+            return configBase.getDataSource(dataSourceName);
         }
-        return configBase.getDataSource(dataSourceName);
-    }
-*/
+    */
     public T getModule() {
         Module module = createModuleContainer();
         injectionRegisterModule.fillModule(module);
         return (T) module;
     }
 
-    protected T createModuleContainer(){
+    protected T createModuleContainer() {
         return (T) new Module(injectionContainer);
     }
 

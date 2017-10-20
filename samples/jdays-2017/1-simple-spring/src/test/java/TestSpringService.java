@@ -10,8 +10,11 @@ import static org.junit.Assert.assertEquals;
 @ContainerContext(JUnitModuleConfig.class)
 @RunWith(SpringJUnitRunner.class)
 public class TestSpringService {
-    @Autowired private Service aService;
-    @Test public void testDoing(){
+    @Autowired
+    private Service aService;
+
+    @Test
+    public void testDoing() {
         assertEquals("done", aService.doIt());
     }
 }

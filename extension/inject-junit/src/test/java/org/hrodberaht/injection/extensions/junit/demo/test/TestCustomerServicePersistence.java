@@ -20,7 +20,7 @@ import static org.junit.Assert.assertNotSame;
  * Inject extension TDD
  *
  * @author Robert Alexandersson
- *         2011-05-03 20:05
+ * 2011-05-03 20:05
  * @created 1.0
  * @since 1.0
  */

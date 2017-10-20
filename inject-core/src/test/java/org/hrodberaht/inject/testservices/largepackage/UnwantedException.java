@@ -4,7 +4,7 @@ package org.hrodberaht.inject.testservices.largepackage;
  * Simple Java Utils
  *
  * @author Robert Alexandersson
- *         2010-aug-02 21:46:10
+ * 2010-aug-02 21:46:10
  * @version 1.0
  * @since 1.0
  */

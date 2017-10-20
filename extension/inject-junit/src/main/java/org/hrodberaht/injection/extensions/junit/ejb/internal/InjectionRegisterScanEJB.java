@@ -14,7 +14,7 @@ import javax.ejb.Stateless;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 19:45:53
+ * 2010-okt-11 19:45:53
  * @version 1.0
  * @since 1.0
  */
@@ -55,7 +55,6 @@ public class InjectionRegisterScanEJB extends InjectionRegisterScanBase {
         }
         return false;
     }
-
 
 
     public ScopeContainer.Scope getScope(Class serviceClass) {

@@ -16,7 +16,7 @@ import javax.inject.Provider;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-10 18:47:12
+ * 2010-aug-10 18:47:12
  * @version 1.0
  * @since 1.0
  */

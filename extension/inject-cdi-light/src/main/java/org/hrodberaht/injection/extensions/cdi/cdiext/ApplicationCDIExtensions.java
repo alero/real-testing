@@ -35,7 +35,7 @@ import java.util.jar.JarFile;
  * Time: 12:29
  * To change this template use File | Settings | File Templates.
  */
-public class ApplicationCDIExtensions implements CDIExtensions{
+public class ApplicationCDIExtensions implements CDIExtensions {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationCDIExtensions.class);
 
@@ -97,12 +97,12 @@ public class ApplicationCDIExtensions implements CDIExtensions{
                 LOG.info("evaluating jar-file = {}", path);
                 if (FileScanningUtil.isJarFile(resource)) {
                     LOG.info("findJarFiles fileToLoad = {}", path);
-                    try(JarFile jarFile = new JarFile(FileScanningUtil.findJarFile(path))) {
+                    try (JarFile jarFile = new JarFile(FileScanningUtil.findJarFile(path))) {
                         handleJarEntries(extensionFileName, jarFile);
                     }
                 } else {
-                    try(FileInputStream fileInputStream = new FileInputStream(new File(resource.toURI()));
-                        BufferedReader br = new BufferedReader(new InputStreamReader(fileInputStream));
+                    try (FileInputStream fileInputStream = new FileInputStream(new File(resource.toURI()));
+                         BufferedReader br = new BufferedReader(new InputStreamReader(fileInputStream));
                     ) {
                         readExtensionsAndRegister(br);
                     }

@@ -8,7 +8,7 @@ import java.util.Collection;
  * Inject extension JUnit
  *
  * @author Robert Alexandersson
- *         2011-05-03 21:45
+ * 2011-05-03 21:45
  * @created 1.0
  * @since 1.0
  * <p/>

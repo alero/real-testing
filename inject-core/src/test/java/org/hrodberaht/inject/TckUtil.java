@@ -31,7 +31,7 @@ import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
  * Simple Java Utils
  *
  * @author Robert Alexandersson
- *         2010-maj-29 15:39:51
+ * 2010-maj-29 15:39:51
  * @version 1.0
  * @since 1.0
  */

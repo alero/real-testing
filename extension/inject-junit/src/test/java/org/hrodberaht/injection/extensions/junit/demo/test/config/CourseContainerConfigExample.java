@@ -10,7 +10,7 @@ import javax.sql.DataSource;
  * Inject extension TDD
  *
  * @author Robert Alexandersson
- *         2011-05-03 20:31
+ * 2011-05-03 20:31
  * @created 1.0
  * @since 1.0
  */

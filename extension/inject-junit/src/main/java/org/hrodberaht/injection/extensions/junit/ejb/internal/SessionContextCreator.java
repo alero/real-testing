@@ -9,7 +9,7 @@ import java.security.Principal;
  * Inject extension TDD
  *
  * @author Robert Alexandersson
- *         2011-04-04 23:15
+ * 2011-04-04 23:15
  * @created 1.0
  * @since 1.0
  */

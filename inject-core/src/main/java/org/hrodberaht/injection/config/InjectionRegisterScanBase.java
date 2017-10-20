@@ -17,7 +17,7 @@ import java.util.List;
  * Injection Extension JUnit
  *
  * @author Robert Alexandersson
- *         2010-okt-26 19:09:57
+ * 2010-okt-26 19:09:57
  * @version 1.0
  * @since 1.0
  */
@@ -62,7 +62,7 @@ public abstract class InjectionRegisterScanBase<T extends InjectionRegisterScanB
 
     public T scanPackageExclude(String packagename, Class... manuallyexcluded) {
         List<Class> listOfClasses = classScanner.getClasses(packagename);
-        List<Class> listOfFilteredClasses = new ArrayList<>(listOfClasses.size()-manuallyexcluded.length);
+        List<Class> listOfFilteredClasses = new ArrayList<>(listOfClasses.size() - manuallyexcluded.length);
         // remove the manual excludes
         for (Class aClazz : listOfClasses) {
             if (!manuallyExcluded(aClazz, manuallyexcluded)) {
@@ -75,7 +75,7 @@ public abstract class InjectionRegisterScanBase<T extends InjectionRegisterScanB
         return (T) this;
     }
 
-    public void registerForScanner(Class aClazz, Class serviceClass, ScopeContainer.Scope scope){
+    public void registerForScanner(Class aClazz, Class serviceClass, ScopeContainer.Scope scope) {
         RegistrationModuleAnnotation registrationModule = new RegistrationModuleAnnotation() {
             @Override
             public void registrations() {
@@ -105,7 +105,6 @@ public abstract class InjectionRegisterScanBase<T extends InjectionRegisterScanB
         };
         container.register(registrationModule);
     }
-
 
 
 }

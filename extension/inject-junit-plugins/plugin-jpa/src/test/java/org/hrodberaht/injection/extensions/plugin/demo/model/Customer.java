@@ -7,7 +7,7 @@ import javax.persistence.Id;
  * Inject extension TDD
  *
  * @author Robert Alexandersson
- *         2011-05-03 20:10
+ * 2011-05-03 20:10
  * @created 1.0
  * @since 1.0
  */

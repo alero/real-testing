@@ -6,9 +6,9 @@ import org.hrodberaht.injection.extensions.plugin.demo.test.config.CourseContain
 import org.hrodberaht.injection.extensions.plugin.demo.test.util.CourseDataModelStub;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
+import org.hrodberaht.injection.plugin.junit.jpa.JPATestUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.hrodberaht.injection.plugin.junit.jpa.JPATestUtil;
 
 import javax.inject.Inject;
 
@@ -20,7 +20,7 @@ import static org.junit.Assert.assertNotSame;
  * Inject extension TDD
  *
  * @author Robert Alexandersson
- *         2011-05-03 20:05
+ * 2011-05-03 20:05
  * @created 1.0
  * @since 1.0
  */

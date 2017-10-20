@@ -23,7 +23,7 @@ import java.util.logging.Logger;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 22:34:53
+ * 2010-okt-11 22:34:53
  * @version 1.0
  * @since 1.0
  */

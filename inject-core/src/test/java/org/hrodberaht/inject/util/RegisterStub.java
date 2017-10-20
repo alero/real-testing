@@ -9,7 +9,7 @@ import org.hrodberaht.injection.internal.InjectionRegisterScan;
  * Simple Java Utils
  *
  * @author Robert Alexandersson
- *         2010-aug-01 17:14:13
+ * 2010-aug-01 17:14:13
  * @version 1.0
  * @since 1.0
  */

@@ -38,7 +38,7 @@ import java.util.Map;
  * Simple Java Utils - Container
  *
  * @author Robert Alexandersson
- *         2010-maj-28 20:26:43
+ * 2010-maj-28 20:26:43
  * @version 1.0
  * @since 1.0
  */
@@ -112,7 +112,7 @@ public class AnnotationInjection {
         return injectionMetaData;
     }
 
-    public InjectionCacheHandler getInjectionCacheHandler(){
+    public InjectionCacheHandler getInjectionCacheHandler() {
         return injectionCacheHandler;
     }
 
@@ -194,7 +194,7 @@ public class AnnotationInjection {
     }
 
     private boolean validateListSize(List<InjectionMetaData> list) {
-        if(list == null){
+        if (list == null) {
             return true;
         }
         return list.size() == 0;
@@ -305,7 +305,7 @@ public class AnnotationInjection {
 
     private ObjectAndScope createInstanceObjectAndScope(InjectionMetaData injectionMetaData
             , boolean enforceNew, Object[] dependencies) {
-        if(enforceNew){
+        if (enforceNew) {
             return injectionMetaData.createNewInstance(dependencies);
         }
         return injectionMetaData.createInstance(dependencies);

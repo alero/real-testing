@@ -8,7 +8,7 @@ import java.util.Map;
  * Inject extension TDD
  *
  * @author Robert Alexandersson
- *         2011-02-05 20:19
+ * 2011-02-05 20:19
  * @created 1.0
  * @since 1.0
  */

@@ -8,7 +8,7 @@ import com.hrodberaht.inject.extensions.transaction.manager.internal.Transaction
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-21 20:29:06
+ * 2010-aug-21 20:29:06
  * @version 1.0
  * @since 1.0
  */
@@ -102,7 +102,7 @@ public abstract class TransactionManagerBase<T> implements TransactionManager, R
         if (holder == null) {
             return null;
         }
-        return holder.getCurrentActiveTransaction();        
+        return holder.getCurrentActiveTransaction();
     }
 
 }

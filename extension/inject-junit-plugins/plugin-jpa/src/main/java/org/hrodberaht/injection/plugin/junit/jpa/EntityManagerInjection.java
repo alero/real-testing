@@ -2,12 +2,10 @@ package org.hrodberaht.injection.plugin.junit.jpa;
 
 import org.hrodberaht.injection.internal.annotation.ReflectionUtils;
 
-import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +52,7 @@ public class EntityManagerInjection {
     }
 
     private void injectEntityManager(Object serviceInstance, Field field, PersistenceContext resource) {
-        if(entityManagers == null){
+        if (entityManagers == null) {
             throw new IllegalAccessError("Entity manager not registered");
         }
         Object value = entityManagers.get(resource.unitName());

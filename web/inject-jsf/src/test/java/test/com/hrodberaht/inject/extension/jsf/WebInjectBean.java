@@ -8,7 +8,7 @@ import javax.inject.Inject;
  * Injection Extension Web
  *
  * @author Robert Alexandersson
- *         2010-jul-28 22:52:12
+ * 2010-jul-28 22:52:12
  * @version 1.0
  * @since 1.0
  */

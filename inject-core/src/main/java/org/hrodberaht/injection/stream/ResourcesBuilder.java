@@ -31,36 +31,35 @@ public class ResourcesBuilder {
         return typed;
     }
 
-    public ResourcesBuilder resource(String name, Class type, Object instance){
+    public ResourcesBuilder resource(String name, Class type, Object instance) {
         namedInstances.put(ResourceKey.of(name, type), instance);
         return this;
     }
 
-    public ResourcesBuilder resource(String name, Object instance){
+    public ResourcesBuilder resource(String name, Object instance) {
         namedInstances.put(ResourceKey.of(name, instance.getClass()), instance);
         return this;
     }
 
-    public ResourcesBuilder resource(Class type, Object instance){
+    public ResourcesBuilder resource(Class type, Object instance) {
         typedInstances.put(type, instance);
         return this;
     }
 
-    public ResourcesBuilder resource(Object instance){
+    public ResourcesBuilder resource(Object instance) {
         typedInstances.put(instance.getClass(), instance);
         return this;
     }
 
-    public ResourcesBuilder resource(Class type){
+    public ResourcesBuilder resource(Class type) {
         typed.put(type, type);
         return this;
     }
 
-    public ResourcesBuilder resource(String name, Class type){
+    public ResourcesBuilder resource(String name, Class type) {
         namedType.put(ResourceKey.of(name, type), type);
         return this;
     }
-
 
 
 }

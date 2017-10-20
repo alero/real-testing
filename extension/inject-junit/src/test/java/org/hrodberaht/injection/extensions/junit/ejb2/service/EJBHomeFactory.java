@@ -11,7 +11,7 @@ import javax.rmi.PortableRemoteObject;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 21:53:38
+ * 2010-okt-11 21:53:38
  * @version 1.0
  * @since 1.0
  */

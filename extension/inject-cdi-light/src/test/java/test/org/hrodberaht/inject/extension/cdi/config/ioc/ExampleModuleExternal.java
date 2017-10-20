@@ -13,12 +13,12 @@ public class ExampleModuleExternal {
     private CDIModule module;
 
     public ExampleModuleExternal(CDIContainerConfigBase configBase) {
-        module =  new CDIInjectionRegistryStream(configBase)
+        module = new CDIInjectionRegistryStream(configBase)
                 .scan(() -> "org.hrodberaht.injection.extensions.cdi.example.service")
                 .resource(e -> {
-                        e.createDataSource(DataSourceNames.SAMPLE);
-                        e.createEntityManager("example-jpa", DataSourceNames.SAMPLE);
-                    }
+                            e.createDataSource(DataSourceNames.SAMPLE);
+                            e.createEntityManager("example-jpa", DataSourceNames.SAMPLE);
+                        }
                 )
                 .getModule();
     }

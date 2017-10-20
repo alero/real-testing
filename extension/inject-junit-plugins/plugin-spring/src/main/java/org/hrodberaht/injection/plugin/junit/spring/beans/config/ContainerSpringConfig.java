@@ -12,12 +12,12 @@ import org.springframework.context.annotation.Configuration;
 public class ContainerSpringConfig {
 
     @Bean
-    public ApplicationContextService applicationContextService(){
+    public ApplicationContextService applicationContextService() {
         return new ApplicationContextService();
     }
 
     @Bean
-    public SpringInjectionBeanInjector springInjectionBeanInjector(){
+    public SpringInjectionBeanInjector springInjectionBeanInjector() {
         return new SpringInjectionBeanInjector();
     }
 

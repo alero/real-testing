@@ -5,5 +5,6 @@ package org.hrodberaht.injection;
  */
 public interface InjectionRegistry<T extends Module> {
     InjectContainer getContainer();
+
     T getModule();
 }

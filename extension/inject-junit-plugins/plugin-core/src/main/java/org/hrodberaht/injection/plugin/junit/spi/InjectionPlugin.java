@@ -7,5 +7,6 @@ import org.hrodberaht.injection.spi.ContainerConfigBuilder;
 public interface InjectionPlugin extends Plugin {
 
     void setInjectionRegister(InjectionRegister containerConfigBuilder);
+
     DefaultInjectionPointFinder getInjectionFinder(ContainerConfigBuilder containerConfigBuilder);
 }

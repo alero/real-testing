@@ -38,13 +38,13 @@ public class DataSourcePlugin implements RunnerPlugin, ResourcePlugin {
      * Second filter is a schema creator pattern as "create_schema_*.sql", example create_schema_user.sql
      * The order of the filters are guaranteed to follow create_schema first, insert_script second
      */
-    public DataSourcePlugin loadSchema(DataSource dataSource, String classPathRoot){
+    public DataSourcePlugin loadSchema(DataSource dataSource, String classPathRoot) {
         DatasourceContainerService datasourceContainerService = new DatasourceContainerService(dataSource);
         datasourceContainerService.addSQLSchemas(DEFAULT_SCHEMA_NAME, classPathRoot);
         return this;
     }
 
-    public DataSourcePlugin loadSchema(String schemaName, DataSource dataSource, String classPathRoot){
+    public DataSourcePlugin loadSchema(String schemaName, DataSource dataSource, String classPathRoot) {
         DatasourceContainerService datasourceContainerService = new DatasourceContainerService(dataSource);
         datasourceContainerService.addSQLSchemas(schemaName, classPathRoot);
         return this;

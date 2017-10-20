@@ -68,14 +68,14 @@ public class ResourceInjection {
     }
 
     public Collection<EntityManager> getEntityManagers() {
-        if(entityManagers == null){
+        if (entityManagers == null) {
             return null;
         }
         return entityManagers.values();
     }
 
     public EntityManager getEntityManager(String name) {
-        if(entityManagers == null){
+        if (entityManagers == null) {
             return null;
         }
         return entityManagers.get(name);
@@ -89,7 +89,7 @@ public class ResourceInjection {
     }
 
     private void injectEntityManager(Object serviceInstance, Field field, PersistenceContext resource) {
-        if(entityManagers == null){
+        if (entityManagers == null) {
             throw new IllegalAccessError("Entity manager not registered");
         }
         Object value = entityManagers.get(resource.unitName());

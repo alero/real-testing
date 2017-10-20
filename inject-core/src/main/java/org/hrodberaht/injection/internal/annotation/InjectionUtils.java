@@ -41,7 +41,7 @@ import java.util.List;
  * Simple Java Utils - Container
  *
  * @author Robert Alexandersson
- *         2010-maj-29 01:34:21
+ * 2010-maj-29 01:34:21
  * @version 1.0
  * @since 1.0
  */
@@ -137,7 +137,7 @@ public class InjectionUtils {
             }
 
             return annotatedConstructors.get(0);
-        }catch (Throwable throwable){
+        } catch (Throwable throwable) {
             throw new RuntimeException(throwable);
         }
     }
@@ -212,8 +212,7 @@ public class InjectionUtils {
             } else if (scope == ScopeContainer.Scope.INHERITABLE_THREAD) {
                 return new InheritableThreadScopeHandler();
             }
-        }
-        else {
+        } else {
             if (isSingleton(serviceClass)) {
                 return new SingletonScopeHandler();
             } else if (isThread(serviceClass)) {

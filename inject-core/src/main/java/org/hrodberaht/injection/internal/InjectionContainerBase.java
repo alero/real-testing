@@ -26,7 +26,7 @@ import java.util.Collection;
  * Simple Java Utils - Container
  *
  * @author Robert Alexandersson
- *         2010-maj-29 13:07:33
+ * 2010-maj-29 13:07:33
  * @version 1.0
  * @since 1.0
  */
@@ -68,7 +68,6 @@ public abstract class InjectionContainerBase {
     }
 
 
-
     protected static InjectionContainerManager.RegisterType normalizeType(InjectionContainerManager.RegisterType type) {
         if (type == InjectionContainerManager.RegisterType.OVERRIDE_NORMAL) {
             return InjectionContainerManager.RegisterType.NORMAL;
@@ -77,6 +76,7 @@ public abstract class InjectionContainerBase {
     }
 
     protected abstract Object createNewInstance(ServiceRegister serviceRegister, InjectionKey key);
+
     protected abstract Object createInstance(ServiceRegister serviceRegister, InjectionKey key);
 
     protected <T> ServiceRegister findServiceImplementation(Class<T> service) {

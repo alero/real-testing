@@ -16,7 +16,7 @@ import java.util.Map;
  * Simple Java Utils
  *
  * @author Robert Alexandersson
- *         2010-jun-17 19:11:31
+ * 2010-jun-17 19:11:31
  * @version 1.0
  * @since 1.0
  */
@@ -69,8 +69,8 @@ public abstract class RegistrationModuleAnnotation implements RegistrationModule
         return new ArrayList<>(registrations.values());
     }
 
-    public void putRegistrations(List<RegistrationInstanceSimple> registrationList ) {
-        for(RegistrationInstanceSimple registrationInstanceSimple:registrationList){
+    public void putRegistrations(List<RegistrationInstanceSimple> registrationList) {
+        for (RegistrationInstanceSimple registrationInstanceSimple : registrationList) {
             registrations.put(registrationInstanceSimple, registrationInstanceSimple);
         }
     }

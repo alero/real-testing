@@ -8,7 +8,7 @@ import org.mockito.Mockito;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-17 02:44:35
+ * 2010-okt-17 02:44:35
  * @version 1.0
  * @since 1.0
  */

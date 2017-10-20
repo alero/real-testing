@@ -11,7 +11,7 @@ import java.sql.SQLException;
  * Inject extension TDD
  *
  * @author Robert Alexandersson
- *         2011-02-05 19:26
+ * 2011-02-05 19:26
  * @created 1.0
  * @since 1.0
  */
@@ -24,7 +24,7 @@ public class TransactionManager {
 
     public static void endTransaction() {
         EntityManagers entityManagers = MANAGERS.get();
-        if(entityManagers != null) {
+        if (entityManagers != null) {
             for (EntityManager entityManager : entityManagers.getEntityManagers()) {
                 if (entityManager != null) {
 
@@ -51,7 +51,7 @@ public class TransactionManager {
         DATA_SOURCES.set(new DataSources(creator.getResourceCreator().getDataSources()));
 
         EntityManagers entityManagers = MANAGERS.get();
-        if(entityManagers != null) {
+        if (entityManagers != null) {
             for (EntityManager entityManager : entityManagers.getEntityManagers()) {
                 if (entityManager != null) {
 

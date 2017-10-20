@@ -33,7 +33,7 @@ import java.util.jar.JarFile;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-13 00:15:23
+ * 2010-okt-13 00:15:23
  * @version 1.0
  * @since 1.0
  */
@@ -82,7 +82,7 @@ public class DataSourceExecution {
             }
             for (File fileToLoad : filesToLoad) {
                 LOG.debug("findJarFiles fileToLoad = " + fileToLoad);
-                try(final JarFile jarFile = new JarFile(fileToLoad)) {
+                try (final JarFile jarFile = new JarFile(fileToLoad)) {
                     Enumeration<JarEntry> enumeration = jarFile.entries();
                     handleJarEntries(packageBase, schemaName, fileToLoad, jarFile, enumeration);
                 }
@@ -140,7 +140,7 @@ public class DataSourceExecution {
         try (FileInputStream fstream = new FileInputStream(file);
              DataInputStream in = new DataInputStream(fstream);
              BufferedReader br = new BufferedReader(new InputStreamReader(in))
-        ){
+        ) {
 
             String strLine;
             StringBuilder stringBuffer = new StringBuilder();
@@ -157,7 +157,7 @@ public class DataSourceExecution {
 
     private void executeStringToSQL(final String schemaName, final StringBuilder stringBuffer) {
 
-        if(stringBuffer.toString().isEmpty()){
+        if (stringBuffer.toString().isEmpty()) {
             return;
         }
 
@@ -165,7 +165,7 @@ public class DataSourceExecution {
         if (dataSource == null) {
             throw new IllegalAccessError("schemaName:" + schemaName + " does not exist ");
         }
-        if(dataSource instanceof DataSourceProxyInterface) {
+        if (dataSource instanceof DataSourceProxyInterface) {
             DataSourceProxyInterface proxyInterface = (DataSourceProxyInterface) dataSource;
             try {
                 proxyInterface.runWithConnectionAndCommit(
@@ -174,7 +174,7 @@ public class DataSourceExecution {
             } catch (Exception e) {
                 throw new DataSourceException(e);
             }
-        }else{
+        } else {
             try {
                 runScriptForConnection(stringBuffer, dataSource.getConnection());
             } catch (SQLException e) {
@@ -188,7 +188,7 @@ public class DataSourceExecution {
             stmt.execute(stringBuffer.toString());
         } catch (SQLIntegrityConstraintViolationException e) {
             // Just skip this, its annoying but cant seem to fix it
-            LOG.debug("hidden error: "+ e.getMessage());
+            LOG.debug("hidden error: " + e.getMessage());
         } catch (SQLException e) {
             throw new DataSourceException(e);
         }
@@ -205,7 +205,7 @@ public class DataSourceExecution {
         if (dataSource == null) {
             throw new IllegalAccessError("schemaName:" + schemaName + " does not exist ");
         }
-        if(dataSource instanceof DataSourceProxyInterface) {
+        if (dataSource instanceof DataSourceProxyInterface) {
             DataSourceProxyInterface proxyInterface = (DataSourceProxyInterface) dataSource;
             try {
                 return proxyInterface.runWithConnectionAndCommit(
@@ -213,7 +213,7 @@ public class DataSourceExecution {
             } catch (Exception e) {
                 return false;
             }
-        }else{
+        } else {
             try {
                 return verifyScriptExistence(testPackageName, initiatedTableName, dataSource.getConnection());
             } catch (SQLException e) {

@@ -20,9 +20,9 @@ public class PerformanceStatistics {
         this.end = LocalDateTime.now();
     }
 
-    public void markAndPrint(String message){
-        System.out.println(getName()+ ":"+ message +
-            " Time in Milliseconds:" + ChronoUnit.MILLIS.between(start, LocalDateTime.now())
+    public void markAndPrint(String message) {
+        System.out.println(getName() + ":" + message +
+                " Time in Milliseconds:" + ChronoUnit.MILLIS.between(start, LocalDateTime.now())
         );
     }
 

@@ -62,8 +62,7 @@ public class ClassScanningUtil {
                     e.printStackTrace(System.err);
                 }
             }
-        }
-        else if (
+        } else if (
                 !aClazz.isInterface()
                         && !aClazz.isAnnotation()
                         && scanningService.isServiceAnnotated(aClazz)

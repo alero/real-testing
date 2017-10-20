@@ -25,7 +25,7 @@ import java.util.Collection;
  * Simple Java Utils - Container
  *
  * @author Robert Alexandersson
- *         2010-maj-28 21:12:27
+ * 2010-maj-28 21:12:27
  * @version 1.0
  * @since 1.0
  */
@@ -51,36 +51,43 @@ public abstract class InjectionRegisterBase<T extends InjectionRegister> impleme
         register(qualifier, serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
+
     @Override
     public InjectionRegister register(Class serviceDefinition, Class service) {
         register(serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
+
     @Override
     public InjectionRegister register(Class service) {
         register(service, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
+
     @Override
     public InjectionRegister overrideRegister(Class<? extends Annotation> qualifier, Class serviceDefinition, Class service) {
         overrideRegister(qualifier, serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
+
     @Override
     public InjectionRegister overrideRegister(Class serviceDefinition, Class service) {
         overrideRegister(serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
+
     @Override
     public InjectionRegister overrideRegister(Class service) {
         overrideRegister(service, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
+
     @Override
     public InjectionRegister finalRegister(Class<? extends Annotation> qualifier, Class serviceDefinition, Class service) {
         finalRegister(qualifier, serviceDefinition, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
+
     @Override
     public InjectionRegister finalRegister(Class serviceDefinition, Class service) {
         finalRegister(serviceDefinition, service, InjectionContainerManager.Scope.NEW);

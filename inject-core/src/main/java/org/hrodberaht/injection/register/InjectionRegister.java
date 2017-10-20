@@ -10,7 +10,7 @@ import java.lang.annotation.Annotation;
  * Simple Java Utils
  *
  * @author Robert Alexandersson
- *         2010-aug-01 16:43:03
+ * 2010-aug-01 16:43:03
  * @version 1.0
  * @since 1.0
  */

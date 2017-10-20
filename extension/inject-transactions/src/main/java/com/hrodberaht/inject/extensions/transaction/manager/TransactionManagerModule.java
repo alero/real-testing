@@ -15,24 +15,20 @@ import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.register.ExtendedModule;
 import org.hrodberaht.injection.register.InjectionFactory;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
-import org.hrodberaht.injection.register.internal.RegistrationInstanceSimple;
 
 import javax.persistence.EntityManager;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-11 21:09:52
+ * 2010-aug-11 21:09:52
  * @version 1.0
  * @since 1.0
  */
 public class TransactionManagerModule extends ExtendedModule {
-    
+
 
     public TransactionManagerModule(final TransactionManager transactionManager) {
         registration = new RegistrationModuleAnnotation() {
@@ -44,7 +40,6 @@ public class TransactionManagerModule extends ExtendedModule {
         };
         registration.registrations();
     }
-
 
 
     private void registerServices(RegistrationModuleAnnotation registrationModuleAnnotation, final TransactionManager transactionManager) {
@@ -60,34 +55,38 @@ public class TransactionManagerModule extends ExtendedModule {
             registrationModuleAnnotation.register(injectionFactory.getInstanceType()).withFactory(injectionFactory);
         }
 
-        if(transactionManager instanceof TransactionManagerJPA){
-            final TransactionManagerJPA transactionManagerJPA = (TransactionManagerJPA)transactionManager;
-            InjectionFactory<Connection> injectionFactory = new InjectionFactory<Connection>(){
+        if (transactionManager instanceof TransactionManagerJPA) {
+            final TransactionManagerJPA transactionManagerJPA = (TransactionManagerJPA) transactionManager;
+            InjectionFactory<Connection> injectionFactory = new InjectionFactory<Connection>() {
                 @Override
                 public Connection getInstance() {
                     return getConnection(transactionManagerJPA);
                 }
+
                 @Override
                 public Class getInstanceType() {
                     return Connection.class;
                 }
+
                 @Override
                 public boolean newObjectOnInstance() {
                     return false;
                 }
             };
             registrationModuleAnnotation.register(Connection.class).withFactory(injectionFactory);
-        }else if(transactionManager instanceof TransactionManagerJDBC){
-            final TransactionManagerJDBC transactionManagerJDBC = (TransactionManagerJDBC)transactionManager;
-            InjectionFactory<Connection> injectionFactory = new InjectionFactory<Connection>(){
+        } else if (transactionManager instanceof TransactionManagerJDBC) {
+            final TransactionManagerJDBC transactionManagerJDBC = (TransactionManagerJDBC) transactionManager;
+            InjectionFactory<Connection> injectionFactory = new InjectionFactory<Connection>() {
                 @Override
                 public Connection getInstance() {
                     return transactionManagerJDBC.getNativeManager();
                 }
+
                 @Override
                 public Class getInstanceType() {
                     return Connection.class;
                 }
+
                 @Override
                 public boolean newObjectOnInstance() {
                     return false;
@@ -104,10 +103,10 @@ public class TransactionManagerModule extends ExtendedModule {
     private Connection getConnection(TransactionManagerJPA transactionManagerJPA) {
         EntityManager entityManager = transactionManagerJPA.getNativeManager();
         ProviderService providerService = ProviderFactory.getService(entityManager);
-        if(providerService != null){
-            return providerService.findConnection(entityManager);   
+        if (providerService != null) {
+            return providerService.findConnection(entityManager);
         }
-        throw new InjectRuntimeException("Cannot find Connection for entity-manager "+entityManager);
+        throw new InjectRuntimeException("Cannot find Connection for entity-manager " + entityManager);
     }
 
     private Class getInterface(TransactionManager transactionManager) {
@@ -117,9 +116,7 @@ public class TransactionManagerModule extends ExtendedModule {
             return TransactionManagerJDBC.class;
         }
         throw new IllegalArgumentException("transactionManager does not have a specific interface");
-    }    
-
-    
+    }
 
 
 }

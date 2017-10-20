@@ -6,12 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -31,11 +27,11 @@ public class ResourceInject {
                 Field field = (Field) member;
                 if (field.isAnnotationPresent(Resource.class)) {
                     Resource resource = field.getAnnotation(Resource.class);
-                    if(hasNameOrMappedName(resource)){
-                        if(!injectNamedResource(namedResources, serviceInstance, field, resource)){
-                            throw new RuntimeException("No resource found for "+descriptive(field, resource));
+                    if (hasNameOrMappedName(resource)) {
+                        if (!injectNamedResource(namedResources, serviceInstance, field, resource)) {
+                            throw new RuntimeException("No resource found for " + descriptive(field, resource));
                         }
-                    }else {
+                    } else {
                         injectTypedResource(typedResources, serviceInstance, field);
                     }
                 }
@@ -45,10 +41,9 @@ public class ResourceInject {
 
     private String descriptive(Field field, Resource resource) {
         return hasName(resource) ?
-                "field:'"+field.getName()+"' name:'"+resource.name()+"'" :
-                hasMappedName(resource) ? "field:'"+field.getName()+"' mapped-name:'"+resource.mappedName()+"'" : "no name?";
+                "field:'" + field.getName() + "' name:'" + resource.name() + "'" :
+                hasMappedName(resource) ? "field:'" + field.getName() + "' mapped-name:'" + resource.mappedName() + "'" : "no name?";
     }
-
 
 
     private boolean hasNameOrMappedName(Resource resource) {
@@ -71,12 +66,12 @@ public class ResourceInject {
         if (namedResources == null) {
             return false;
         }
-        ResourceKey key = ResourceKey.of(resource.name(),field.getType());
+        ResourceKey key = ResourceKey.of(resource.name(), field.getType());
         Object value = namedResources.get(key);
         if (value == null) {
-            ResourceKey mappedKey = ResourceKey.of(resource.mappedName(),field.getType());
+            ResourceKey mappedKey = ResourceKey.of(resource.mappedName(), field.getType());
             value = namedResources.get(mappedKey);
-        }else if(hasMappedName(resource)){
+        } else if (hasMappedName(resource)) {
             LOG.debug("using name to inject, mapped name exists though");
         }
         if (value != null) {

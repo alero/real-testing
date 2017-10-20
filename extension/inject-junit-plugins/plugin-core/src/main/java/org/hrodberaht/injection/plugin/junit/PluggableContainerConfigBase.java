@@ -2,7 +2,6 @@ package org.hrodberaht.injection.plugin.junit;
 
 import org.hrodberaht.injection.config.ContainerConfig;
 import org.hrodberaht.injection.internal.ResourceInject;
-import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.internal.annotation.InjectionFinder;
 import org.hrodberaht.injection.plugin.junit.resources.ChainableInjectionPointProvider;
 import org.hrodberaht.injection.plugin.junit.resources.PluggableResourceFactory;
@@ -29,22 +28,23 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
     private final RunnerPlugins runnerPlugins = new RunnerPlugins();
     private final ContainerConfigInner containerConfigInner = new ContainerConfigInner(this);
     private final Map<Class<? extends Plugin>, Plugin> activePlugins = new ConcurrentHashMap<>();
+
     protected abstract void register(InjectionRegistryBuilder registryBuilder);
 
     protected <T extends Plugin> T activatePlugin(Class<T> pluginClass) {
         return containerConfigInner.activatePlugin(pluginClass);
     }
 
-    protected  <T extends Plugin> T getPlugin(Class<T> pluginClass ) {
+    protected <T extends Plugin> T getPlugin(Class<T> pluginClass) {
         return (T) activePlugins.get(pluginClass);
     }
 
-    protected <T> JavaResourceCreator<T> getCreator(Class<T> type){
+    protected <T> JavaResourceCreator<T> getCreator(Class<T> type) {
         return containerConfigInner.getResourceFactory().getCreator(type);
     }
 
     @Override
-    public RunnerPlugins getRunnerPlugins(){
+    public RunnerPlugins getRunnerPlugins() {
         return runnerPlugins;
     }
 
@@ -67,7 +67,7 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
         containerConfigInner.start();
     }
 
-    private static class ContainerConfigInner extends ContainerConfig{
+    private static class ContainerConfigInner extends ContainerConfig {
         private final PluggableContainerConfigBase base;
         private InjectionPlugin injectionPlugin;
         private ResourcePlugin resourcePlugin;
@@ -75,6 +75,7 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
         private ContainerConfigInner(PluggableContainerConfigBase base) {
             this.base = base;
         }
+
         @Override
         protected ResourceFactory createResourceFactory() {
             return new PluggableResourceFactory();
@@ -87,15 +88,15 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
 
         @Override
         protected InjectionFinder createDefaultInjectionPointFinder() {
-            if(injectionPlugin != null){
+            if (injectionPlugin != null) {
                 return wrap(injectionPlugin.getInjectionFinder(this));
             }
-            return  wrap(super.createDefaultInjectionPointFinder());
+            return wrap(super.createDefaultInjectionPointFinder());
         }
 
         private InjectionFinder wrap(InjectionFinder injectionFinder) {
             ChainableInjectionPointProvider chainableInjectionPointProvider = resourcePlugin.getInjectionProvider(injectionFinder);
-            if(chainableInjectionPointProvider != null){
+            if (chainableInjectionPointProvider != null) {
                 return chainableInjectionPointProvider;
             }
             return injectionFinder;
@@ -104,26 +105,25 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
         private <T extends Plugin> T activatePlugin(Class<T> pluginClass) {
             T plugin = createPlugin(pluginClass);
             base.activePlugins.put(pluginClass, plugin);
-            if(plugin instanceof ResourcePlugin){
+            if (plugin instanceof ResourcePlugin) {
                 LOG.info("Activating ResourcePlugin {}", plugin.getClass().getSimpleName());
-                resourcePlugin = (ResourcePlugin)plugin;
-                PluggableResourceFactory pluggableResourceFactory = (PluggableResourceFactory)resourceFactory;
+                resourcePlugin = (ResourcePlugin) plugin;
+                PluggableResourceFactory pluggableResourceFactory = (PluggableResourceFactory) resourceFactory;
                 pluggableResourceFactory.addCustomCreator(resourcePlugin);
                 resourcePlugin.setPluggableResourceFactory(pluggableResourceFactory);
 
 
-
             }
-            if(plugin instanceof RunnerPlugin){
+            if (plugin instanceof RunnerPlugin) {
                 LOG.info("Activating RunnerPlugin {}", plugin.getClass().getSimpleName());
                 base.runnerPlugins.addPlugin((RunnerPlugin) plugin);
             }
-            if(plugin instanceof InjectionPlugin){
+            if (plugin instanceof InjectionPlugin) {
                 LOG.info("Activating InjectionPlugin {}", plugin.getClass().getSimpleName());
-                InjectionPlugin injectionPlugin = (InjectionPlugin)plugin;
-                if(this.injectionPlugin == null){
+                InjectionPlugin injectionPlugin = (InjectionPlugin) plugin;
+                if (this.injectionPlugin == null) {
                     this.injectionPlugin = injectionPlugin;
-                }else{
+                } else {
                     throw new RuntimeException("There can be only one InjectionPlugin active at once");
                 }
             }
@@ -140,13 +140,13 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
 
         @Override
         public void injectResources(Object serviceInstance) {
-            PluggableResourceFactory pluggableResourceFactory = (PluggableResourceFactory)resourceFactory;
+            PluggableResourceFactory pluggableResourceFactory = (PluggableResourceFactory) resourceFactory;
             resourceInjection.injectResources(pluggableResourceFactory.getTypedMap(), pluggableResourceFactory.getNamedMap(), serviceInstance);
         }
 
         @Override
         protected void appendResources(InjectionRegister registerModule) {
-            PluggableResourceFactory pluggableResourceFactory = (PluggableResourceFactory)resourceFactory;
+            PluggableResourceFactory pluggableResourceFactory = (PluggableResourceFactory) resourceFactory;
 
             pluggableResourceFactory.getNamedMap().forEach((resourceKey, value) -> {
                 registerModule.register(new RegistrationModuleAnnotation() {
@@ -172,21 +172,12 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
         @Override
         public void register(InjectionRegistryBuilder registryBuilder) {
             base.register(registryBuilder);
-            if(injectionPlugin != null) {
+            if (injectionPlugin != null) {
                 // Once the user has registered all resources needed, we bind it to the selected injection plugin
                 injectionPlugin.setInjectionRegister(registryBuilder.getInjectionRegister());
             }
         }
     }
-
-
-
-
-
-
-
-
-
 
 
 }

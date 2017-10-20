@@ -11,11 +11,11 @@ import java.util.Map;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 20:38:41
+ * 2010-okt-11 20:38:41
  * @version 1.0
  * @since 1.0
  */
-public class ProxyResourceCreator implements DatasourceCreator{
+public class ProxyResourceCreator implements DatasourceCreator {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProxyResourceCreator.class);
 
@@ -65,9 +65,6 @@ public class ProxyResourceCreator implements DatasourceCreator{
     private boolean hasDataSource(String dataSourceName) {
         return DATASOURCES.get(dataSourceName) != null;
     }
-
-
-
 
 
 }

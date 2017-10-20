@@ -11,7 +11,7 @@ import javax.inject.Inject;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-13 00:23:43
+ * 2010-okt-13 00:23:43
  * @version 1.0
  * @since 1.0
  * <p/>
@@ -23,7 +23,7 @@ public class ContainerLifeCycleTestUtil {
 
 
     public void registerServiceInstance(Class serviceDefinition, Object service) {
-        RegistrationModuleAnnotation registrationModule = new RegistrationModuleAnnotation(){
+        RegistrationModuleAnnotation registrationModule = new RegistrationModuleAnnotation() {
             @Override
             public void registrations() {
                 register(serviceDefinition)

@@ -24,8 +24,8 @@ public class InjectionResources {
 
     public ResourceEntityManager createEntityManager(String aJPAResource, String aDataSource) {
         ResourceDataSource resourceDataSource = dataSources.get(aDataSource);
-        if(resourceDataSource == null){
-            throw new IllegalAccessError("aDataSource not found:"+aDataSource);
+        if (resourceDataSource == null) {
+            throw new IllegalAccessError("aDataSource not found:" + aDataSource);
         }
         ResourceEntityManager dataSource = new ResourceEntityManager(aJPAResource, resourceDataSource);
         entityManagers.add(dataSource);

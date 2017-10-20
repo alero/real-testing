@@ -6,7 +6,7 @@ import javax.ejb.EJBLocalHome;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 21:40:53
+ * 2010-okt-11 21:40:53
  * @version 1.0
  * @since 1.0
  */

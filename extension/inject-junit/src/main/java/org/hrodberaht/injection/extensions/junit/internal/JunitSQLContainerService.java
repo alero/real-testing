@@ -1,7 +1,6 @@
 package org.hrodberaht.injection.extensions.junit.internal;
 
 import org.hrodberaht.injection.config.ContainerConfigBase;
-import org.hrodberaht.injection.config.jpa.JPAContainerConfigBase;
 import org.hrodberaht.injection.extensions.junit.util.EntityManagerHolder;
 import org.hrodberaht.injection.internal.InjectionContainerManager;
 import org.hrodberaht.injection.internal.ScopeContainer;
@@ -45,16 +44,16 @@ public class JunitSQLContainerService {
 
     public void addSingletonActiveEntityManagers() {
         Collection<EntityManager> entityManagers = null;//jpaContainerConfigBase.getEntityManagers();
-        if(entityManagers != null) {
+        if (entityManagers != null) {
             jpaContainerConfigBase.getActiveRegister().register(new RegistrationModuleAnnotation() {
-                                        @Override
-                                        public void registrations() {
-                                            register(EntityManagerHolder.class)
-                                                    .scopeAs(ScopeContainer.Scope.SINGLETON)
-                                                    .registerTypeAs(InjectionContainerManager.RegisterType.FINAL)
-                                                    .withInstance(new EntityManagerHolder(entityManagers));
-                                        }
-                                    }
+                                                                    @Override
+                                                                    public void registrations() {
+                                                                        register(EntityManagerHolder.class)
+                                                                                .scopeAs(ScopeContainer.Scope.SINGLETON)
+                                                                                .registerTypeAs(InjectionContainerManager.RegisterType.FINAL)
+                                                                                .withInstance(new EntityManagerHolder(entityManagers));
+                                                                    }
+                                                                }
             );
         }
     }

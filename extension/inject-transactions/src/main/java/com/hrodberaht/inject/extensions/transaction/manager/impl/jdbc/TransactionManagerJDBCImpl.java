@@ -17,7 +17,7 @@ import java.sql.SQLException;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-21 20:29:06
+ * 2010-aug-21 20:29:06
  * @version 1.0
  * @since 1.0
  */
@@ -34,11 +34,11 @@ public class TransactionManagerJDBCImpl extends TransactionManagerBase<Connectio
 
     public TransactionManagerJDBCImpl(DataSource connectionFactory) {
         this.connectionFactory = connectionFactory;
-        try{
-            if(connectionFactory instanceof DataSourceProxy){
+        try {
+            if (connectionFactory instanceof DataSourceProxy) {
                 isDataSourceProxy = true;
             }
-        }catch (Throwable e){
+        } catch (Throwable e) {
             TransactionLogging.log(e);
         }
     }
@@ -58,8 +58,8 @@ public class TransactionManagerJDBCImpl extends TransactionManagerBase<Connectio
     @Override
     protected void closeNative(Connection nativeTransaction) {
         try {
-            if(isDataSourceProxy){
-                ((DataSourceProxy)connectionFactory).finalizeConnection(nativeTransaction);
+            if (isDataSourceProxy) {
+                ((DataSourceProxy) connectionFactory).finalizeConnection(nativeTransaction);
             }
             nativeTransaction.close();
         } catch (SQLException e) {
@@ -70,8 +70,8 @@ public class TransactionManagerJDBCImpl extends TransactionManagerBase<Connectio
     @Override
     protected Connection createNativeManager() {
         try {
-            if(isDataSourceProxy){
-                ((DataSourceProxy)connectionFactory).forceCreateNewConnection();
+            if (isDataSourceProxy) {
+                ((DataSourceProxy) connectionFactory).forceCreateNewConnection();
             }
             return connectionFactory.getConnection();
         } catch (SQLException e) {
@@ -217,7 +217,7 @@ public class TransactionManagerJDBCImpl extends TransactionManagerBase<Connectio
         ConnectionHolder connectionHolder = (ConnectionHolder) connectionTransactionHolder;
         connectionHolder.setActive(true);
     }
-    
+
     public boolean requiresNewDisabled() {
         return requiresNewDisabled.get() != null;
     }
@@ -239,10 +239,10 @@ public class TransactionManagerJDBCImpl extends TransactionManagerBase<Connectio
 
     private ConnectionHolder getConnectionHolder() {
         ConnectionHolder connectionHolder = (ConnectionHolder) entityManagerScope.get();
-        if(connectionHolder == null){
+        if (connectionHolder == null) {
             return null;
         }
-        return (ConnectionHolder)connectionHolder.getCurrentActiveTransaction();
+        return (ConnectionHolder) connectionHolder.getCurrentActiveTransaction();
     }
 
 }

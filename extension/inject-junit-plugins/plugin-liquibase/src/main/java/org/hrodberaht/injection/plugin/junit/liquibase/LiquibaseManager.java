@@ -22,7 +22,7 @@ public class LiquibaseManager {
     public LiquibaseManager(String name, String verificationQuery) {
         this.verificationQuery = verificationQuery;
         dataStoreDir = getBackUpDirectory(name);
-        if(!dataStoreDir.exists()){
+        if (!dataStoreDir.exists()) {
             dataStoreDir.mkdirs();
         }
     }
@@ -31,28 +31,28 @@ public class LiquibaseManager {
         File watcherFile = getLiquibaseFile("filewatcher.log");
         LOG.info("using watcher file {}", watcherFile.getAbsolutePath());
         FileTimestampResourceWatcher fileTimestampResourceWatcher = new FileTimestampResourceWatcher(
-                watcherFile , asResources(watchers, schema)
+                watcherFile, asResources(watchers, schema)
         );
         liquiBaseSchemaCreation(dataSource, schema, fileTimestampResourceWatcher);
     }
 
     private File getBackUpDirectory(String name) {
-        if(System.getProperty("hrodberaht.test.liquibase.home") != null){
-            return new File(System.getProperty("hrodberaht.test.liquibase.home")+name);
+        if (System.getProperty("hrodberaht.test.liquibase.home") != null) {
+            return new File(System.getProperty("hrodberaht.test.liquibase.home") + name);
         }
-        return new File("target/liquibase/"+name);
+        return new File("target/liquibase/" + name);
     }
 
-    private File getLiquibaseBackupFile(){
+    private File getLiquibaseBackupFile() {
         return new File(dataStoreDir, "backup.script");
     }
 
-    private File getLiquibaseFile(String fileName){
+    private File getLiquibaseFile(String fileName) {
         return new File(dataStoreDir, fileName);
     }
 
     private String[] asResources(String[] schemas, String schema) {
-        if(schemas.length > 0) {
+        if (schemas.length > 0) {
             List<String> strings = new ArrayList<>(schemas.length);
             Stream.of(schemas).forEach(s -> {
                 String resource = "classpath:" + s;
@@ -60,7 +60,7 @@ public class LiquibaseManager {
                 LOG.info("watching resource '{}'", resource);
             });
             return strings.toArray(new String[schemas.length]);
-        }else{
+        } else {
             String resource = "classpath:" + schema;
             LOG.info("watching resource '{}'", resource);
             return new String[]{resource};

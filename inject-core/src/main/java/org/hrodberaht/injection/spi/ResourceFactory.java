@@ -1,8 +1,5 @@
 package org.hrodberaht.injection.spi;
 
-import javax.sql.DataSource;
-import java.util.Collection;
-
 /**
  * Created with IntelliJ IDEA.
  * User: alexbrob

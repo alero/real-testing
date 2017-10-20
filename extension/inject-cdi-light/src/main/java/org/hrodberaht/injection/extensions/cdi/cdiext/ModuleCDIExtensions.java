@@ -10,7 +10,7 @@ import org.hrodberaht.injection.spi.ContainerConfig;
  * Time: 12:29
  * To change this template use File | Settings | File Templates.
  */
-public class ModuleCDIExtensions implements CDIExtensions{
+public class ModuleCDIExtensions implements CDIExtensions {
 
     public ModuleCDIExtensions() {
     }
@@ -22,8 +22,6 @@ public class ModuleCDIExtensions implements CDIExtensions{
     public void runBeforeBeanDiscovery(InjectionRegister register, ContainerConfig containerConfig) {
         throw new RuntimeException("not yet implemented");
     }
-
-
 
 
 }

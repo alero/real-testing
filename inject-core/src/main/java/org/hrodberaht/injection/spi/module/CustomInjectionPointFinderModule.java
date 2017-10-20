@@ -1,7 +1,5 @@
 package org.hrodberaht.injection.spi.module;
 
-import org.hrodberaht.injection.Module;
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.internal.annotation.InjectionFinder;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 

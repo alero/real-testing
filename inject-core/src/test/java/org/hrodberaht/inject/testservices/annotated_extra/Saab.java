@@ -12,7 +12,7 @@ import javax.inject.Inject;
  * Injection Extension JUnit
  *
  * @author Robert Alexandersson
- *         2010-sep-26 21:36:54
+ * 2010-sep-26 21:36:54
  * @version 1.0
  * @since 1.0
  */

@@ -24,15 +24,15 @@ public class SpringBean {
     private JdbcTemplate jdbcTemplate;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         jdbcTemplate = new JdbcTemplate(dataSource);
     }
 
-    public String getName(){
+    public String getName() {
         return "SpringBeanName";
     }
 
-    public String getNameFromDB(){
+    public String getNameFromDB() {
         return jdbcTemplate.queryForObject("select username from user where username=?", String.class, "dude");
     }
 

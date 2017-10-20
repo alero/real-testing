@@ -15,27 +15,33 @@ import static org.junit.Assert.assertNull;
 @RunWith(InjectionJUnitTestRunner.class)
 @TransactionAttribute
 public class TestCDIJDBCService {
-    @Inject private Service aService;
-    @Test public void testDoing(){
+    @Inject
+    private Service aService;
+
+    @Test
+    public void testDoing() {
         aService.createData("init", "done");
         assertEquals("done", aService.findIt("init"));
     }
 
-    @Test public void testChangingWhatIsDone(){
+    @Test
+    public void testChangingWhatIsDone() {
         aService.createData("init", "done");
         assertEquals("done", aService.findIt("init"));
         aService.changeIt("init", "changed what done");
         assertEquals("changed what done", aService.findIt("init"));
     }
 
-    @Test public void testChangingWhatIsDoneAgain(){
+    @Test
+    public void testChangingWhatIsDoneAgain() {
         aService.createData("init", "done");
         assertEquals("done", aService.findIt("init"));
         aService.changeIt("init", "changed what done again");
         assertEquals("changed what done again", aService.findIt("init"));
     }
 
-    @Test public void testNotFindingIt(){
+    @Test
+    public void testNotFindingIt() {
         assertNull("done", aService.findIt("init"));
     }
 

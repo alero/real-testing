@@ -4,7 +4,7 @@ package org.hrodberaht.injection.annotation;
  * Projectname
  *
  * @author Robert Alexandersson
- *         2010-sep-26 22:39:09
+ * 2010-sep-26 22:39:09
  * @version 1.0
  * @since 1.0
  */

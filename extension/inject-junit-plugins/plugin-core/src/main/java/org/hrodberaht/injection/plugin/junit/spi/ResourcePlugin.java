@@ -16,7 +16,7 @@ public interface ResourcePlugin {
 
     void setPluggableResourceFactory(PluggableResourceFactory pluggableResourceFactory);
 
-    default ChainableInjectionPointProvider getInjectionProvider(InjectionFinder injectionFinder){
+    default ChainableInjectionPointProvider getInjectionProvider(InjectionFinder injectionFinder) {
         return null;
     }
 }

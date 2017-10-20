@@ -10,7 +10,7 @@ import java.util.List;
  * Simple Java Utils - Container
  *
  * @author Robert Alexandersson
- *         2010-jun-03 17:49:42
+ * 2010-jun-03 17:49:42
  * @version 1.0
  * @since 1.0
  */

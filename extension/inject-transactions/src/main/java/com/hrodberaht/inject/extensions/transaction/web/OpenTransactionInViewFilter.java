@@ -15,7 +15,7 @@ import java.io.IOException;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-25 23:05:59
+ * 2010-aug-25 23:05:59
  * @version 1.0
  * @since 1.0
  */
@@ -44,7 +44,7 @@ public class OpenTransactionInViewFilter implements Filter {
                     transactionManager.rollback();
                 }
             } catch (Throwable e) {
-                e.printStackTrace(System.err);       
+                e.printStackTrace(System.err);
             }
 
             // Let others handle it... maybe another interceptor for exceptions?

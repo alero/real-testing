@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-10 18:29:58
+ * 2010-aug-10 18:29:58
  * @version 1.0
  * @since 1.0
  */
@@ -59,7 +59,6 @@ public class JDBCTransactedApplication implements TransactedApplication {
     }
 
 
-
     @TransactionAttribute(value = TransactionAttributeType.REQUIRES_NEW)
     public Person findPersonReqNew(Long id) {
         return findPersonJDBC(id);
@@ -76,7 +75,7 @@ public class JDBCTransactedApplication implements TransactedApplication {
     @TransactionAttribute(value = TransactionAttributeType.SUPPORTS)
     public Collection<Person> findAllPersons() {
         String sql = "select * from Person";
-        return jdbcService.query(sql, new PersonIterator());      
+        return jdbcService.query(sql, new PersonIterator());
     }
 
     @TransactionAttribute(value = TransactionAttributeType.REQUIRES_NEW)
@@ -151,7 +150,7 @@ public class JDBCTransactedApplication implements TransactedApplication {
     @TransactionAttribute
     public void fakeOperationForPerformanceTest() {
         try {
-            
+
             // A classic DB call takes about 5 ms
             Thread.sleep(performanceSleeptime);
             performanceCount.incrementAndGet();
@@ -164,21 +163,23 @@ public class JDBCTransactedApplication implements TransactedApplication {
         String sql = "select * from Person where id = ?";
         return jdbcService.querySingle(sql, new PersonIterator(), id);
     }
+
     private void createPersonJDBC(Person person) {
         Insert insert = jdbcService.createInsert("Person");
-        insert.field("id",person.getId());
+        insert.field("id", person.getId());
         insert.field("name", person.getName());
 
         errorHandleInsertUpdate(insert);
     }
 
     private Logging findLogJDBC(Long id) {
-        String sql = "select * from Logging where id = "+id;
+        String sql = "select * from Logging where id = " + id;
         return jdbcService.querySingle(sql, new LogIterator(), id);
     }
+
     private void createLogJDBC(Logging log) {
         Insert insert = jdbcService.createInsert("Logging");
-        insert.field("id",log.getId());
+        insert.field("id", log.getId());
         insert.field("message", log.getMessage());
 
         errorHandleInsertUpdate(insert);
@@ -186,7 +187,7 @@ public class JDBCTransactedApplication implements TransactedApplication {
 
     private void errorHandleInsertUpdate(Insert insert) {
         int insertReturn = jdbcService.insert(insert);
-        if(insertReturn == 0){
+        if (insertReturn == 0) {
             throw new RuntimeException("Insert Failed");
         }
     }

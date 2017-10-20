@@ -19,7 +19,7 @@ import java.util.Map;
  * Unit Test JUnit (using @Inject)
  *
  * @author Robert Alexandersson
- *         2010-okt-11 19:35:27
+ * 2010-okt-11 19:35:27
  * @version 1.0
  * @since 1.0
  */
@@ -128,7 +128,6 @@ public abstract class ContainerConfigBase<T extends InjectionRegister> implement
             }
         }
     }
-
 
 
     public InjectContainer getActiveContainer() {

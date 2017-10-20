@@ -7,7 +7,7 @@ import org.hrodberaht.injection.extensions.junit.ejb.TDDEJBContainerConfigBase;
  * Injection Extension JUnit
  *
  * @author Robert Alexandersson
- *         2010-okt-26 20:49:29
+ * 2010-okt-26 20:49:29
  * @version 1.0
  * @since 1.0
  */
