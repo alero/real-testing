@@ -5,32 +5,28 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.hrodberaht.inject.extension</groupId>
-        <artifactId>inject-junit-plugins</artifactId>
+        <groupId>org.hrodberaht.inject.plugin</groupId>
+        <artifactId>plugin</artifactId>
         <version>2.2.1-SNAPSHOT</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.extension</groupId>
-    <artifactId>plugin-core</artifactId>
+    <artifactId>inject-plugin-liquibase</artifactId>
     <version>2.2.1-SNAPSHOT</version>
-
 
     <dependencies>
         <dependency>
-            <artifactId>inject-core</artifactId>
-            <groupId>org.hrodberaht.inject</groupId>
+            <groupId>org.hrodberaht.inject.extension</groupId>
+            <artifactId>inject-plugin-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>3.5.3</version>
+            <scope>provided</scope>
+            <optional>true</optional>
         </dependency>
-
-        <dependency>
-            <groupId>org.hsqldb</groupId>
-            <artifactId>hsqldb</artifactId>
-        </dependency>
-
         <!-- TODO: remove the need for this //-->
         <dependency>
             <groupId>org.springframework</groupId>
@@ -38,7 +34,6 @@
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
-
     </dependencies>
 
 </project>

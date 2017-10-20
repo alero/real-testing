@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.hrodberaht.inject</groupId>
+        <artifactId>injection-parent</artifactId>
+        <version>2.2.1-SNAPSHOT</version>
+    </parent>
+
+    <groupId>org.hrodberaht.inject.plugin</groupId>
+    <artifactId>plugin</artifactId>
+    <version>2.2.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>inject-core-plugin</module>
+        <module>inject-jpa-plugin</module>
+        <module>inject-liquibase-plugin</module>
+        <module>inject-spring-plugin</module>
+    </modules>
+    
+</project>

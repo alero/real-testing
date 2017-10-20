@@ -5,35 +5,36 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.hrodberaht.inject.extension</groupId>
-        <artifactId>inject-junit-plugins</artifactId>
+        <groupId>org.hrodberaht.inject.plugin</groupId>
+        <artifactId>plugin</artifactId>
         <version>2.2.1-SNAPSHOT</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.extension</groupId>
-    <artifactId>plugin-liquibase</artifactId>
+    <artifactId>inject-plugin-jpa</artifactId>
     <version>2.2.1-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
             <groupId>org.hrodberaht.inject.extension</groupId>
-            <artifactId>plugin-core</artifactId>
+            <artifactId>inject-plugin-core</artifactId>
             <version>${project.version}</version>
         </dependency>
+
         <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
-            <version>3.5.3</version>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-all</artifactId>
             <scope>provided</scope>
             <optional>true</optional>
         </dependency>
-        <!-- TODO: remove the need for this //-->
+
         <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <scope>provided</scope>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-entitymanager</artifactId>
+            <version>${hibernate-core-version}</version>
             <optional>true</optional>
         </dependency>
     </dependencies>
+
 
 </project>

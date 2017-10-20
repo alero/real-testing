@@ -37,10 +37,4 @@ public class SpringContainerJavaConfigComboExample extends PluggableContainerCon
         registryBuilder.scan(() -> _package);
     }
 
-
-/*    @Override
-    public InjectContainer createContainer() {
-        return createAutoScanContainer("org.hrodberaht.injection.extensions.spring.testservices.simple");
-    }
-*/
 }

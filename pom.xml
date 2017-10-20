@@ -48,6 +48,7 @@
 
     <modules>
         <module>extension</module>
+        <module>plugin</module>
         <module>inject-core</module>
     </modules>
 

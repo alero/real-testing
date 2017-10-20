@@ -19,7 +19,7 @@ Session.vim
 **/*.iml
 **/*.ipr
 **/*.iws
-**/*.idea/*
+**/*.idea
 
 # Maven Shade Plugin #
 dependency-reduced-pom.xml
