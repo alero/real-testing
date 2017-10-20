@@ -3,13 +3,7 @@ package org.hrodberaht.injection.plugin.context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.naming.Binding;
-import javax.naming.Context;
-import javax.naming.Name;
-import javax.naming.NameClassPair;
-import javax.naming.NameParser;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
+import javax.naming.*;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -25,16 +19,21 @@ public class ContextImpl implements Context {
 
     @Override
     public Object lookup(Name name) throws NamingException {
-        return namedContextItems.get(name.get(0));
+        return namedContextItems.get(getNameAsString(name));
     }
+
+    private String getNameAsString(Name name) {
+        return name.toString();
+    }
+
     @Override
     public Object lookup(String name) throws NamingException {
         return namedContextItems.get(name);
     }
     @Override
     public void bind(Name name, Object obj) throws NamingException {
-        LOG.info("bind name: {}", name.get(0));
-        namedContextItems.put(name.get(0), obj);
+        LOG.info("bind name: {}", getNameAsString(name));
+        namedContextItems.put(getNameAsString(name), obj);
     }
     @Override
     public void bind(String name, Object obj) throws NamingException {
@@ -43,8 +42,8 @@ public class ContextImpl implements Context {
     }
     @Override
     public void rebind(Name name, Object obj) throws NamingException {
-        LOG.info("rebind name: {}", name.get(0));
-        namedContextItems.put(name.get(0), obj);
+        LOG.info("rebind name: {}", getNameAsString(name));
+        namedContextItems.put(getNameAsString(name), obj);
     }
     @Override
     public void rebind(String name, Object obj) throws NamingException {
@@ -53,8 +52,8 @@ public class ContextImpl implements Context {
     }
     @Override
     public void unbind(Name name) throws NamingException {
-        LOG.info("unbind name: {}", name.get(0));
-        namedContextItems.remove(name.get(0));
+        LOG.info("unbind name: {}", getNameAsString(name));
+        namedContextItems.remove(getNameAsString(name));
     }
     @Override
     public void unbind(String name) throws NamingException {
@@ -111,11 +110,11 @@ public class ContextImpl implements Context {
     }
     @Override
     public NameParser getNameParser(Name name) throws NamingException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return CompositeName::new;
     }
     @Override
     public NameParser getNameParser(String name) throws NamingException {
-        return null;  //To change body of implemented methods use File | Settings | File Templates.
+        return CompositeName::new;
     }
     @Override
     public Name composeName(Name name, Name prefix) throws NamingException {

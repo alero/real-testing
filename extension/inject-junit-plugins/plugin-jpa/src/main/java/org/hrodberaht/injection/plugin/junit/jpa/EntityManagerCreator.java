@@ -10,9 +10,14 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Makes sure that only one EntityManager is created / JVM to avoid issues with data cleanup/sharing
+ */
 public class EntityManagerCreator {
+
     private static final Logger LOG = LoggerFactory.getLogger(EntityManagerCreator.class);
-    private Map<String, EntityManager> entityManagerMap = new HashMap<String, EntityManager>();
+    private static Map<String, EntityManager> entityManagerMap = new HashMap<>();
+
     public EntityManager createEntityManager(String name) {
 
         if(entityManagerMap.get(name) == null){

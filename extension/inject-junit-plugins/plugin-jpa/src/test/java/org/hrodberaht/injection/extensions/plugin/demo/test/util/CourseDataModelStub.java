@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.extensions.plugin.demo.test;
+package org.hrodberaht.injection.extensions.plugin.demo.test.util;
 
 import org.hrodberaht.injection.extensions.plugin.demo.model.Customer;
 import org.hrodberaht.injection.extensions.plugin.demo.model.CustomerAccount;

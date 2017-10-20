@@ -3,6 +3,7 @@ package org.hrodberaht.injection.extensions.plugin.demo.test;
 import org.hrodberaht.injection.extensions.plugin.demo.model.Customer;
 import org.hrodberaht.injection.extensions.plugin.demo.service.CustomerService;
 import org.hrodberaht.injection.extensions.plugin.demo.test.config.CourseContainerConfigExample;
+import org.hrodberaht.injection.extensions.plugin.demo.test.util.CourseDataModelStub;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
 import org.junit.Test;

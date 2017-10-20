@@ -4,6 +4,7 @@ import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.Module;
 import org.hrodberaht.injection.internal.*;
 import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
+import org.hrodberaht.injection.internal.annotation.InjectionFinder;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.spi.ContainerConfigBuilder;
@@ -93,7 +94,7 @@ public abstract class ContainerConfig<T extends InjectionRegister> implements Co
         return resourceFactory;
     }
 
-    protected DefaultInjectionPointFinder createDefaultInjectionPointFinder() {
+    protected InjectionFinder createDefaultInjectionPointFinder() {
         return new DefaultInjectionPointFinder(this);
     }
 }

@@ -16,27 +16,14 @@ import javax.sql.DataSource;
  */
 public class CourseContainerConfigExample extends PluggableContainerConfigBase {
 
-    public CourseContainerConfigExample() {
-
-        String dataSourceName = "MyDataSource";
-        String jpaName = "example-jpa";
-        /*
-        DataSource dataSource = createDataSource(dataSourceName);
-        // EntityManager resource
-        EntityManager entityManager = createEntityManager(jpaName, dataSourceName, dataSource);
-        addPersistenceContext(jpaName, entityManager);
-
-        addSQLSchemas(
-                "CourseContainerConfigExample", "MyDataSource", "org/hrodberaht/injection/extensions/course");
-        */
-    }
+    public static final String DATASOURCE_NAME = "MyDataSource";
 
 
     @Override
     protected void register(InjectionRegistryBuilder registryBuilder) {
         JpaPlugin jpaPlugin = activatePlugin(JpaPlugin.class);
 
-        DataSource dataSource = jpaPlugin.getCreator(DataSource.class).create("MyDataSource");
+        DataSource dataSource = jpaPlugin.getCreator(DataSource.class).create(DATASOURCE_NAME);
 
 
         // DataSource dataSourceTwo = getCreator(DataSource.class).create("secondDataSource");
@@ -46,7 +33,6 @@ public class CourseContainerConfigExample extends PluggableContainerConfigBase {
         // Load schema is a custom method located in the plugin code, this creates clean separation
         jpaPlugin
                 .loadSchema(dataSource, "org.hrodberaht.injection.extensions.plugin.course")
-        // .loadSchema(dataSource, "org.hrodberaht.injection.extensions.plugin.course2")
         ;
 
 

@@ -3,6 +3,8 @@ package org.hrodberaht.injection.plugin.junit;
 import org.hrodberaht.injection.config.ContainerConfig;
 import org.hrodberaht.injection.internal.ResourceInject;
 import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
+import org.hrodberaht.injection.internal.annotation.InjectionFinder;
+import org.hrodberaht.injection.plugin.junit.resources.ChainableInjectionPointProvider;
 import org.hrodberaht.injection.plugin.junit.resources.PluggableResourceFactory;
 import org.hrodberaht.injection.plugin.junit.spi.InjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.spi.Plugin;
@@ -68,6 +70,7 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
     private static class ContainerConfigInner extends ContainerConfig{
         private final PluggableContainerConfigBase base;
         private InjectionPlugin injectionPlugin;
+        private ResourcePlugin resourcePlugin;
 
         private ContainerConfigInner(PluggableContainerConfigBase base) {
             this.base = base;
@@ -83,11 +86,19 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
         }
 
         @Override
-        protected DefaultInjectionPointFinder createDefaultInjectionPointFinder() {
+        protected InjectionFinder createDefaultInjectionPointFinder() {
             if(injectionPlugin != null){
-                return injectionPlugin.getInjectionFinder(this);
+                return wrap(injectionPlugin.getInjectionFinder(this));
             }
-            return super.createDefaultInjectionPointFinder();
+            return  wrap(super.createDefaultInjectionPointFinder());
+        }
+
+        private InjectionFinder wrap(InjectionFinder injectionFinder) {
+            ChainableInjectionPointProvider chainableInjectionPointProvider = resourcePlugin.getInjectionProvider(injectionFinder);
+            if(chainableInjectionPointProvider != null){
+                return chainableInjectionPointProvider;
+            }
+            return injectionFinder;
         }
 
         private <T extends Plugin> T activatePlugin(Class<T> pluginClass) {
@@ -95,10 +106,13 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
             base.activePlugins.put(pluginClass, plugin);
             if(plugin instanceof ResourcePlugin){
                 LOG.info("Activating ResourcePlugin {}", plugin.getClass().getSimpleName());
-                ResourcePlugin resourcePlugin = (ResourcePlugin)plugin;
+                resourcePlugin = (ResourcePlugin)plugin;
                 PluggableResourceFactory pluggableResourceFactory = (PluggableResourceFactory)resourceFactory;
                 pluggableResourceFactory.addCustomCreator(resourcePlugin);
                 resourcePlugin.setPluggableResourceFactory(pluggableResourceFactory);
+
+
+
             }
             if(plugin instanceof RunnerPlugin){
                 LOG.info("Activating RunnerPlugin {}", plugin.getClass().getSimpleName());

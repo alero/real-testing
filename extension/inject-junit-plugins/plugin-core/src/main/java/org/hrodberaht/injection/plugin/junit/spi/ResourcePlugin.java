@@ -1,5 +1,7 @@
 package org.hrodberaht.injection.plugin.junit.spi;
 
+import org.hrodberaht.injection.internal.annotation.InjectionFinder;
+import org.hrodberaht.injection.plugin.junit.resources.ChainableInjectionPointProvider;
 import org.hrodberaht.injection.plugin.junit.resources.PluggableResourceFactory;
 import org.hrodberaht.injection.spi.JavaResourceCreator;
 
@@ -13,4 +15,8 @@ public interface ResourcePlugin {
     <T> JavaResourceCreator<T> getInnerCreator(Class<T> aClass);
 
     void setPluggableResourceFactory(PluggableResourceFactory pluggableResourceFactory);
+
+    default ChainableInjectionPointProvider getInjectionProvider(InjectionFinder injectionFinder){
+        return null;
+    }
 }
