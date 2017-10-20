@@ -14,6 +14,10 @@
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
             <!-- AspectJ configuration -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
@@ -57,8 +61,8 @@
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.hrodberaht.inject.extension</groupId>
-            <artifactId>inject-junit</artifactId>
+            <groupId>org.hrodberaht.inject.plugin</groupId>
+            <artifactId>inject-plugin-core</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
         </dependency>

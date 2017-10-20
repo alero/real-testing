@@ -15,9 +15,6 @@
     <name>Extensions</name>
 
     <modules>
-        <module>inject-cdi-light</module>
-        <module>inject-cdi-light-junit</module>
-        <module>inject-junit</module>
         <module>inject-transactions</module>
     </modules>
 

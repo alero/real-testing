@@ -19,19 +19,13 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.7.0</version>
-                <configuration>
-                    <source>1.8</source>
-                    <target>1.8</target>
-                    <skip>false</skip>
-                </configuration>
             </plugin>
         </plugins>
     </build>
 
     <dependencies>
         <dependency>
-            <groupId>org.hrodberaht.inject.extension</groupId>
+            <groupId>org.hrodberaht.inject.plugin</groupId>
             <artifactId>inject-plugin-core</artifactId>
             <version>${project.version}</version>
         </dependency>

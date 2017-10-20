@@ -30,7 +30,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.hrodberaht.inject.extension</groupId>
+            <groupId>org.hrodberaht.inject.plugin</groupId>
             <artifactId>inject-plugin-core</artifactId>
             <version>${project.version}</version>
         </dependency>

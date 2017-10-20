@@ -14,7 +14,7 @@ public class ProviderFactory {
 
     public static ProviderService getService(EntityManager entityManager) {
         String className = entityManager.getClass().getName();
-        if (className.equals("org.hibernate.ejb.EntityManagerImpl")) {
+        if (className.equals("org.hibernate.internal.SessionImpl")) {
             return new HibernateProviderService();
         } else if (className.equals("org.eclipse.persistence.internal.jpa.EntityManagerImpl")) {
             return new EclipseLinkProviderService();

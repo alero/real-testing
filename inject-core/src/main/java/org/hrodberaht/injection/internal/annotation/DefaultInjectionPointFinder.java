@@ -92,8 +92,6 @@ public class DefaultInjectionPointFinder implements InjectionFinder {
         ContainerConfigBuilder containerConfigBuilder = getContainerConfigBuilder();
         if (containerConfigBuilder != null) {
             containerConfigBuilder.injectResources(service);
-        } else {
-            throw new RuntimeException("Failed to find container, it was null");
         }
         return service;
     }

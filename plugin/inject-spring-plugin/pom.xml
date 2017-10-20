@@ -16,8 +16,8 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.hrodberaht.inject.extension</groupId>
-            <artifactId>plugin-core</artifactId>
+            <groupId>org.hrodberaht.inject.plugin</groupId>
+            <artifactId>inject-plugin-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

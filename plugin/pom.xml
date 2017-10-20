@@ -24,5 +24,14 @@
         <module>inject-cdi-plugin</module>
         <module>inject-cdi-junittest-service</module>
     </modules>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
     
 </project>
