@@ -95,9 +95,11 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
         }
 
         private InjectionFinder wrap(InjectionFinder injectionFinder) {
-            ChainableInjectionPointProvider chainableInjectionPointProvider = resourcePlugin.getInjectionProvider(injectionFinder);
-            if (chainableInjectionPointProvider != null) {
-                return chainableInjectionPointProvider;
+            if(resourcePlugin != null) {
+                ChainableInjectionPointProvider chainableInjectionPointProvider = resourcePlugin.getInjectionProvider(injectionFinder);
+                if (chainableInjectionPointProvider != null) {
+                    return chainableInjectionPointProvider;
+                }
             }
             return injectionFinder;
         }
