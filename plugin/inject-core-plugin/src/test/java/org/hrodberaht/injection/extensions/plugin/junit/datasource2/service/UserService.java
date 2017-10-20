@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.extensions.plugin.junit.datasource.service;
+package org.hrodberaht.injection.extensions.plugin.junit.datasource2.service;
 
 import org.hrodberaht.injection.extensions.plugin.junit.model.User;
 
@@ -21,8 +21,6 @@ public interface UserService {
     void changePassword(String userName, String newPassword);
 
     boolean loginCompare(String userName, String password);
-
-    DataSource getTypedDataSource();
 
     DataSource getNamedDataSource();
 

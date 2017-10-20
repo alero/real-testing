@@ -1,7 +1,7 @@
-package org.hrodberaht.injection.extensions.plugin.junit.datasource.test;
+package org.hrodberaht.injection.extensions.plugin.junit.datasource2.test;
 
-import org.hrodberaht.injection.extensions.plugin.junit.datasource.service.UserService;
-import org.hrodberaht.injection.extensions.plugin.junit.datasource.test.config.SQLLoadingContainerConfig;
+import org.hrodberaht.injection.extensions.plugin.junit.datasource2.service.UserService;
+import org.hrodberaht.injection.extensions.plugin.junit.datasource2.test.config.ServiceLoadingContainerConfig;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
 import org.junit.Test;
@@ -21,9 +21,9 @@ import static org.junit.Assert.assertTrue;
  * @created 1.0
  * @since 1.0
  */
-@ContainerContext(SQLLoadingContainerConfig.class)
+@ContainerContext(ServiceLoadingContainerConfig.class)
 @RunWith(PluggableJUnitRunner.class)
-public class TestDatasourceUserCreation {
+public class TestServiceLoadingDatasourceUserCreation {
 
     @Inject
     private UserService userService;
@@ -31,11 +31,6 @@ public class TestDatasourceUserCreation {
     @Test
     public void testNamedDataSourceExists() throws Exception {
         assertNotNull(userService.getNamedDataSource());
-    }
-
-    @Test
-    public void testTypedDataSourceExists() throws Exception {
-        assertNotNull(userService.getTypedDataSource());
     }
 
     @Test

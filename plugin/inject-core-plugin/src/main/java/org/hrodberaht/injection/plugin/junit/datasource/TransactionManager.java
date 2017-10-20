@@ -36,6 +36,14 @@ public class TransactionManager {
         });
     }
 
+    public void endTransactionCommit() {
+        DataSources dataSources = DATA_SOURCES.get();
+        dataSources.dataSourceList.forEach(dataSource -> {
+            dataSource.commitDataSource();
+            LOG.debug("dataSource committed " + dataSource);
+        });
+    }
+
     public void beginTransaction() {
 
         DATA_SOURCES.set(new DataSources(proxyResourceCreator.DATASOURCES.values()));

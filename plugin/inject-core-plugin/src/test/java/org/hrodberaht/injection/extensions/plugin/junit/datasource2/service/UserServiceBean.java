@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.extensions.plugin.junit.datasource.service;
+package org.hrodberaht.injection.extensions.plugin.junit.datasource2.service;
 
 import org.hrodberaht.injection.extensions.plugin.junit.model.User;
 import org.hrodberaht.injection.plugin.datasource.jdbc.InsertOrUpdater;
@@ -21,10 +21,7 @@ import javax.sql.DataSource;
 @Singleton
 public class UserServiceBean implements UserService {
 
-    @Resource
-    private DataSource dataSource;
-
-    @Resource(name = "MyDataSource")
+    @Resource(name = "MyDataSource2")
     private DataSource namedDataSource;
 
     private JDBCService jdbcService;
@@ -32,7 +29,7 @@ public class UserServiceBean implements UserService {
 
     @PostConstruct
     public void init() {
-        jdbcService = JDBCServiceFactory.of(dataSource);
+        jdbcService = JDBCServiceFactory.of(namedDataSource);
     }
 
     public User find(String userName) {
@@ -57,11 +54,6 @@ public class UserServiceBean implements UserService {
             return false;
         }
         return user.getPassword().equals(password);
-    }
-
-    @Override
-    public DataSource getTypedDataSource() {
-        return dataSource;
     }
 
     @Override

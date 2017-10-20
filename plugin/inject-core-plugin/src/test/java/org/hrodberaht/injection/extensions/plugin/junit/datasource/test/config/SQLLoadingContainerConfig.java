@@ -14,7 +14,7 @@ import javax.sql.DataSource;
  * @created 1.0
  * @since 1.0
  */
-public class Course2ContainerConfigExample extends PluggableContainerConfigBase {
+public class SQLLoadingContainerConfig extends PluggableContainerConfigBase {
 
 
     @Override

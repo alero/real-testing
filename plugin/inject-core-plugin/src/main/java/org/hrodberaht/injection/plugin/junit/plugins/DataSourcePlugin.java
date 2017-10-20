@@ -11,6 +11,7 @@ import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugin;
 import org.hrodberaht.injection.spi.JavaResourceCreator;
 
 import javax.sql.DataSource;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -18,10 +19,11 @@ public class DataSourcePlugin implements RunnerPlugin, ResourcePlugin {
 
     private final DatasourceResourceCreator datasourceResourceCreator = getDatasourceResourceCreator();
     private final List<Class> classList = Arrays.asList(datasourceResourceCreator.getType());
-    private final String DEFAULT_SCHEMA_NAME = "main";
+    private final List<Runnable> beforeSuite = new ArrayList<>();
 
     private PluggableResourceFactory pluggableResourceFactory;
     private TransactionManager transactionManager;
+    private InjectContainer injectContainer;
 
     private DatasourceResourceCreator getDatasourceResourceCreator() {
         ProxyResourceCreator proxyResourceCreator = new ProxyResourceCreator(
@@ -40,7 +42,7 @@ public class DataSourcePlugin implements RunnerPlugin, ResourcePlugin {
      */
     public DataSourcePlugin loadSchema(DataSource dataSource, String classPathRoot) {
         DatasourceContainerService datasourceContainerService = new DatasourceContainerService(dataSource);
-        datasourceContainerService.addSQLSchemas(DEFAULT_SCHEMA_NAME, classPathRoot);
+        datasourceContainerService.addSQLSchemas("main", classPathRoot);
         return this;
     }
 
@@ -77,6 +79,12 @@ public class DataSourcePlugin implements RunnerPlugin, ResourcePlugin {
 
     @Override
     public void afterContainerCreation(InjectContainer injectContainer) {
+        this.injectContainer = injectContainer;
+        if(this.beforeSuite.size() > 0) {
+            transactionManager.beginTransaction();
+            this.beforeSuite.forEach(Runnable::run);
+            transactionManager.endTransactionCommit();
+        }
 
     }
 
@@ -93,5 +101,18 @@ public class DataSourcePlugin implements RunnerPlugin, ResourcePlugin {
     @Override
     public LifeCycle getLifeCycle() {
         return LifeCycle.NEW;
+    }
+
+    /**
+     * This is useful if there is a need to run any code before the actual tests are executed
+     * @param runnable
+     */
+    public DataSourcePlugin runBeforeSuite(Runnable runnable) {
+        this.beforeSuite.add(runnable);
+        return this;
+    }
+
+    public <T> T inject(Class<T> aClass) {
+        return injectContainer.get(aClass);
     }
 }
