@@ -104,8 +104,8 @@ public class DataSourcePlugin implements RunnerPlugin, ResourcePlugin {
     }
 
     /**
-     * This is useful if there is a need to run any code before the actual tests are executed
-     * @param runnable the runnable to be added to run before tests start, comparable to @BeforeClass but with a but more state from JUnit
+     * This is useful if there is a need to run any code before the actual tests are executed, any results from code executed like this is commited to the underlying datasources and entitymanagers
+     * @param runnable the runnable to be added to run before tests start, comparable to @BeforeClass from JUnit, but with a but reusability over testsuites not onlt testclasses
      */
     public DataSourcePlugin addBeforeSuite(Runnable runnable) {
         this.beforeSuite.add(runnable);

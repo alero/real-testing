@@ -17,8 +17,8 @@
 
     <dependencies>
         <dependency>
-            <artifactId>inject-core</artifactId>
             <groupId>org.hrodberaht.inject</groupId>
+            <artifactId>inject-core</artifactId>
             <version>${project.version}</version>
         </dependency>
         <dependency>

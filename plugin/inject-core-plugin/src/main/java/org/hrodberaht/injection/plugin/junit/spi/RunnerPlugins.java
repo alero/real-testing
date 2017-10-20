@@ -15,7 +15,7 @@ public class RunnerPlugins {
 
     public void addPlugin(RunnerPlugin runnerPlugin) {
         if (runnerPlugins.get(runnerPlugin.getClass()) != null) {
-            throw new InjectRuntimeException("Can not register plugin several times");
+            throw new InjectRuntimeException("Can not register same RunnerPlugin several times");
         }
         runnerPlugins.put(runnerPlugin.getClass(), runnerPlugin);
     }

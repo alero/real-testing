@@ -19,7 +19,6 @@
         <module>inject-cdi-light</module>
         <module>inject-cdi-light-junit</module>
         <module>inject-junit</module>
-        <module>inject-junit-plugins</module>
         <module>inject-transactions</module>
     </modules>
 

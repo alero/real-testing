@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.extensions.cdi.example.service;
 
-import javax.inject.Inject;
+import javax.ejb.EJB;
 
 /**
  * Created with IntelliJ IDEA.
@@ -11,7 +11,7 @@ import javax.inject.Inject;
  */
 public class ExampleInterfaceImplementation implements ExampleInterface {
 
-    @Inject
+    @EJB
     private AnotherInterface anotherInterface;
 
     public String getSomething() {
