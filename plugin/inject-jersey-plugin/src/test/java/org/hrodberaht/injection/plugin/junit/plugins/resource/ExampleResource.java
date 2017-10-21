@@ -7,6 +7,8 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @Path("api")
 public class ExampleResource {
@@ -21,6 +23,12 @@ public class ExampleResource {
         return "OK";
     }
 
-
+    @GET
+    @Path("find")
+    @Produces(MediaType.APPLICATION_JSON)
+    public JsonObject find() {
+        return new JsonObject(Long.valueOf(1), 2, "string",
+                LocalDateTime.now(), LocalTime.now(), Boolean.FALSE, Double.valueOf(1.2));
+    }
 
 }

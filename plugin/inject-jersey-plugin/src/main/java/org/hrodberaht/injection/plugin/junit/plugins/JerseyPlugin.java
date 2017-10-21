@@ -22,6 +22,7 @@ public class JerseyPlugin implements RunnerPlugin {
     private JerseyTestRunner jerseyTestRunner;
     private ClientConfigInterface clientConfigInterface;
     private ResourceConfigInterface resourceConfigInterface;
+    private TestContainerFactoryInterface testContainerFactoryInterface;
 
     @FunctionalInterface
     public interface ClientConfigInterface{
@@ -31,6 +32,11 @@ public class JerseyPlugin implements RunnerPlugin {
     @FunctionalInterface
     public interface ResourceConfigInterface{
         ResourceConfig config();
+    }
+
+    @FunctionalInterface
+    public interface TestContainerFactoryInterface{
+        TestContainerFactory container();
     }
 
     public JerseyPluginBuilder build(){
@@ -52,6 +58,11 @@ public class JerseyPlugin implements RunnerPlugin {
 
         public JerseyPluginBuilder resourceConfig(ResourceConfigInterface resourceConfigInterface) {
             jerseyPlugin.resourceConfigInterface = resourceConfigInterface;
+            return this;
+        }
+
+        public JerseyPluginBuilder resourceConfig(TestContainerFactoryInterface testContainerFactoryInterface) {
+            jerseyPlugin.testContainerFactoryInterface = testContainerFactoryInterface;
             return this;
         }
 
@@ -77,6 +88,9 @@ public class JerseyPlugin implements RunnerPlugin {
 
             @Override
             protected TestContainerFactory getTestContainerFactory() {
+                if(testContainerFactoryInterface != null){
+                    return testContainerFactoryInterface.container();
+                }
                 return new InMemoryTestContainerFactory() {
                     @Override
                     public TestContainer create(URI baseUri, DeploymentContext context) {
