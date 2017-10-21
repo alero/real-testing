@@ -43,8 +43,8 @@ public class SpringContainerJavaConfigExample extends PluggableContainerConfigBa
         DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class);
         DataSource dataSource = dataSourcePlugin.getCreator(DataSource.class).create(dataSourceName);
 
-        dataSourcePlugin.loadSchema(dataSource, "inject-spring-plugin/src/test/resources/sql");
-        dataSourcePlugin.loadSchema(dataSource, "inject-spring-plugin/src/test/resources/sql/insert");
+        dataSourcePlugin.loadSchema(dataSource, "sql");
+        dataSourcePlugin.loadSchema(dataSource, "sql/insert");
 
         activatePlugin(SpringExtensionPlugin.class).loadConfig(SpringConfigJavaSample.class);
 
