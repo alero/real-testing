@@ -15,7 +15,9 @@
     <name>Extensions</name>
 
     <modules>
+        <!--
         <module>inject-transactions</module>
+        //-->
     </modules>
 
 

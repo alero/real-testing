@@ -16,7 +16,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>inject-core-plugin</module>
+        <module>inject-plugin-core</module>
         <module>inject-jpa-plugin</module>
         <module>inject-guice-plugin</module>
         <module>inject-liquibase-plugin</module>
