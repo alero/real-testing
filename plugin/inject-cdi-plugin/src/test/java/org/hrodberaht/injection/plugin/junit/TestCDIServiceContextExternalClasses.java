@@ -5,6 +5,7 @@ import org.hrodberaht.injection.extensions.cdi.example.service.ExampleInterface;
 import org.hrodberaht.injection.plugin.junit.cdi.config.CDIContainerConfigExampleExternalResources;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import javax.inject.Inject;
 
 import static org.junit.Assert.assertEquals;

@@ -16,11 +16,11 @@ import java.lang.reflect.Method;
 public class CDIInjectionPlugin implements InjectionPlugin, RunnerPlugin {
 
     private final CDIExtensions cdiExtensions = new ApplicationCDIExtensions();
-    private InjectionRegister injectionRegister;
+
 
     @Override
     public void setInjectionRegister(InjectionRegister injectionRegister) {
-        this.injectionRegister = injectionRegister;
+
     }
 
     @Override
@@ -37,21 +37,21 @@ public class CDIInjectionPlugin implements InjectionPlugin, RunnerPlugin {
 
     @Override
     public void beforeContainerCreation() {
-        cdiExtensions.runBeforeBeanDiscovery(injectionRegister);
+        cdiExtensions.runBeforeBeanDiscovery();
     }
 
     @Override
-    public void afterContainerCreation(InjectContainer injectContainer) {
+    public void afterContainerCreation(InjectionRegister injectionRegister) {
         cdiExtensions.runAfterBeanDiscovery(injectionRegister);
     }
 
     @Override
-    public void beforeMethod(InjectContainer injectContainer) {
+    public void beforeMethod(InjectionRegister injectionRegisterr) {
 
     }
 
     @Override
-    public void afterMethod(InjectContainer injectContainer) {
+    public void afterMethod(InjectionRegister injectionRegister) {
 
     }
 

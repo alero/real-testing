@@ -2,6 +2,7 @@ package org.hrodberaht.injection.plugin.junit.spi;
 
 import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
+import org.hrodberaht.injection.register.InjectionRegister;
 
 import javax.inject.Singleton;
 import java.util.HashMap;
@@ -24,15 +25,15 @@ public class RunnerPlugins {
         runnerPlugins.forEach((aClass, runnerPlugin) -> runnerPlugin.beforeContainerCreation());
     }
 
-    public void runInitAfterContainer(InjectContainer injectContainer) {
-        runnerPlugins.forEach((aClass, runnerPlugin) -> runnerPlugin.afterContainerCreation(injectContainer));
+    public void runInitAfterContainer(InjectionRegister injectionRegister) {
+        runnerPlugins.forEach((aClass, runnerPlugin) -> runnerPlugin.afterContainerCreation(injectionRegister));
     }
 
-    public void runBeforeTest(InjectContainer injectContainer) {
-        runnerPlugins.forEach((aClass, runnerPlugin) -> runnerPlugin.beforeMethod(injectContainer));
+    public void runBeforeTest(InjectionRegister injectionRegister) {
+        runnerPlugins.forEach((aClass, runnerPlugin) -> runnerPlugin.beforeMethod(injectionRegister));
     }
 
-    public void runAfterTest(InjectContainer injectContainer) {
-        runnerPlugins.forEach((aClass, runnerPlugin) -> runnerPlugin.afterMethod(injectContainer));
+    public void runAfterTest(InjectionRegister injectionRegister) {
+        runnerPlugins.forEach((aClass, runnerPlugin) -> runnerPlugin.afterMethod(injectionRegister));
     }
 }

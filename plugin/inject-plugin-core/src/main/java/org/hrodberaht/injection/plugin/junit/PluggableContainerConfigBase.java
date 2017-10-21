@@ -106,7 +106,13 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
 
         private <T extends Plugin> T activatePlugin(Class<T> pluginClass) {
             T plugin = createPlugin(pluginClass);
-            base.activePlugins.put(pluginClass, plugin);
+            base.registerActivePlugin(pluginClass, plugin);
+            injectionRegistryBuilder.register(registrations -> registrations.register(new RegistrationModuleAnnotation() {
+                @Override
+                public void registrations() {
+                    register(pluginClass).withFactoryInstance(plugin);
+                }
+            }));
             if (plugin instanceof ResourcePlugin) {
                 LOG.info("Activating ResourcePlugin {}", plugin.getClass().getSimpleName());
                 resourcePlugin = (ResourcePlugin) plugin;
@@ -179,6 +185,10 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
                 injectionPlugin.setInjectionRegister(registryBuilder.getInjectionRegister());
             }
         }
+    }
+
+    private <T extends Plugin> void registerActivePlugin(Class<T> pluginClass, T plugin) {
+        activePlugins.put(pluginClass, plugin);
     }
 
 

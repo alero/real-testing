@@ -65,7 +65,7 @@ public class ApplicationCDIExtensions implements CDIExtensions {
         }
     }
 
-    public void runBeforeBeanDiscovery(InjectionRegister register) {
+    public void runBeforeBeanDiscovery() {
         BeforeBeanDiscoveryByInject inject = new BeforeBeanDiscoveryByInject();
         List<MethodClassHolder> methods = phaseMethods.get(Phase.BeforeBeanDiscovery);
         for (MethodClassHolder methodClassHolder : methods) {

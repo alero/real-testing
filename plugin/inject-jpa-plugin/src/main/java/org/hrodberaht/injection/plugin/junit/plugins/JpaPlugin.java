@@ -6,6 +6,7 @@ import org.hrodberaht.injection.plugin.junit.jpa.EntityManagerCreator;
 import org.hrodberaht.injection.plugin.junit.jpa.EntityManagerHolder;
 import org.hrodberaht.injection.plugin.junit.jpa.EntityManagerInjection;
 import org.hrodberaht.injection.plugin.junit.resources.ChainableInjectionPointProvider;
+import org.hrodberaht.injection.register.InjectionRegister;
 
 import javax.persistence.EntityManager;
 
@@ -33,19 +34,19 @@ public class JpaPlugin extends DataSourcePlugin {
     }
 
     @Override
-    public void afterContainerCreation(InjectContainer injectContainer) {
-        super.afterContainerCreation(injectContainer);
+    public void afterContainerCreation(InjectionRegister injectionRegister) {
+        super.afterContainerCreation(injectionRegister);
     }
 
     @Override
-    public void beforeMethod(InjectContainer injectContainer) {
+    public void beforeMethod(InjectionRegister injectionRegister) {
         entityManagerHolder.begin(entityManagerCreator.getManagers());
-        super.beforeMethod(injectContainer);
+        super.beforeMethod(injectionRegister);
     }
 
     @Override
-    public void afterMethod(InjectContainer injectContainer) {
+    public void afterMethod(InjectionRegister injectionRegister) {
         entityManagerHolder.end();
-        super.afterMethod(injectContainer);
+        super.afterMethod(injectionRegister);
     }
 }

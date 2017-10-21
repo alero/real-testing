@@ -1,11 +1,8 @@
 package org.hrodberaht.injection.plugin.junit.cdi.config;
 
-import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.plugin.junit.PluggableContainerConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.CDIInjectionPlugin;
 import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
-
-import javax.sql.DataSource;
 
 /**
  * Unit Test JUnit (using @Inject)

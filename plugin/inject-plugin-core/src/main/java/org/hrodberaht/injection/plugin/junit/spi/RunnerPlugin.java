@@ -1,15 +1,15 @@
 package org.hrodberaht.injection.plugin.junit.spi;
 
-import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.register.InjectionRegister;
 
 public interface RunnerPlugin extends Plugin {
 
     void beforeContainerCreation();
 
-    void afterContainerCreation(InjectContainer injectContainer);
+    void afterContainerCreation(InjectionRegister injectionRegister);
 
-    void beforeMethod(InjectContainer injectContainer);
+    void beforeMethod(InjectionRegister injectionRegister);
 
-    void afterMethod(InjectContainer injectContainer);
+    void afterMethod(InjectionRegister injectionRegister);
 
 }

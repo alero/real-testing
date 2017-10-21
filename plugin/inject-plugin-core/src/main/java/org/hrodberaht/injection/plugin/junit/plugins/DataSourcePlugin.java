@@ -8,6 +8,7 @@ import org.hrodberaht.injection.plugin.junit.datasource.TransactionManager;
 import org.hrodberaht.injection.plugin.junit.resources.PluggableResourceFactory;
 import org.hrodberaht.injection.plugin.junit.spi.ResourcePlugin;
 import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugin;
+import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.spi.JavaResourceCreator;
 
 import javax.sql.DataSource;
@@ -78,8 +79,8 @@ public class DataSourcePlugin implements RunnerPlugin, ResourcePlugin {
     }
 
     @Override
-    public void afterContainerCreation(InjectContainer injectContainer) {
-        this.injectContainer = injectContainer;
+    public void afterContainerCreation(InjectionRegister injectionRegister) {
+        this.injectContainer = injectionRegister.getContainer();
         if(this.beforeSuite.size() > 0) {
             transactionManager.beginTransaction();
             this.beforeSuite.forEach(Runnable::run);
@@ -89,12 +90,12 @@ public class DataSourcePlugin implements RunnerPlugin, ResourcePlugin {
     }
 
     @Override
-    public void beforeMethod(InjectContainer injectContainer) {
+    public void beforeMethod(InjectionRegister injectContainer) {
         transactionManager.beginTransaction();
     }
 
     @Override
-    public void afterMethod(InjectContainer injectContainer) {
+    public void afterMethod(InjectionRegister injectContainer) {
         transactionManager.endTransaction();
     }
 

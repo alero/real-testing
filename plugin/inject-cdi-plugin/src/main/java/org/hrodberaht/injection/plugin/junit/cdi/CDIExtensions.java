@@ -8,5 +8,5 @@ import org.hrodberaht.injection.register.InjectionRegister;
 public interface CDIExtensions {
     void runAfterBeanDiscovery(InjectionRegister register);
 
-    void runBeforeBeanDiscovery(InjectionRegister register);
+    void runBeforeBeanDiscovery();
 }

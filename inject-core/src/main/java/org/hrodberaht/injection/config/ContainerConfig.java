@@ -24,6 +24,7 @@ public abstract class ContainerConfig<T extends InjectionRegister> implements Co
 
     protected InjectionRegister originalRegister = null;
     protected InjectionRegister activeRegister = null;
+    protected final InjectionRegistryBuilder injectionRegistryBuilder = new InjectionRegistryBuilder(this);
 
     protected ResourceFactory resourceFactory = createResourceFactory();
 
@@ -42,14 +43,14 @@ public abstract class ContainerConfig<T extends InjectionRegister> implements Co
     }
 
     public void start() {
-        InjectionRegistryBuilder combinedRegister = new InjectionRegistryBuilder(this);
-        register(combinedRegister);
-        combinedRegister.register(
+
+        register(injectionRegistryBuilder);
+        injectionRegistryBuilder.register(
                 registrations -> registrations.register(
                         new CustomInjectionPointFinderModule(createDefaultInjectionPointFinder())
                 )
         );
-        originalRegister = combinedRegister.build();
+        originalRegister = injectionRegistryBuilder.build();
         appendResources(originalRegister);
         activeRegister = originalRegister.copy();
     }
