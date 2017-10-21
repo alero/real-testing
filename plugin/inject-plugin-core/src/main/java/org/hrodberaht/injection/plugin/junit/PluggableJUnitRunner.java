@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 
 /**
  * Unit Test JUnit (using @Inject)
@@ -118,6 +119,13 @@ public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
         runnerPlugins.runAfterTest(containerConfig.getActiveRegister());
         // TransactionManager.endTransaction();
         containerConfig.cleanActiveContainer();
+    }
+
+    @Override
+    public void run(RunNotifier notifier) {
+        runnerPlugins.runBeforeTestClass(containerConfig.getActiveRegister());
+        super.run(notifier);
+        runnerPlugins.runAfterTestClass(containerConfig.getActiveRegister());
     }
 
     /**

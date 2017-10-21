@@ -46,12 +46,22 @@ public class CDIInjectionPlugin implements InjectionPlugin, RunnerPlugin {
     }
 
     @Override
-    public void beforeMethod(InjectionRegister injectionRegisterr) {
+    public void beforeTest(InjectionRegister injectionRegisterr) {
 
     }
 
     @Override
-    public void afterMethod(InjectionRegister injectionRegister) {
+    public void beforeTestClass(InjectionRegister injectionRegister) {
+
+    }
+
+    @Override
+    public void afterTestClass(InjectionRegister injectionRegister) {
+
+    }
+
+    @Override
+    public void afterTest(InjectionRegister injectionRegister) {
 
     }
 

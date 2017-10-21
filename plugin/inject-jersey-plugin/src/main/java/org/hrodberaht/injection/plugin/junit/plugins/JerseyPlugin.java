@@ -132,7 +132,7 @@ public class JerseyPlugin implements RunnerPlugin {
     }
 
     @Override
-    public void beforeMethod(InjectionRegister injectionRegister) {
+    public void beforeTest(InjectionRegister injectionRegister) {
         jerseyTestRunner.initializeJersey();
         /*
         injectionRegister.register(new RegistrationModuleAnnotation() {
@@ -146,7 +146,17 @@ public class JerseyPlugin implements RunnerPlugin {
     }
 
     @Override
-    public void afterMethod(InjectionRegister injectionRegister) {
+    public void beforeTestClass(InjectionRegister injectionRegister) {
+
+    }
+
+    @Override
+    public void afterTestClass(InjectionRegister injectionRegister) {
+
+    }
+
+    @Override
+    public void afterTest(InjectionRegister injectionRegister) {
         jerseyTestRunner.shutdownJersey();
     }
 

@@ -90,12 +90,22 @@ public class DataSourcePlugin implements RunnerPlugin, ResourcePlugin {
     }
 
     @Override
-    public void beforeMethod(InjectionRegister injectContainer) {
+    public void beforeTest(InjectionRegister injectContainer) {
         transactionManager.beginTransaction();
     }
 
     @Override
-    public void afterMethod(InjectionRegister injectContainer) {
+    public void beforeTestClass(InjectionRegister injectionRegister) {
+
+    }
+
+    @Override
+    public void afterTestClass(InjectionRegister injectionRegister) {
+
+    }
+
+    @Override
+    public void afterTest(InjectionRegister injectContainer) {
         transactionManager.endTransaction();
     }
 

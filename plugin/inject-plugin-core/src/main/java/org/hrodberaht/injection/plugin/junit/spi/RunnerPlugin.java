@@ -8,8 +8,12 @@ public interface RunnerPlugin extends Plugin {
 
     void afterContainerCreation(InjectionRegister injectionRegister);
 
-    void beforeMethod(InjectionRegister injectionRegister);
+    void beforeTest(InjectionRegister injectionRegister);
 
-    void afterMethod(InjectionRegister injectionRegister);
+    void beforeTestClass(InjectionRegister injectionRegister);
+
+    void afterTestClass(InjectionRegister injectionRegister);
+
+    void afterTest(InjectionRegister injectionRegister);
 
 }

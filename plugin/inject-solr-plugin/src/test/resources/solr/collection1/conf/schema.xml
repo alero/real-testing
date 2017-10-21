@@ -1,0 +1,17 @@
+<schema name="test" version="1.2">
+
+    <fieldType name="integer" class="solr.TrieIntField" precisionStep="0"/>
+    <fieldType name="string" class="solr.StrField" sortMissingLast="true"/>
+    <fieldType name="long" class="solr.TrieLongField" precisionStep="0" positionIncrementGap="0"/>
+
+    <field name="_version_" type="long" indexed="true" stored="true"/>
+    <field name="_root_" type="string" indexed="true" stored="false"/>
+    <field name="id" type="string" indexed="true" stored="true" required="true" multiValued="false"/>
+    <field name="text" type="string" indexed="true" stored="true"/>
+    <field name="FilePath" type="string" indexed="true" stored="true"/>
+
+
+
+    <uniqueKey>id</uniqueKey>
+
+</schema>

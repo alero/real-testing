@@ -1,6 +1,5 @@
 package org.hrodberaht.injection.plugin.junit.spi;
 
-import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.register.InjectionRegister;
 
@@ -30,10 +29,18 @@ public class RunnerPlugins {
     }
 
     public void runBeforeTest(InjectionRegister injectionRegister) {
-        runnerPlugins.forEach((aClass, runnerPlugin) -> runnerPlugin.beforeMethod(injectionRegister));
+        runnerPlugins.forEach((aClass, runnerPlugin) -> runnerPlugin.beforeTest(injectionRegister));
     }
 
     public void runAfterTest(InjectionRegister injectionRegister) {
-        runnerPlugins.forEach((aClass, runnerPlugin) -> runnerPlugin.afterMethod(injectionRegister));
+        runnerPlugins.forEach((aClass, runnerPlugin) -> runnerPlugin.afterTest(injectionRegister));
+    }
+
+    public void runBeforeTestClass(InjectionRegister injectionRegister) {
+        runnerPlugins.forEach((aClass, runnerPlugin) -> runnerPlugin.beforeTestClass(injectionRegister));
+    }
+
+    public void runAfterTestClass(InjectionRegister injectionRegister) {
+        runnerPlugins.forEach((aClass, runnerPlugin) -> runnerPlugin.afterTestClass(injectionRegister));
     }
 }
