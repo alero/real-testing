@@ -29,7 +29,7 @@ public class CDIInjectionPlugin implements InjectionPlugin, RunnerPlugin {
 
     @Override
     public LifeCycle getLifeCycle() {
-        return LifeCycle.SINGLETON;
+        return LifeCycle.TESTSUITE;
     }
 
 

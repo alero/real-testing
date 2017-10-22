@@ -111,7 +111,7 @@ public class DataSourcePlugin implements RunnerPlugin, ResourcePlugin {
 
     @Override
     public LifeCycle getLifeCycle() {
-        return LifeCycle.NEW;
+        return LifeCycle.TESTCLASS;
     }
 
     /**

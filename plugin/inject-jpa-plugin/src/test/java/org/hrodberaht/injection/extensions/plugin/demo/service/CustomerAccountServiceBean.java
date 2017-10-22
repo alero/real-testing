@@ -22,11 +22,13 @@ public class CustomerAccountServiceBean implements CustomerAccountService {
         return entityManager.find(CustomerAccount.class, id);
     }
 
+    @Override
     public CustomerAccount create(CustomerAccount customer) {
         entityManager.persist(customer);
         return customer;
     }
 
+    @Override
     public CustomerAccount update(CustomerAccount customerAccount) {
         entityManager.persist(customerAccount);
         return customerAccount;

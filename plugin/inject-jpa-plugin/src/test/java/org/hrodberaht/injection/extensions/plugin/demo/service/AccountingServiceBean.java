@@ -18,7 +18,7 @@ public class AccountingServiceBean implements AccountingService {
     @Inject
     private CustomerAccountService customerAccountService;
 
-
+    @Override
     public void addMoney(double money, long customerAccountId) {
         CustomerAccount customerAccount = customerAccountService.find(customerAccountId);
         if (customerAccount.getMoney() != null) {

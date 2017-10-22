@@ -1,23 +1,22 @@
-package org.hrodberaht.injection.plugin.junit.spi;
+package org.hrodberaht.injection.plugin.junit.inner;
 
-import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
+import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugin;
 import org.hrodberaht.injection.register.InjectionRegister;
 
-import javax.inject.Singleton;
 import java.util.HashMap;
 import java.util.Map;
 
-@Singleton
-public class RunnerPlugins {
+public class TestSuiteRunnerPlugins implements RunnerPluginInterface{
 
 
-    private Map<Class, RunnerPlugin> runnerPlugins = new HashMap<>();
+    private static Map<Class, RunnerPlugin> runnerPlugins = new HashMap<>();
 
-    public void addPlugin(RunnerPlugin runnerPlugin) {
+    public RunnerPlugin addPlugin(RunnerPlugin runnerPlugin) {
         if (runnerPlugins.get(runnerPlugin.getClass()) != null) {
-            throw new InjectRuntimeException("Can not register same RunnerPlugin several times");
+            return runnerPlugins.get(runnerPlugin.getClass());
         }
         runnerPlugins.put(runnerPlugin.getClass(), runnerPlugin);
+        return runnerPlugin;
     }
 
     public void runInitBeforeContainer() {

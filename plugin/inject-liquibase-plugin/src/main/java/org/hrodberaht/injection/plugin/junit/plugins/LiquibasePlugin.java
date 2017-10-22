@@ -35,6 +35,6 @@ public class LiquibasePlugin extends DataSourcePlugin implements Plugin {
 
     @Override
     public LifeCycle getLifeCycle() {
-        return LifeCycle.SINGLETON;
+        return LifeCycle.TESTSUITE;
     }
 }

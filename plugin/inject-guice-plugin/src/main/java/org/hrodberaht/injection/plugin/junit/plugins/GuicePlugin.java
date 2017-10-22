@@ -46,7 +46,7 @@ public class GuicePlugin implements InjectionPlugin {
 
     @Override
     public LifeCycle getLifeCycle() {
-        return LifeCycle.SINGLETON;
+        return LifeCycle.TESTSUITE;
     }
 
 

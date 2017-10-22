@@ -2,7 +2,7 @@ package org.hrodberaht.injection.plugin.junit;
 
 import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
-import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugins;
+import org.hrodberaht.injection.plugin.junit.inner.RunnerPlugins;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;

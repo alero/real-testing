@@ -239,8 +239,10 @@ public class SolrTestRunner {
 
     private void tearDown() throws IOException {
         File coreDir = new File(home, coreName);
-        LOG.info("cleaning : "+coreDir.getAbsolutePath());
-        FileUtils.cleanDirectory(coreDir);
+        if(coreDir.exists()) {
+            LOG.info("cleaning : " + coreDir.getAbsolutePath());
+            FileUtils.cleanDirectory(coreDir);
+        }
     }
 
 

@@ -162,7 +162,7 @@ public class JerseyPlugin implements RunnerPlugin {
 
     @Override
     public LifeCycle getLifeCycle() {
-        return LifeCycle.SINGLETON;
+        return LifeCycle.TESTSUITE;
     }
 
 

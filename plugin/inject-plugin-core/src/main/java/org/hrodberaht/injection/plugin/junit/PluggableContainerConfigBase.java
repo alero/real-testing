@@ -10,7 +10,7 @@ import org.hrodberaht.injection.plugin.junit.spi.Plugin;
 import org.hrodberaht.injection.plugin.junit.spi.PluginConfig;
 import org.hrodberaht.injection.plugin.junit.spi.ResourcePlugin;
 import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugin;
-import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugins;
+import org.hrodberaht.injection.plugin.junit.inner.RunnerPlugins;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.spi.JavaResourceCreator;
@@ -105,7 +105,7 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
         }
 
         private <T extends Plugin> T activatePlugin(Class<T> pluginClass) {
-            T plugin = createPlugin(pluginClass);
+            final T plugin = createPlugin(pluginClass);
             base.registerActivePlugin(pluginClass, plugin);
             injectionRegistryBuilder.register(registrations -> registrations.register(new RegistrationModuleAnnotation() {
                 @Override
@@ -119,12 +119,6 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
                 PluggableResourceFactory pluggableResourceFactory = (PluggableResourceFactory) resourceFactory;
                 pluggableResourceFactory.addCustomCreator(resourcePlugin);
                 resourcePlugin.setPluggableResourceFactory(pluggableResourceFactory);
-
-
-            }
-            if (plugin instanceof RunnerPlugin) {
-                LOG.info("Activating RunnerPlugin {}", plugin.getClass().getSimpleName());
-                base.runnerPlugins.addPlugin((RunnerPlugin) plugin);
             }
             if (plugin instanceof InjectionPlugin) {
                 LOG.info("Activating InjectionPlugin {}", plugin.getClass().getSimpleName());
@@ -140,7 +134,12 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
 
         private <T extends Plugin> T createPlugin(Class<T> pluginClass) {
             try {
-                return pluginClass.newInstance();
+                T plugin = pluginClass.newInstance();
+                if (plugin instanceof RunnerPlugin) {
+                    LOG.info("Activating RunnerPlugin {}", plugin.getClass().getSimpleName());
+                    return base.runnerPlugins.addPlugin((RunnerPlugin) plugin);
+                }
+                return plugin;
             } catch (InstantiationException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
