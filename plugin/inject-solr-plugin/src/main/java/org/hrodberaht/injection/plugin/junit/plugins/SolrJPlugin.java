@@ -21,16 +21,6 @@ public class SolrJPlugin implements RunnerPlugin{
 
     @Override
     public void afterContainerCreation(InjectionRegister injectionRegister) {
-
-    }
-
-    @Override
-    public void beforeTest(InjectionRegister injectionRegister) {
-
-    }
-
-    @Override
-    public void beforeTestClass(InjectionRegister injectionRegister) {
         try {
             solrTestRunner.setup(SolrTestRunner.DEAFULT_HOME, coreName);
         } catch (Exception e) {
@@ -38,22 +28,29 @@ public class SolrJPlugin implements RunnerPlugin{
         }
     }
 
+
+    @Override
+    public void beforeTestClass(InjectionRegister injectionRegister) {
+
+    }
+
     @Override
     public void afterTestClass(InjectionRegister injectionRegister) {
+
+    }
+
+    @Override
+    public void beforeTest(InjectionRegister injectionRegister) {
         try {
-            solrTestRunner.tearDown(coreName);
-        } catch (IOException e) {
+            solrTestRunner.cleanSolrInstance();
+        } catch (SolrServerException | IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Override
     public void afterTest(InjectionRegister injectionRegister) {
-        try {
-            solrTestRunner.cleanSolrInstance();
-        } catch (SolrServerException | IOException e) {
-            throw new RuntimeException(e);
-        }
+
     }
 
     @Override

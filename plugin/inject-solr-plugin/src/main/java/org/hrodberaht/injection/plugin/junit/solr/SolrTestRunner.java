@@ -66,6 +66,14 @@ public class SolrTestRunner {
         setupSolr();
     }
 
+    public SolrAssertions solrAssertions(){
+        return new SolrAssertions(getServer());
+    }
+
+    public SolrClient getClient() {
+        return getServer();
+    }
+
     private void setupSolr() throws IOException {
         System.out.println(" ----------- SolrTestRunner setup --- STARTING! ");
 
@@ -84,11 +92,18 @@ public class SolrTestRunner {
     }
 
     private void perpareSolrHomeAndStart() throws IOException {
-        moveConfigFiles();
-        cleanDirectory(home + "/" + coreName + "/data/index/");
-        cleanDirectory(home + "/" + coreName + "/data/tlog/");
-        LOG.info("Loading Solr container {}", home);
-        getCoreContainer();
+        String runnerName = runnerName();
+        CORE_CACHE.computeIfAbsent(runnerName, s -> {
+            try {
+                tearDown();
+                moveConfigFiles();
+                LOG.info("Loading Solr container {}", runnerName);
+                return createSolrContainer(s);
+            }catch (IOException e){
+                LOG.error("Bad container", e);
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private EmbeddedSolrServer getServer(){
@@ -96,33 +111,16 @@ public class SolrTestRunner {
         return CORE_CACHE.get(runnerName).solr;
     }
 
-    private SolrRunnerHolder getCoreContainer() {
-        // TODO: create a reusable core/collection service cache
-        String runnerName = runnerName();
-        SolrRunnerHolder solrRunnerHolder = CORE_CACHE.get(runnerName);
-        if(solrRunnerHolder == null) {
-            synchronized(SolrTestRunner.class) {
-                solrRunnerHolder = CORE_CACHE.get(runnerName);
-                if(solrRunnerHolder != null){
-                    LOG.info("Reusing Solr container {}", home);
-                    return solrRunnerHolder;
-                }
-
-                CoreContainer coreContainer = new CoreContainer(home);
-                LOG.info("Loading Solr container {}", home);
-                coreContainer.load();
-                LOG.info("Loading embedded container {}", coreName);
-                EmbeddedSolrServer solr = new EmbeddedSolrServer(coreContainer, coreName);
-                LOG.info("Loading done");
-                solrRunnerHolder = new SolrRunnerHolder(
-                        coreContainer, solr
-                );
-                CORE_CACHE.put(runnerName, solrRunnerHolder);
-            }
-        }else{
-            LOG.info("Reusing Solr container {}", home);
-        }
-        return solrRunnerHolder;
+    private SolrRunnerHolder createSolrContainer(String runnerName) {
+        // TODO: figure out if its possible to create a reusable core/collection service cache
+        CoreContainer coreContainer = new CoreContainer(home);
+        coreContainer.load();
+        LOG.info("Loading embedded container {}", runnerName);
+        EmbeddedSolrServer solr = new EmbeddedSolrServer(coreContainer, coreName);
+        LOG.info("Loading done {}", runnerName);
+        return new SolrRunnerHolder(
+                coreContainer, solr
+        );
     }
 
     private String runnerName() {
@@ -240,51 +238,11 @@ public class SolrTestRunner {
     }
 
 
-    public void tearDown(String collection) throws IOException {
-        File coreDir = new File(home, collection);
-        FileUtils.deleteDirectory(coreDir);
-    }
-
-    public void tearDown() throws Exception {
-        EmbeddedSolrServer solr = getServer();
-        try {
-            if (solr != null) {
-                solr.rollback();
-                //solrCore.close();
-            }
-        } catch (SolrException e) {
-        }
-        //solrCore.close();
-
-        FileUtils.deleteDirectory(new File(home));
-
-    }
-
-    private void cleanDirectory(String pathname) throws IOException {
-        File file = new File(pathname);
-        if (file.exists()) {
-            FileUtils.cleanDirectory(file);
-        }
-    }
-
-    public SolrAssertions solrAssertions(){
-        return new SolrAssertions(getServer());
+    private void tearDown() throws IOException {
+        File coreDir = new File(home, coreName);
+        LOG.info("cleaning : "+coreDir.getAbsolutePath());
+        FileUtils.cleanDirectory(coreDir);
     }
 
 
-    public String getHome() {
-        return home;
-    }
-
-    public void commit()  {
-        try {
-            getServer().commit(true, true, false);
-        } catch (SolrServerException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public SolrClient getClient() {
-        return getServer();
-    }
 }
