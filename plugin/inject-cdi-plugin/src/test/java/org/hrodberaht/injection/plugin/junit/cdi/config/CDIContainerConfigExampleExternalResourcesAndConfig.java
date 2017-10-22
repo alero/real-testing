@@ -17,7 +17,7 @@ import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
  */
 public class CDIContainerConfigExampleExternalResourcesAndConfig extends ContainerContextConfigBase {
     @Override
-    protected void register(InjectionRegistryBuilder injectionRegistryBuilder) {
+    public void register(InjectionRegistryBuilder injectionRegistryBuilder) {
         activatePlugin(CDIInjectionPlugin.class);
         JpaPlugin jpaPlugin = activatePlugin(JpaPlugin.class);
         new ExampleModuleInternal(injectionRegistryBuilder, jpaPlugin);

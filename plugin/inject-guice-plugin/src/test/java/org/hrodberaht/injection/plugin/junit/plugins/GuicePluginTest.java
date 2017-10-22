@@ -22,7 +22,7 @@ public class GuicePluginTest {
 
     public static class Config extends ContainerContextConfigBase {
         @Override
-        protected void register(InjectionRegistryBuilder registryBuilder) {
+        public void register(InjectionRegistryBuilder registryBuilder) {
             activatePlugin(GuicePlugin.class).loadModules(new GuiceModule());
         }
     }
@@ -43,7 +43,6 @@ public class GuicePluginTest {
 
         assertSame(moreServices, aService.getService());
 
-        // TODO: figure out why its not the same ...
         assertSame(injector.getInstance(MoreServices.class), aService.getService());
     }
 }

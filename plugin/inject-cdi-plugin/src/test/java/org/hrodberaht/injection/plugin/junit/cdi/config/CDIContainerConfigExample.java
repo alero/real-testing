@@ -19,7 +19,7 @@ public class CDIContainerConfigExample extends ContainerContextConfigBase {
     }
 
     @Override
-    protected void register(InjectionRegistryBuilder injectionRegistryBuilder) {
+    public void register(InjectionRegistryBuilder injectionRegistryBuilder) {
         injectionRegistryBuilder.scan(() -> "org.hrodberaht.injection.plugin.junit.cdi.service");
     }
 

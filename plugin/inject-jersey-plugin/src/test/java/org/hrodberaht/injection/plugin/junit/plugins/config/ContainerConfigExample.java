@@ -9,7 +9,7 @@ import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
 public class ContainerConfigExample extends ContainerContextConfigBase {
 
     @Override
-    protected void register(InjectionRegistryBuilder registryBuilder) {
+    public void register(InjectionRegistryBuilder registryBuilder) {
         activatePlugin(JerseyPlugin.class).build()
                 .clientConfig(config -> config.register(ObjectMapperResolver.class))
                 .resourceConfig(JerseyApplication::new);

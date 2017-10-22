@@ -19,26 +19,8 @@ import static org.hrodberaht.injection.plugin.junit.spring.config.SpringContaine
  */
 public class SpringContainerJavaConfigExample extends ContainerContextConfigBase {
 
-
-    public SpringContainerJavaConfigExample() {
-        // Prepare the datasource
-        /*
-        String dataSourceName = "jdbc/MyDataSource";
-        DataSource dataSource = createDataSource(dataSourceName);
-        addResourceCrator(dataSourceName, dataSource);
-
-        // Load reusable test data to the datasource
-        junitSQLContainerService = new JunitSQLContainerService(this);
-        junitSQLContainerService.addSQLSchemas(dataSourceName, "sql");
-        junitSQLContainerService.addSQLSchemas(dataSourceName, "sql/insert");
-
-        // Adding the spring config, will combine the IoC of the tests and the spring config
-        loadJavaSpringConfig(SpringConfigJavaSample.class);
-        */
-    }
-
     @Override
-    protected void register(InjectionRegistryBuilder registryBuilder) {
+    public void register(InjectionRegistryBuilder registryBuilder) {
         String dataSourceName = "MyDataSource";
         DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class);
         DataSource dataSource = dataSourcePlugin.getCreator(DataSource.class).create(dataSourceName);
@@ -50,12 +32,5 @@ public class SpringContainerJavaConfigExample extends ContainerContextConfigBase
 
         registryBuilder.scan(() -> _package);
     }
-
-    /*
-    @Override
-    public InjectContainer createContainer() {
-        return createAutoScanContainer("org.hrodberaht.injection.extensions.spring.testservices.simple");
-    }
-    */
 
 }

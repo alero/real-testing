@@ -22,7 +22,7 @@ public class SpringContainerJavaConfigComboExample extends ContainerContextConfi
 
 
     @Override
-    protected void register(InjectionRegistryBuilder registryBuilder) {
+    public void register(InjectionRegistryBuilder registryBuilder) {
         String dataSourceName = "MyDataSource";
         DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class);
         DataSource dataSource = dataSourcePlugin.getCreator(DataSource.class).create(dataSourceName);

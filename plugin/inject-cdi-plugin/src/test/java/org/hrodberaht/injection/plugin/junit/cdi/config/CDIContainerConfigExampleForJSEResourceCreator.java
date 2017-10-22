@@ -13,31 +13,8 @@ import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
  */
 public class CDIContainerConfigExampleForJSEResourceCreator extends ContainerContextConfigBase {
 
-    /*
-    public CDIContainerConfigExampleForJSEResourceCreator() {
-
-        super(new JSEResourceCreator());
-
-        System.setProperty("MyDataSource.driver", "org.hsqldb.jdbcDriver");
-        System.setProperty("MyDataSource.url", "jdbc:hsqldb:mem:MyDataSource");
-        System.setProperty("MyDataSource.username", "sa");
-        System.setProperty("MyDataSource.password", "");
-
-        String dataSourceName = "MyDataSource";
-        DataSource dataSource = createDataSource(dataSourceName);
-        // Named resource
-        addResourceCrator(dataSourceName, dataSource);
-        addSQLSchemas(dataSourceName, "test");
-
-    }
     @Override
-    public InjectContainer createContainer() {
-        return createAutoScanContainer("test.org.hrodberaht.inject.extension.cdi.service2");
-    }
-    */
-
-    @Override
-    protected void register(InjectionRegistryBuilder injectionRegistryBuilder) {
+    public void register(InjectionRegistryBuilder injectionRegistryBuilder) {
 
     }
 

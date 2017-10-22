@@ -17,7 +17,7 @@ import javax.sql.DataSource;
  */
 public class CDIContainerConfigExampleExternalResources extends ContainerContextConfigBase {
     @Override
-    protected void register(InjectionRegistryBuilder injectionRegistryBuilder) {
+    public void register(InjectionRegistryBuilder injectionRegistryBuilder) {
         activatePlugin(CDIInjectionPlugin.class);
         JpaPlugin jpaPlugin = activatePlugin(JpaPlugin.class);
         DataSource dataSource = jpaPlugin.getCreator(DataSource.class).create("ExampleDataSource");

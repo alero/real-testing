@@ -15,7 +15,6 @@ import org.hrodberaht.injection.plugin.junit.spi.Plugin;
 import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugin;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
-import org.hrodberaht.injection.spi.JavaResourceCreator;
 import org.hrodberaht.injection.spi.ResourceFactory;
 import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
 import org.slf4j.Logger;
@@ -24,21 +23,17 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public abstract class ContainerContextConfigBase {
+public abstract class ContainerContextConfigBase implements ContainerContextConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(ContainerContextConfigBase.class);
     private final Map<Class<? extends Plugin>, Plugin> activePlugins = new ConcurrentHashMap<>();
     private final RunnerPlugins runnerPlugins = new RunnerPlugins(activePlugins);
     private final ContainerConfigInner containerConfigInner = new ContainerConfigInner(this);
 
-    protected abstract void register(InjectionRegistryBuilder registryBuilder);
+    public abstract void register(InjectionRegistryBuilder registryBuilder);
 
     protected <T extends Plugin> T activatePlugin(Class<T> pluginClass) {
         return containerConfigInner.activatePlugin(pluginClass);
-    }
-
-    protected <T> JavaResourceCreator<T> getCreator(Class<T> type) {
-        return containerConfigInner.getResourceFactory().getCreator(type);
     }
 
     RunnerPlugins getRunnerPlugins() {
@@ -48,7 +43,6 @@ public abstract class ContainerContextConfigBase {
     void cleanActiveContainer() {
         containerConfigInner.cleanActiveContainer();
     }
-
 
     InjectionRegister getActiveRegister() {
         return containerConfigInner.getActiveRegister();

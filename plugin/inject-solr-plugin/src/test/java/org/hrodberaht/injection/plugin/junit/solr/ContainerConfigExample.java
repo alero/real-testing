@@ -6,7 +6,7 @@ import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
 
 public class ContainerConfigExample extends ContainerContextConfigBase {
     @Override
-    protected void register(InjectionRegistryBuilder registryBuilder) {
+    public void register(InjectionRegistryBuilder registryBuilder) {
 
         activatePlugin(SolrJPlugin.class).loadCollection("collection1");
 

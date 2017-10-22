@@ -15,11 +15,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AnnotatedInjectionPlugin {
     private static final Logger LOG = LoggerFactory.getLogger(AnnotatedInjectionPlugin.class);
-
+    private static Map<Class, Method> classInjectionFinderMethodMap = new ConcurrentHashMap<>();
+    private static Map<Class, Method> classInjectionRegisterMethodMap = new ConcurrentHashMap<>();
 
     private static Set<Class> supporedAnnotations = new HashSet<>(Arrays.asList(
             InjectionPluginInjectionFinder.class,
@@ -62,37 +65,42 @@ public class AnnotatedInjectionPlugin {
     }
 
     private static <T extends Plugin> Method findInjectionRegisterMethod(T plugin) {
-        for (Method method : ReflectionUtils.findMethods(plugin.getClass())) {
-            if (method.getAnnotation(InjectionPluginInjectionRegister.class) != null) {
-                if (!method.isAccessible()) {
-                    method.setAccessible(true);
-                }
-                if (method.getParameterCount() != 1 || !method.getParameterTypes()[0].isAssignableFrom(InjectionRegister.class)) {
-                    throw new RuntimeException("method with InjectionPluginInjectionFinder must have a parameter of type ContainerConfigBuilder");
-                } else {
-                    return method;
+        return classInjectionRegisterMethodMap.computeIfAbsent(plugin.getClass(), aClass -> {
+            for (Method method : ReflectionUtils.findMethods(plugin.getClass())) {
+                if (method.getAnnotation(InjectionPluginInjectionRegister.class) != null) {
+                    if (!method.isAccessible()) {
+                        method.setAccessible(true);
+                    }
+                    if (method.getParameterCount() != 1 || !method.getParameterTypes()[0].isAssignableFrom(InjectionRegister.class)) {
+                        throw new RuntimeException("method with InjectionPluginInjectionFinder must have a parameter of type ContainerConfigBuilder");
+                    } else {
+                        return method;
+                    }
                 }
             }
-        }
-        return null;
+            return null;
+        });
     }
 
     private static <T extends Plugin> Method findInjectionFinderMethod(T plugin) {
-        for (Method method : ReflectionUtils.findMethods(plugin.getClass())) {
-            if (method.getAnnotation(InjectionPluginInjectionFinder.class) != null) {
 
-                if (!method.isAccessible()) {
-                    method.setAccessible(true);
-                }
-                if (!InjectionFinder.class.isAssignableFrom(method.getReturnType())) {
-                    throw new RuntimeException("method with InjectionPluginInjectionFinder must have a returnType of InjectionFinder");
-                } else if (method.getParameterCount() != 1 || !method.getParameterTypes()[0].isAssignableFrom(ContainerConfigBuilder.class)) {
-                    throw new RuntimeException("method with InjectionPluginInjectionFinder must have a parameter of type ContainerConfigBuilder");
-                } else {
-                    return method;
+        return classInjectionFinderMethodMap.computeIfAbsent(plugin.getClass(), aClass -> {
+            for (Method method : ReflectionUtils.findMethods(plugin.getClass())) {
+                if (method.getAnnotation(InjectionPluginInjectionFinder.class) != null) {
+
+                    if (!method.isAccessible()) {
+                        method.setAccessible(true);
+                    }
+                    if (!InjectionFinder.class.isAssignableFrom(method.getReturnType())) {
+                        throw new RuntimeException("method with InjectionPluginInjectionFinder must have a returnType of InjectionFinder");
+                    } else if (method.getParameterCount() != 1 || !method.getParameterTypes()[0].isAssignableFrom(ContainerConfigBuilder.class)) {
+                        throw new RuntimeException("method with InjectionPluginInjectionFinder must have a parameter of type ContainerConfigBuilder");
+                    } else {
+                        return method;
+                    }
                 }
             }
-        }
-        return null;
+            return null;
+        });
     }
 }
