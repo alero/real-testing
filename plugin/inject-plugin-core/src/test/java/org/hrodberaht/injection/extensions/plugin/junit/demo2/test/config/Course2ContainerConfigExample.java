@@ -14,19 +14,6 @@ import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
  */
 public class Course2ContainerConfigExample extends PluggableContainerConfigBase {
 
-    public Course2ContainerConfigExample() {
-
-/*        String dataSourceName = "MyDataSource";
-        DataSource dataSource = super.createDataSource(dataSourceName);
-        super.addResource(dataSourceName, dataSource);
-
-        super.addSQLSchemas(
-                "Course2ContainerConfigExample", "MyDataSource", "org/hrodberaht/injection/extensions/course2"
-        );
-        */
-    }
-
-
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
         registryBuilder

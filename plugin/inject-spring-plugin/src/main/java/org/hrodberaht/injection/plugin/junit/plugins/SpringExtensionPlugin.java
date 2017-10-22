@@ -40,7 +40,7 @@ public class SpringExtensionPlugin implements InjectionPlugin {
 
     @Override
     public LifeCycle getLifeCycle() {
-        return LifeCycle.TESTSUITE;
+        return LifeCycle.TEST_SUITE;
     }
 
     public void loadConfig(String... springConfigs) {

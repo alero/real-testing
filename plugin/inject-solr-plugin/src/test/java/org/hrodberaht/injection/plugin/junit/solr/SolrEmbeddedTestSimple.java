@@ -1,4 +1,4 @@
-package org;
+package org.hrodberaht.injection.plugin.junit.solr;
 
 import org.apache.solr.client.solrj.request.schema.SchemaRequest;
 import org.apache.solr.client.solrj.response.schema.SchemaResponse;
@@ -6,7 +6,6 @@ import org.apache.solr.common.SolrInputDocument;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
 import org.hrodberaht.injection.plugin.junit.plugins.SolrJPlugin;
-import org.hrodberaht.injection.plugin.junit.solr.SolrAssertions;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

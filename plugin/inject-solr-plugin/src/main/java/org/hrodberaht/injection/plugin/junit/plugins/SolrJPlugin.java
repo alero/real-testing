@@ -55,7 +55,7 @@ public class SolrJPlugin implements RunnerPlugin{
 
     @Override
     public LifeCycle getLifeCycle() {
-        return LifeCycle.TESTSUITE;
+        return LifeCycle.TEST_SUITE;
     }
 
     public void loadCollection(String coreName) {

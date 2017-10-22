@@ -1,4 +1,4 @@
-package org;
+package org.hrodberaht.injection.plugin.junit.solr;
 
 import org.apache.solr.client.solrj.request.schema.SchemaRequest;
 import org.apache.solr.client.solrj.response.schema.SchemaResponse;
@@ -6,8 +6,6 @@ import org.apache.solr.common.SolrInputDocument;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
 import org.hrodberaht.injection.plugin.junit.plugins.SolrJPlugin;
-import org.hrodberaht.injection.plugin.junit.solr.SolrAssertions;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -26,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 @ContainerContext(ContainerConfigExample.class)
 @RunWith(PluggableJUnitRunner.class)
-public class SolrEmbeddedTest2 {
+public class SolrEmbeddedTest {
 
 
     @Inject
@@ -50,9 +48,9 @@ public class SolrEmbeddedTest2 {
         assertions.assertExistsAndReturn("1");
         assertions.assertCount(OK, 10);
 
-        assertions.cleanDataFromCollection();
+        // assertions.assertQuery(null, "(delete('/doc/1'),commit())");
+        // assertions.assertQuery(9L, "count(collection())");
 
-        assertions.assertCount(OK, 0);
 
         //assertions.assertQuery("OK", "('OK',delete('/doc/2'),commit())");
         //assertions.assertQuery(8L, "count(collection())");
@@ -109,7 +107,6 @@ public class SolrEmbeddedTest2 {
 
 
     @Test
-    @Ignore // TODO: Schema updates are persisted across tests ... not sure what to do about it
     public void testSchemaUpdate() throws Exception {
         String fieldName = "VerificationTest";
 

@@ -28,7 +28,7 @@ public class ServiceLoadingContainerConfig extends PluggableContainerConfigBase 
         // Load schema is a custom method located in the plugin code, this creates clean separation
         dataSourcePlugin
                 .loadSchema(dataSource, "org.hrodberaht.injection.extensions.plugin.course")
-                .addBeforeSuite(() -> dataSourcePlugin.getService(LoadingTheTestWithData.class).load())
+                .addBeforeTestSuite(() -> dataSourcePlugin.getService(LoadingTheTestWithData.class).load())
         ;
 
 

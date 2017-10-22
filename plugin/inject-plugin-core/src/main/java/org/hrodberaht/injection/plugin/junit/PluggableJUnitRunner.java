@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Unit Test JUnit (using @Inject)
@@ -73,7 +74,7 @@ public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
         if (containerConfig != null) {
             return containerConfig.getRunnerPlugins();
         } else {
-            return new RunnerPlugins();
+            return new RunnerPlugins(new ConcurrentHashMap<>());
         }
     }
 

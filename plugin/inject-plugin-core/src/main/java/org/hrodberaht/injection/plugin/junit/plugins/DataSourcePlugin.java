@@ -6,17 +6,21 @@ import org.hrodberaht.injection.plugin.junit.datasource.DatasourceContainerServi
 import org.hrodberaht.injection.plugin.junit.datasource.ProxyResourceCreator;
 import org.hrodberaht.injection.plugin.junit.datasource.TransactionManager;
 import org.hrodberaht.injection.plugin.junit.resources.PluggableResourceFactory;
+import org.hrodberaht.injection.plugin.junit.spi.Plugin;
 import org.hrodberaht.injection.plugin.junit.spi.ResourcePlugin;
-import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugin;
+import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginAfterContainerCreation;
+import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginAfterTest;
+import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginBeforeTest;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.spi.JavaResourceCreator;
 
+import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class DataSourcePlugin implements RunnerPlugin, ResourcePlugin {
+public class DataSourcePlugin implements ResourcePlugin {
 
     private final DatasourceResourceCreator datasourceResourceCreator = getDatasourceResourceCreator();
     private final List<Class> classList = Arrays.asList(datasourceResourceCreator.getType());
@@ -73,52 +77,37 @@ public class DataSourcePlugin implements RunnerPlugin, ResourcePlugin {
         this.pluggableResourceFactory = pluggableResourceFactory;
     }
 
-    @Override
-    public void beforeContainerCreation() {
 
-    }
-
-    @Override
-    public void afterContainerCreation(InjectionRegister injectionRegister) {
+    @RunnerPluginAfterContainerCreation
+    protected void afterContainerCreation(InjectionRegister injectionRegister){
         this.injectContainer = injectionRegister.getContainer();
         if(this.beforeSuite.size() > 0) {
             transactionManager.beginTransaction();
             this.beforeSuite.forEach(Runnable::run);
             transactionManager.endTransactionCommit();
         }
-
     }
 
-    @Override
-    public void beforeTest(InjectionRegister injectContainer) {
+
+    @RunnerPluginBeforeTest
+    protected void beforeTest() {
         transactionManager.beginTransaction();
     }
 
-    @Override
-    public void beforeTestClass(InjectionRegister injectionRegister) {
-
-    }
-
-    @Override
-    public void afterTestClass(InjectionRegister injectionRegister) {
-
-    }
-
-    @Override
-    public void afterTest(InjectionRegister injectContainer) {
+    @RunnerPluginAfterTest
+    protected void afterTest() {
         transactionManager.endTransaction();
     }
 
-    @Override
-    public LifeCycle getLifeCycle() {
-        return LifeCycle.TESTCLASS;
+    public Plugin.LifeCycle getLifeCycle() {
+        return LifeCycle.TEST_SUITE;
     }
 
     /**
      * This is useful if there is a need to run any code before the actual tests are executed, any results from code executed like this is commited to the underlying datasources and entitymanagers
      * @param runnable the runnable to be added to run before tests start, comparable to @BeforeClass from JUnit, but with a but reusability over testsuites not onlt testclasses
      */
-    public DataSourcePlugin addBeforeSuite(Runnable runnable) {
+    public DataSourcePlugin addBeforeTestSuite(Runnable runnable) {
         this.beforeSuite.add(runnable);
         return this;
     }

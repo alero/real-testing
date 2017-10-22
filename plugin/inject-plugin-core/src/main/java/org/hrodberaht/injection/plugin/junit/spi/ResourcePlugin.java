@@ -7,7 +7,7 @@ import org.hrodberaht.injection.spi.JavaResourceCreator;
 
 import java.util.List;
 
-public interface ResourcePlugin {
+public interface ResourcePlugin extends Plugin{
     List<Class> getCustomTypes();
 
     <T> JavaResourceCreator<T> getCreator(Class<T> aClass);

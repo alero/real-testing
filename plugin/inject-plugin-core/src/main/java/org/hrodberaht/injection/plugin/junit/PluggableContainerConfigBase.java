@@ -3,6 +3,7 @@ package org.hrodberaht.injection.plugin.junit;
 import org.hrodberaht.injection.config.ContainerConfig;
 import org.hrodberaht.injection.internal.ResourceInject;
 import org.hrodberaht.injection.internal.annotation.InjectionFinder;
+import org.hrodberaht.injection.plugin.junit.inner.AnnotatedRunnerPlugin;
 import org.hrodberaht.injection.plugin.junit.resources.ChainableInjectionPointProvider;
 import org.hrodberaht.injection.plugin.junit.resources.PluggableResourceFactory;
 import org.hrodberaht.injection.plugin.junit.spi.InjectionPlugin;
@@ -11,6 +12,7 @@ import org.hrodberaht.injection.plugin.junit.spi.PluginConfig;
 import org.hrodberaht.injection.plugin.junit.spi.ResourcePlugin;
 import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugin;
 import org.hrodberaht.injection.plugin.junit.inner.RunnerPlugins;
+import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginAfterContainerCreation;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.spi.JavaResourceCreator;
@@ -19,15 +21,18 @@ import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Stream;
 
 public abstract class PluggableContainerConfigBase implements PluginConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(PluggableContainerConfigBase.class);
-    private final RunnerPlugins runnerPlugins = new RunnerPlugins();
-    private final ContainerConfigInner containerConfigInner = new ContainerConfigInner(this);
     private final Map<Class<? extends Plugin>, Plugin> activePlugins = new ConcurrentHashMap<>();
+    private final RunnerPlugins runnerPlugins = new RunnerPlugins(activePlugins);
+    private final ContainerConfigInner containerConfigInner = new ContainerConfigInner(this);
 
     protected abstract void register(InjectionRegistryBuilder registryBuilder);
 
@@ -139,10 +144,19 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
                     LOG.info("Activating RunnerPlugin {}", plugin.getClass().getSimpleName());
                     return base.runnerPlugins.addPlugin((RunnerPlugin) plugin);
                 }
+                if(containsRunnerAnnotation(plugin)){
+                    LOG.info("Activating Runner annotated Plugin {}", plugin.getClass().getSimpleName());
+                    return base.runnerPlugins.addAnnotatedPlugin(plugin);
+                }
+                LOG.info("Plugin does not container runner info {}", plugin.getClass().getSimpleName());
                 return plugin;
             } catch (InstantiationException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
+        }
+
+        private <T extends Plugin> boolean containsRunnerAnnotation(T plugin) {
+            return AnnotatedRunnerPlugin.containsRunnerAnnotations(plugin);
         }
 
         @Override
