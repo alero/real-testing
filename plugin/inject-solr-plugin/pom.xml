@@ -19,13 +19,6 @@
     </properties>
 
     <dependencies>
-        <!-- TODO: remove the need for this //-->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-core</artifactId>
-            <scope>provided</scope>
-            <optional>true</optional>
-        </dependency>
         <dependency>
             <groupId>org.hrodberaht.inject.plugin</groupId>
             <artifactId>inject-plugin-core</artifactId>

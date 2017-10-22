@@ -93,7 +93,7 @@ public class SolrEmbeddedTest {
         assertEquals(1, assertions.findFields("id:1", "id").getResults().get(0).getFieldNames().size());
 
         assertEquals(1, assertions.find("sometype:somevalue").getResults().size());
-        assertEquals(2, assertions.find("FilePath:path").getResults().size());
+        assertEquals(2, assertions.find("filePath:path").getResults().size());
         assertEquals(2, assertions.find("dynamicField:dynamicValue").getResults().size());
 
     }
@@ -142,7 +142,7 @@ public class SolrEmbeddedTest {
     private SolrInputDocument makeTestDocument(int i, String key, Object value) {
         SolrInputDocument document = new SolrInputDocument();
         document.addField("id", String.valueOf(i));
-        document.addField("FilePath", "path");
+        document.addField("filePath", "path");
         if (key != null) {
             document.addField(key, value);
         }

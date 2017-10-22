@@ -8,7 +8,6 @@ import org.apache.solr.common.SolrException;
 import org.apache.solr.core.CoreContainer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.File;
 import java.io.IOException;
@@ -30,7 +29,6 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 public class SolrTestRunner {
 
-    private static final PathMatchingResourcePatternResolver patternResolver = new PathMatchingResourcePatternResolver();
     private static final Logger LOG = LoggerFactory.getLogger(SolrTestRunner.class);
     private static Map<String, SolrRunnerHolder> CORE_CACHE = new ConcurrentHashMap<>();
 
@@ -81,7 +79,7 @@ public class SolrTestRunner {
     }
 
     private static void copyFile(final String copyToDir, final String resourceStream, final String fileName) throws IOException {
-        final InputStream inputStream = patternResolver.getResource("classpath:" + resourceStream).getInputStream();
+        final InputStream inputStream = SolrTestRunner.class.getClassLoader().getResourceAsStream(resourceStream);
         new File(copyToDir).mkdirs();
         Files.copy(inputStream, new File(copyToDir, fileName).toPath(), REPLACE_EXISTING);
     }
@@ -103,11 +101,14 @@ public class SolrTestRunner {
                 throw new RuntimeException(e);
             }
         });
+        LOG.info("Loading Solr DONE container {}", runnerName);
     }
 
     private EmbeddedSolrServer getServer() {
         String runnerName = runnerName();
-        return CORE_CACHE.get(runnerName).solr;
+        SolrRunnerHolder solrRunnerHolder = CORE_CACHE.get(runnerName);
+        LOG.info("using runnerholder {}", solrRunnerHolder.solr);
+        return solrRunnerHolder.solr;
     }
 
     private SolrRunnerHolder createSolrContainer(String runnerName) {
@@ -116,7 +117,6 @@ public class SolrTestRunner {
         coreContainer.load();
         LOG.info("Loading embedded container {}", runnerName);
         EmbeddedSolrServer solr = new EmbeddedSolrServer(coreContainer, coreName);
-        LOG.info("Loading done {}", runnerName);
         return new SolrRunnerHolder(
                 coreContainer, solr
         );
@@ -124,18 +124,6 @@ public class SolrTestRunner {
 
     private String runnerName() {
         return home + "/" + coreName;
-    }
-
-    private boolean hasSolrConfigDir() {
-        return new File(home, "solr.xml").exists();
-    }
-
-    public void cleanDataFromCollection() throws SolrServerException, IOException {
-        try {
-            cleanSolrInstance();
-        } catch (SolrException e) {
-            // might get "no such core" in the multi-core config
-        }
     }
 
     public void cleanSolrInstance() throws SolrServerException, IOException {

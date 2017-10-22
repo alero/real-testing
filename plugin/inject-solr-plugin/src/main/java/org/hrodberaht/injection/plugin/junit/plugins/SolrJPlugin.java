@@ -12,7 +12,8 @@ import java.io.IOException;
 public class SolrJPlugin implements RunnerPlugin {
 
     private SolrTestRunner solrTestRunner = new SolrTestRunner();
-    private String coreName;
+    private String solrHome = null;
+    private String coreName = null;
 
     @Override
     public void beforeContainerCreation() {
@@ -22,7 +23,7 @@ public class SolrJPlugin implements RunnerPlugin {
     @Override
     public void afterContainerCreation(InjectionRegister injectionRegister) {
         try {
-            solrTestRunner.setup(SolrTestRunner.DEAFULT_HOME, coreName);
+            solrTestRunner.setup(solrHome == null ? SolrTestRunner.DEAFULT_HOME : solrHome, coreName);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -55,11 +56,17 @@ public class SolrJPlugin implements RunnerPlugin {
 
     @Override
     public LifeCycle getLifeCycle() {
-        return LifeCycle.TEST_SUITE;
+        return LifeCycle.TEST_CONFIG;
     }
 
-    public void loadCollection(String coreName) {
+    public SolrJPlugin coreName(String coreName) {
         this.coreName = coreName;
+        return this;
+    }
+
+    public SolrJPlugin solrHome(String solrHome) {
+        this.solrHome = solrHome;
+        return this;
     }
 
     public SolrAssertions getAssertions() {

@@ -8,7 +8,7 @@ public class ContainerConfigExample extends ContainerContextConfigBase {
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
 
-        activatePlugin(SolrJPlugin.class).loadCollection("collection1");
+        activatePlugin(SolrJPlugin.class).coreName("collection1");
 
     }
 }

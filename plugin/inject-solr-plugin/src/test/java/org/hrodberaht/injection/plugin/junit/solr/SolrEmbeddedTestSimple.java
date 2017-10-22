@@ -4,8 +4,10 @@ import org.apache.solr.client.solrj.request.schema.SchemaRequest;
 import org.apache.solr.client.solrj.response.schema.SchemaResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
+import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.JUnitRunner;
 import org.hrodberaht.injection.plugin.junit.plugins.SolrJPlugin;
+import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -19,7 +21,7 @@ import static org.hrodberaht.injection.plugin.junit.solr.SolrAssertions.Status.O
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@ContainerContext(ContainerConfigExample2.class)
+@ContainerContext(SolrEmbeddedTestSimple.Config.class)
 @RunWith(JUnitRunner.class)
 public class SolrEmbeddedTestSimple {
 
@@ -27,6 +29,16 @@ public class SolrEmbeddedTestSimple {
     private SolrJPlugin solrJPlugin;
 
     private SolrAssertions assertions;
+
+    public static class Config extends ContainerContextConfigBase {
+
+        @Override
+        public void register(InjectionRegistryBuilder registryBuilder) {
+            activatePlugin(SolrJPlugin.class)
+                    .solrHome("target/solr2")
+                    .coreName("collection2");
+        }
+    }
 
     @PostConstruct
     public void init() {
