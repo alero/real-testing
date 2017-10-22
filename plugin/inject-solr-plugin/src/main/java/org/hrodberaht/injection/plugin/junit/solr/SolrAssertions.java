@@ -12,7 +12,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
-
 import static org.hrodberaht.injection.plugin.junit.solr.SolrAssertions.Status.OK;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;

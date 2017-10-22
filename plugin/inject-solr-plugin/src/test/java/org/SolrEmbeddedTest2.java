@@ -50,9 +50,9 @@ public class SolrEmbeddedTest2 {
         assertions.assertExistsAndReturn("1");
         assertions.assertCount(OK, 10);
 
-        // assertions.assertQuery(null, "(delete('/doc/1'),commit())");
-        // assertions.assertQuery(9L, "count(collection())");
+        assertions.cleanDataFromCollection();
 
+        assertions.assertCount(OK, 0);
 
         //assertions.assertQuery("OK", "('OK',delete('/doc/2'),commit())");
         //assertions.assertQuery(8L, "count(collection())");

@@ -7,7 +7,6 @@ import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
 import org.hrodberaht.injection.plugin.junit.plugins.SolrJPlugin;
 import org.hrodberaht.injection.plugin.junit.solr.SolrAssertions;
-import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

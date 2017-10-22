@@ -6,7 +6,6 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.common.SolrException;
 import org.apache.solr.core.CoreContainer;
-import org.apache.solr.core.SolrCore;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
@@ -142,7 +141,7 @@ public class SolrTestRunner {
     public void cleanSolrInstance() throws SolrServerException, IOException {
         EmbeddedSolrServer solr = getServer();
         solr.deleteByQuery("*:*");
-        solr.commit();
+        solr.commit(true, true, false);
     }
 
     private void moveConfigFiles() throws IOException {
