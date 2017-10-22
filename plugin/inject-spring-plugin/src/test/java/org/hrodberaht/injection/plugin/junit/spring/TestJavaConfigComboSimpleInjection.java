@@ -2,7 +2,7 @@ package org.hrodberaht.injection.plugin.junit.spring;
 
 
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
-import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
+import org.hrodberaht.injection.plugin.junit.JUnitRunner;
 import org.hrodberaht.injection.plugin.junit.spring.beans.incubator.ContainerLifeCycleTestUtil;
 import org.hrodberaht.injection.plugin.junit.spring.config.SpringContainerJavaConfigComboExample;
 import org.hrodberaht.injection.plugin.junit.spring.testservices.simple.AnyServiceInner;
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertNull;
  * Created by alexbrob on 2016-02-25.
  */
 @ContainerContext(SpringContainerJavaConfigComboExample.class)
-@RunWith(PluggableJUnitRunner.class)
+@RunWith(JUnitRunner.class)
 public class TestJavaConfigComboSimpleInjection {
 
     @Autowired

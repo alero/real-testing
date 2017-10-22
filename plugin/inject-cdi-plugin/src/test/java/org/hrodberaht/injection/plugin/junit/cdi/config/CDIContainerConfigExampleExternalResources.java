@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.plugin.junit.cdi.config;
 
-import org.hrodberaht.injection.plugin.junit.PluggableContainerConfigBase;
+import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.CDIInjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin;
 import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
@@ -15,7 +15,7 @@ import javax.sql.DataSource;
  * @version 1.0
  * @since 1.0
  */
-public class CDIContainerConfigExampleExternalResources extends PluggableContainerConfigBase {
+public class CDIContainerConfigExampleExternalResources extends ContainerContextConfigBase {
     @Override
     protected void register(InjectionRegistryBuilder injectionRegistryBuilder) {
         activatePlugin(CDIInjectionPlugin.class);
@@ -24,10 +24,9 @@ public class CDIContainerConfigExampleExternalResources extends PluggableContain
         jpaPlugin.createEntityManager("example-jpa");
 
 
-
         injectionRegistryBuilder
                 .scan(() -> "org.hrodberaht.injection.extensions.cdi.example.service")
-        .resource(builder -> builder.resource("ExampleDataSource", dataSource))
+                .resource(builder -> builder.resource("ExampleDataSource", dataSource))
         ;
     }
 
@@ -38,7 +37,7 @@ public class CDIContainerConfigExampleExternalResources extends PluggableContain
         String jpaName = "example-jpa";
         DataSource dataSource = createDataSource(dataSourceName);
         // Named resource
-        addResource(dataSourceName, dataSource);
+        addResourceCrator(dataSourceName, dataSource);
 
         EntityManager entityManager = createEntityManager(jpaName, dataSourceName, dataSource);
         addPersistenceContext(jpaName, entityManager);

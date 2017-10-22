@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.plugin.junit.spring.config;
 
-import org.hrodberaht.injection.plugin.junit.PluggableContainerConfigBase;
+import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.SpringExtensionPlugin;
 import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
@@ -17,7 +17,7 @@ import static org.hrodberaht.injection.plugin.junit.spring.config.SpringContaine
  * @version 2.0
  * @since 2.0
  */
-public class SpringContainerJavaConfigExample extends PluggableContainerConfigBase {
+public class SpringContainerJavaConfigExample extends ContainerContextConfigBase {
 
 
     public SpringContainerJavaConfigExample() {
@@ -25,7 +25,7 @@ public class SpringContainerJavaConfigExample extends PluggableContainerConfigBa
         /*
         String dataSourceName = "jdbc/MyDataSource";
         DataSource dataSource = createDataSource(dataSourceName);
-        addResource(dataSourceName, dataSource);
+        addResourceCrator(dataSourceName, dataSource);
 
         // Load reusable test data to the datasource
         junitSQLContainerService = new JunitSQLContainerService(this);

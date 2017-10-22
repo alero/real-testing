@@ -6,9 +6,11 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Created by alexbrob on 2016-03-31.
@@ -18,6 +20,8 @@ public class EntityManagerInjection {
     private boolean hasPersistenceContextInClassPath = true;
     private Map<String, EntityManager> entityManagers = null;
 
+    private static Map<Class, List<Field>> foundMembersMap = new ConcurrentHashMap<>();
+
 
     public void injectResources(Object serviceInstance) {
 
@@ -25,22 +29,30 @@ public class EntityManagerInjection {
             return;
         }
 
-        List<Member> members = ReflectionUtils.findMembers(serviceInstance.getClass());
-        for (Member member : members) {
-            if (member instanceof Field) {
-                Field field = (Field) member;
-                if (hasPersistenceContextInClassPath) {
-                    try {
-                        if (field.isAnnotationPresent(PersistenceContext.class)) {
-                            PersistenceContext resource = field.getAnnotation(PersistenceContext.class);
-                            injectEntityManager(serviceInstance, field, resource);
+        List<Field> foundFields = foundMembersMap.computeIfAbsent(serviceInstance.getClass(), aClass -> {
+            List<Field> foundFieldsInner = new ArrayList<>();
+            List<Member> members = ReflectionUtils.findMembers(serviceInstance.getClass());
+            for (Member member : members) {
+                if (member instanceof Field) {
+                    Field field = (Field) member;
+                    if (hasPersistenceContextInClassPath) {
+                        try {
+                            if (field.isAnnotationPresent(PersistenceContext.class)) {
+                                foundFieldsInner.add(field);
+                            }
+                        } catch (NoClassDefFoundError e) {
+                            hasPersistenceContextInClassPath = false;
                         }
-                    } catch (NoClassDefFoundError e) {
-                        hasPersistenceContextInClassPath = false;
                     }
                 }
             }
-        }
+            return foundFieldsInner;
+        });
+
+        foundFields.forEach(field -> {
+            PersistenceContext resource = field.getAnnotation(PersistenceContext.class);
+            injectEntityManager(serviceInstance, field, resource);
+        });
     }
 
     public EntityManager addPersistenceContext(String name, EntityManager entityManager) {

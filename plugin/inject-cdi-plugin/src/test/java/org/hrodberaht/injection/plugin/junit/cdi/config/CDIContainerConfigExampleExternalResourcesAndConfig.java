@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.plugin.junit.cdi.config;
 
-import org.hrodberaht.injection.plugin.junit.PluggableContainerConfigBase;
+import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.cdi.config.ioc.ExampleModuleExternal;
 import org.hrodberaht.injection.plugin.junit.cdi.config.ioc.ExampleModuleInternal;
 import org.hrodberaht.injection.plugin.junit.plugins.CDIInjectionPlugin;
@@ -15,7 +15,7 @@ import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
  * @version 1.0
  * @since 1.0
  */
-public class CDIContainerConfigExampleExternalResourcesAndConfig extends PluggableContainerConfigBase {
+public class CDIContainerConfigExampleExternalResourcesAndConfig extends ContainerContextConfigBase {
     @Override
     protected void register(InjectionRegistryBuilder injectionRegistryBuilder) {
         activatePlugin(CDIInjectionPlugin.class);

@@ -15,19 +15,11 @@ import org.slf4j.LoggerFactory;
 import java.lang.annotation.Annotation;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Unit Test JUnit (using @Inject)
- *
- * @author Robert Alexandersson
- * 2010-okt-11 19:32:34
- * @version 1.0
- * @since 1.0
- */
-public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
+public class JUnitRunner extends BlockJUnit4ClassRunner {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PluggableJUnitRunner.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JUnitRunner.class);
     private InjectContainer activeContainer = null;
-    private PluggableContainerConfigBase containerConfig = null;
+    private ContainerContextConfigBase containerConfig = null;
     private RunnerPlugins runnerPlugins = null;
 
     /**
@@ -35,7 +27,7 @@ public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
      *
      * @throws InitializationError if the test class is malformed.
      */
-    public PluggableJUnitRunner(Class<?> clazz) throws InitializationError {
+    public JUnitRunner(Class<?> clazz) throws InitializationError {
         super(clazz);
         createContainerFromRegistration();
     }
@@ -57,8 +49,8 @@ public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
     private void createUnitTestContext(ContainerContext annotation) throws InstantiationException, IllegalAccessException {
         ContainerContext containerContext = annotation;
         Class testConfigClass = containerContext.value();
-        if (PluggableContainerConfigBase.class.isAssignableFrom(testConfigClass)) {
-            containerConfig = (PluggableContainerConfigBase) testConfigClass.newInstance();
+        if (ContainerContextConfigBase.class.isAssignableFrom(testConfigClass)) {
+            containerConfig = (ContainerContextConfigBase) testConfigClass.newInstance();
             runnerPlugins = getRunnerPlugins();
             runnerPlugins.runInitBeforeContainer();
             containerConfig.start();
@@ -66,7 +58,7 @@ public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
 
             LOG.info("Creating creator for thread {}", Thread.currentThread().getName());
         } else {
-            throw new IllegalAccessError("Currently the test config class must extrend PluggableContainerConfigBase");
+            throw new IllegalAccessError("Currently the test config class must extrend ContainerContextConfigBase");
         }
     }
 
@@ -85,7 +77,6 @@ public class PluggableJUnitRunner extends BlockJUnit4ClassRunner {
     @Override
     protected void runChild(FrameworkMethod frameworkMethod, RunNotifier notifier) {
         try {
-
             beforeRunChild();
             try {
                 // This will execute the createTest method below, the activeContainer handling relies on this.

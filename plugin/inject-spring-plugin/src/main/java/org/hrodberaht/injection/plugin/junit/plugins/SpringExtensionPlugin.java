@@ -1,7 +1,9 @@
 package org.hrodberaht.injection.plugin.junit.plugins;
 
 import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
-import org.hrodberaht.injection.plugin.junit.spi.InjectionPlugin;
+import org.hrodberaht.injection.plugin.junit.spi.Plugin;
+import org.hrodberaht.injection.plugin.junit.spi.annotation.InjectionPluginInjectionFinder;
+import org.hrodberaht.injection.plugin.junit.spi.annotation.InjectionPluginInjectionRegister;
 import org.hrodberaht.injection.plugin.junit.spring.beans.config.ContainerAllSpringConfig;
 import org.hrodberaht.injection.plugin.junit.spring.beans.config.ContainerSpringConfig;
 import org.hrodberaht.injection.plugin.junit.spring.injector.SpringBeanInjector;
@@ -25,7 +27,7 @@ import java.util.stream.Stream;
  * It currently can not automatically wire @Inject fields over to spring, so use @Autowired in the testclasses to get the bridge working.
  * This limitation will be fixed in a future release, coming soon.
  */
-public class SpringExtensionPlugin implements InjectionPlugin {
+public class SpringExtensionPlugin implements Plugin {
 
     private static final Logger LOG = LoggerFactory.getLogger(SpringExtensionPlugin.class);
     private static final Map<Class, SpringExtensionPlugin> CACHE = new ConcurrentHashMap<>();
@@ -112,13 +114,13 @@ public class SpringExtensionPlugin implements InjectionPlugin {
         }
     }
 
-    @Override
-    public void setInjectionRegister(InjectionRegister injectionRegister) {
+    @InjectionPluginInjectionRegister
+    private void setInjectionRegister(InjectionRegister injectionRegister) {
         this.injectionRegister = injectionRegister;
     }
 
-    @Override
-    public DefaultInjectionPointFinder getInjectionFinder(ContainerConfigBuilder containerConfigBuilder) {
+    @InjectionPluginInjectionFinder
+    private DefaultInjectionPointFinder getInjectionFinder(ContainerConfigBuilder containerConfigBuilder) {
         return new SpringInjectionPointFinder(this, containerConfigBuilder);
     }
 }

@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
  * @since 1.0
  */
 @ContainerContext(CDIContainerConfigExample.class)
-@RunWith(PluggableJUnitRunner.class)
+@RunWith(JUnitRunner.class)
 public class TestCDIServiceContext {
 
 

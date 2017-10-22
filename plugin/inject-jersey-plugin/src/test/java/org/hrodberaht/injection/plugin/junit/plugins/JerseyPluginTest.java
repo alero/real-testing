@@ -2,7 +2,7 @@ package org.hrodberaht.injection.plugin.junit.plugins;
 
 
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
-import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
+import org.hrodberaht.injection.plugin.junit.JUnitRunner;
 import org.hrodberaht.injection.plugin.junit.plugins.config.ContainerConfigExample;
 import org.hrodberaht.injection.plugin.junit.plugins.resource.JsonObject;
 import org.junit.Test;
@@ -13,7 +13,7 @@ import javax.inject.Inject;
 import static org.junit.Assert.assertEquals;
 
 @ContainerContext(ContainerConfigExample.class)
-@RunWith(PluggableJUnitRunner.class)
+@RunWith(JUnitRunner.class)
 public class JerseyPluginTest {
 
     @Inject

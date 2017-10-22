@@ -3,7 +3,7 @@ package org.hrodberaht.injection.plugin.junit.plugins;
 import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCService;
 import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCServiceFactory;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
-import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
+import org.hrodberaht.injection.plugin.junit.JUnitRunner;
 import org.hrodberaht.injection.plugin.junit.config.ContainerConfigExample;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @ContainerContext(ContainerConfigExample.class)
-@RunWith(PluggableJUnitRunner.class)
+@RunWith(JUnitRunner.class)
 public class LiquibasePluginTest {
     @Resource
     private DataSource dataSource;

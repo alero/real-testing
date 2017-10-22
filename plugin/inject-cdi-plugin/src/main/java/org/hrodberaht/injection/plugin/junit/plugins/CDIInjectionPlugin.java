@@ -33,7 +33,6 @@ public class CDIInjectionPlugin implements InjectionPlugin, RunnerPlugin {
     }
 
 
-
     @Override
     public void beforeContainerCreation() {
         cdiExtensions.runBeforeBeanDiscovery();

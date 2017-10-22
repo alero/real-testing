@@ -32,12 +32,16 @@ public class RunnerPlugins {
         return (T) getRunner(runnerPlugin.getLifeCycle()).addAnnotatedPlugin(runnerPlugin);
     }
 
-    private RunnerPluginInterface getRunner(Plugin.LifeCycle lifeCycle){
-        switch (lifeCycle){
-            case TEST_CONFIG: return testConfigRunnerPlugins;
-            case TEST_CLASS: return testClassRunnerPlugins;
-            case TEST_SUITE: return testSuiteRunnerPlugins;
-            default: throw new RuntimeException("Not supported plugin lifecycle selected");
+    private RunnerPluginInterface getRunner(Plugin.LifeCycle lifeCycle) {
+        switch (lifeCycle) {
+            case TEST_CONFIG:
+                return testConfigRunnerPlugins;
+            case TEST_CLASS:
+                return testClassRunnerPlugins;
+            case TEST_SUITE:
+                return testSuiteRunnerPlugins;
+            default:
+                throw new RuntimeException("Not supported plugin lifecycle selected");
         }
     }
 

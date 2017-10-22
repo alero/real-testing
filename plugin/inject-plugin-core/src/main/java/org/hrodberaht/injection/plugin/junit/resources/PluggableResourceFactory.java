@@ -1,7 +1,6 @@
 package org.hrodberaht.injection.plugin.junit.resources;
 
 import org.hrodberaht.injection.plugin.context.ContextManager;
-import org.hrodberaht.injection.plugin.junit.spi.ResourcePlugin;
 import org.hrodberaht.injection.spi.JavaResourceCreator;
 import org.hrodberaht.injection.spi.ResourceFactory;
 import org.hrodberaht.injection.spi.ResourceKey;
@@ -14,21 +13,16 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PluggableResourceFactory implements ResourceFactory {
 
 
+    public static void setPluggableResourceFactory(ResourcePluginBase pluginBase, ResourceFactory resourceFactory) {
+        pluginBase.resourceFactory = resourceFactory;
+    }
+
     private static final Logger LOG = LoggerFactory.getLogger(PluggableResourceFactory.class);
 
     private final Map<Class, Object> typedMap = new ConcurrentHashMap<>();
     private final Map<ResourceKey, Object> namedMap = new ConcurrentHashMap<>();
     private final Map<Class, JavaResourceCreator> customCreator = new ConcurrentHashMap<>();
     private final ContextManager contextManager = new ContextManager();
-
-    public void addCustomCreator(ResourcePlugin resurcePlugin) {
-        resurcePlugin.getCustomTypes().forEach(aClass -> {
-            if (customCreator.get(aClass) != null) {
-                throw new IllegalArgumentException("Only one custom-resource-creater per type is allowed, found two for type: " + aClass.getName());
-            }
-            customCreator.put(aClass, resurcePlugin.getInnerCreator(aClass));
-        });
-    }
 
 
     public Map<Class, Object> getTypedMap() {
@@ -40,7 +34,7 @@ public class PluggableResourceFactory implements ResourceFactory {
     }
 
     @Override
-    public <T> JavaResourceCreator<T> getCreator(Class<T> type) {
+    public <T> JavaResourceCreator<T> getCreator(final Class<T> type) {
 
         JavaResourceCreator<T> javaResourceCreator = customCreator.get(type);
         if (javaResourceCreator != null) {
@@ -72,6 +66,11 @@ public class PluggableResourceFactory implements ResourceFactory {
                 public T create(T instance) {
                     typedMap.put(type, instance);
                     return instance;
+                }
+
+                @Override
+                public Class getType() {
+                    return type;
                 }
             };
         }
@@ -124,7 +123,17 @@ public class PluggableResourceFactory implements ResourceFactory {
                 typedMap.put(type, instance);
                 return instance;
             }
+
+            @Override
+            public Class getType() {
+                return type;
+            }
         };
+    }
+
+    @Override
+    public <T> void addResourceCrator(JavaResourceCreator<T> javaResourceCreator) {
+        customCreator.put(javaResourceCreator.getType(), javaResourceCreator);
     }
 
     private <T> void registerInstance(T instance, ResourceKey key) {

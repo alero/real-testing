@@ -25,21 +25,21 @@ public class JerseyPlugin implements RunnerPlugin {
     private TestContainerFactoryInterface testContainerFactoryInterface;
 
     @FunctionalInterface
-    public interface ClientConfigInterface{
+    public interface ClientConfigInterface {
         void config(ClientConfig config);
     }
 
     @FunctionalInterface
-    public interface ResourceConfigInterface{
+    public interface ResourceConfigInterface {
         ResourceConfig config();
     }
 
     @FunctionalInterface
-    public interface TestContainerFactoryInterface{
+    public interface TestContainerFactoryInterface {
         TestContainerFactory container();
     }
 
-    public JerseyPluginBuilder build(){
+    public JerseyPluginBuilder build() {
         return new JerseyPluginBuilder(this);
     }
 
@@ -80,7 +80,7 @@ public class JerseyPlugin implements RunnerPlugin {
 
             @Override
             protected void configureClient(ClientConfig config) {
-                if(clientConfigInterface != null){
+                if (clientConfigInterface != null) {
                     clientConfigInterface.config(config);
                 }
                 super.configureClient(config);
@@ -88,7 +88,7 @@ public class JerseyPlugin implements RunnerPlugin {
 
             @Override
             protected TestContainerFactory getTestContainerFactory() {
-                if(testContainerFactoryInterface != null){
+                if (testContainerFactoryInterface != null) {
                     return testContainerFactoryInterface.container();
                 }
                 return new InMemoryTestContainerFactory() {
@@ -116,8 +116,6 @@ public class JerseyPlugin implements RunnerPlugin {
             throw new RuntimeException(e);
         }
     }
-
-
 
 
     @Override

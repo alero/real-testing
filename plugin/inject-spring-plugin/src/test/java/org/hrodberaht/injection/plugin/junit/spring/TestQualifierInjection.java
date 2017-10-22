@@ -1,7 +1,7 @@
 package org.hrodberaht.injection.plugin.junit.spring;
 
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
-import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
+import org.hrodberaht.injection.plugin.junit.JUnitRunner;
 import org.hrodberaht.injection.plugin.junit.spring.config.SpringContainerConfigExample;
 import org.hrodberaht.injection.plugin.junit.spring.testservices.simple.ServiceForQualifier;
 import org.hrodberaht.injection.plugin.junit.spring.testservices.spring.SpringBeanQualifierInterfaceImpl1;
@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
  * Created by alexbrob on 2016-04-01.
  */
 @ContainerContext(SpringContainerConfigExample.class)
-@RunWith(PluggableJUnitRunner.class)
+@RunWith(JUnitRunner.class)
 public class TestQualifierInjection {
 
     @Inject

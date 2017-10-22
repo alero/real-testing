@@ -10,4 +10,6 @@ package org.hrodberaht.injection.spi;
 public interface ResourceFactory {
 
     <T> JavaResourceCreator<T> getCreator(Class<T> type);
+
+    <T> void addResourceCrator(JavaResourceCreator<T> tJavaResourceCreator);
 }

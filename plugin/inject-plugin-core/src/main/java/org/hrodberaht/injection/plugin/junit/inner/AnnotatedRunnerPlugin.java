@@ -35,26 +35,18 @@ public class AnnotatedRunnerPlugin {
             RunnerPluginAfterClassTest.class,
             RunnerPluginBeforeTest.class,
             RunnerPluginAfterTest.class
-            ));
+    ));
 
-    public static boolean containsRunnerAnnotations(Plugin plugin){
-
-        for(Method method : ReflectionUtils.findMethods(plugin.getClass())){
-            for(Class annotationCLass: supporedAnnotations){
-                if(method.getAnnotation(annotationCLass) != null){
-                    return true;
-                }
-            }
-        }
-        return false;
+    public static boolean containsRunnerAnnotations(Plugin plugin) {
+        return AnnotatedRunnerBase.containsRunnerAnnotations(plugin, supporedAnnotations);
     }
 
-    public Plugin addPlugin(Plugin plugin){
+    public Plugin addPlugin(Plugin plugin) {
         if (annotatedPlugin.get(plugin.getClass()) != null) {
-            LOG.info("reused plugin "+plugin.getClass());
+            LOG.info("reused plugin " + plugin.getClass());
             return annotatedPlugin.get(plugin.getClass());
         }
-        LOG.info("added plugin "+plugin.getClass());
+        LOG.info("added plugin " + plugin.getClass());
         annotatedPlugin.put(plugin.getClass(), plugin);
         return plugin;
     }
@@ -66,9 +58,9 @@ public class AnnotatedRunnerPlugin {
                 AnnotationKey annotationKey = new AnnotationKey(aClass, annotation);
                 List<Method> foundMethods = annotationKeyMethodsMap.computeIfAbsent(annotationKey, annotationKey1 -> {
                     List<Method> foundMethodsInner = new ArrayList<>();
-                    for(Method method : ReflectionUtils.findMethods(aClass)){
-                        if(method.getAnnotation(annotation) != null){
-                            if(!method.isAccessible()){
+                    for (Method method : ReflectionUtils.findMethods(aClass)) {
+                        if (method.getAnnotation(annotation) != null) {
+                            if (!method.isAccessible()) {
                                 method.setAccessible(true);
                             }
                             foundMethodsInner.add(method);
@@ -80,9 +72,9 @@ public class AnnotatedRunnerPlugin {
 
                 foundMethods.forEach(method -> {
                     try {
-                        if(injectionRegister != null && method.getParameterCount() == 1 && method.getParameterTypes()[0].isAssignableFrom(InjectionRegister.class)){
+                        if (injectionRegister != null && method.getParameterCount() == 1 && method.getParameterTypes()[0].isAssignableFrom(InjectionRegister.class)) {
                             method.invoke(plugin, injectionRegister);
-                        }else{
+                        } else {
                             method.invoke(plugin);
                         }
                     } catch (IllegalAccessException | InvocationTargetException e) {

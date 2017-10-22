@@ -20,7 +20,7 @@ import static org.junit.Assert.assertTrue;
  * @since 1.0
  */
 @ContainerContext(CDIContainerConfigExampleExternalResources.class)
-@RunWith(PluggableJUnitRunner.class)
+@RunWith(JUnitRunner.class)
 public class TestCDIServiceContextExternalClasses {
 
 

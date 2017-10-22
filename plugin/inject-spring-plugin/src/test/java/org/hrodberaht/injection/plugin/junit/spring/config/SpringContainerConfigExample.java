@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.plugin.junit.spring.config;
 
-import org.hrodberaht.injection.plugin.junit.PluggableContainerConfigBase;
+import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.SpringExtensionPlugin;
 import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
@@ -15,7 +15,7 @@ import javax.sql.DataSource;
  * @version 2.0
  * @since 2.0
  */
-public class SpringContainerConfigExample extends PluggableContainerConfigBase {
+public class SpringContainerConfigExample extends ContainerContextConfigBase {
 
     static final String _package = "org.hrodberaht.injection.plugin.junit.spring.testservices.simple";
 

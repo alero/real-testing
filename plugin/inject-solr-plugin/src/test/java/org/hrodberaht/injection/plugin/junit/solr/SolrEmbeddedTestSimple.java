@@ -4,7 +4,7 @@ import org.apache.solr.client.solrj.request.schema.SchemaRequest;
 import org.apache.solr.client.solrj.response.schema.SchemaResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
-import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
+import org.hrodberaht.injection.plugin.junit.JUnitRunner;
 import org.hrodberaht.injection.plugin.junit.plugins.SolrJPlugin;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,7 +20,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @ContainerContext(ContainerConfigExample2.class)
-@RunWith(PluggableJUnitRunner.class)
+@RunWith(JUnitRunner.class)
 public class SolrEmbeddedTestSimple {
 
     @Inject
@@ -29,7 +29,7 @@ public class SolrEmbeddedTestSimple {
     private SolrAssertions assertions;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         assertions = solrJPlugin.getAssertions();
     }
 

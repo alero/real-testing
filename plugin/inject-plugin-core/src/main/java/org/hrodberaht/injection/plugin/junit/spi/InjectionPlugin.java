@@ -4,7 +4,7 @@ import org.hrodberaht.injection.internal.annotation.InjectionFinder;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.spi.ContainerConfigBuilder;
 
-public interface InjectionPlugin extends Plugin {
+public interface InjectionPlugin {
 
     void setInjectionRegister(InjectionRegister injectionRegister);
 

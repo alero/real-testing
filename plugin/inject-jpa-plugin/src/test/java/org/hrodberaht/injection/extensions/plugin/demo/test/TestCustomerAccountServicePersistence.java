@@ -7,7 +7,7 @@ import org.hrodberaht.injection.extensions.plugin.demo.service.CustomerService;
 import org.hrodberaht.injection.extensions.plugin.demo.test.config.CourseContainerConfigExample;
 import org.hrodberaht.injection.extensions.plugin.demo.test.util.CourseDataModelStub;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
-import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
+import org.hrodberaht.injection.plugin.junit.JUnitRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -25,7 +25,7 @@ import static org.junit.Assert.assertEquals;
  * @since 1.0
  */
 @ContainerContext(CourseContainerConfigExample.class)
-@RunWith(PluggableJUnitRunner.class)
+@RunWith(JUnitRunner.class)
 public class TestCustomerAccountServicePersistence {
 
 

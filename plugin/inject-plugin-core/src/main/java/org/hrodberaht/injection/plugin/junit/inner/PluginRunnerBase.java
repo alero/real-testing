@@ -1,6 +1,5 @@
 package org.hrodberaht.injection.plugin.junit.inner;
 
-import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.plugin.junit.spi.Plugin;
 import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugin;
 import org.hrodberaht.injection.register.InjectionRegister;
@@ -15,8 +14,8 @@ public abstract class PluginRunnerBase implements RunnerPluginInterface {
     private final Map<Class<? extends Plugin>, Plugin> activePlugins;
 
     public PluginRunnerBase(Map<Class<? extends Plugin>, Plugin> activePlugins,
-                                  Map<Class, RunnerPlugin> runnerPlugins,
-                                  AnnotatedRunnerPlugin annotatedPluginRunner) {
+                            Map<Class, RunnerPlugin> runnerPlugins,
+                            AnnotatedRunnerPlugin annotatedPluginRunner) {
         this.activePlugins = activePlugins;
         this.runnerPlugins = runnerPlugins;
         this.annotatedPluginRunner = annotatedPluginRunner;
@@ -44,8 +43,8 @@ public abstract class PluginRunnerBase implements RunnerPluginInterface {
         void runOp();
     }
 
-    void runIfActive(Class pluginClass, RunnerPluginOp runnerPluginOp){
-        if(activePlugins.get(pluginClass) != null){
+    void runIfActive(Class pluginClass, RunnerPluginOp runnerPluginOp) {
+        if (activePlugins.get(pluginClass) != null) {
             runnerPluginOp.runOp();
         }
     }
@@ -60,7 +59,7 @@ public abstract class PluginRunnerBase implements RunnerPluginInterface {
     }
 
     public void runBeforeTest(InjectionRegister injectionRegister) {
-        runnerPlugins.forEach((aClass, runnerPlugin) ->  runIfActive(aClass, () -> runnerPlugin.beforeTest(injectionRegister)));
+        runnerPlugins.forEach((aClass, runnerPlugin) -> runIfActive(aClass, () -> runnerPlugin.beforeTest(injectionRegister)));
     }
 
     public void runAfterTest(InjectionRegister injectionRegister) {

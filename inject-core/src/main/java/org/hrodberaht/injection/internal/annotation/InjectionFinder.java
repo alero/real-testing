@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface InjectionFinder {
 
-    enum InjectionType{ EXTENDED, OVERRIDDEN }
+    enum InjectionType {EXTENDED, OVERRIDDEN}
 
     List<InjectionPoint> findInjectionPoints(Class instanceClass, AnnotationInjection annotationInjection);
 
@@ -25,7 +25,7 @@ public interface InjectionFinder {
 
     ContainerConfig getContainerConfig();
 
-    default InjectionType getInjectionType(){
+    default InjectionType getInjectionType() {
         return InjectionType.EXTENDED;
     }
 

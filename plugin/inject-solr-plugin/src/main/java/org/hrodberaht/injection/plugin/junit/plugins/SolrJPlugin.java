@@ -9,7 +9,7 @@ import org.hrodberaht.injection.register.InjectionRegister;
 
 import java.io.IOException;
 
-public class SolrJPlugin implements RunnerPlugin{
+public class SolrJPlugin implements RunnerPlugin {
 
     private SolrTestRunner solrTestRunner = new SolrTestRunner();
     private String coreName;

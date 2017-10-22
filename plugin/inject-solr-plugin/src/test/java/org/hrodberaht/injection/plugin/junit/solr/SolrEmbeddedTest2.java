@@ -4,7 +4,7 @@ import org.apache.solr.client.solrj.request.schema.SchemaRequest;
 import org.apache.solr.client.solrj.response.schema.SchemaResponse;
 import org.apache.solr.common.SolrInputDocument;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
-import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
+import org.hrodberaht.injection.plugin.junit.JUnitRunner;
 import org.hrodberaht.injection.plugin.junit.plugins.SolrJPlugin;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -24,7 +24,7 @@ import static org.junit.Assert.assertTrue;
 
 
 @ContainerContext(ContainerConfigExample.class)
-@RunWith(PluggableJUnitRunner.class)
+@RunWith(JUnitRunner.class)
 public class SolrEmbeddedTest2 {
 
 
@@ -34,7 +34,7 @@ public class SolrEmbeddedTest2 {
     private SolrAssertions assertions;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         assertions = solrJPlugin.getAssertions();
     }
 
@@ -100,8 +100,8 @@ public class SolrEmbeddedTest2 {
     }
 
     private SolrInputDocument updateSolrFieldPartial(SolrInputDocument document, String key, Object value) {
-        Map<String,Object> fieldModifier = new HashMap<>(1);
-        fieldModifier.put("add",value);
+        Map<String, Object> fieldModifier = new HashMap<>(1);
+        fieldModifier.put("add", value);
         document.addField(key, fieldModifier);
         return document;
     }
@@ -145,7 +145,7 @@ public class SolrEmbeddedTest2 {
         SolrInputDocument document = new SolrInputDocument();
         document.addField("id", String.valueOf(i));
         document.addField("FilePath", "path");
-        if(key != null) {
+        if (key != null) {
             document.addField(key, value);
         }
         document.addField("text", "<doc><title id='" + i + "'>" + (101 - i) + "</title><test>cat</test></doc>");

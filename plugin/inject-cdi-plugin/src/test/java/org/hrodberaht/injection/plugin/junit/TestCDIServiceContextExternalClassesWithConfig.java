@@ -21,7 +21,7 @@ import static org.junit.Assert.assertNotNull;
  * @since 1.0
  */
 @ContainerContext(CDIContainerConfigExampleExternalResourcesAndConfig.class)
-@RunWith(PluggableJUnitRunner.class)
+@RunWith(JUnitRunner.class)
 public class TestCDIServiceContextExternalClassesWithConfig {
 
 

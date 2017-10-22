@@ -2,7 +2,7 @@ package org.hrodberaht.injection.plugin.junit.spring;
 
 
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
-import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
+import org.hrodberaht.injection.plugin.junit.JUnitRunner;
 import org.hrodberaht.injection.plugin.junit.spring.beans.incubator.ContainerLifeCycleTestUtil;
 import org.hrodberaht.injection.plugin.junit.spring.config.SpringContainerConfigExample;
 import org.hrodberaht.injection.plugin.junit.spring.testservices.simple.AnyServiceDoSomethingImpl;
@@ -19,7 +19,7 @@ import static org.junit.Assert.assertNotNull;
  * Created by alexbrob on 2016-02-25.
  */
 @ContainerContext(SpringContainerConfigExample.class)
-@RunWith(PluggableJUnitRunner.class)
+@RunWith(JUnitRunner.class)
 public class TestSimpleInjection {
 
     @Inject

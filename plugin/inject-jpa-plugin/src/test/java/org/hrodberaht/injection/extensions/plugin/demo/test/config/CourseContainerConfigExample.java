@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.extensions.plugin.demo.test.config;
 
-import org.hrodberaht.injection.plugin.junit.PluggableContainerConfigBase;
+import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin;
 import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
 
@@ -14,7 +14,7 @@ import javax.sql.DataSource;
  * @created 1.0
  * @since 1.0
  */
-public class CourseContainerConfigExample extends PluggableContainerConfigBase {
+public class CourseContainerConfigExample extends ContainerContextConfigBase {
 
     public static final String DATASOURCE_NAME = "MyDataSource";
 

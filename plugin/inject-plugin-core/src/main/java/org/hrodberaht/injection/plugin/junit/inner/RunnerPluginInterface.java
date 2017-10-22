@@ -8,7 +8,9 @@ import java.lang.annotation.Annotation;
 
 public interface RunnerPluginInterface {
     RunnerPlugin addPlugin(RunnerPlugin runnerPlugin);
+
     Plugin addAnnotatedPlugin(Plugin runnerPlugin);
+
     void runInitBeforeContainer();
 
     void runAfterTestClass(InjectionRegister injectionRegister);

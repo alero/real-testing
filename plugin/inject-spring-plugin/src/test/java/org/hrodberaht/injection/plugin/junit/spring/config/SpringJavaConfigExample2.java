@@ -1,7 +1,7 @@
 package org.hrodberaht.injection.plugin.junit.spring.config;
 
 
-import org.hrodberaht.injection.plugin.junit.PluggableContainerConfigBase;
+import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.SpringExtensionPlugin;
 import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
@@ -16,7 +16,7 @@ import javax.sql.DataSource;
  * @version 2.0
  * @since 2.0
  */
-public class SpringJavaConfigExample2 extends PluggableContainerConfigBase {
+public class SpringJavaConfigExample2 extends ContainerContextConfigBase {
 
     public SpringJavaConfigExample2() {
         final String dataSourceName = "jdbc/MyDataSource";
@@ -24,7 +24,7 @@ public class SpringJavaConfigExample2 extends PluggableContainerConfigBase {
         // Prepare the datasource
 /*
         DataSource dataSource = createDataSource(dataSourceName);
-        addResource(dataSourceName, dataSource);
+        addResourceCrator(dataSourceName, dataSource);
 
         // Load reusable test data to the datasource
 

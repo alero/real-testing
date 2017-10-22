@@ -13,7 +13,7 @@ import java.sql.Connection;
  */
 public class HibernateProviderService extends GeneralProviderServiceBase {
     public Connection findConnection(EntityManager entityManager) {
-        org.hibernate.internal.SessionImpl entityManagerHib = (org.hibernate.internal.SessionImpl)entityManager;
+        org.hibernate.internal.SessionImpl entityManagerHib = (org.hibernate.internal.SessionImpl) entityManager;
         return entityManagerHib.getJdbcCoordinator().getLogicalConnection().getPhysicalConnection();
     }
 }

@@ -29,4 +29,5 @@ public interface JavaResourceCreator<T> {
      */
     T create(T instance);
 
+    Class getType();
 }

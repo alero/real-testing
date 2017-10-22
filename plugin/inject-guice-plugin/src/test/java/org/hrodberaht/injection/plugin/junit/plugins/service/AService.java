@@ -11,7 +11,7 @@ public class AService implements AnInterface {
     private MoreServices moreServices;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         something = "inited";
     }
 

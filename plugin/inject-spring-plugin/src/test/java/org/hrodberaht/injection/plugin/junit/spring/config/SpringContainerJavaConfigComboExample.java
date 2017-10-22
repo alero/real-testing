@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.plugin.junit.spring.config;
 
-import org.hrodberaht.injection.plugin.junit.PluggableContainerConfigBase;
+import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.SpringExtensionPlugin;
 import org.hrodberaht.injection.plugin.junit.spring.beans.incubator.SpringBeanReplacementProxy;
@@ -18,7 +18,7 @@ import static org.hrodberaht.injection.plugin.junit.spring.config.SpringContaine
  * @version 2.0
  * @since 2.0
  */
-public class SpringContainerJavaConfigComboExample extends PluggableContainerConfigBase {
+public class SpringContainerJavaConfigComboExample extends ContainerContextConfigBase {
 
 
     @Override

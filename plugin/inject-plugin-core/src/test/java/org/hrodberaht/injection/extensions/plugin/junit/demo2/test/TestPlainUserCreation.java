@@ -3,7 +3,7 @@ package org.hrodberaht.injection.extensions.plugin.junit.demo2.test;
 import org.hrodberaht.injection.extensions.plugin.junit.demo2.service.UserService;
 import org.hrodberaht.injection.extensions.plugin.junit.demo2.test.config.Course2ContainerConfigExample;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
-import org.hrodberaht.injection.plugin.junit.PluggableJUnitRunner;
+import org.hrodberaht.injection.plugin.junit.JUnitRunner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -22,7 +22,7 @@ import static org.junit.Assert.assertTrue;
  * @since 1.0
  */
 @ContainerContext(Course2ContainerConfigExample.class)
-@RunWith(PluggableJUnitRunner.class)
+@RunWith(JUnitRunner.class)
 public class TestPlainUserCreation {
 
 

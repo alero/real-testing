@@ -3,16 +3,16 @@ package org.hrodberaht.injection.plugin.junit;
 import org.hrodberaht.injection.config.ContainerConfig;
 import org.hrodberaht.injection.internal.ResourceInject;
 import org.hrodberaht.injection.internal.annotation.InjectionFinder;
+import org.hrodberaht.injection.plugin.junit.inner.AnnotatedInjectionPlugin;
+import org.hrodberaht.injection.plugin.junit.inner.AnnotatedResourcePlugin;
 import org.hrodberaht.injection.plugin.junit.inner.AnnotatedRunnerPlugin;
+import org.hrodberaht.injection.plugin.junit.inner.RunnerPlugins;
 import org.hrodberaht.injection.plugin.junit.resources.ChainableInjectionPointProvider;
 import org.hrodberaht.injection.plugin.junit.resources.PluggableResourceFactory;
+import org.hrodberaht.injection.plugin.junit.resources.ResourcePluginBase;
 import org.hrodberaht.injection.plugin.junit.spi.InjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.spi.Plugin;
-import org.hrodberaht.injection.plugin.junit.spi.PluginConfig;
-import org.hrodberaht.injection.plugin.junit.spi.ResourcePlugin;
 import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugin;
-import org.hrodberaht.injection.plugin.junit.inner.RunnerPlugins;
-import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginAfterContainerCreation;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.spi.JavaResourceCreator;
@@ -21,15 +21,12 @@ import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Stream;
 
-public abstract class PluggableContainerConfigBase implements PluginConfig {
+public abstract class ContainerContextConfigBase {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PluggableContainerConfigBase.class);
+    private static final Logger LOG = LoggerFactory.getLogger(ContainerContextConfigBase.class);
     private final Map<Class<? extends Plugin>, Plugin> activePlugins = new ConcurrentHashMap<>();
     private final RunnerPlugins runnerPlugins = new RunnerPlugins(activePlugins);
     private final ContainerConfigInner containerConfigInner = new ContainerConfigInner(this);
@@ -40,16 +37,11 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
         return containerConfigInner.activatePlugin(pluginClass);
     }
 
-    protected <T extends Plugin> T getPlugin(Class<T> pluginClass) {
-        return (T) activePlugins.get(pluginClass);
-    }
-
     protected <T> JavaResourceCreator<T> getCreator(Class<T> type) {
         return containerConfigInner.getResourceFactory().getCreator(type);
     }
 
-    @Override
-    public RunnerPlugins getRunnerPlugins() {
+    RunnerPlugins getRunnerPlugins() {
         return runnerPlugins;
     }
 
@@ -73,11 +65,11 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
     }
 
     private static class ContainerConfigInner extends ContainerConfig {
-        private final PluggableContainerConfigBase base;
+        private final ContainerContextConfigBase base;
         private InjectionPlugin injectionPlugin;
-        private ResourcePlugin resourcePlugin;
+        private ChainableInjectionPointProvider chainableInjectionPointProvider;
 
-        private ContainerConfigInner(PluggableContainerConfigBase base) {
+        private ContainerConfigInner(ContainerContextConfigBase base) {
             this.base = base;
         }
 
@@ -93,20 +85,17 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
 
         @Override
         protected InjectionFinder createDefaultInjectionPointFinder() {
-            if (injectionPlugin != null) {
-                return wrap(injectionPlugin.getInjectionFinder(this));
+            if (chainableInjectionPointProvider != null) {
+                return chainableInjectionPointProvider;
             }
-            return wrap(super.createDefaultInjectionPointFinder());
+            return lookupInjectionPointFinder();
         }
 
-        private InjectionFinder wrap(InjectionFinder injectionFinder) {
-            if(resourcePlugin != null) {
-                ChainableInjectionPointProvider chainableInjectionPointProvider = resourcePlugin.getInjectionProvider(injectionFinder);
-                if (chainableInjectionPointProvider != null) {
-                    return chainableInjectionPointProvider;
-                }
+        private InjectionFinder lookupInjectionPointFinder() {
+            if (injectionPlugin != null) {
+                return injectionPlugin.getInjectionFinder(this);
             }
-            return injectionFinder;
+            return super.createDefaultInjectionPointFinder();
         }
 
         private <T extends Plugin> T activatePlugin(Class<T> pluginClass) {
@@ -118,12 +107,30 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
                     register(pluginClass).withFactoryInstance(plugin);
                 }
             }));
-            if (plugin instanceof ResourcePlugin) {
-                LOG.info("Activating ResourcePlugin {}", plugin.getClass().getSimpleName());
-                resourcePlugin = (ResourcePlugin) plugin;
-                PluggableResourceFactory pluggableResourceFactory = (PluggableResourceFactory) resourceFactory;
-                pluggableResourceFactory.addCustomCreator(resourcePlugin);
-                resourcePlugin.setPluggableResourceFactory(pluggableResourceFactory);
+            if (plugin instanceof ResourcePluginBase) {
+                LOG.info("adding PluggableResourceFactory for {}", plugin.getClass().getSimpleName());
+                PluggableResourceFactory.setPluggableResourceFactory(
+                        (ResourcePluginBase) plugin, resourceFactory
+                );
+            }
+            if (AnnotatedResourcePlugin.containsAnnotations(plugin)) {
+                LOG.info("Activating annotated ResourcePlugin {}", plugin.getClass().getSimpleName());
+                AnnotatedResourcePlugin.inject(resourceFactory, plugin);
+                if (AnnotatedResourcePlugin.hasChainableAnnotaion(plugin)) {
+                    if (chainableInjectionPointProvider == null) {
+                        chainableInjectionPointProvider = AnnotatedResourcePlugin.getChainableInjectionPointProvider(plugin, lookupInjectionPointFinder());
+                    } else {
+                        chainableInjectionPointProvider = AnnotatedResourcePlugin.getChainableInjectionPointProvider(plugin, chainableInjectionPointProvider);
+                    }
+                }
+            }
+            if (AnnotatedInjectionPlugin.containsAnnotations(plugin)) {
+                LOG.info("Activating annotated InjectionPlugin {}", plugin.getClass().getSimpleName());
+                if (this.injectionPlugin == null) {
+                    this.injectionPlugin = AnnotatedInjectionPlugin.createPluginWrapper(plugin);
+                } else {
+                    throw new RuntimeException("There can be only one InjectionPlugin active at once");
+                }
             }
             if (plugin instanceof InjectionPlugin) {
                 LOG.info("Activating InjectionPlugin {}", plugin.getClass().getSimpleName());
@@ -144,7 +151,7 @@ public abstract class PluggableContainerConfigBase implements PluginConfig {
                     LOG.info("Activating RunnerPlugin {}", plugin.getClass().getSimpleName());
                     return base.runnerPlugins.addPlugin((RunnerPlugin) plugin);
                 }
-                if(containsRunnerAnnotation(plugin)){
+                if (containsRunnerAnnotation(plugin)) {
                     LOG.info("Activating Runner annotated Plugin {}", plugin.getClass().getSimpleName());
                     return base.runnerPlugins.addAnnotatedPlugin(plugin);
                 }

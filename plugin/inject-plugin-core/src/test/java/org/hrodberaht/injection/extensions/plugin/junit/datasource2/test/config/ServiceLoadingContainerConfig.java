@@ -1,7 +1,7 @@
 package org.hrodberaht.injection.extensions.plugin.junit.datasource2.test.config;
 
 import org.hrodberaht.injection.extensions.plugin.junit.datasource2.test.LoadingTheTestWithData;
-import org.hrodberaht.injection.plugin.junit.PluggableContainerConfigBase;
+import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
 import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
 
@@ -15,7 +15,7 @@ import javax.sql.DataSource;
  * @created 1.0
  * @since 1.0
  */
-public class ServiceLoadingContainerConfig extends PluggableContainerConfigBase {
+public class ServiceLoadingContainerConfig extends ContainerContextConfigBase {
 
 
     @Override

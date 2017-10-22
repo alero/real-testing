@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.plugin.junit.cdi.config;
 
-import org.hrodberaht.injection.plugin.junit.PluggableContainerConfigBase;
+import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
 
 /**
@@ -11,7 +11,7 @@ import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
  * @version 1.0
  * @since 1.0
  */
-public class CDIContainerConfigExampleForJSEResourceCreator extends PluggableContainerConfigBase {
+public class CDIContainerConfigExampleForJSEResourceCreator extends ContainerContextConfigBase {
 
     /*
     public CDIContainerConfigExampleForJSEResourceCreator() {
@@ -26,7 +26,7 @@ public class CDIContainerConfigExampleForJSEResourceCreator extends PluggableCon
         String dataSourceName = "MyDataSource";
         DataSource dataSource = createDataSource(dataSourceName);
         // Named resource
-        addResource(dataSourceName, dataSource);
+        addResourceCrator(dataSourceName, dataSource);
         addSQLSchemas(dataSourceName, "test");
 
     }
@@ -40,9 +40,6 @@ public class CDIContainerConfigExampleForJSEResourceCreator extends PluggableCon
     protected void register(InjectionRegistryBuilder injectionRegistryBuilder) {
 
     }
-
-
-
 
 
 }

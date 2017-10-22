@@ -1,6 +1,6 @@
 package org.hrodberaht.injection.plugin.junit.cdi.config;
 
-import org.hrodberaht.injection.plugin.junit.PluggableContainerConfigBase;
+import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.CDIInjectionPlugin;
 import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
 
@@ -12,7 +12,7 @@ import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
  * @version 1.0
  * @since 1.0
  */
-public class CDIContainerConfigExample extends PluggableContainerConfigBase {
+public class CDIContainerConfigExample extends ContainerContextConfigBase {
 
     public CDIContainerConfigExample() {
         activatePlugin(CDIInjectionPlugin.class);
@@ -29,7 +29,7 @@ public class CDIContainerConfigExample extends PluggableContainerConfigBase {
         String dataSourceName = "MyDataSource";
         DataSource dataSource = createDataSource(dataSourceName);
         // Named resource
-        addResource(dataSourceName, dataSource);
+        addResourceCrator(dataSourceName, dataSource);
 
     }
 

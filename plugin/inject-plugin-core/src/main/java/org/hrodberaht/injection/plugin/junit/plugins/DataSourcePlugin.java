@@ -5,32 +5,30 @@ import org.hrodberaht.injection.plugin.datasource.DatasourceResourceCreator;
 import org.hrodberaht.injection.plugin.junit.datasource.DatasourceContainerService;
 import org.hrodberaht.injection.plugin.junit.datasource.ProxyResourceCreator;
 import org.hrodberaht.injection.plugin.junit.datasource.TransactionManager;
-import org.hrodberaht.injection.plugin.junit.resources.PluggableResourceFactory;
 import org.hrodberaht.injection.plugin.junit.spi.Plugin;
-import org.hrodberaht.injection.plugin.junit.spi.ResourcePlugin;
+import org.hrodberaht.injection.plugin.junit.spi.annotation.ResourcePluginFactory;
 import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginAfterContainerCreation;
 import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginAfterTest;
 import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginBeforeTest;
 import org.hrodberaht.injection.register.InjectionRegister;
 import org.hrodberaht.injection.spi.JavaResourceCreator;
+import org.hrodberaht.injection.spi.ResourceFactory;
 
-import javax.inject.Inject;
 import javax.sql.DataSource;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class DataSourcePlugin implements ResourcePlugin {
+public class DataSourcePlugin implements Plugin {
 
     private final DatasourceResourceCreator datasourceResourceCreator = getDatasourceResourceCreator();
-    private final List<Class> classList = Arrays.asList(datasourceResourceCreator.getType());
     private final List<Runnable> beforeSuite = new ArrayList<>();
 
-    private PluggableResourceFactory pluggableResourceFactory;
     private TransactionManager transactionManager;
     private InjectContainer injectContainer;
+    private ResourceFactory resourceFactory;
 
-    private DatasourceResourceCreator getDatasourceResourceCreator() {
+
+    protected DatasourceResourceCreator getDatasourceResourceCreator() {
         ProxyResourceCreator proxyResourceCreator = new ProxyResourceCreator(
                 ProxyResourceCreator.DataSourceProvider.HSQLDB,
                 ProxyResourceCreator.DataSourcePersistence.RESTORABLE);
@@ -57,31 +55,17 @@ public class DataSourcePlugin implements ResourcePlugin {
         return this;
     }
 
-    @Override
-    public List<Class> getCustomTypes() {
-        return classList;
-    }
-
-    @Override
-    public <T> JavaResourceCreator<T> getCreator(Class<T> aClass) {
-        return pluggableResourceFactory.getCreator(aClass);
-    }
-
-    @Override
-    public <T> JavaResourceCreator<T> getInnerCreator(Class<T> aClass) {
-        return (JavaResourceCreator<T>) datasourceResourceCreator;
-    }
-
-    @Override
-    public void setPluggableResourceFactory(PluggableResourceFactory pluggableResourceFactory) {
-        this.pluggableResourceFactory = pluggableResourceFactory;
+    @ResourcePluginFactory
+    private void setResourceFactory(ResourceFactory resourceFactory) {
+        this.resourceFactory = resourceFactory;
+        this.resourceFactory.addResourceCrator(datasourceResourceCreator);
     }
 
 
     @RunnerPluginAfterContainerCreation
-    protected void afterContainerCreation(InjectionRegister injectionRegister){
+    protected void afterContainerCreation(InjectionRegister injectionRegister) {
         this.injectContainer = injectionRegister.getContainer();
-        if(this.beforeSuite.size() > 0) {
+        if (this.beforeSuite.size() > 0) {
             transactionManager.beginTransaction();
             this.beforeSuite.forEach(Runnable::run);
             transactionManager.endTransactionCommit();
@@ -99,12 +83,14 @@ public class DataSourcePlugin implements ResourcePlugin {
         transactionManager.endTransaction();
     }
 
-    public Plugin.LifeCycle getLifeCycle() {
+    @Override
+    public LifeCycle getLifeCycle() {
         return LifeCycle.TEST_SUITE;
     }
 
     /**
      * This is useful if there is a need to run any code before the actual tests are executed, any results from code executed like this is commited to the underlying datasources and entitymanagers
+     *
      * @param runnable the runnable to be added to run before tests start, comparable to @BeforeClass from JUnit, but with a but reusability over testsuites not onlt testclasses
      */
     public DataSourcePlugin addBeforeTestSuite(Runnable runnable) {
@@ -114,5 +100,9 @@ public class DataSourcePlugin implements ResourcePlugin {
 
     public <T> T getService(Class<T> aClass) {
         return injectContainer.get(aClass);
+    }
+
+    public <T> JavaResourceCreator<T> getCreator(Class<T> typeClass) {
+        return resourceFactory.getCreator(typeClass);
     }
 }

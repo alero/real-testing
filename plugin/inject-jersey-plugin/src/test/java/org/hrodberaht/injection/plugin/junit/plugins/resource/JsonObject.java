@@ -14,7 +14,7 @@ public class JsonObject {
     private Double aDouble;
 
     // For the Json Parser
-    public JsonObject(){
+    public JsonObject() {
     }
 
     public JsonObject(Long aLong, Integer aInteger, String aString, LocalDateTime localDateTime, LocalTime localime, Boolean aBoolean, Double aDouble) {

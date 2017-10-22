@@ -32,7 +32,7 @@ public class SolrTestRunner {
 
     private static final PathMatchingResourcePatternResolver patternResolver = new PathMatchingResourcePatternResolver();
     private static final Logger LOG = LoggerFactory.getLogger(SolrTestRunner.class);
-    private static Map<String,SolrRunnerHolder> CORE_CACHE = new ConcurrentHashMap<>();
+    private static Map<String, SolrRunnerHolder> CORE_CACHE = new ConcurrentHashMap<>();
 
     public static final String DEAFULT_HOME = "target/solr";
 
@@ -40,7 +40,7 @@ public class SolrTestRunner {
     private String coreName;
 
 
-    private class SolrRunnerHolder{
+    private class SolrRunnerHolder {
         private final CoreContainer coreContainer;
         private final EmbeddedSolrServer solr;
 
@@ -65,7 +65,7 @@ public class SolrTestRunner {
         setupSolr();
     }
 
-    public SolrAssertions solrAssertions(){
+    public SolrAssertions solrAssertions() {
         return new SolrAssertions(getServer());
     }
 
@@ -98,14 +98,14 @@ public class SolrTestRunner {
                 moveConfigFiles();
                 LOG.info("Loading Solr container {}", runnerName);
                 return createSolrContainer(s);
-            }catch (IOException e){
+            } catch (IOException e) {
                 LOG.error("Bad container", e);
                 throw new RuntimeException(e);
             }
         });
     }
 
-    private EmbeddedSolrServer getServer(){
+    private EmbeddedSolrServer getServer() {
         String runnerName = runnerName();
         return CORE_CACHE.get(runnerName).solr;
     }
@@ -175,7 +175,7 @@ public class SolrTestRunner {
         List<String> foundFiles = new ArrayList<>();
         URL dirURL = clazz.getClassLoader().getResource(path);
         if (findFilesFromFilessystem(dirURL, foundFiles)) {
-            LOG.debug("Found files on filesystem : "+foundFiles.size());
+            LOG.debug("Found files on filesystem : " + foundFiles.size());
             return foundFiles;
         }
 
@@ -191,8 +191,8 @@ public class SolrTestRunner {
             /* A JAR path */
             String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!")); //strip out only the JAR file
 
-            if(findJarFilesInPath(path, foundFiles, jarPath)){
-                LOG.debug("Found files in jar-resource : "+foundFiles.size());
+            if (findJarFilesInPath(path, foundFiles, jarPath)) {
+                LOG.debug("Found files in jar-resource : " + foundFiles.size());
                 return foundFiles;
             }
         }
@@ -239,7 +239,7 @@ public class SolrTestRunner {
 
     private void tearDown() throws IOException {
         File coreDir = new File(home, coreName);
-        if(coreDir.exists()) {
+        if (coreDir.exists()) {
             LOG.info("cleaning : " + coreDir.getAbsolutePath());
             FileUtils.cleanDirectory(coreDir);
         }
