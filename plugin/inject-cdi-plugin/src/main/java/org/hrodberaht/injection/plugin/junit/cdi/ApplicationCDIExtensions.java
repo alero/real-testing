@@ -97,8 +97,8 @@ public class ApplicationCDIExtensions implements CDIExtensions {
         try {
             String extensionFileName = "javax.enterprise.inject.spi.Extension";
             Enumeration<URL> resources = Thread.currentThread().getContextClassLoader().getResources("META-INF/services/" + extensionFileName);
-            for (URL resource; resources.hasMoreElements(); ) {
-                resource = resources.nextElement();
+            while (resources.hasMoreElements()) {
+                URL resource = resources.nextElement();
                 String path = resource.getFile();
                 LOG.info("evaluating jar-file for path: {}", path);
                 if (FileScanningUtil.isJarFile(resource)) {
@@ -123,15 +123,16 @@ public class ApplicationCDIExtensions implements CDIExtensions {
         Enumeration<JarEntry> enumeration = jarFile.entries();
         while (enumeration.hasMoreElements()) {
             JarEntry jarEntry = enumeration.nextElement();
-            String classPath = jarEntry.getName().replaceAll("/", ".");
             if (!jarEntry.isDirectory() && jarEntry.getName().contains(extensionFileName)) {
                 try {
                     BufferedReader br = new BufferedReader(new InputStreamReader(jarFile.getInputStream(jarEntry)));
                     readExtensionsAndRegister(br);
                     br.close();
                 } catch (ClassFormatError e) {
+                    String classPath = jarEntry.getName().replaceAll("/", ".");
                     LOG.debug("jar aClass error: {}", classPath);
                 } catch (NoClassDefFoundError e) {
+                    String classPath = jarEntry.getName().replaceAll("/", ".");
                     throw new CDIException("jar aClass error: " + classPath);
                 }
             }
