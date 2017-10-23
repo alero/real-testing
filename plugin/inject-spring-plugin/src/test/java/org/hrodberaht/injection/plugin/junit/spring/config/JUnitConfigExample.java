@@ -29,12 +29,12 @@ public class JUnitConfigExample extends ContainerContextConfigBase {
 
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
-        String dataSourceName = "MyDataSource2";
+        String dataSourceName = "MyDataSource";
         DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class);
         DataSource dataSource = dataSourcePlugin.getCreator(DataSource.class).create(dataSourceName);
 
         dataSourcePlugin.loadSchema(dataSource, "sql");
-        dataSourcePlugin.addBeforeTestSuite((loader) -> loader.get(LoadingTheTestWithData.class).run());
+        dataSourcePlugin.loadSchema(dataSource, "sql/insert");
 
         activatePlugin(SpringExtensionPlugin.class).loadConfig(
                 "/META-INF/spring-config.xml"

@@ -27,7 +27,7 @@ import javax.sql.DataSource;
 public class SpringBeanV2 {
 
 
-    @Resource(lookup = "DataSource/MyDataSource")
+    @Resource(lookup = "DataSource/MyDataSource2")
     private DataSource dataSource;
 
     private JdbcTemplate jdbcTemplate;
@@ -43,6 +43,10 @@ public class SpringBeanV2 {
 
     public String getNameFromDB() {
         return jdbcTemplate.queryForObject("select username from theUser where username=?", String.class, "dude");
+    }
+
+    public void createUser(String username, String password) {
+        jdbcTemplate.update("insert into theUser (username, password) values (?, ?)", username, password);
     }
 
 }
