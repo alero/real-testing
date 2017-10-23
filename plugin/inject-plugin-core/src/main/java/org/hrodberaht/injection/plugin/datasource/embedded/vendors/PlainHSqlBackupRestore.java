@@ -25,6 +25,8 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class PlainHSqlBackupRestore implements DatasourceBackupRestore {
@@ -94,25 +96,45 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore {
     private String readFile(File file, JDBCService jdbcTemplate) throws IOException {
         StringBuilder fileContents = new StringBuilder((int) file.length());
         Scanner scanner = new Scanner(file);
-
+        Map<String, String> restoreRetryMap = new HashMap<>();
         try {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 if (shouldExecuteLine(line)) {
-                    executeLine(jdbcTemplate, line);
+                    executeLine(jdbcTemplate, line, restoreRetryMap);
                 }
             }
+            retryRestoreMap(jdbcTemplate, restoreRetryMap);
             return fileContents.toString();
         } finally {
             scanner.close();
         }
     }
 
-    private void executeLine(JDBCService jdbcTemplate, String line) {
+    private void retryRestoreMap(final JdbcTemplate jdbcTemplate, final Map<String, String> restoreRetryMap) {
+        final Map<String, String> restoreRetryMapAgain = new HashMap<>();
+        restoreRetryMap.keySet().forEach(line -> {
+            if (shouldExecuteLine(line)) {
+                executeLine(jdbcTemplate, line, restoreRetryMapAgain);
+            }
+        });
+
+        if (restoreRetryMapAgain.size() < restoreRetryMap.size()) {
+            retryRestoreMap(jdbcTemplate, restoreRetryMapAgain);
+        } else {
+            restoreRetryMap.keySet().forEach(line ->
+                    LOG.warn("Last - Failed to restore line - " + line)
+            );
+        }
+
+    }
+
+    private void executeLine(JDBCService jdbcTemplate, String line, Map<String, String> restoreRetryMap) {
         try {
             jdbcTemplate.execute(line);
         } catch (Exception e) {
             LOG.debug("Failed to restore line - " + line);
+            restoreRetryMap.put(line, "failed");
         }
     }
 
