@@ -29,7 +29,7 @@ public class SpringBeanV2 {
     }
 
     public String getNameFromDB() {
-        return jdbcTemplate.queryForObject("select username from user where username=?", String.class, "dude");
+        return jdbcTemplate.queryForObject("select username from theUser where username=?", String.class, "dude");
     }
 
 }

@@ -21,12 +21,12 @@ public class SpringContainerConfigExample extends ContainerContextConfigBase {
 
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
-        String dataSourceName = "MyDataSource";
+        String dataSourceName = "MyDataSource2";
         DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class);
         DataSource dataSource = dataSourcePlugin.getCreator(DataSource.class).create(dataSourceName);
 
         dataSourcePlugin.loadSchema(dataSource, "sql");
-        dataSourcePlugin.loadSchema(dataSource, "sql/insert");
+        dataSourcePlugin.addBeforeTestSuite((loader) -> loader.get(LoadingTheTestWithData.class).run());
 
         activatePlugin(SpringExtensionPlugin.class).loadConfig(
                 "/META-INF/spring-config.xml"

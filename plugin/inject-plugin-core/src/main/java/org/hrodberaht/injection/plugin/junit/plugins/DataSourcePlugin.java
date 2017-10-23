@@ -17,15 +17,20 @@ import org.hrodberaht.injection.spi.ResourceFactory;
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class DataSourcePlugin implements Plugin {
 
     private final DatasourceResourceCreator datasourceResourceCreator = getDatasourceResourceCreator();
-    private final List<Runnable> beforeSuite = new ArrayList<>();
+    private static final Map<Class, ResourceRunnerHolder> resourceRunnereState = new ConcurrentHashMap<>();
+
+    private final List<ResourceRunner> beforeSuite = new ArrayList<>();
 
     private TransactionManager transactionManager;
     private InjectContainer injectContainer;
     private ResourceFactory resourceFactory;
+
 
 
     protected DatasourceResourceCreator getDatasourceResourceCreator() {
@@ -65,13 +70,15 @@ public class DataSourcePlugin implements Plugin {
     @RunnerPluginAfterContainerCreation
     protected void afterContainerCreation(InjectionRegister injectionRegister) {
         this.injectContainer = injectionRegister.getContainer();
-        if (this.beforeSuite.size() > 0) {
+        if (!beforeSuite.isEmpty()) {
             transactionManager.beginTransaction();
-            this.beforeSuite.forEach(Runnable::run);
+            beforeSuite.forEach(resourceRunner -> {
+                ResourceLoader resourceLoader = new ResourceLoader(resourceRunner);
+                resourceRunner.run(resourceLoader);
+            });
             transactionManager.endTransactionCommit();
         }
     }
-
 
     @RunnerPluginBeforeTest
     protected void beforeTest() {
@@ -93,14 +100,46 @@ public class DataSourcePlugin implements Plugin {
      *
      * @param runnable the runnable to be added to run before tests start, comparable to @BeforeClass from JUnit, but with a but reusability over testsuites not onlt testclasses
      */
-    public DataSourcePlugin addBeforeTestSuite(Runnable runnable) {
-        this.beforeSuite.add(runnable);
+    public DataSourcePlugin addBeforeTestSuite(ResourceRunner runnable) {
+        beforeSuite.add(runnable);
         return this;
     }
 
-    public <T> T getService(Class<T> aClass) {
-        return injectContainer.get(aClass);
+    public interface ResourceLoaderRunner {
+        void run();
     }
+
+    public class ResourceLoader {
+        private final ResourceRunner resourceRunner;
+
+        ResourceLoader(ResourceRunner resourceRunner) {
+            this.resourceRunner = resourceRunner;
+        }
+
+        public ResourceLoaderRunner get(Class<? extends ResourceLoaderRunner> aClass) {
+            ResourceRunnerHolder resourceRunnerHolder = resourceRunnereState.get(aClass);
+            if (resourceRunnerHolder == null) {
+                resourceRunnereState.put(aClass, new ResourceRunnerHolder(resourceRunner));
+                return injectContainer.get(aClass);
+            }
+            return () -> {
+            };
+        }
+    }
+
+    public class ResourceRunnerHolder {
+        private final ResourceRunner resourceRunner;
+        private boolean hasRun = false;
+
+        public ResourceRunnerHolder(ResourceRunner resourceRunner) {
+            this.resourceRunner = resourceRunner;
+        }
+    }
+
+    public interface ResourceRunner {
+        void run(ResourceLoader resourceLoader);
+    }
+
 
     public <T> JavaResourceCreator<T> getCreator(Class<T> typeClass) {
         return resourceFactory.getCreator(typeClass);

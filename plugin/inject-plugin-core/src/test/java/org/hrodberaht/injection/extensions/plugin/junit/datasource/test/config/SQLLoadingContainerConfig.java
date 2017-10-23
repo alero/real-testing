@@ -21,10 +21,7 @@ public class SQLLoadingContainerConfig extends ContainerContextConfigBase {
     public void register(InjectionRegistryBuilder registryBuilder) {
 
         DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class);
-
         DataSource dataSource = dataSourcePlugin.getCreator(DataSource.class).create("MyDataSource");
-
-        // DataSource dataSourceTwo = getCreator(DataSource.class).create("secondDataSource");
 
         // Load schema is a custom method located in the plugin code, this creates clean separation
         dataSourcePlugin
@@ -37,10 +34,8 @@ public class SQLLoadingContainerConfig extends ContainerContextConfigBase {
                 .scan(() -> "org.hrodberaht.injection.extensions.plugin.junit.datasource.service")
                 .resource(builder ->
                         builder
-                                // .bindPluginResources()
                                 .resource("MyDataSource", DataSource.class, dataSource)
                                 .resource(DataSource.class, dataSource)
-
                 )
         ;
     }

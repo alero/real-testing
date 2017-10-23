@@ -9,7 +9,7 @@
 >
 
     <jee:jndi-lookup id="MyDataSource"
-                     jndi-name="DataSource/MyDataSource"
+                     jndi-name="DataSource/MyDataSource2"
                      expected-type="javax.sql.DataSource"/>
 
 </beans>

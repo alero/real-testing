@@ -45,7 +45,7 @@ public class SpringExtensionPlugin implements Plugin {
         return LifeCycle.TEST_SUITE;
     }
 
-    public void loadConfig(String... springConfigs) {
+    public SpringExtensionPlugin loadConfig(String... springConfigs) {
         validateEmptyContext(context);
         String testSpringConfig = "/META-INF/container-spring-config.xml";
         String[] config = new String[]{testSpringConfig};
@@ -55,9 +55,10 @@ public class SpringExtensionPlugin implements Plugin {
         }
         context = new ClassPathXmlApplicationContext(config);
         springBeanInjector = new SpringBeanInjector(context);
+        return this;
     }
 
-    public void loadConfig(Class... springConfigs) {
+    public SpringExtensionPlugin loadConfig(Class... springConfigs) {
         SpringExtensionPlugin configBase = CACHE.get(this.getClass());
         if (configBase != null && enabledCache) {
             LOG.debug("SpringContainerConfigBase - Using cached SpringApplication for " + this.getClass());
@@ -75,7 +76,7 @@ public class SpringExtensionPlugin implements Plugin {
             springBeanInjector = new SpringBeanInjector(context);
             CACHE.put(this.getClass(), this);
         }
-
+        return this;
     }
 
     private Class<?> getContainerSpringConfigClass() {

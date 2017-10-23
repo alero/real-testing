@@ -18,7 +18,7 @@ public class SpringBean {
     @SpringInject
     private AnyServiceInner anyServiceInner;
 
-    @Resource(lookup = "MyDataSource")
+    @Resource(lookup = "MyDataSource2")
     private DataSource dataSource;
 
     private JdbcTemplate jdbcTemplate;
@@ -33,7 +33,11 @@ public class SpringBean {
     }
 
     public String getNameFromDB() {
-        return jdbcTemplate.queryForObject("select username from user where username=?", String.class, "dude");
+        return jdbcTemplate.queryForObject("select username from theUser where username=?", String.class, "dude");
+    }
+
+    public void createUser(String username, String password) {
+        jdbcTemplate.update("insert into theUser (username, password) values (?, ?)", username, password);
     }
 
     public AnyServiceInner getAnyServiceInner() {
