@@ -76,7 +76,7 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore {
     public void loadSnapshot(String name) {
 
         final String fileName = getFilename(name);
-        LOG.debug("PlainHSqlBackupRestore restore from : " + fileName);
+        LOG.debug("PlainHSqlBackupRestore restore from : {}", fileName);
 
         try (Connection connection = driverManager.getConnection();) {
 
