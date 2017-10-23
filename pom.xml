@@ -247,20 +247,6 @@
 
     <profiles>
         <profile>
-            <id>release-seal-nexus</id>
-            <distributionManagement>
-                <repository>
-                    <id>seal-releases</id>
-                    <name>Internal Releases</name>
-                    <url>http://nexus.seal-software.net/content/repositories/releases/</url>
-                </repository>
-                <snapshotRepository>
-                    <id>seal-snapshots</id>
-                    <url>http://nexus.seal-software.net/content/repositories/snapshots/</url>
-                </snapshotRepository>
-            </distributionManagement>
-        </profile>
-        <profile>
             <id>sonar-jacoco</id>
             <properties>
                 <!-- Sonar -->
@@ -289,71 +275,6 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>
-        <profile>
-            <id>sonar-cobertura</id>
-            <properties>
-                <!-- Sonar -->
-                <sonar.java.coveragePlugin>cobertura</sonar.java.coveragePlugin>
-                <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
-                <sonar.language>java</sonar.language>
-            </properties>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>cobertura-maven-plugin</artifactId>
-                        <version>2.7</version>
-                        <configuration>
-                            <check />
-                            <outputDirectory>./target/cobertura</outputDirectory>
-                            <formats>
-                                <format>xml</format>
-                            </formats>
-                            <aggregate>true</aggregate>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <phase>package</phase>
-                                <goals>
-                                    <goal>cobertura</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>alexandersson-local-profile</id>
-            <repositories>
-                <repository>
-                    <snapshots>
-                        <enabled>false</enabled>
-                    </snapshots>
-                    <id>central</id>
-                    <name>libs-releases</name>
-                    <url>http://san:8081/artifactory/libs-releases</url>
-                </repository>
-                <repository>
-                    <snapshots />
-                    <id>snapshots</id>
-                    <name>libs-snapshots</name>
-                    <url>http://san:8081/artifactory/libs-snapshots</url>
-                </repository>
-            </repositories>
-            <distributionManagement>
-                <repository>
-                    <id>san</id>
-                    <name>san-releases</name>
-                    <url>http://san:8081/artifactory/libs-releases-local</url>
-                </repository>
-                <snapshotRepository>
-                    <id>san</id>
-                    <name>san-snapshots</name>
-                    <url>http://san:8081/artifactory/libs-snapshots-local</url>
-                </snapshotRepository>
-            </distributionManagement>
         </profile>
         <profile>
             <id>release-sign-artifacts-to-sonatype-nexus</id>
