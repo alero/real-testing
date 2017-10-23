@@ -19,7 +19,7 @@ package org.hrodberaht.injection.plugin.junit.plugins;
 import com.google.inject.Injector;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
-import org.hrodberaht.injection.plugin.junit.JUnitRunner;
+import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
 import org.hrodberaht.injection.plugin.junit.plugins.service.AService;
 import org.hrodberaht.injection.plugin.junit.plugins.service.MoreServices;
 import org.hrodberaht.injection.plugin.junit.plugins.service.config.GuiceModule;
@@ -33,7 +33,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertSame;
 
 @ContainerContext(GuicePluginTest.Config.class)
-@RunWith(JUnitRunner.class)
+@RunWith(JUnit4Runner.class)
 public class GuicePluginTest {
 
     public static class Config extends ContainerContextConfigBase {

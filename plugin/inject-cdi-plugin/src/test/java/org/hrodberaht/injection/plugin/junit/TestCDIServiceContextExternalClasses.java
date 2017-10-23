@@ -28,7 +28,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @ContainerContext(CDIContainerConfigExampleExternalResources.class)
-@RunWith(JUnitRunner.class)
+@RunWith(JUnit4Runner.class)
 public class TestCDIServiceContextExternalClasses {
 
 

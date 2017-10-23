@@ -23,7 +23,7 @@ import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
 
-public class JUnitRunner extends BlockJUnit4ClassRunner {
+public class JUnit4Runner extends BlockJUnit4ClassRunner {
 
     private final JUnitContext jUnitContext;
 
@@ -32,7 +32,7 @@ public class JUnitRunner extends BlockJUnit4ClassRunner {
      *
      * @throws InitializationError if the test class is malformed.
      */
-    public JUnitRunner(final Class<?> clazz) throws InitializationError {
+    public JUnit4Runner(final Class<?> clazz) throws InitializationError {
         super(clazz);
         jUnitContext = new JUnitContext(clazz);
     }

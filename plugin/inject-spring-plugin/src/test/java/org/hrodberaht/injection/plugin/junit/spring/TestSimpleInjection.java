@@ -18,7 +18,7 @@ package org.hrodberaht.injection.plugin.junit.spring;
 
 
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
-import org.hrodberaht.injection.plugin.junit.JUnitRunner;
+import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
 import org.hrodberaht.injection.plugin.junit.spring.beans.incubator.ContainerLifeCycleTestUtil;
 import org.hrodberaht.injection.plugin.junit.spring.config.JUnitConfigExample;
 import org.hrodberaht.injection.plugin.junit.spring.testservices.simple.AnyServiceDoSomethingImpl;
@@ -32,7 +32,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 @ContainerContext(JUnitConfigExample.class)
-@RunWith(JUnitRunner.class)
+@RunWith(JUnit4Runner.class)
 public class TestSimpleInjection {
 
     @Inject

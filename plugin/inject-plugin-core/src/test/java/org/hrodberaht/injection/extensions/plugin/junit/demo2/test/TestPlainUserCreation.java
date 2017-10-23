@@ -19,7 +19,7 @@ package org.hrodberaht.injection.extensions.plugin.junit.demo2.test;
 import org.hrodberaht.injection.extensions.plugin.junit.demo2.service.UserService;
 import org.hrodberaht.injection.extensions.plugin.junit.demo2.test.config.Course2ContainerConfigExample;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
-import org.hrodberaht.injection.plugin.junit.JUnitRunner;
+import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,7 +30,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @ContainerContext(Course2ContainerConfigExample.class)
-@RunWith(JUnitRunner.class)
+@RunWith(JUnit4Runner.class)
 public class TestPlainUserCreation {
 
 

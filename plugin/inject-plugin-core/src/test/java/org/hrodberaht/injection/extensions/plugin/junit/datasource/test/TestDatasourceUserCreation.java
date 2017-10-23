@@ -19,7 +19,7 @@ package org.hrodberaht.injection.extensions.plugin.junit.datasource.test;
 import org.hrodberaht.injection.extensions.plugin.junit.datasource.service.UserService;
 import org.hrodberaht.injection.extensions.plugin.junit.datasource.test.config.SQLLoadingContainerConfig;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
-import org.hrodberaht.injection.plugin.junit.JUnitRunner;
+import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -30,7 +30,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 @ContainerContext(SQLLoadingContainerConfig.class)
-@RunWith(JUnitRunner.class)
+@RunWith(JUnit4Runner.class)
 public class TestDatasourceUserCreation {
 
     @Inject

@@ -26,7 +26,7 @@ import javax.inject.Inject;
 import static org.junit.Assert.assertEquals;
 
 @ContainerContext(CDIContainerConfigExample.class)
-@RunWith(JUnitRunner.class)
+@RunWith(JUnit4Runner.class)
 public class TestCDIServiceContext {
 
 

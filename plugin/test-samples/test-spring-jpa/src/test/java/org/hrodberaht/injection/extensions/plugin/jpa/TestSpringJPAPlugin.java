@@ -22,7 +22,7 @@ import org.hrodberaht.injection.extensions.plugin.jpa.spring.SpringBean;
 import org.hrodberaht.injection.extensions.plugin.jpa.spring.SpringConfig;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
-import org.hrodberaht.injection.plugin.junit.JUnitRunner;
+import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
 import org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.SpringExtensionPlugin;
 import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
@@ -35,7 +35,7 @@ import javax.sql.DataSource;
 import static org.junit.Assert.assertEquals;
 
 @ContainerContext(TestSpringJPAPlugin.Config.class)
-@RunWith(JUnitRunner.class)
+@RunWith(JUnit4Runner.class)
 public class TestSpringJPAPlugin {
 
     public static class Config extends ContainerContextConfigBase {

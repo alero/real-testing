@@ -19,7 +19,7 @@ package org.hrodberaht.injection.extensions.plugin.junit.datasource2.test;
 import org.hrodberaht.injection.extensions.plugin.junit.datasource2.service.UserService;
 import org.hrodberaht.injection.extensions.plugin.junit.datasource2.test.config.ServiceLoadingContainerConfig;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
-import org.hrodberaht.injection.plugin.junit.JUnitRunner;
+import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -38,7 +38,7 @@ import static org.junit.Assert.assertTrue;
  * @since 1.0
  */
 @ContainerContext(ServiceLoadingContainerConfig.class)
-@RunWith(JUnitRunner.class)
+@RunWith(JUnit4Runner.class)
 public class TestServiceLoadingDatasourceUserCreation {
 
     @Inject

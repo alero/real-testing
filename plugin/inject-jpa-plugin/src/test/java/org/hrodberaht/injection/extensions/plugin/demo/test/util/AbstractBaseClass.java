@@ -18,7 +18,7 @@ package org.hrodberaht.injection.extensions.plugin.demo.test.util;
 
 import org.hrodberaht.injection.extensions.plugin.demo.test.config.CourseContainerConfigExample;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
-import org.hrodberaht.injection.plugin.junit.JUnitRunner;
+import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
 import org.junit.runner.RunWith;
 
 import javax.annotation.PostConstruct;
@@ -28,7 +28,7 @@ import javax.sql.DataSource;
 import static org.hrodberaht.injection.extensions.plugin.demo.test.config.CourseContainerConfigExample.DATASOURCE_NAME;
 
 @ContainerContext(CourseContainerConfigExample.class)
-@RunWith(JUnitRunner.class)
+@RunWith(JUnit4Runner.class)
 public abstract class AbstractBaseClass {
 
     @Resource(name = DATASOURCE_NAME)

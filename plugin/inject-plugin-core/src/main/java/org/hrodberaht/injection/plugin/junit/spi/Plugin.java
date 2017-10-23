@@ -19,7 +19,7 @@ package org.hrodberaht.injection.plugin.junit.spi;
 public interface Plugin {
 
     /**
-     * Determines the lifecycle of the plugin, meaning how often it will be created and kept managed by the JUnitRunner
+     * Determines the lifecycle of the plugin, meaning how often it will be created and kept managed by the JUnit4Runner
      *
      * @return the lifecycle the plugin should utilize
      * @see Plugin.LifeCycle#TEST_CLASS
