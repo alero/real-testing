@@ -2,6 +2,7 @@ package org.hrodberaht.injection.plugin.junit.inner;
 
 import org.hrodberaht.injection.internal.annotation.InjectionFinder;
 import org.hrodberaht.injection.internal.annotation.ReflectionUtils;
+import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.plugin.junit.spi.InjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.spi.Plugin;
 import org.hrodberaht.injection.plugin.junit.spi.annotation.InjectionPluginInjectionFinder;
@@ -46,7 +47,7 @@ public class AnnotatedInjectionPlugin {
                 try {
                     injectionRegisterMethod.invoke(plugin, injectionRegister);
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
+                    throw new InjectRuntimeException(e);
                 }
             }
 
@@ -58,7 +59,7 @@ public class AnnotatedInjectionPlugin {
                 try {
                     return (InjectionFinder) injectionFinderMethod.invoke(plugin, containerConfigBuilder);
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
+                    throw new InjectRuntimeException(e);
                 }
             }
         };
@@ -72,7 +73,7 @@ public class AnnotatedInjectionPlugin {
                         method.setAccessible(true);
                     }
                     if (method.getParameterCount() != 1 || !method.getParameterTypes()[0].isAssignableFrom(InjectionRegister.class)) {
-                        throw new RuntimeException("method with InjectionPluginInjectionFinder must have a parameter of type ContainerConfigBuilder");
+                        throw new InjectRuntimeException("method with InjectionPluginInjectionFinder must have a parameter of type ContainerConfigBuilder");
                     } else {
                         return method;
                     }
@@ -92,9 +93,9 @@ public class AnnotatedInjectionPlugin {
                         method.setAccessible(true);
                     }
                     if (!InjectionFinder.class.isAssignableFrom(method.getReturnType())) {
-                        throw new RuntimeException("method with InjectionPluginInjectionFinder must have a returnType of InjectionFinder");
+                        throw new InjectRuntimeException("method with InjectionPluginInjectionFinder must have a returnType of InjectionFinder");
                     } else if (method.getParameterCount() != 1 || !method.getParameterTypes()[0].isAssignableFrom(ContainerConfigBuilder.class)) {
-                        throw new RuntimeException("method with InjectionPluginInjectionFinder must have a parameter of type ContainerConfigBuilder");
+                        throw new InjectRuntimeException("method with InjectionPluginInjectionFinder must have a parameter of type ContainerConfigBuilder");
                     } else {
                         return method;
                     }

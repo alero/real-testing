@@ -16,10 +16,8 @@ import javax.enterprise.inject.spi.ObserverMethod;
  */
 public class AfterBeanDiscoveryByInject implements AfterBeanDiscovery {
 
-    private InjectionRegister injectionRegisterScanInterface;
 
     public AfterBeanDiscoveryByInject(InjectionRegister injectionRegisterScanInterface) {
-        this.injectionRegisterScanInterface = injectionRegisterScanInterface;
     }
 
     public void addDefinitionError(Throwable throwable) {

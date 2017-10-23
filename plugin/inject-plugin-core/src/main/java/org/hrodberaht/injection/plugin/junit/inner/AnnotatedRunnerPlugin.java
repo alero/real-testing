@@ -26,7 +26,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AnnotatedRunnerPlugin {
     private static final Logger LOG = LoggerFactory.getLogger(AnnotatedRunnerPlugin.class);
     private static Map<AnnotationKey, List<Method>> annotationKeyMethodsMap = new ConcurrentHashMap<>();
-    private final Map<Class, Plugin> annotatedPlugin = new ConcurrentHashMap<>();
 
     private static Set<Class> supporedAnnotations = new HashSet<>(Arrays.asList(
             RunnerPluginBeforeContainerCreation.class,
@@ -37,11 +36,14 @@ public class AnnotatedRunnerPlugin {
             RunnerPluginAfterTest.class
     ));
 
+    private final Map<Class, Plugin> annotatedPlugin = new ConcurrentHashMap<>();
+
     public static boolean containsRunnerAnnotations(Plugin plugin) {
         return AnnotatedRunnerBase.containsRunnerAnnotations(plugin, supporedAnnotations);
     }
 
-    public Plugin addPlugin(Plugin plugin) {
+
+    Plugin addPlugin(Plugin plugin) {
         if (annotatedPlugin.get(plugin.getClass()) != null) {
             LOG.info("reused plugin " + plugin.getClass());
             return annotatedPlugin.get(plugin.getClass());
@@ -52,37 +54,35 @@ public class AnnotatedRunnerPlugin {
     }
 
 
-    public void findAnnotationAndInvokeMethod(PluginRunnerBase runnerBase, InjectionRegister injectionRegister, Class<Annotation> annotation) {
-        annotatedPlugin.forEach((aClass, plugin) -> {
-            runnerBase.runIfActive(aClass, () -> {
-                AnnotationKey annotationKey = new AnnotationKey(aClass, annotation);
-                List<Method> foundMethods = annotationKeyMethodsMap.computeIfAbsent(annotationKey, annotationKey1 -> {
-                    List<Method> foundMethodsInner = new ArrayList<>();
-                    for (Method method : ReflectionUtils.findMethods(aClass)) {
-                        if (method.getAnnotation(annotation) != null) {
-                            if (!method.isAccessible()) {
-                                method.setAccessible(true);
-                            }
-                            foundMethodsInner.add(method);
+    void findAnnotationAndInvokeMethod(PluginRunnerBase runnerBase, InjectionRegister injectionRegister, Class<Annotation> annotation) {
+        annotatedPlugin.forEach((aClass, plugin) -> runnerBase.runIfActive(aClass, () -> {
+            AnnotationKey annotationKey = new AnnotationKey(aClass, annotation);
+            List<Method> foundMethods = annotationKeyMethodsMap.computeIfAbsent(annotationKey, annotationKey1 -> {
+                List<Method> foundMethodsInner = new ArrayList<>();
+                for (Method method : ReflectionUtils.findMethods(aClass)) {
+                    if (method.getAnnotation(annotation) != null) {
+                        if (!method.isAccessible()) {
+                            method.setAccessible(true);
                         }
+                        foundMethodsInner.add(method);
                     }
-                    return foundMethodsInner;
-                });
-
-
-                foundMethods.forEach(method -> {
-                    try {
-                        if (injectionRegister != null && method.getParameterCount() == 1 && method.getParameterTypes()[0].isAssignableFrom(InjectionRegister.class)) {
-                            method.invoke(plugin, injectionRegister);
-                        } else {
-                            method.invoke(plugin);
-                        }
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
+                }
+                return foundMethodsInner;
             });
-        });
+
+
+            foundMethods.forEach(method -> {
+                try {
+                    if (injectionRegister != null && method.getParameterCount() == 1 && method.getParameterTypes()[0].isAssignableFrom(InjectionRegister.class)) {
+                        method.invoke(plugin, injectionRegister);
+                    } else {
+                        method.invoke(plugin);
+                    }
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new RuntimeException(e);
+                }
+            });
+        }));
 
     }
 
