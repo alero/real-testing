@@ -19,7 +19,7 @@ package org.hrodberaht.injection.extensions.plugin.junit5.demo2.test.config;
 import org.hrodberaht.injection.extensions.plugin.junit5.demo2.service.MyResource;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.ResourcePlugin;
-import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 
 /**
  * Inject extension TDD

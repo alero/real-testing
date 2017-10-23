@@ -11,10 +11,10 @@ import com.hrodberaht.inject.extensions.transaction.manager.impl.jpa.Transaction
 import com.hrodberaht.inject.extensions.transaction.manager.impl.jpa.TransactionManagerJPAImpl;
 import com.hrodberaht.inject.extensions.transaction.manager.internal.vendor.ProviderFactory;
 import com.hrodberaht.inject.extensions.transaction.manager.internal.vendor.ProviderService;
-import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
-import org.hrodberaht.injection.register.ExtendedModule;
-import org.hrodberaht.injection.register.InjectionFactory;
-import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
+import org.hrodberaht.injection.core.internal.exception.InjectRuntimeException;
+import org.hrodberaht.injection.core.register.ExtendedModule;
+import org.hrodberaht.injection.core.register.InjectionFactory;
+import org.hrodberaht.injection.core.register.RegistrationModuleAnnotation;
 
 import javax.persistence.EntityManager;
 import java.sql.Connection;

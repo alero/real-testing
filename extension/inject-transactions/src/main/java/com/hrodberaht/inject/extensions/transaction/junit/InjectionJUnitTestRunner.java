@@ -4,7 +4,7 @@ import com.hrodberaht.inject.extensions.transaction.TransactionManager;
 import com.hrodberaht.inject.extensions.transaction.manager.internal.TransactionLogging;
 import com.hrodberaht.inject.extensions.transaction.manager.util.TransactionManagerUtil;
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
+import org.hrodberaht.injection.core.internal.exception.InjectRuntimeException;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;

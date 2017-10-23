@@ -7,7 +7,7 @@ import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.extensions.cdi.CDIContainerConfigBase;
 import org.hrodberaht.injection.extensions.junit.internal.JunitSQLContainerService;
 import org.hrodberaht.injection.extensions.junit.internal.ProxyResourceCreator;
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.core.internal.InjectionRegisterModule;
 
 import javax.sql.DataSource;
 

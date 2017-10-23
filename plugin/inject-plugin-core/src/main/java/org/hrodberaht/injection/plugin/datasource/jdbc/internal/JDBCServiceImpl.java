@@ -16,7 +16,7 @@
 
 package org.hrodberaht.injection.plugin.datasource.jdbc.internal;
 
-import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
+import org.hrodberaht.injection.core.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.plugin.datasource.jdbc.Insert;
 import org.hrodberaht.injection.plugin.datasource.jdbc.InsertOrUpdater;
 import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCService;

@@ -17,8 +17,8 @@
 package org.hrodberaht.inject.annotation;
 
 import org.hrodberaht.inject.testservices.annotated.SpecialResource;
-import org.hrodberaht.injection.internal.annotation.ReflectionUtils;
-import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
+import org.hrodberaht.injection.core.internal.annotation.ReflectionUtils;
+import org.hrodberaht.injection.core.internal.exception.InjectRuntimeException;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;

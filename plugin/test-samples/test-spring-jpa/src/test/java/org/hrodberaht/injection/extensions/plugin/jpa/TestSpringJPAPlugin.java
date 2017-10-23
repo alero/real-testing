@@ -25,7 +25,7 @@ import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.JUnitRunner;
 import org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.SpringExtensionPlugin;
-import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

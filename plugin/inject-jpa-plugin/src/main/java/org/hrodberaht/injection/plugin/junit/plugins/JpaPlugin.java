@@ -16,7 +16,7 @@
 
 package org.hrodberaht.injection.plugin.junit.plugins;
 
-import org.hrodberaht.injection.internal.annotation.InjectionFinder;
+import org.hrodberaht.injection.core.internal.annotation.InjectionFinder;
 import org.hrodberaht.injection.plugin.junit.jpa.EntityManagerCreator;
 import org.hrodberaht.injection.plugin.junit.jpa.EntityManagerHolder;
 import org.hrodberaht.injection.plugin.junit.jpa.EntityManagerInjection;

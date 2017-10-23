@@ -16,12 +16,12 @@
 
 package test.org.hrodberaht.inject.annotation.config;
 
-import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.config.ContainerConfigBase;
-import org.hrodberaht.injection.config.InjectionRegisterScanBase;
-import org.hrodberaht.injection.internal.ResourceInjection;
-import org.hrodberaht.injection.register.InjectionRegister;
-import org.hrodberaht.injection.spi.ResourceCreator;
+import org.hrodberaht.injection.core.InjectContainer;
+import org.hrodberaht.injection.core.config.ContainerConfigBase;
+import org.hrodberaht.injection.core.config.InjectionRegisterScanBase;
+import org.hrodberaht.injection.core.internal.ResourceInjection;
+import org.hrodberaht.injection.core.register.InjectionRegister;
+import org.hrodberaht.injection.core.spi.ResourceCreator;
 
 /**
  * Created by alexbrob on 2016-03-29.

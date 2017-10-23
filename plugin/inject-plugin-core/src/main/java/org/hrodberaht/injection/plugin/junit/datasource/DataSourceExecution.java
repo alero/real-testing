@@ -17,7 +17,7 @@
 package org.hrodberaht.injection.plugin.junit.datasource;
 
 
-import org.hrodberaht.injection.config.JarUtil;
+import org.hrodberaht.injection.core.config.JarUtil;
 import org.hrodberaht.injection.plugin.datasource.DataSourceException;
 import org.hrodberaht.injection.plugin.datasource.DataSourceProxyInterface;
 import org.slf4j.Logger;

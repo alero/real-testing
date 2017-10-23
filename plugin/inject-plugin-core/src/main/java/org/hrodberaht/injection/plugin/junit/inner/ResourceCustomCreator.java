@@ -16,7 +16,7 @@
 
 package org.hrodberaht.injection.plugin.junit.inner;
 
-import org.hrodberaht.injection.spi.JavaResourceCreator;
+import org.hrodberaht.injection.core.spi.JavaResourceCreator;
 
 import java.util.List;
 

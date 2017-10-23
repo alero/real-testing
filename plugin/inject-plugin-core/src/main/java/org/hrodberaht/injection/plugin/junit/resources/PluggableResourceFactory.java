@@ -17,9 +17,9 @@
 package org.hrodberaht.injection.plugin.junit.resources;
 
 import org.hrodberaht.injection.plugin.context.ContextManager;
-import org.hrodberaht.injection.spi.JavaResourceCreator;
-import org.hrodberaht.injection.spi.ResourceFactory;
-import org.hrodberaht.injection.spi.ResourceKey;
+import org.hrodberaht.injection.core.spi.JavaResourceCreator;
+import org.hrodberaht.injection.core.spi.ResourceFactory;
+import org.hrodberaht.injection.core.spi.ResourceKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -19,7 +19,7 @@ package org.hrodberaht.injection.plugin.junit.cdi.config;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.CDIInjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin;
-import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 
 import javax.sql.DataSource;
 

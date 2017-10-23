@@ -16,7 +16,7 @@
 
 package org.hrodberaht.injection.plugin.junit.jpa;
 
-import org.hrodberaht.injection.internal.annotation.ReflectionUtils;
+import org.hrodberaht.injection.core.internal.annotation.ReflectionUtils;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;

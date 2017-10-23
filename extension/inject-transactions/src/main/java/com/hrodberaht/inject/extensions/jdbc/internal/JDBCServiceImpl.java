@@ -5,7 +5,7 @@ import com.hrodberaht.inject.extensions.jdbc.InsertOrUpdater;
 import com.hrodberaht.inject.extensions.jdbc.JDBCService;
 import com.hrodberaht.inject.extensions.jdbc.RowIterator;
 import com.hrodberaht.inject.extensions.jdbc.SQLDateUtil;
-import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
+import org.hrodberaht.injection.core.internal.exception.InjectRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

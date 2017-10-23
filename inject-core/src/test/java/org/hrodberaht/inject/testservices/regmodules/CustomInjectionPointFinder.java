@@ -19,7 +19,7 @@ package org.hrodberaht.inject.testservices.regmodules;
 import org.hrodberaht.inject.annotation.ExtendedResourceInjection;
 import org.hrodberaht.inject.testservices.annotated.Injected;
 import org.hrodberaht.inject.testservices.annotated.PostConstructInit;
-import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
+import org.hrodberaht.injection.core.internal.annotation.DefaultInjectionPointFinder;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

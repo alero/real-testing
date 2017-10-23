@@ -16,8 +16,8 @@
 
 package org.hrodberaht.injection.plugin.junit.resources;
 
-import org.hrodberaht.injection.spi.JavaResourceCreator;
-import org.hrodberaht.injection.spi.ResourceFactory;
+import org.hrodberaht.injection.core.spi.JavaResourceCreator;
+import org.hrodberaht.injection.core.spi.ResourceFactory;
 
 public abstract class ResourcePluginBase {
 

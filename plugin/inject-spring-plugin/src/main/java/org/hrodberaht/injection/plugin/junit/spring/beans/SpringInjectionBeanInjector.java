@@ -16,8 +16,8 @@
 
 package org.hrodberaht.injection.plugin.junit.spring.beans;
 
-import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.internal.annotation.ReflectionUtils;
+import org.hrodberaht.injection.core.InjectContainer;
+import org.hrodberaht.injection.core.internal.annotation.ReflectionUtils;
 import org.hrodberaht.injection.plugin.junit.spring.injector.SpringInject;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;

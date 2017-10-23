@@ -18,9 +18,9 @@ package org.hrodberaht.inject;
 
 import org.hrodberaht.inject.testservices.annotated.Tire;
 import org.hrodberaht.inject.testservices.annotated.Volvo;
-import org.hrodberaht.injection.internal.annotation.creator.InstanceCreator;
-import org.hrodberaht.injection.internal.annotation.creator.InstanceCreatorCGLIB;
-import org.hrodberaht.injection.internal.annotation.creator.InstanceCreatorDefault;
+import org.hrodberaht.injection.core.internal.annotation.creator.InstanceCreator;
+import org.hrodberaht.injection.core.internal.annotation.creator.InstanceCreatorCGLIB;
+import org.hrodberaht.injection.core.internal.annotation.creator.InstanceCreatorDefault;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 

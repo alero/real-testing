@@ -21,7 +21,7 @@ import org.hrodberaht.injection.plugin.junit.cdi.config.ioc.ExampleModuleExterna
 import org.hrodberaht.injection.plugin.junit.cdi.config.ioc.ExampleModuleInternal;
 import org.hrodberaht.injection.plugin.junit.plugins.CDIInjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin;
-import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 
 /**
  * Unit Test JUnit (using @Inject)

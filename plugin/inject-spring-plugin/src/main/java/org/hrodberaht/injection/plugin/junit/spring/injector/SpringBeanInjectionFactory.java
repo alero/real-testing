@@ -16,7 +16,7 @@
 
 package org.hrodberaht.injection.plugin.junit.spring.injector;
 
-import org.hrodberaht.injection.register.InjectionFactory;
+import org.hrodberaht.injection.core.register.InjectionFactory;
 import org.springframework.context.ApplicationContext;
 
 public class SpringBeanInjectionFactory implements InjectionFactory {

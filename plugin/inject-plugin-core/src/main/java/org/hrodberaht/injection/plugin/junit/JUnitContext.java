@@ -16,8 +16,8 @@
 
 package org.hrodberaht.injection.plugin.junit;
 
-import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
+import org.hrodberaht.injection.core.InjectContainer;
+import org.hrodberaht.injection.core.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.plugin.junit.inner.RunnerPlugins;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;

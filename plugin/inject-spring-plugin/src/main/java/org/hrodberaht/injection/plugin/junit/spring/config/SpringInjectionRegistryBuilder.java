@@ -16,8 +16,8 @@
 
 package org.hrodberaht.injection.plugin.junit.spring.config;
 
-import org.hrodberaht.injection.config.ContainerConfig;
-import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
+import org.hrodberaht.injection.core.config.ContainerConfig;
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 
 
 public class SpringInjectionRegistryBuilder<T extends SpringModule> extends InjectionRegistryBuilder<T> {

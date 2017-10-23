@@ -4,7 +4,7 @@ import com.hrodberaht.inject.extensions.transaction.TransactionManager;
 import com.hrodberaht.inject.extensions.transaction.manager.impl.jpa.TransactionManagerJPAImpl;
 import com.hrodberaht.inject.extensions.transaction.manager.util.TransactionManagerUtil;
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.register.ExtendedModule;
+import org.hrodberaht.injection.core.register.ExtendedModule;
 
 import javax.persistence.Persistence;
 

@@ -16,8 +16,8 @@
 
 package org.hrodberaht.injection.plugin.junit.cdi;
 
-import org.hrodberaht.injection.internal.annotation.ReflectionUtils;
-import org.hrodberaht.injection.register.InjectionRegister;
+import org.hrodberaht.injection.core.internal.annotation.ReflectionUtils;
+import org.hrodberaht.injection.core.register.InjectionRegister;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

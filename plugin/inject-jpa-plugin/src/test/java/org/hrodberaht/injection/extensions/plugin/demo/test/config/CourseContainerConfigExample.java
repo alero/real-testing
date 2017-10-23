@@ -18,7 +18,7 @@ package org.hrodberaht.injection.extensions.plugin.demo.test.config;
 
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin;
-import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 
 import javax.sql.DataSource;
 

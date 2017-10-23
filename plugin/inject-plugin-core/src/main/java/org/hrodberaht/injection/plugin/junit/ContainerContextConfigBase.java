@@ -16,9 +16,9 @@
 
 package org.hrodberaht.injection.plugin.junit;
 
-import org.hrodberaht.injection.config.ContainerConfig;
-import org.hrodberaht.injection.internal.ResourceInject;
-import org.hrodberaht.injection.internal.annotation.InjectionFinder;
+import org.hrodberaht.injection.core.config.ContainerConfig;
+import org.hrodberaht.injection.core.internal.ResourceInject;
+import org.hrodberaht.injection.core.internal.annotation.InjectionFinder;
 import org.hrodberaht.injection.plugin.junit.inner.AnnotatedInjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.inner.AnnotatedResourcePlugin;
 import org.hrodberaht.injection.plugin.junit.inner.AnnotatedRunnerPlugin;
@@ -29,10 +29,10 @@ import org.hrodberaht.injection.plugin.junit.resources.ResourcePluginBase;
 import org.hrodberaht.injection.plugin.junit.spi.InjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.spi.Plugin;
 import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugin;
-import org.hrodberaht.injection.register.InjectionRegister;
-import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
-import org.hrodberaht.injection.spi.ResourceFactory;
-import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
+import org.hrodberaht.injection.core.register.InjectionRegister;
+import org.hrodberaht.injection.core.register.RegistrationModuleAnnotation;
+import org.hrodberaht.injection.core.spi.ResourceFactory;
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

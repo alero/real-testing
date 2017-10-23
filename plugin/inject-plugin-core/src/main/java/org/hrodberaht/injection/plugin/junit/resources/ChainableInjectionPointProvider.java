@@ -16,10 +16,10 @@
 
 package org.hrodberaht.injection.plugin.junit.resources;
 
-import org.hrodberaht.injection.internal.annotation.AnnotationInjection;
-import org.hrodberaht.injection.internal.annotation.InjectionFinder;
-import org.hrodberaht.injection.internal.annotation.InjectionPoint;
-import org.hrodberaht.injection.spi.ContainerConfig;
+import org.hrodberaht.injection.core.internal.annotation.AnnotationInjection;
+import org.hrodberaht.injection.core.internal.annotation.InjectionFinder;
+import org.hrodberaht.injection.core.internal.annotation.InjectionPoint;
+import org.hrodberaht.injection.core.spi.ContainerConfig;
 
 import java.lang.reflect.Method;
 import java.util.List;

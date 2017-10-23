@@ -16,10 +16,10 @@
 
 package org.hrodberaht.injection.plugin.junit;
 
-import org.hrodberaht.injection.internal.InjectionContainerManager;
-import org.hrodberaht.injection.register.InjectionRegister;
-import org.hrodberaht.injection.register.RegistrationModule;
-import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
+import org.hrodberaht.injection.core.internal.InjectionContainerManager;
+import org.hrodberaht.injection.core.register.InjectionRegister;
+import org.hrodberaht.injection.core.register.RegistrationModule;
+import org.hrodberaht.injection.core.register.RegistrationModuleAnnotation;
 
 import javax.inject.Inject;
 

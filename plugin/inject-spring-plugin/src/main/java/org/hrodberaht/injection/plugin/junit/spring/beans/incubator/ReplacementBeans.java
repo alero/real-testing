@@ -16,7 +16,7 @@
 
 package org.hrodberaht.injection.plugin.junit.spring.beans.incubator;
 
-import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.core.InjectContainer;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;

@@ -4,7 +4,7 @@ import com.hrodberaht.inject.extensions.transaction.junit.InjectionContainerCrea
 import com.hrodberaht.inject.extensions.transaction.junit.TransactionManagedTesting;
 import com.hrodberaht.inject.extensions.transaction.manager.JdbcModule;
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.core.internal.InjectionRegisterModule;
 
 import javax.sql.DataSource;
 

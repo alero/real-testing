@@ -16,7 +16,7 @@
 
 package org.hrodberaht.inject.testservices.annotated;
 
-import org.hrodberaht.injection.register.InjectionFactory;
+import org.hrodberaht.injection.core.register.InjectionFactory;
 
 /**
  * Created by IntelliJ IDEA.

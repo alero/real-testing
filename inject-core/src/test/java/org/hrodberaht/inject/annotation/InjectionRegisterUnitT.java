@@ -27,10 +27,10 @@ import org.hrodberaht.inject.testservices.sortedinterfaces.ATestingService;
 import org.hrodberaht.inject.testservices.sortedinterfaces.ATestingServiceInterface;
 import org.hrodberaht.inject.testservices.sortedinterfaces.BTestingServiceInner;
 import org.hrodberaht.inject.testservices.sortedinterfaces.BTestingServiceInnerInterface;
-import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.InjectionRegistryPlain;
-import org.hrodberaht.injection.Module;
-import org.hrodberaht.injection.stream.InjectionRegistryStream;
+import org.hrodberaht.injection.core.InjectContainer;
+import org.hrodberaht.injection.core.InjectionRegistryPlain;
+import org.hrodberaht.injection.core.Module;
+import org.hrodberaht.injection.core.stream.InjectionRegistryStream;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

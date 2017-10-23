@@ -19,7 +19,7 @@ package org.hrodberaht.inject.util;
 import org.hrodberaht.inject.testservices.annotated.Spare;
 import org.hrodberaht.inject.testservices.annotated.SpareTire;
 import org.hrodberaht.inject.testservices.annotated.Tire;
-import org.hrodberaht.injection.internal.InjectionRegisterScan;
+import org.hrodberaht.injection.core.internal.InjectionRegisterScan;
 
 /**
  * Simple Java Utils

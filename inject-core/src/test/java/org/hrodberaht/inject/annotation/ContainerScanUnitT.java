@@ -25,12 +25,12 @@ import org.hrodberaht.inject.testservices.simple.AnyServiceDoNothingImpl;
 import org.hrodberaht.inject.testservices.simple.AnyServiceDoSomethingImpl;
 import org.hrodberaht.inject.testservices.sortedinterfaces.ATestingServiceInterface;
 import org.hrodberaht.inject.util.RegisterStub;
-import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.internal.InjectionRegisterJava;
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
-import org.hrodberaht.injection.internal.InjectionRegisterScan;
-import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
-import org.hrodberaht.injection.register.RegistrationModuleAnnotationScanner;
+import org.hrodberaht.injection.core.InjectContainer;
+import org.hrodberaht.injection.core.internal.InjectionRegisterJava;
+import org.hrodberaht.injection.core.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.core.internal.InjectionRegisterScan;
+import org.hrodberaht.injection.core.internal.exception.InjectRuntimeException;
+import org.hrodberaht.injection.core.register.RegistrationModuleAnnotationScanner;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertNotNull;

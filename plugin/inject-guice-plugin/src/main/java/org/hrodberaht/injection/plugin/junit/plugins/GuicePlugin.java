@@ -19,14 +19,14 @@ package org.hrodberaht.injection.plugin.junit.plugins;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
-import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
-import org.hrodberaht.injection.internal.annotation.InjectionFinder;
+import org.hrodberaht.injection.core.internal.annotation.DefaultInjectionPointFinder;
+import org.hrodberaht.injection.core.internal.annotation.InjectionFinder;
 import org.hrodberaht.injection.plugin.junit.spi.Plugin;
 import org.hrodberaht.injection.plugin.junit.spi.annotation.InjectionPluginInjectionFinder;
 import org.hrodberaht.injection.plugin.junit.spi.annotation.InjectionPluginInjectionRegister;
-import org.hrodberaht.injection.register.InjectionRegister;
-import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
-import org.hrodberaht.injection.spi.ContainerConfigBuilder;
+import org.hrodberaht.injection.core.register.InjectionRegister;
+import org.hrodberaht.injection.core.register.RegistrationModuleAnnotation;
+import org.hrodberaht.injection.core.spi.ContainerConfigBuilder;
 
 import java.util.List;
 

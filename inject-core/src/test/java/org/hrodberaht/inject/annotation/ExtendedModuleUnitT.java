@@ -16,7 +16,7 @@
 
 package org.hrodberaht.inject.annotation;
 
-import org.hrodberaht.injection.register.ExtendedModule;
+import org.hrodberaht.injection.core.register.ExtendedModule;
 import org.junit.Test;
 
 /**

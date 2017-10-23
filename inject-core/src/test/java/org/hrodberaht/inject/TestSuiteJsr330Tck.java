@@ -19,7 +19,7 @@ package org.hrodberaht.inject;
 import junit.framework.TestCase;
 import org.atinject.tck.Tck;
 import org.atinject.tck.auto.Car;
-import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.core.InjectContainer;
 
 
 /**

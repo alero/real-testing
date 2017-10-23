@@ -3,7 +3,7 @@ package config;
 import org.hrodberaht.injection.extensions.cdi.CDIContainerConfigBase;
 import org.hrodberaht.injection.extensions.junit.internal.JunitSQLContainerService;
 import org.hrodberaht.injection.extensions.junit.internal.ProxyResourceCreator;
-import org.hrodberaht.injection.spi.ResourceCreator;
+import org.hrodberaht.injection.core.spi.ResourceCreator;
 
 /**
  * Created with IntelliJ IDEA.

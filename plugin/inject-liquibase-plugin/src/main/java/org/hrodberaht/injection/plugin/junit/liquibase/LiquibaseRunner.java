@@ -21,7 +21,7 @@ import liquibase.database.core.HsqlDatabase;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
-import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
+import org.hrodberaht.injection.core.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.plugin.datasource.DataSourceProxyInterface;
 import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCService;
 import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCServiceFactory;

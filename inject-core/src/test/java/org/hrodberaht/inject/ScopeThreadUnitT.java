@@ -19,8 +19,8 @@ package org.hrodberaht.inject;
 import org.hrodberaht.inject.testservices.annotated.Car;
 import org.hrodberaht.inject.testservices.annotated.Volvo;
 import org.hrodberaht.inject.util.RegisterStub;
-import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.internal.InjectionRegisterScan;
+import org.hrodberaht.injection.core.InjectContainer;
+import org.hrodberaht.injection.core.internal.InjectionRegisterScan;
 import org.junit.Before;
 import org.junit.Test;
 

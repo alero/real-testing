@@ -18,8 +18,8 @@ package org.hrodberaht.inject.testservices.regmodules;
 
 import org.hrodberaht.inject.testservices.annotated.Spare;
 import org.hrodberaht.inject.testservices.annotated.Tire;
-import org.hrodberaht.injection.register.Overrides;
-import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
+import org.hrodberaht.injection.core.register.Overrides;
+import org.hrodberaht.injection.core.register.RegistrationModuleAnnotation;
 
 /**
  * Simple Java Utils

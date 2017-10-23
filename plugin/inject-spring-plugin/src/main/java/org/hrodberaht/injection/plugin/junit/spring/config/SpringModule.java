@@ -16,8 +16,8 @@
 
 package org.hrodberaht.injection.plugin.junit.spring.config;
 
-import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.Module;
+import org.hrodberaht.injection.core.InjectContainer;
+import org.hrodberaht.injection.core.Module;
 
 public class SpringModule extends Module {
 

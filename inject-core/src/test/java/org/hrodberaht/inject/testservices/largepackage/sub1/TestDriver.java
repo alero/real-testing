@@ -16,7 +16,7 @@
 
 package org.hrodberaht.inject.testservices.largepackage.sub1;
 
-import org.hrodberaht.injection.scope.ThreadScope;
+import org.hrodberaht.injection.core.scope.ThreadScope;
 
 /**
  * Simple Java Utils

@@ -16,13 +16,13 @@
 
 package org.hrodberaht.injection.plugin.junit.plugins;
 
-import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
+import org.hrodberaht.injection.core.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.plugin.junit.cdi.ApplicationCDIExtensions;
 import org.hrodberaht.injection.plugin.junit.cdi.CDIExtensions;
 import org.hrodberaht.injection.plugin.junit.spi.InjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugin;
-import org.hrodberaht.injection.register.InjectionRegister;
-import org.hrodberaht.injection.spi.ContainerConfigBuilder;
+import org.hrodberaht.injection.core.register.InjectionRegister;
+import org.hrodberaht.injection.core.spi.ContainerConfigBuilder;
 
 import javax.ejb.EJB;
 import java.lang.reflect.Field;

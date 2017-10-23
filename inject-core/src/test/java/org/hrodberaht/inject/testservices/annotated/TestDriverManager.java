@@ -16,7 +16,7 @@
 
 package org.hrodberaht.inject.testservices.annotated;
 
-import org.hrodberaht.injection.scope.InheritableThreadScope;
+import org.hrodberaht.injection.core.scope.InheritableThreadScope;
 
 import javax.inject.Inject;
 import javax.inject.Provider;

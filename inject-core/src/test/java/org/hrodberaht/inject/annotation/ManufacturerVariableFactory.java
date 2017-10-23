@@ -22,7 +22,7 @@ import org.hrodberaht.inject.testservices.annotated.VolvoManufacturer;
 import org.hrodberaht.inject.testservices.annotated_extra.Manufacturer;
 import org.hrodberaht.inject.testservices.annotated_extra.Saab;
 import org.hrodberaht.inject.testservices.annotated_extra.SaabManufacturer;
-import org.hrodberaht.injection.register.VariableInjectionFactory;
+import org.hrodberaht.injection.core.register.VariableInjectionFactory;
 
 /**
  * Injection Extension JUnit

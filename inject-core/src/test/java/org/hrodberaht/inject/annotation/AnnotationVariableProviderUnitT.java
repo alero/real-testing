@@ -21,9 +21,9 @@ import org.hrodberaht.inject.testservices.annotated.SpareTire;
 import org.hrodberaht.inject.testservices.annotated.SpareVindShield;
 import org.hrodberaht.inject.testservices.annotated_extra.CarWrapper;
 import org.hrodberaht.inject.testservices.annotated_extra.SaabManufacturer;
-import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
-import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
+import org.hrodberaht.injection.core.InjectContainer;
+import org.hrodberaht.injection.core.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.core.register.RegistrationModuleAnnotation;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

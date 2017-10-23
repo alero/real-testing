@@ -25,10 +25,10 @@ import org.hrodberaht.inject.testservices.annotated.Tire;
 import org.hrodberaht.inject.testservices.annotated.VindShield;
 import org.hrodberaht.inject.testservices.annotated.Volvo;
 import org.hrodberaht.inject.testservices.regmodules.CustomInjectionPointFinder;
-import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
-import org.hrodberaht.injection.internal.annotation.InjectionFinder;
-import org.hrodberaht.injection.spi.module.CustomInjectionPointFinderModule;
+import org.hrodberaht.injection.core.InjectContainer;
+import org.hrodberaht.injection.core.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.core.internal.annotation.InjectionFinder;
+import org.hrodberaht.injection.core.spi.module.CustomInjectionPointFinderModule;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

@@ -17,7 +17,7 @@
 package org.hrodberaht.injection.plugin.junit.spring.beans.incubator;
 
 import org.hrodberaht.injection.plugin.junit.spring.beans.ApplicationContextService;
-import org.hrodberaht.injection.register.RegistrationModule;
+import org.hrodberaht.injection.core.register.RegistrationModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;

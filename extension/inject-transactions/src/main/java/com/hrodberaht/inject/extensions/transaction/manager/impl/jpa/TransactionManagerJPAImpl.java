@@ -6,7 +6,7 @@ import com.hrodberaht.inject.extensions.transaction.manager.impl.TransactionMana
 import com.hrodberaht.inject.extensions.transaction.manager.impl.TransactionScopeHandler;
 import com.hrodberaht.inject.extensions.transaction.manager.internal.TransactionHandlingError;
 import com.hrodberaht.inject.extensions.transaction.manager.internal.TransactionLogging;
-import org.hrodberaht.injection.register.InjectionFactory;
+import org.hrodberaht.injection.core.register.InjectionFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;

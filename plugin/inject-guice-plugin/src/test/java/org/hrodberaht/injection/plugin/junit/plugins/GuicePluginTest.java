@@ -23,7 +23,7 @@ import org.hrodberaht.injection.plugin.junit.JUnitRunner;
 import org.hrodberaht.injection.plugin.junit.plugins.service.AService;
 import org.hrodberaht.injection.plugin.junit.plugins.service.MoreServices;
 import org.hrodberaht.injection.plugin.junit.plugins.service.config.GuiceModule;
-import org.hrodberaht.injection.stream.InjectionRegistryBuilder;
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 

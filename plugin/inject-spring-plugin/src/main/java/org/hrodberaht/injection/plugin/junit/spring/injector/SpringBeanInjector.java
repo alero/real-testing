@@ -16,11 +16,11 @@
 
 package org.hrodberaht.injection.plugin.junit.spring.injector;
 
-import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.internal.InjectionKey;
-import org.hrodberaht.injection.internal.annotation.InjectionMetaData;
-import org.hrodberaht.injection.internal.annotation.InjectionPoint;
-import org.hrodberaht.injection.internal.annotation.ReflectionUtils;
+import org.hrodberaht.injection.core.InjectContainer;
+import org.hrodberaht.injection.core.internal.InjectionKey;
+import org.hrodberaht.injection.core.internal.annotation.InjectionMetaData;
+import org.hrodberaht.injection.core.internal.annotation.InjectionPoint;
+import org.hrodberaht.injection.core.internal.annotation.ReflectionUtils;
 import org.hrodberaht.injection.plugin.junit.spring.beans.SpringInjectionBeanInjector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

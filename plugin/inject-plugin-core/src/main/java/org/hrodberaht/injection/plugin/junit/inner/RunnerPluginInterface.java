@@ -18,7 +18,7 @@ package org.hrodberaht.injection.plugin.junit.inner;
 
 import org.hrodberaht.injection.plugin.junit.spi.Plugin;
 import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugin;
-import org.hrodberaht.injection.register.InjectionRegister;
+import org.hrodberaht.injection.core.register.InjectionRegister;
 
 import java.lang.annotation.Annotation;
 

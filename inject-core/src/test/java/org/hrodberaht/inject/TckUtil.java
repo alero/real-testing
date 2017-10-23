@@ -25,9 +25,9 @@ import org.atinject.tck.auto.Seat;
 import org.atinject.tck.auto.Tire;
 import org.atinject.tck.auto.V8Engine;
 import org.atinject.tck.auto.accessories.SpareTire;
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
-import org.hrodberaht.injection.register.InjectionRegister;
-import org.hrodberaht.injection.register.RegistrationModuleAnnotation;
+import org.hrodberaht.injection.core.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.core.register.InjectionRegister;
+import org.hrodberaht.injection.core.register.RegistrationModuleAnnotation;
 
 /**
  * Simple Java Utils

@@ -7,7 +7,7 @@ import liquibase.exception.LiquibaseException;
 import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.extensions.junit.datasource.FileTimestampResourceWatcher;
 import org.hrodberaht.injection.extensions.junit.datasource.liquibase.LiquibaseUtil;
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.core.internal.InjectionRegisterModule;
 
 import javax.sql.DataSource;
 import java.io.File;

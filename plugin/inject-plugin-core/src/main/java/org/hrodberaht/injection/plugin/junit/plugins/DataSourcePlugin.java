@@ -16,7 +16,7 @@
 
 package org.hrodberaht.injection.plugin.junit.plugins;
 
-import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.core.InjectContainer;
 import org.hrodberaht.injection.plugin.datasource.DatasourceResourceCreator;
 import org.hrodberaht.injection.plugin.junit.datasource.DatasourceContainerService;
 import org.hrodberaht.injection.plugin.junit.datasource.ProxyResourceCreator;
@@ -26,9 +26,9 @@ import org.hrodberaht.injection.plugin.junit.spi.annotation.ResourcePluginFactor
 import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginAfterContainerCreation;
 import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginAfterTest;
 import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginBeforeTest;
-import org.hrodberaht.injection.register.InjectionRegister;
-import org.hrodberaht.injection.spi.JavaResourceCreator;
-import org.hrodberaht.injection.spi.ResourceFactory;
+import org.hrodberaht.injection.core.register.InjectionRegister;
+import org.hrodberaht.injection.core.spi.JavaResourceCreator;
+import org.hrodberaht.injection.core.spi.ResourceFactory;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;

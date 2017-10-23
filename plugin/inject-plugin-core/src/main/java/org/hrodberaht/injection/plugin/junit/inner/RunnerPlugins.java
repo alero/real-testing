@@ -24,7 +24,7 @@ import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginAfterTes
 import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginBeforeClassTest;
 import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginBeforeContainerCreation;
 import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginBeforeTest;
-import org.hrodberaht.injection.register.InjectionRegister;
+import org.hrodberaht.injection.core.register.InjectionRegister;
 
 import java.util.Map;
 

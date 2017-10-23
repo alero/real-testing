@@ -16,17 +16,17 @@
 
 package org.hrodberaht.injection.plugin.junit.plugins;
 
-import org.hrodberaht.injection.internal.annotation.DefaultInjectionPointFinder;
+import org.hrodberaht.injection.core.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.plugin.junit.spi.InjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.spi.Plugin;
-import org.hrodberaht.injection.register.InjectionRegister;
-import org.hrodberaht.injection.spi.ContainerConfigBuilder;
+import org.hrodberaht.injection.core.register.InjectionRegister;
+import org.hrodberaht.injection.core.spi.ContainerConfigBuilder;
 
 /**
  * The SpringInjectionPlugin is intended to not "start" a spring container but to
  * emulate the boot sequence of spring and move the beans found to the hrodberaht IoC container
  *
- * @see org.hrodberaht.injection.internal.InjectionContainer
+ * @see org.hrodberaht.injection.core.internal.InjectionContainer
  */
 public class SpringInjectionPlugin implements InjectionPlugin, Plugin {
 
