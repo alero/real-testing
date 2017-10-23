@@ -111,7 +111,7 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore {
         }
     }
 
-    private void retryRestoreMap(final JdbcTemplate jdbcTemplate, final Map<String, String> restoreRetryMap) {
+    private void retryRestoreMap(final JDBCService jdbcTemplate, final Map<String, String> restoreRetryMap) {
         final Map<String, String> restoreRetryMapAgain = new HashMap<>();
         restoreRetryMap.keySet().forEach(line -> {
             if (shouldExecuteLine(line)) {
