@@ -1,73 +1,40 @@
+/*
+ * Copyright (c) 2017 org.hrodberaht
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.hrodberaht.injection.plugin.junit;
 
-import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
-import org.hrodberaht.injection.plugin.junit.inner.RunnerPlugins;
 import org.junit.runner.Description;
 import org.junit.runner.notification.Failure;
 import org.junit.runner.notification.RunNotifier;
 import org.junit.runners.BlockJUnit4ClassRunner;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.lang.annotation.Annotation;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class JUnitRunner extends BlockJUnit4ClassRunner {
 
-    private static final Logger LOG = LoggerFactory.getLogger(JUnitRunner.class);
-    private InjectContainer activeContainer = null;
-    private ContainerContextConfigBase containerConfig = null;
-    private RunnerPlugins runnerPlugins = null;
+    private final JUnitContext jUnitContext;
 
     /**
      * Creates a BlockJUnit4ClassRunner to run
      *
      * @throws InitializationError if the test class is malformed.
      */
-    public JUnitRunner(Class<?> clazz) throws InitializationError {
+    public JUnitRunner(final Class<?> clazz) throws InitializationError {
         super(clazz);
-        createContainerFromRegistration();
-    }
-
-    private void createContainerFromRegistration() {
-        try {
-            Class testClass = getTestClass().getJavaClass();
-            Annotation[] annotations = testClass.getAnnotations();
-            for (Annotation annotation : annotations) {
-                if (annotation.annotationType() == ContainerContext.class) {
-                    createUnitTestContext((ContainerContext) annotation);
-                }
-            }
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new InjectRuntimeException(e);
-        }
-    }
-
-    private void createUnitTestContext(ContainerContext annotation) throws InstantiationException, IllegalAccessException {
-        ContainerContext containerContext = annotation;
-        Class testConfigClass = containerContext.value();
-        if (ContainerContextConfigBase.class.isAssignableFrom(testConfigClass)) {
-            containerConfig = (ContainerContextConfigBase) testConfigClass.newInstance();
-            runnerPlugins = getRunnerPlugins();
-            runnerPlugins.runInitBeforeContainer();
-            containerConfig.start();
-            runnerPlugins.runInitAfterContainer(containerConfig.getActiveRegister());
-
-            LOG.info("Creating creator for thread {}", Thread.currentThread().getName());
-        } else {
-            throw new IllegalAccessError("Currently the test config class must extrend ContainerContextConfigBase");
-        }
-    }
-
-    private RunnerPlugins getRunnerPlugins() {
-        if (containerConfig != null) {
-            return containerConfig.getRunnerPlugins();
-        } else {
-            return new RunnerPlugins(new ConcurrentHashMap<>());
-        }
+        jUnitContext = new JUnitContext(clazz);
     }
 
     /**
@@ -75,48 +42,20 @@ public class JUnitRunner extends BlockJUnit4ClassRunner {
      * @param notifier
      */
     @Override
-    protected void runChild(FrameworkMethod frameworkMethod, RunNotifier notifier) {
-        try {
-            beforeRunChild();
-            try {
-                // This will execute the createTest method below, the activeContainer handling relies on this.
-                LOG.info("START running test " +
-                        frameworkMethod.getName() + " for thread " + Thread.currentThread().getName());
-                super.runChild(frameworkMethod, notifier);
-                LOG.info("END running test " +
-                        frameworkMethod.getName() + " for thread " + Thread.currentThread().getName());
-            } finally {
-                afterRunChild();
-            }
-        } catch (Throwable e) {
-            LOG.error("Fatal test error :" + frameworkMethod.getName(), e);
+    protected void runChild(final FrameworkMethod frameworkMethod, final RunNotifier notifier) {
+
+        jUnitContext.runChild(frameworkMethod, () -> super.runChild(frameworkMethod, notifier), (e) -> {
             Description description = describeChild(frameworkMethod);
             notifier.fireTestFailure(new Failure(description, e));
             notifier.fireTestFinished(description);
-        }
+        });
     }
 
-    private void beforeRunChild() {
-        runnerPlugins.runBeforeTest(containerConfig.getActiveRegister());
-        // TransactionManager.beginTransaction(creator);
-
-        // So that ContainerLifeCycleTestUtil can access the activeContainer and do magic
-        containerConfig.beforeRunChild();
-
-        activeContainer = containerConfig.getActiveRegister().getContainer();
-    }
-
-    private void afterRunChild() {
-        runnerPlugins.runAfterTest(containerConfig.getActiveRegister());
-        // TransactionManager.endTransaction();
-        containerConfig.cleanActiveContainer();
-    }
 
     @Override
-    public void run(RunNotifier notifier) {
-        runnerPlugins.runBeforeTestClass(containerConfig.getActiveRegister());
-        super.run(notifier);
-        runnerPlugins.runAfterTestClass(containerConfig.getActiveRegister());
+    public void run(final RunNotifier notifier) {
+
+        jUnitContext.run(() -> super.run(notifier));
     }
 
     /**
@@ -127,9 +66,10 @@ public class JUnitRunner extends BlockJUnit4ClassRunner {
      */
     @Override
     protected Object createTest() throws Exception {
-        Object testInstance = super.createTest();
-        activeContainer.autowireAndPostConstruct(testInstance);
-        return testInstance;
+        return jUnitContext.createTest(this::create);
     }
 
+    private Object create() throws Exception {
+        return super.createTest();
+    }
 }

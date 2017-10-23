@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2017 org.hrodberaht
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.hrodberaht.injection.plugin.junit;
 
 import org.hrodberaht.injection.config.ContainerConfig;
@@ -121,6 +137,9 @@ public abstract class ContainerContextConfigBase implements ContainerContextConf
             if (AnnotatedInjectionPlugin.containsAnnotations(plugin)) {
                 LOG.info("Activating annotated InjectionPlugin {}", plugin.getClass().getSimpleName());
                 if (this.injectionPlugin == null) {
+                    if (chainableInjectionPointProvider != null) {
+                        throw new RuntimeException("A plugin that has created a Injection provider already exxists, change the order of the plugins to get the InjectionPlugin to go active first");
+                    }
                     this.injectionPlugin = AnnotatedInjectionPlugin.createPluginWrapper(plugin);
                 } else {
                     throw new RuntimeException("There can be only one InjectionPlugin active at once");

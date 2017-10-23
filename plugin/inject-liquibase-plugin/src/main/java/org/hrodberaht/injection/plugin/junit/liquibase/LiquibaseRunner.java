@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2017 org.hrodberaht
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.hrodberaht.injection.plugin.junit.liquibase;
 
 import liquibase.Liquibase;
@@ -15,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.io.File;
+import java.sql.Connection;
 import java.sql.SQLException;
 
 class LiquibaseRunner {
@@ -68,15 +85,12 @@ class LiquibaseRunner {
     }
 
     private void loadSchemaDataStore(DataSourceProxyInterface dataSource, String liquiBaseSchema) throws SQLException, LiquibaseException {
-
         if (isTempStoreValid()) {
             readFromFile(dataSource);
         } else {
             loadSchemaFromConfig(dataSource, liquiBaseSchema);
-            if (tempStore.exists()) {
-                if (!tempStore.delete()) {
-                    LOG.debug("could not delete " + tempStore.getPath());
-                }
+            if (tempStore.exists() && !tempStore.delete()) {
+                LOG.debug("could not delete " + tempStore.getPath());
             }
             dataSource.createSnapshot(liquibaseStorageName);
         }
@@ -91,34 +105,37 @@ class LiquibaseRunner {
     }
 
 
-    private void loadSchemaFromConfig(DataSourceProxyInterface dataSource, String liquiBaseSchema) throws SQLException, LiquibaseException {
-
-        DataSourceProxyInterface dataSourceProxyInterface = init(dataSource);
+    private void loadSchemaFromConfig(DataSourceProxyInterface dataSource, String liquiBaseSchema) {
 
         try {
+            DataSourceProxyInterface dataSourceProxyInterface = init(dataSource);
             dataSourceProxyInterface.runWithConnectionAndCommit(con -> {
                         LOG.debug("RUNNING Liquidbase update on schema!");
-                        try {
-                            HsqlDatabase hsqlDatabase = new HsqlDatabase() {
-                                // This feature exists in a PR against liquibase
-                                public boolean failOnDefferable() {
-                                    return false;
-                                }
-                            };
-                            hsqlDatabase.setConnection(new JdbcConnection(con));
-                            Liquibase liquibase = new Liquibase(liquiBaseSchema,
-                                    new ClassLoaderResourceAccessor(), hsqlDatabase);
-                            liquibase.update("");
-                        } catch (LiquibaseException e) {
-                            throw new RuntimeException(e);
-                        }
-                        return true;
+                        return runLuqibaseUpdateWithConnection(liquiBaseSchema, con);
                     }
             );
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new InjectRuntimeException(e);
         }
 
+    }
+
+    private boolean runLuqibaseUpdateWithConnection(String liquiBaseSchema, Connection con) {
+        try {
+            HsqlDatabase hsqlDatabase = new HsqlDatabase() {
+                // This feature exists in a PR against liquibase
+                public boolean failOnDefferable() {
+                    return false;
+                }
+            };
+            hsqlDatabase.setConnection(new JdbcConnection(con));
+            Liquibase liquibase = new Liquibase(liquiBaseSchema,
+                    new ClassLoaderResourceAccessor(), hsqlDatabase);
+            liquibase.update("");
+        } catch (LiquibaseException e) {
+            throw new InjectRuntimeException(e);
+        }
+        return true;
     }
 
     private DataSourceProxyInterface init(DataSourceProxyInterface dataSource) throws SQLException {

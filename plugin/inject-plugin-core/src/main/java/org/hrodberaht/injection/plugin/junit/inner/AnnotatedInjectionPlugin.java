@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2017 org.hrodberaht
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.hrodberaht.injection.plugin.junit.inner;
 
 import org.hrodberaht.injection.internal.annotation.InjectionFinder;
@@ -69,6 +85,7 @@ public class AnnotatedInjectionPlugin {
         return classInjectionRegisterMethodMap.computeIfAbsent(plugin.getClass(), aClass -> {
             for (Method method : ReflectionUtils.findMethods(plugin.getClass())) {
                 if (method.getAnnotation(InjectionPluginInjectionRegister.class) != null) {
+                    LOG.info("found InjectionPluginInjectionRegister at {} in {}", method.getName(), aClass.getName());
                     if (!method.isAccessible()) {
                         method.setAccessible(true);
                     }
@@ -88,7 +105,7 @@ public class AnnotatedInjectionPlugin {
         return classInjectionFinderMethodMap.computeIfAbsent(plugin.getClass(), aClass -> {
             for (Method method : ReflectionUtils.findMethods(plugin.getClass())) {
                 if (method.getAnnotation(InjectionPluginInjectionFinder.class) != null) {
-
+                    LOG.info("found InjectionPluginInjectionFinder at {} in {}", method.getName(), aClass.getName());
                     if (!method.isAccessible()) {
                         method.setAccessible(true);
                     }

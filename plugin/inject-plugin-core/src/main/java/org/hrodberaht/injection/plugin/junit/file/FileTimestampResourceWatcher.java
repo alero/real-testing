@@ -1,14 +1,30 @@
+/*
+ * Copyright (c) 2017 org.hrodberaht
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.hrodberaht.injection.plugin.junit.file;
 
 import org.hrodberaht.injection.plugin.junit.ResourceWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -28,8 +44,6 @@ public class FileTimestampResourceWatcher implements ResourceWatcher {
     private Map<File, FileWatcher> filesToWatchCache;
 
     private boolean hasChanged = false;
-
-    private PathMatchingResourcePatternResolver patternResolver = new PathMatchingResourcePatternResolver();
 
     public FileTimestampResourceWatcher(File timestampHolder, String... resourceFiles) {
         this.timestampHolder = timestampHolder;
@@ -76,18 +90,26 @@ public class FileTimestampResourceWatcher implements ResourceWatcher {
 
         for (String resourceFile : resourceFiles) {
             try {
-                Resource resource = patternResolver.getResource(resourceFile);
-                if (!resource.getURL().getProtocol().equals("jar")) {
-                    File file = resource.getFile();
-                    FileWatcher fileWatcher = new FileWatcher(file.getPath(),
-                            LocalDateTime.ofInstant(Instant.ofEpochMilli(file.lastModified()), ZoneId.systemDefault())
-                    );
-                    filesToWatch.put(file, fileWatcher);
+                // Resource resource = patternResolver.getResource(resourceFile);
+                if (resourceFile.startsWith("classpath:")) {
+                    URL resource = FileTimestampResourceWatcher.class.getResource(cleanUpClasspath(resourceFile));
+                    if (!resource.getProtocol().equals("jar")) {
+                        File file = new File(resource.toURI());
+                        FileWatcher fileWatcher = new FileWatcher(file.getPath(),
+                                LocalDateTime.ofInstant(Instant.ofEpochMilli(file.lastModified()), ZoneId.systemDefault())
+                        );
+                        filesToWatch.put(file, fileWatcher);
+                    }
                 }
-            } catch (IOException e) {
+            } catch (URISyntaxException e) {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    private String cleanUpClasspath(String resourceFile) {
+        String classPath = resourceFile.substring(10, resourceFile.length());
+        return classPath.startsWith("/") ? classPath : "/" + classPath;
     }
 
     private boolean compareEquals(Map<File, FileWatcher> filesToWatch, Map<File, FileWatcher> filesToWatchCache) {
