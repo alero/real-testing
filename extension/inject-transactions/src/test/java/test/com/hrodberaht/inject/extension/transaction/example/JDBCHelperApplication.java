@@ -14,7 +14,7 @@ import java.sql.SQLException;
  * Injection Extension JUnit
  *
  * @author Robert Alexandersson
- *         2010-sep-16 20:07:43
+ * 2010-sep-16 20:07:43
  * @version 1.0
  * @since 1.0
  */

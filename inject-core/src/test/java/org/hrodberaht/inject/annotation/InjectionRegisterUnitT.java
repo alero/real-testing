@@ -1,3 +1,19 @@
+/*
+ * Copyright (c) 2017 org.hrodberaht
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package org.hrodberaht.inject.annotation;
 
 import org.hrodberaht.inject.testservices.interfaces.TestingService;
@@ -11,10 +27,10 @@ import org.hrodberaht.inject.testservices.sortedinterfaces.ATestingService;
 import org.hrodberaht.inject.testservices.sortedinterfaces.ATestingServiceInterface;
 import org.hrodberaht.inject.testservices.sortedinterfaces.BTestingServiceInner;
 import org.hrodberaht.inject.testservices.sortedinterfaces.BTestingServiceInnerInterface;
-import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.InjectionRegistryPlain;
-import org.hrodberaht.injection.Module;
-import org.hrodberaht.injection.stream.InjectionRegistryStream;
+import org.hrodberaht.injection.core.InjectContainer;
+import org.hrodberaht.injection.core.InjectionRegistryPlain;
+import org.hrodberaht.injection.core.Module;
+import org.hrodberaht.injection.core.stream.InjectionRegistryStream;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -42,6 +58,7 @@ public class InjectionRegisterUnitT {
                 this.register(ATestingServiceInterface.class).with(ATestingService.class);
                 this.register(BTestingServiceInnerInterface.class).with(BTestingServiceInner.class);
             }
+
             @Override
             public void scan() {
                 this.scanAndRegister("org.hrodberaht.inject.testservices.annotated");
@@ -50,29 +67,28 @@ public class InjectionRegisterUnitT {
 
         InjectContainer injectionContainer =
                 new InjectionRegistryPlain()
-                .register(largeScanModule)
-                .register(scanModule)
-                .getContainer();
+                        .register(largeScanModule)
+                        .register(scanModule)
+                        .getContainer();
 
         assertTheContainer(injectionContainer);
     }
 
 
-
     @Test
     public void moduleRegistrationLambda() throws Exception {
         InjectContainer injectionContainer =
-            new InjectionRegistryStream()
-                    .scan(() -> "org.hrodberaht.inject.testservices.largepackage")
-                    .register(
-                            e -> {
-                                e.register(AnyService.class).with(AnyServiceDoSomethingImpl.class);
-                                e.register(ATestingServiceInterface.class).with(ATestingService.class);
-                                e.register(BTestingServiceInnerInterface.class).with(BTestingServiceInner.class);
-                            }
-                    )
-                    .scan(() -> "org.hrodberaht.inject.testservices.annotated")
-            .getContainer();
+                new InjectionRegistryStream()
+                        .scan(() -> "org.hrodberaht.inject.testservices.largepackage")
+                        .register(
+                                e -> {
+                                    e.register(AnyService.class).with(AnyServiceDoSomethingImpl.class);
+                                    e.register(ATestingServiceInterface.class).with(ATestingService.class);
+                                    e.register(BTestingServiceInnerInterface.class).with(BTestingServiceInner.class);
+                                }
+                        )
+                        .scan(() -> "org.hrodberaht.inject.testservices.annotated")
+                        .getContainer();
 
         assertTheContainer(injectionContainer);
 
@@ -136,7 +152,7 @@ public class InjectionRegisterUnitT {
                                 }
                         )
                         .scan(() -> "org.hrodberaht.inject.testservices.annotated")
-                    .getModule();
+                        .getModule();
 
         Module moduleTwo =
                 new InjectionRegistryStream()

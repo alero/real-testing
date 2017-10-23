@@ -7,11 +7,13 @@ import javax.inject.Singleton;
 @Singleton
 public class Service {
     private String doSomething = "thing about it";
+
     @PostConstruct
-    public void init(){
+    public void init() {
         doSomething = "done";
     }
-    public String doIt(){
+
+    public String doIt() {
         return doSomething;
     }
 

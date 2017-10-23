@@ -7,13 +7,13 @@ import java.sql.Connection;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-27 15:08:55
+ * 2010-aug-27 15:08:55
  * @version 1.0
  * @since 1.0
  */
-public class HibernateProviderService extends GeneralProviderServiceBase  {
+public class HibernateProviderService extends GeneralProviderServiceBase {
     public Connection findConnection(EntityManager entityManager) {
-        org.hibernate.ejb.EntityManagerImpl entityManagerHib = (org.hibernate.ejb.EntityManagerImpl)entityManager;
-        return entityManagerHib.getSession().connection();        
+        org.hibernate.internal.SessionImpl entityManagerHib = (org.hibernate.internal.SessionImpl) entityManager;
+        return entityManagerHib.getJdbcCoordinator().getLogicalConnection().getPhysicalConnection();
     }
 }

@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * Inject Transactions
  *
  * @author Robert Alexandersson
- *         2010-sep-09 22:01:06
+ * 2010-sep-09 22:01:06
  * @version 1.0
  * @since 1.0
  */

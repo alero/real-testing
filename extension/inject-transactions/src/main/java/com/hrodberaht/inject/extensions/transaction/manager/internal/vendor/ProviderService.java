@@ -7,7 +7,7 @@ import java.sql.Connection;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-27 15:06:07
+ * 2010-aug-27 15:06:07
  * @version 1.0
  * @since 1.0
  */

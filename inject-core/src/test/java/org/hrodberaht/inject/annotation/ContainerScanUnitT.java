@@ -1,15 +1,17 @@
 /*
- * ~ Copyright (c) 2010.
- *   ~ Licensed under the Apache License, Version 2.0 (the "License");
- *   ~ you may not use this file except in compliance with the License.
- *   ~ You may obtain a copy of the License at
- *   ~
- *   ~        http://www.apache.org/licenses/LICENSE-2.0
- *   ~
- *   ~ Unless required by applicable law or agreed to in writing, software
- *   ~ distributed under the License is distributed on an "AS IS" BASIS,
- *   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   ~ See the License for the specific language governing permissions and limitations under the License.
+ * Copyright (c) 2017 org.hrodberaht
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.hrodberaht.inject.annotation;
@@ -23,12 +25,12 @@ import org.hrodberaht.inject.testservices.simple.AnyServiceDoNothingImpl;
 import org.hrodberaht.inject.testservices.simple.AnyServiceDoSomethingImpl;
 import org.hrodberaht.inject.testservices.sortedinterfaces.ATestingServiceInterface;
 import org.hrodberaht.inject.util.RegisterStub;
-import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.internal.InjectionRegisterJava;
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
-import org.hrodberaht.injection.internal.InjectionRegisterScan;
-import org.hrodberaht.injection.internal.exception.InjectRuntimeException;
-import org.hrodberaht.injection.register.RegistrationModuleAnnotationScanner;
+import org.hrodberaht.injection.core.InjectContainer;
+import org.hrodberaht.injection.core.internal.InjectionRegisterJava;
+import org.hrodberaht.injection.core.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.core.internal.InjectionRegisterScan;
+import org.hrodberaht.injection.core.internal.exception.InjectRuntimeException;
+import org.hrodberaht.injection.core.register.RegistrationModuleAnnotationScanner;
 import org.junit.Test;
 
 import static junit.framework.Assert.assertNotNull;
@@ -39,7 +41,7 @@ import static org.junit.Assert.assertTrue;
  * Simple Java Utils
  *
  * @author Robert Alexandersson
- *         2010-maj-29 17:02:46
+ * 2010-maj-29 17:02:46
  * @version 1.0
  * @since 1.0
  */
@@ -155,10 +157,10 @@ public class ContainerScanUnitT {
         register.scanPackage("org.hrodberaht.inject.testservices.simple");
 
         InjectContainer container = register.getContainer();
-        try{
+        try {
             AnyService anyService = container.get(AnyService.class);
             assertEquals("not here", null);
-        }catch (InjectRuntimeException e){
+        } catch (InjectRuntimeException e) {
             assertNotNull(container);
         }
 

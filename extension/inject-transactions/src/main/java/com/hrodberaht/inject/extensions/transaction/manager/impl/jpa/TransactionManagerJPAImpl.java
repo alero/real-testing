@@ -6,7 +6,7 @@ import com.hrodberaht.inject.extensions.transaction.manager.impl.TransactionMana
 import com.hrodberaht.inject.extensions.transaction.manager.impl.TransactionScopeHandler;
 import com.hrodberaht.inject.extensions.transaction.manager.internal.TransactionHandlingError;
 import com.hrodberaht.inject.extensions.transaction.manager.internal.TransactionLogging;
-import org.hrodberaht.injection.register.InjectionFactory;
+import org.hrodberaht.injection.core.register.InjectionFactory;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -15,7 +15,7 @@ import javax.persistence.EntityManagerFactory;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-21 20:29:06
+ * 2010-aug-21 20:29:06
  * @version 1.0
  * @since 1.0
  */
@@ -60,7 +60,7 @@ public class TransactionManagerJPAImpl extends TransactionManagerBase<EntityMana
         }
         emh.getNativeManager().getTransaction().begin();
         TransactionLogging.log("TransactionManagerJPAImpl: Tx Begin for session {0}", emh.getNativeManager());
-        StatisticsJPA.addBeginCount();        
+        StatisticsJPA.addBeginCount();
     }
 
     public void commit() {
@@ -73,8 +73,8 @@ public class TransactionManagerJPAImpl extends TransactionManagerBase<EntityMana
     }
 
     private void verifyTransactionHolder(TransactionHolder emh) {
-        if(emh.isRollbackOnly()){
-            throw new TransactionHandlingError("Transaction is marked for rollback only"); 
+        if (emh.isRollbackOnly()) {
+            throw new TransactionHandlingError("Transaction is marked for rollback only");
         }
     }
 
@@ -168,7 +168,7 @@ public class TransactionManagerJPAImpl extends TransactionManagerBase<EntityMana
 
     public void newClose() {
         TransactionHolder<EntityManager> holder = findDeepestHolder();
-        if(holder != null){
+        if (holder != null) {
             TransactionLogging.log("TransactionManagerJPAImpl: NewTX closing session {0}", holder.getNativeManager());
             closeEntityManager(holder.getNativeManager());
             cleanupTransactionHolder(holder);

@@ -7,7 +7,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-11 22:58:13
+ * 2010-aug-11 22:58:13
  * @version 1.0
  * @since 1.0
  */

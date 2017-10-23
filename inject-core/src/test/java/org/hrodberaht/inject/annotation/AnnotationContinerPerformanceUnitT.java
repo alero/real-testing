@@ -1,15 +1,17 @@
 /*
- * ~ Copyright (c) 2010.
- *   ~ Licensed under the Apache License, Version 2.0 (the "License");
- *   ~ you may not use this file except in compliance with the License.
- *   ~ You may obtain a copy of the License at
- *   ~
- *   ~        http://www.apache.org/licenses/LICENSE-2.0
- *   ~
- *   ~ Unless required by applicable law or agreed to in writing, software
- *   ~ distributed under the License is distributed on an "AS IS" BASIS,
- *   ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *   ~ See the License for the specific language governing permissions and limitations under the License.
+ * Copyright (c) 2017 org.hrodberaht
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 
 package org.hrodberaht.inject.annotation;
@@ -20,9 +22,9 @@ import org.hrodberaht.inject.PerformanceTests;
 import org.hrodberaht.inject.TckUtil;
 import org.hrodberaht.inject.testservices.annotated.Volvo;
 import org.hrodberaht.inject.util.PerformanceStatistics;
-import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.internal.stats.Statistics;
-import org.hrodberaht.injection.register.InjectionRegister;
+import org.hrodberaht.injection.core.InjectContainer;
+import org.hrodberaht.injection.core.internal.stats.Statistics;
+import org.hrodberaht.injection.core.register.InjectionRegister;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -37,7 +39,7 @@ import java.util.Collection;
  * Simple Java Utils
  *
  * @author Robert Alexandersson
- *         2010-maj-29 15:39:23
+ * 2010-maj-29 15:39:23
  * @version 1.0
  * @since 1.0
  */
@@ -137,7 +139,7 @@ public class AnnotationContinerPerformanceUnitT {
     }
 
     private void runningOfContainerTCK(InjectContainer container, PerformanceStatistics performanceStatistics) {
-       //  performanceStatistics.markAndPrint("before get");
+        //  performanceStatistics.markAndPrint("before get");
         Car car = container.get(Car.class);
         // performanceStatistics.markAndPrint("after get");
         Tck.testsFor(car, false, true);

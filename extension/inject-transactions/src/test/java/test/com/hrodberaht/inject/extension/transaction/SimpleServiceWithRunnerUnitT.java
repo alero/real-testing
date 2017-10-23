@@ -15,7 +15,7 @@ import static org.junit.Assert.assertEquals;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-12 21:02:15
+ * 2010-aug-12 21:02:15
  * @version 1.0
  * @since 1.0
  */
@@ -27,7 +27,7 @@ public class SimpleServiceWithRunnerUnitT {
     private SimpleServiceApplication serviceApplication;
 
     @Test
-    public void testSimpleService(){
+    public void testSimpleService() {
         int value = serviceApplication.addOne(2);
         assertEquals(3, value);
     }

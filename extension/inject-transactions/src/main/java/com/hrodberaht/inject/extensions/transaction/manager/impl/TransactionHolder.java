@@ -5,7 +5,7 @@ package com.hrodberaht.inject.extensions.transaction.manager.impl;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-21 20:29:06
+ * 2010-aug-21 20:29:06
  * @version 1.0
  * @since 1.0
  */

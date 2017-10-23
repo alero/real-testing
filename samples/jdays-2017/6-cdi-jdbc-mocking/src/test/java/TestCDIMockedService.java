@@ -17,15 +17,19 @@ public class TestCDIMockedService {
     @Inject
     private ContainerLifeCycleTestUtil lifeCycleTestUtil;
 
-    @Inject private Service aService;
-    @Test public void testDoing(){
+    @Inject
+    private Service aService;
+
+    @Test
+    public void testDoing() {
         assertEquals("done", aService.doIt());
     }
 
 
-    @Test public void testDoingWithDeepMock(){
+    @Test
+    public void testDoingWithDeepMock() {
 
-        lifeCycleTestUtil.registerServiceInstance(ServiceBean.class, new ServiceBean(){
+        lifeCycleTestUtil.registerServiceInstance(ServiceBean.class, new ServiceBean() {
             @Override
             public String doIt() {
                 return "mocked done";

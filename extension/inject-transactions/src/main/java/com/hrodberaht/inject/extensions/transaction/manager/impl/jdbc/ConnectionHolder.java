@@ -8,7 +8,7 @@ import java.sql.Connection;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-21 20:29:06
+ * 2010-aug-21 20:29:06
  * @version 1.0
  * @since 1.0
  */
@@ -27,7 +27,7 @@ public class ConnectionHolder extends TransactionHolder<Connection> {
 
     public ConnectionHolder(Connection entityManager, TransactionHolder<Connection> holder) {
         this.nativeManager = entityManager;
-        this.parentTransaction = holder;        
+        this.parentTransaction = holder;
     }
 
     public boolean isActive() {

@@ -8,7 +8,7 @@ import org.aspectj.lang.ProceedingJoinPoint;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-11 22:58:13
+ * 2010-aug-11 22:58:13
  * @version 1.0
  * @since 1.0
  */
@@ -21,13 +21,13 @@ public class TransactionRequiresNew {
             throws Throwable {
 
 
-        if(!(transactionManager instanceof RequiresNewTransactionManager)){
+        if (!(transactionManager instanceof RequiresNewTransactionManager)) {
             throw new IllegalAccessError("transaction manager does not support requires new: "
-                    +transactionManager.getClass());
+                    + transactionManager.getClass());
         }
-        RequiresNewTransactionManager newTransactionManager = (RequiresNewTransactionManager)transactionManager;
-        if(newTransactionManager.requiresNewDisabled()){
-            return new TransactionRequired().transactionHandling(thisJoinPoint, transactionManager);        
+        RequiresNewTransactionManager newTransactionManager = (RequiresNewTransactionManager) transactionManager;
+        if (newTransactionManager.requiresNewDisabled()) {
+            return new TransactionRequired().transactionHandling(thisJoinPoint, transactionManager);
         }
 
         try {
@@ -39,7 +39,7 @@ public class TransactionRequiresNew {
 
             TransactionLogging.log("TransactionRequiresNew: Commit/Close Transactional call : {0}",
                     thisJoinPoint.getSignature().getName());
-            if(newTransactionManager.newIsActive()){
+            if (newTransactionManager.newIsActive()) {
                 newTransactionManager.newCommit();
             }
 
@@ -51,13 +51,12 @@ public class TransactionRequiresNew {
                 newTransactionManager.newRollback();
             }
             throw error;
-        } finally{
+        } finally {
             // if (newTransactionManager.newIsActive()) {
             newTransactionManager.newClose();
             // }
         }
     }
 
-    
 
 }

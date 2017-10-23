@@ -1,6 +1,6 @@
 *.log*
 *.class
-target/
+**/target/
 
 # Logging #
 *.log
@@ -16,10 +16,10 @@ target/
 Session.vim
 
 # IntelliJ #
-*.iml
-*.ipr
-*.iws
-.idea/
+**/*.iml
+**/*.ipr
+**/*.iws
+**/*.idea
 
 # Maven Shade Plugin #
 dependency-reduced-pom.xml

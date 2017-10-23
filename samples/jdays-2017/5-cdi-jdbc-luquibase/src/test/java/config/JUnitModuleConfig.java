@@ -3,12 +3,11 @@ package config;
 import com.hrodberaht.inject.extensions.transaction.junit.InjectionContainerCreator;
 import com.hrodberaht.inject.extensions.transaction.junit.TransactionManagedTesting;
 import com.hrodberaht.inject.extensions.transaction.manager.JdbcModule;
-import com.hrodberaht.inject.extensions.transaction.manager.internal.TransactionLogging;
 import liquibase.exception.LiquibaseException;
 import org.hrodberaht.injection.InjectContainer;
 import org.hrodberaht.injection.extensions.junit.datasource.FileTimestampResourceWatcher;
 import org.hrodberaht.injection.extensions.junit.datasource.liquibase.LiquibaseUtil;
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.core.internal.InjectionRegisterModule;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -23,7 +22,7 @@ import java.util.stream.Stream;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-11 22:58:13
+ * 2010-aug-11 22:58:13
  * @version 1.0
  * @since 1.0
  */
@@ -50,6 +49,7 @@ public class JUnitModuleConfig extends TDDCDIContainerConfigBase implements Inje
 
     private String dataStoreDir = "target/liquibase/";
     private String liquieBaseSchema = "db.changelog-test.xml";
+
     private void createLiquibaseSchema(DataSource dataSource, String... watchers) {
         try {
             createDirectoryIfNotExists(new File(dataStoreDir));
@@ -77,14 +77,14 @@ public class JUnitModuleConfig extends TDDCDIContainerConfigBase implements Inje
         }
     }
 
-    public File getLiquibaseBackupFile(){
+    public File getLiquibaseBackupFile() {
         return new File(dataStoreDir, "backup.script");
     }
 
 
     private String[] asResources(String[] schemas) {
         List<String> strings = new ArrayList<>(schemas.length);
-        Stream.of(schemas).forEach(s -> strings.add("classpath:"+s));
+        Stream.of(schemas).forEach(s -> strings.add("classpath:" + s));
         return strings.toArray(new String[schemas.length]);
     }
 

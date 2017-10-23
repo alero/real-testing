@@ -9,15 +9,15 @@ import java.util.concurrent.atomic.AtomicLong;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-11 22:58:13
+ * 2010-aug-11 22:58:13
  * @version 1.0
  * @since 1.0
  */
 public class StubUtil {
     private static AtomicLong id = new AtomicLong(1L);
 
-    public static long getNextId(){
-         return id.incrementAndGet();
+    public static long getNextId() {
+        return id.incrementAndGet();
     }
 
     public static Person createPerson() {
@@ -27,7 +27,7 @@ public class StubUtil {
         return person;
     }
 
-    public static Logging createLogg(String message){
+    public static Logging createLogg(String message) {
         Logging logg = new Logging();
         logg.setId(getNextId());
         logg.setMessage(message);

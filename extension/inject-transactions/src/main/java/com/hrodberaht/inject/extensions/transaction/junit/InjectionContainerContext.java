@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-12 19:47:33
+ * 2010-aug-12 19:47:33
  * @version 1.0
  * @since 1.0
  */
@@ -19,5 +19,6 @@ import java.lang.annotation.Target;
 @Inherited
 public @interface InjectionContainerContext {
     Class<? extends InjectionContainerCreator> value();
+
     boolean disableRequiresNewTransaction() default false;
 }

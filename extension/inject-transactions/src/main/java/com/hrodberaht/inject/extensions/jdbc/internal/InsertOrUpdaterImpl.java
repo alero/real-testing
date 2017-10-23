@@ -9,12 +9,12 @@ import java.util.Map;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-21 22:14:07
+ * 2010-aug-21 22:14:07
  * @version 1.0
  * @since 1.0
  */
 public class InsertOrUpdaterImpl implements InsertOrUpdater {
-    
+
     private Map<String, Object> where = new HashMap<String, Object>();
     private Map<String, Object> fields = new HashMap<String, Object>();
     private String table;

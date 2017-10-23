@@ -3,9 +3,8 @@ package config;
 import com.hrodberaht.inject.extensions.transaction.junit.InjectionContainerCreator;
 import com.hrodberaht.inject.extensions.transaction.junit.TransactionManagedTesting;
 import com.hrodberaht.inject.extensions.transaction.manager.JdbcModule;
-import com.hrodberaht.inject.extensions.transaction.manager.internal.TransactionLogging;
 import org.hrodberaht.injection.InjectContainer;
-import org.hrodberaht.injection.internal.InjectionRegisterModule;
+import org.hrodberaht.injection.core.internal.InjectionRegisterModule;
 
 import javax.sql.DataSource;
 
@@ -13,7 +12,7 @@ import javax.sql.DataSource;
  * Injection Transaction Extension
  *
  * @author Robert Alexandersson
- *         2010-aug-11 22:58:13
+ * 2010-aug-11 22:58:13
  * @version 1.0
  * @since 1.0
  */
@@ -32,7 +31,6 @@ public class JUnitModuleConfig extends TDDCDIContainerConfigBase implements Inje
         register.register(new JdbcModule(dataSource));
         return register.getContainer();
     }
-
 
 
 }
