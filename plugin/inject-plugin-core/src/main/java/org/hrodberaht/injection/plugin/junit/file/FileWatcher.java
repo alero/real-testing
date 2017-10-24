@@ -17,11 +17,10 @@
 package org.hrodberaht.injection.plugin.junit.file;
 
 import java.io.File;
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-public class FileWatcher implements Serializable {
+public class FileWatcher {
 
     private String fileName;
     private LocalDateTime timestamp;

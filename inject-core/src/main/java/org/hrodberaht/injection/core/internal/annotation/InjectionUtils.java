@@ -39,38 +39,24 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Simple Java Utils - Container
- *
- * @author Robert Alexandersson
- * 2010-maj-29 01:34:21
- * @version 1.0
- * @since 1.0
- */
-public class InjectionUtils {
+class InjectionUtils {
     private InjectionUtils() {
     }
 
-    public static final Class<Inject> INJECT = Inject.class;
-
-    private static final Class<Scope> SCOPE = Scope.class;
-
-    public static Class<Object> getClassFromProvider(final Object serviceClass, final Type serviceType) {
+    static Class<Object> getClassFromProvider(final Object serviceClass, final Type serviceType) {
         if (serviceType instanceof ParameterizedType) {
             ParameterizedType parameterizedType = (ParameterizedType) serviceType;
             Type[] typeArguments = parameterizedType.getActualTypeArguments();
-            Class<Object> beanClassFromProvider = (Class<Object>) typeArguments[0];
-            return beanClassFromProvider;
+            return (Class<Object>) typeArguments[0];
         }
-
         throw new IllegalArgumentException("Provider used without generic argument: " + serviceClass);
     }
 
-    public static List<InjectionMetaData> findDependencies(
+    static List<InjectionMetaData> findDependencies(
             Class[] parameterTypes, Type[] genericParameterType, Annotation[][] parameterAnnotation
             , AnnotationInjection annotationInjection
     ) {
-        List<InjectionMetaData> injectionMetaData = new ArrayList<InjectionMetaData>(parameterTypes.length);
+        List<InjectionMetaData> injectionMetaData = new ArrayList<>(parameterTypes.length);
 
         for (int i = 0; i < parameterTypes.length; i++) {
             Class serviceDefinition = parameterTypes[i];
@@ -115,7 +101,7 @@ public class InjectionUtils {
         );
     }
 
-    public static Constructor findConstructor(final Class<Object> beanClass) {
+    static Constructor findConstructor(final Class<Object> beanClass) {
         try {
             Constructor<?>[] declaredConstructors = beanClass.getDeclaredConstructors();
 
@@ -127,50 +113,48 @@ public class InjectionUtils {
                 }
             }
 
-            if (annotatedConstructors.size() == 0) {
-                try {
-                    return beanClass.getDeclaredConstructor();
-                } catch (NoSuchMethodException e) {
-                    return null;
-                }
+            if (annotatedConstructors.isEmpty()) {
+                return getConstructorOrNull(beanClass);
             } else if (annotatedConstructors.size() > 1) {
                 throw new InjectRuntimeException(
                         "Several annotated constructors found for autowire {0} {1}", beanClass, annotatedConstructors);
             }
 
             return annotatedConstructors.get(0);
-        } catch (Throwable throwable) {
-            throw new RuntimeException(throwable);
+        } catch (Exception throwable) {
+            throw new InjectRuntimeException(throwable);
         }
     }
 
-    public static boolean constructorNeedsInjection(final Constructor<?> constructor) {
-        return constructor.isAnnotationPresent(INJECT);
+    private static Constructor getConstructorOrNull(Class<Object> beanClass) {
+        try {
+            return beanClass.getDeclaredConstructor();
+        } catch (NoSuchMethodException e) {
+            return null;
+        }
+    }
+
+    private static boolean constructorNeedsInjection(final Constructor<?> constructor) {
+        return constructor.isAnnotationPresent(Inject.class);
     }
 
 
-    public static boolean isProvider(Class service) {
+    static boolean isProvider(Class service) {
         return Provider.class.isAssignableFrom(service) || VariableProvider.class.isAssignableFrom(service);
     }
 
-    public static boolean isVariableProvider(Class service) {
+    static boolean isVariableProvider(Class service) {
         return VariableProvider.class.isAssignableFrom(service);
     }
 
-    public static boolean isSingleton(Class beanClass) {
+    private static boolean isSingleton(Class beanClass) {
         Annotation scope = getScope(beanClass);
-        if (scope instanceof Singleton) {
-            return true;
-        }
-        return false;
+        return scope instanceof Singleton;
     }
 
-    public static boolean isThread(Class beanClass) {
+    private static boolean isThread(Class beanClass) {
         Annotation scope = getScope(beanClass);
-        if (scope instanceof ThreadScope) {
-            return true;
-        }
-        return false;
+        return scope instanceof ThreadScope;
     }
 
     private static boolean isInheritedThread(Class beanClass) {
@@ -185,12 +169,12 @@ public class InjectionUtils {
         List<Annotation> scopeAnnotations = new ArrayList<Annotation>();
         Annotation[] annotations = beanClass.getAnnotations();
         for (Annotation annotation : annotations) {
-            if (annotation.annotationType().isAnnotationPresent(SCOPE)) {
+            if (annotation.annotationType().isAnnotationPresent(Scope.class)) {
                 scopeAnnotations.add(annotation);
             }
         }
 
-        if (scopeAnnotations.size() == 0) {
+        if (scopeAnnotations.isEmpty()) {
             return null;
         } else if (scopeAnnotations.size() > 1) {
             throw new InjectRuntimeException(
@@ -200,11 +184,11 @@ public class InjectionUtils {
         return scopeAnnotations.get(0);
     }
 
-    public static ScopeHandler getScopeHandler(Class serviceClass) {
+    static ScopeHandler getScopeHandler(Class serviceClass) {
         return getScopeHandler(serviceClass, null);
     }
 
-    public static ScopeHandler getScopeHandler(Class serviceClass, ScopeContainer.Scope scope) {
+    static ScopeHandler getScopeHandler(Class serviceClass, ScopeContainer.Scope scope) {
 
         if (scope != null) { // first follow the enforced scope control, do not look for annotations
             if (scope == ScopeContainer.Scope.SINGLETON) {
@@ -222,17 +206,6 @@ public class InjectionUtils {
             } else if (isInheritedThread(serviceClass)) {
                 return new InheritableThreadScopeHandler();
             }
-        }
-        return new DefaultScopeHandler();
-    }
-
-    public static ScopeHandler getScopeHandler(ScopeContainer.Scope scope) {
-        if (scope == ScopeContainer.Scope.SINGLETON) {
-            return new SingletonScopeHandler();
-        } else if (scope == ScopeContainer.Scope.THREAD) {
-            return new ThreadScopeHandler();
-        } else if (scope == ScopeContainer.Scope.INHERITABLE_THREAD) {
-            return new InheritableThreadScopeHandler();
         }
         return new DefaultScopeHandler();
     }

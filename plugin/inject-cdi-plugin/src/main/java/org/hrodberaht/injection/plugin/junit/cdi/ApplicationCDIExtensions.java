@@ -45,19 +45,19 @@ public class ApplicationCDIExtensions implements CDIExtensions {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationCDIExtensions.class);
 
-    protected enum Phase {AfterBeanDiscovery, BeforeBeanDiscovery}
+    protected enum Phase {AFTER_BEAN_DISCOVERY, BEFORE_BEAN_DISCOVERY}
 
     protected Map<Phase, List<MethodClassHolder>> phaseMethods = new ConcurrentHashMap<Phase, List<MethodClassHolder>>();
 
     public ApplicationCDIExtensions() {
-        phaseMethods.put(Phase.BeforeBeanDiscovery, new ArrayList<>());
-        phaseMethods.put(Phase.AfterBeanDiscovery, new ArrayList<>());
+        phaseMethods.put(Phase.BEFORE_BEAN_DISCOVERY, new ArrayList<>());
+        phaseMethods.put(Phase.AFTER_BEAN_DISCOVERY, new ArrayList<>());
         findExtensions();
     }
 
     public void runAfterBeanDiscovery(InjectionRegister register) {
         AfterBeanDiscoveryByInject inject = new AfterBeanDiscoveryByInject(register);
-        List<MethodClassHolder> methods = phaseMethods.get(Phase.AfterBeanDiscovery);
+        List<MethodClassHolder> methods = phaseMethods.get(Phase.AFTER_BEAN_DISCOVERY);
         for (MethodClassHolder methodClassHolder : methods) {
             try {
                 methodClassHolder.getMethod().setAccessible(true);
@@ -76,7 +76,7 @@ public class ApplicationCDIExtensions implements CDIExtensions {
 
     public void runBeforeBeanDiscovery() {
         BeforeBeanDiscoveryByInject inject = new BeforeBeanDiscoveryByInject();
-        List<MethodClassHolder> methods = phaseMethods.get(Phase.BeforeBeanDiscovery);
+        List<MethodClassHolder> methods = phaseMethods.get(Phase.BEFORE_BEAN_DISCOVERY);
         for (MethodClassHolder methodClassHolder : methods) {
             try {
                 methodClassHolder.getMethod().setAccessible(true);
@@ -158,12 +158,8 @@ public class ApplicationCDIExtensions implements CDIExtensions {
         for (Method method : methods) {
             Class[] parameters = method.getParameterTypes();
             Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-            if (parameterAnnotations.length != 1) {
-                if (parameterAnnotations.length == 0) {
-                    continue;
-                } else if (parameterAnnotations[0].length != 1) {
-                    continue;
-                }
+            if (parameterAnnotations.length != 1 && (parameterAnnotations.length == 0 || parameterAnnotations[0].length != 1)) {
+                continue;
             }
             LOG.info("adding CDI extension {} - {}", aClass.getName(), method.getName());
             discoveryAnnotation(new MethodClassHolder(aClass, method), parameters, parameterAnnotations[0]);
@@ -174,10 +170,10 @@ public class ApplicationCDIExtensions implements CDIExtensions {
         for (Class parameter : parameters) {
             if (parameterAnnotation[0].annotationType() == Observes.class) {
                 if (parameter.equals(AfterBeanDiscovery.class)) {
-                    this.phaseMethods.get(Phase.AfterBeanDiscovery).add(e);
+                    this.phaseMethods.get(Phase.AFTER_BEAN_DISCOVERY).add(e);
                 }
                 if (parameter.equals(BeforeBeanDiscovery.class)) {
-                    this.phaseMethods.get(Phase.BeforeBeanDiscovery).add(e);
+                    this.phaseMethods.get(Phase.BEFORE_BEAN_DISCOVERY).add(e);
                 }
             }
         }

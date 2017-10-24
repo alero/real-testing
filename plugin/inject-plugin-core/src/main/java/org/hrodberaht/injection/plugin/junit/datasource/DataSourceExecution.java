@@ -52,7 +52,7 @@ import java.util.jar.JarFile;
  * @version 1.0
  * @since 1.0
  */
-public class DataSourceExecution {
+class DataSourceExecution {
 
     private static final Logger LOG = LoggerFactory.getLogger(DataSourceExecution.class);
 
@@ -65,7 +65,7 @@ public class DataSourceExecution {
         this.dataSource = dataSource;
     }
 
-    public void addSQLSchemas(final String schemaName, final String packageBase) {
+    void addSQLSchemas(final String schemaName, final String packageBase) {
 
         final ClassLoader threadClassLoader = Thread.currentThread().getContextClassLoader();
         final ClassLoader classClassLoader = DataSourceExecution.class.getClassLoader();
@@ -95,7 +95,7 @@ public class DataSourceExecution {
                 return;
             }
             for (File fileToLoad : filesToLoad) {
-                LOG.debug("findJarFiles fileToLoad = " + fileToLoad);
+                LOG.debug("findJarFiles fileToLoad = {}", fileToLoad);
                 try (final JarFile jarFile = new JarFile(fileToLoad)) {
                     Enumeration<JarEntry> enumeration = jarFile.entries();
                     handleJarEntries(packageBase, schemaName, fileToLoad, jarFile, enumeration);
@@ -113,7 +113,7 @@ public class DataSourceExecution {
             final String jarName = jarEntry.getName();
             if (!jarEntry.isDirectory() && jarName.startsWith(packageBase)
                     && jarName.endsWith(".sql")) {
-                LOG.debug("DataSourceExecution findJarFiles " + fileToLoad.getName());
+                LOG.debug("DataSourceExecution findJarFiles {}", fileToLoad.getName());
                 java.io.InputStream is = jarFile.getInputStream(jarEntry);
                 BufferedReader br = new BufferedReader(new InputStreamReader(is));
                 String strLine;
@@ -128,13 +128,13 @@ public class DataSourceExecution {
 
     private List<File> findFiles(final ClassLoader classLoader, final String packageBase) {
         String classLoadingCompatible = stabilize(packageBase);
-        LOG.info("loading resources from " + classLoadingCompatible);
+        LOG.info("loading resources from {}", classLoadingCompatible);
         URL url = classLoader.getResource(classLoadingCompatible);
         if (url == null) {
-            LOG.info("found no resources at " + classLoadingCompatible);
+            LOG.info("found no resources at {}", classLoadingCompatible);
             return Collections.emptyList();
         }
-        LOG.info("found some resources at " + classLoadingCompatible);
+        LOG.info("found some resources at {}", classLoadingCompatible);
         String directoryString = url.getFile().replaceAll("%20", " ");
         File directory = new File(directoryString);
         File[] files = directory.listFiles();
@@ -218,12 +218,7 @@ public class DataSourceExecution {
         return true;
     }
 
-
-    boolean isInitiated(String schemaName, String packageName) {
-        return this.isInitiated(packageName, schemaName, packageName);
-    }
-
-    private synchronized boolean isInitiated(final String testPackageName, final String schemaName, final String initiatedTableName) {
+    synchronized boolean isInitiated(final String testPackageName, final String initiatedTableName) {
 
         if (dataSource == null) {
             throw new IllegalAccessError("dataSource is null ");

@@ -14,41 +14,41 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.core.internal.exception;
+package org.hrodberaht.injection.plugin.junit.datasource;
 
 import java.text.MessageFormat;
 
 
-public class DuplicateRegistrationException extends RuntimeException {
+public class DataSourceRuntimeException extends RuntimeException {
     private transient final Object[] args;
 
 
-    public DuplicateRegistrationException(String message) {
+    public DataSourceRuntimeException(String message) {
         super(message);
         this.args = null;
     }
 
-    public DuplicateRegistrationException(String message, Throwable e) {
+    public DataSourceRuntimeException(String message, Throwable e) {
         super(message, e);
         this.args = null;
     }
 
-    public DuplicateRegistrationException(Throwable e) {
+    public DataSourceRuntimeException(Throwable e) {
         super(e);
         this.args = null;
     }
 
-    public DuplicateRegistrationException(String message, Object... args) {
+    public DataSourceRuntimeException(String message, Object... args) {
         super(message);
         this.args = args;
     }
 
-    public DuplicateRegistrationException(String message, Throwable e, Object... args) {
+    public DataSourceRuntimeException(String message, Throwable e, Object... args) {
         super(message, e);
         this.args = args;
     }
 
-    public DuplicateRegistrationException(Throwable e, Object... args) {
+    public DataSourceRuntimeException(Throwable e, Object... args) {
         super(e);
         this.args = args;
     }
@@ -56,7 +56,7 @@ public class DuplicateRegistrationException extends RuntimeException {
     @Override
     public String toString() {
         if (args != null) {
-            return DuplicateRegistrationException.class.getName()
+            return this.getClass().getName()
                     + ": " + MessageFormat.format(super.getMessage(), args);
         }
         return super.toString();

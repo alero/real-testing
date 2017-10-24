@@ -21,20 +21,13 @@ import org.hrodberaht.injection.core.spi.ContainerConfig;
 import org.hrodberaht.injection.core.spi.ContainerConfigBuilder;
 
 import javax.annotation.PostConstruct;
+import javax.inject.Inject;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Injection Extension JUnit
- *
- * @author Robert Alexandersson
- * 2010-sep-23 20:34:49
- * @version 1.0
- * @since 1.0
- */
 public class DefaultInjectionPointFinder implements InjectionFinder {
 
     private ContainerConfig containerConfig;
@@ -95,19 +88,16 @@ public class DefaultInjectionPointFinder implements InjectionFinder {
                 foundMethod = method;
             }
         }
-        if (foundMethod != null) {
-            // Open up access for post-construct
-            if (!foundMethod.isAccessible()) {
-                foundMethod.setAccessible(true);
-            }
+        if (foundMethod != null && !foundMethod.isAccessible()) {
+            foundMethod.setAccessible(true);
         }
         return foundMethod;
     }
 
     public Object extendedInjection(Object service) {
-        ContainerConfigBuilder containerConfigBuilder = getContainerConfigBuilder();
-        if (containerConfigBuilder != null) {
-            containerConfigBuilder.injectResources(service);
+        ContainerConfigBuilder builder = getContainerConfigBuilder();
+        if (builder != null) {
+            builder.injectResources(service);
         }
         return service;
     }
@@ -123,8 +113,8 @@ public class DefaultInjectionPointFinder implements InjectionFinder {
     /**
      * Intended for override to support other annotations
      *
-     * @param method
-     * @return
+     * @param method the method
+     * @return if the method contains PostConstruct annotation
      */
     protected boolean hasPostConstructAnnotation(Method method) {
         return method.isAnnotationPresent(PostConstruct.class);
@@ -133,21 +123,22 @@ public class DefaultInjectionPointFinder implements InjectionFinder {
     /**
      * Intended for override to support other annotations
      *
-     * @param method
-     * @return
+     * @param method the method
+     * @return if the method should be injected
      */
     protected boolean hasInjectAnnotationOnMethod(Method method) {
-        return method.isAnnotationPresent(InjectionUtils.INJECT);
+        return method.isAnnotationPresent(Inject.class);
     }
 
     /**
      * Intended for override to support other annotations
      *
-     * @param field
-     * @return
+     * @param field the field
+     * @return if the field should be injected
      */
+    @SuppressWarnings("squid:S2109")
     protected boolean hasInjectAnnotationOnField(Field field) {
-        return field.isAnnotationPresent(InjectionUtils.INJECT);
+        return field.isAnnotationPresent(Inject.class);
     }
 
     private boolean methodHasPostConstruct(Method method) {

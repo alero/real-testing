@@ -29,14 +29,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Simple Java Utils - Container
- *
- * @author Robert Alexandersson
- * 2010-maj-28 21:24:31
- * @version 1.0
- * @since 1.0
- */
+
 public class InjectionMetaData {
 
     private InjectionKey key;
@@ -62,7 +55,7 @@ public class InjectionMetaData {
     }
 
 
-    public void setScopeHandler(ScopeHandler scopeHandler) {
+    void setScopeHandler(ScopeHandler scopeHandler) {
         this.scopeHandler = scopeHandler;
     }
 
@@ -74,15 +67,15 @@ public class InjectionMetaData {
         return constructor;
     }
 
-    public List<InjectionMetaData> getConstructorDependencies() {
+    List<InjectionMetaData> getConstructorDependencies() {
         return constructorDependencies;
     }
 
-    public void setConstructorDependencies(List<InjectionMetaData> constructorDependencies) {
+    void setConstructorDependencies(List<InjectionMetaData> constructorDependencies) {
         this.constructorDependencies = constructorDependencies;
     }
 
-    public void setInjectionPoints(List<InjectionPoint> injectionPoints) {
+    void setInjectionPoints(List<InjectionPoint> injectionPoints) {
         this.injectionPoints = injectionPoints;
     }
 
@@ -90,11 +83,11 @@ public class InjectionMetaData {
         return injectionPoints;
     }
 
-    public boolean isPreDefined() {
+    boolean isPreDefined() {
         return preDefined;
     }
 
-    public void setPreDefined(boolean preDefined) {
+    void setPreDefined(boolean preDefined) {
         this.preDefined = preDefined;
     }
 
@@ -106,15 +99,15 @@ public class InjectionMetaData {
         return this.scopeHandler.getScope();
     }
 
-    public void setPostConstructMethod(Method postConstruct) {
+    void setPostConstructMethod(Method postConstruct) {
         this.postConstruct = postConstruct;
     }
 
-    public Method getPostConstruct() {
+    Method getPostConstruct() {
         return this.postConstruct;
     }
 
-    public Class createVariableInstance(Object variable) {
+    Class createVariableInstance(Object variable) {
         Class scopedInstanceClass = ((VariableScopeHandler) scopeHandler).getInstanceClass(variable);
         if (scopedInstanceClass != null) {
             return scopedInstanceClass;
@@ -124,18 +117,13 @@ public class InjectionMetaData {
 
     }
 
-    public ObjectAndScope createNewInstance(Object[] parameters) {
+    ObjectAndScope createNewInstance(Object[] parameters) {
         verifyAccess();
-        try {
-            Object newInstance = instanceCreator.createInstance(constructor, parameters);
-            scopeHandler.addInstance(newInstance);
-            return new ObjectAndScope(newInstance, true);
-        } finally {
-            // Not thread safe, do not reset the accessor
-            /*if (!originalAccessible) {
-                constructor.setAccessible(originalAccessible);
-            }*/
-        }
+
+        Object newInstance = instanceCreator.createInstance(constructor, parameters);
+        scopeHandler.addInstance(newInstance);
+        return new ObjectAndScope(newInstance, true);
+
     }
 
     public ObjectAndScope createInstance(Object[] parameters) {
@@ -149,18 +137,11 @@ public class InjectionMetaData {
             }
         }
         verifyAccess();
-        try {
 
+        Object newInstance = instanceCreator.createInstance(constructor, parameters);
+        scopeHandler.addInstance(newInstance);
+        return new ObjectAndScope(newInstance, true);
 
-            Object newInstance = instanceCreator.createInstance(constructor, parameters);
-            scopeHandler.addInstance(newInstance);
-            return new ObjectAndScope(newInstance, true);
-        } finally {
-            // Not thread safe, do not reset the accessor
-            /*if (!originalAccessible) {
-                constructor.setAccessible(originalAccessible);
-            }*/
-        }
     }
 
     private void verifyAccess() {
@@ -174,7 +155,7 @@ public class InjectionMetaData {
     }
 
 
-    public boolean canInject(final InjectionMetaData bean) {
+    boolean canInject(final InjectionMetaData bean) {
         if (bean == null) {
             return false;
         }
@@ -192,21 +173,15 @@ public class InjectionMetaData {
             return true;
         }
 
-        if (serviceClass.isAssignableFrom(bean.serviceClass)) {
-            if (key == null && bean.key == null) {
-                return true;
-            } else if (key != null && key.equals(bean.key)) {
-                return true;
-            }
+        if (serviceClass.isAssignableFrom(bean.serviceClass) && (key == null && bean.key == null || key != null && key.equals(bean.key))) {
+            return true;
         }
 
         return false;
     }
 
     private boolean hasQualifier(InjectionKey key) {
-        if (key == null) {
-            return false;
-        } else if (key.getQualifier() == null) {
+        if (key == null || key.getQualifier() == null) {
             return false;
         }
         return true;

@@ -29,14 +29,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Simple Java Utils - Container
- *
- * @author Robert Alexandersson
- * 2010-maj-29 00:52:31
- * @version 1.0
- * @since 1.0
- */
+
 public class InjectionPoint {
     public enum InjectionPointType {METHOD, FIELD}
 
@@ -97,14 +90,8 @@ public class InjectionPoint {
         try {
             method.invoke(service, serviceDependency);
             Statistics.addInjectMethodCount();
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        } finally {
-            // Do not reset the accessible as multi-thread calls
-            // will have problems with singletons and this way of doing it 
-            // method.setAccessible(originalAccessible);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            throw new InjectRuntimeException(e);
         }
     }
 
@@ -121,10 +108,6 @@ public class InjectionPoint {
             Statistics.addInjectFieldCount();
         } catch (final IllegalAccessException e) {
             throw new InjectRuntimeException(e);
-        } finally {
-            // Do not reset the accessible as multi-thread calls
-            // will have serious access problems (it will be closed by this call when the next one comes)
-            // field.setAccessible(originalAccessible);
         }
     }
 

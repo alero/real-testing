@@ -156,9 +156,6 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
     public void register(InjectionContainerManager injectionContainerManager, RegistrationModule... modules) {
         for (RegistrationModule module : modules) {
             RegistrationModuleAnnotation aModule = (RegistrationModuleAnnotation) module;
-            /*if (aModule instanceof RegistrationModuleAnnotationScanner) {
-                ((RegistrationModuleAnnotationScanner) aModule).setInjectionContainerManager(injectionContainerManager);
-            }*/
             if (aModule.getInjectionFinder() != null) {
                 if (this.injectionFinder != null) {
                     throw new IllegalStateException("Can not change injectionFinder once set");
@@ -211,13 +208,11 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
     private void reRegisterSupport(InjectionKey key, InjectionContainerManager.RegisterType type, boolean throwError) {
         ServiceRegister serviceRegister = registeredServices.get(key);
         if (serviceRegister.getRegisterType() == InjectionContainerManager.RegisterType.WEAK) {
-            // registeredServices.remove(key);
             return;
         }
 
         if (serviceRegister.getRegisterType() == InjectionContainerManager.RegisterType.NORMAL) {
             if (type == InjectionContainerManager.RegisterType.OVERRIDE_NORMAL) {
-                // registeredServices.remove(key);
                 return;
             }
             throwRegistrationError("a existing Service",
@@ -317,8 +312,8 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
 
         // Validate the MetaDataCache
         AnnotationInjection annotationInjection = new AnnotationInjection(injectionMetaDataCache, container, this);
-        InjectionMetaData injectionMetaDataCache = annotationInjection.getInjectionCacheHandler().find(injectionMetaData);
-        if (injectionMetaDataCache != injectionMetaData) {
+        InjectionMetaData metaData = annotationInjection.getInjectionCacheHandler().find(injectionMetaData);
+        if (metaData != injectionMetaData) {
             throw new InjectRuntimeException("InjectionMetaData not cached correctly");
         }
 
@@ -385,12 +380,12 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
         annotationInjectionContainer.injectionFinder = this.injectionFinder;
         annotationInjectionContainer.instanceCreator = this.instanceCreator;
         annotationInjectionContainer.injectionMetaDataCache.putAll(this.injectionMetaDataCache);
-        for (InjectionKey injectionKey : this.injectionMetaDataCache.keySet()) {
-            InjectionMetaDataBase injectionMetaData = this.injectionMetaDataCache.get(injectionKey);
+        for (Map.Entry<InjectionKey, InjectionMetaDataBase> metaDatantry : this.injectionMetaDataCache.entrySet()) {
+            InjectionMetaDataBase injectionMetaData = metaDatantry.getValue();
             if (injectionMetaData.getInjectionMetaData().getScope() == ScopeContainer.Scope.SINGLETON) {
-                annotationInjectionContainer.injectionMetaDataCache.put(injectionKey, injectionMetaData.copy());
+                annotationInjectionContainer.injectionMetaDataCache.put(metaDatantry.getKey(), injectionMetaData.copy());
             } else {
-                annotationInjectionContainer.injectionMetaDataCache.put(injectionKey, injectionMetaData);
+                annotationInjectionContainer.injectionMetaDataCache.put(metaDatantry.getKey(), injectionMetaData);
             }
         }
 

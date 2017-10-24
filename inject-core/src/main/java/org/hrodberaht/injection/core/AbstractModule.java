@@ -28,7 +28,7 @@ public abstract class AbstractModule {
         module.scanAndRegister(packages);
     }
 
-    public RegistrationExtended bind(Class bindingClass){
+    protected RegistrationExtended bind(Class bindingClass) {
         return module.register(bindingClass);
     }
 

@@ -18,14 +18,7 @@ package org.hrodberaht.injection.core.internal.exception;
 
 import java.text.MessageFormat;
 
-/**
- * Simple Java Utils - Container
- *
- * @author Robert Alexandersson
- * 2010-maj-28 19:00:29
- * @version 1.0
- * @since 1.0
- */
+
 public class InjectRuntimeException extends RuntimeException {
     private transient final Object[] args;
 

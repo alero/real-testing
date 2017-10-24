@@ -53,26 +53,21 @@ public class DataSourceProxy implements DataSourceProxyInterface {
     private final InheritableThreadLocal<ConnectionHandler> threadLocal = new InheritableThreadLocal<ConnectionHandler>();
 
     private DataSourceConfiguration dataSourceConfiguration;
-    private final String dbName;
-    private final ResourceWatcher resourceWatcher;
     private final DataSourceConfigFactory dataSourceConfigFactory;
-
-    private ProxyResourceCreator.DataSourceProvider provider;
-    private ProxyResourceCreator.DataSourcePersistence persistence;
 
     public DataSourceProxy(String dbName,
                            ProxyResourceCreator.DataSourceProvider provider,
                            ProxyResourceCreator.DataSourcePersistence persistence,
                            ResourceWatcher resourceWatcher) {
-        this.resourceWatcher = resourceWatcher;
-        this.provider = provider;
-        this.persistence = persistence;
-        this.dbName = dbName;
+        dataSourceConfigFactory = new DataSourceConfigFactory(this, getResourceWatcher(resourceWatcher), dbName);
+        dataSourceConfiguration = dataSourceConfigFactory.createConfiguration(provider, persistence);
+    }
+
+    private ResourceWatcher getResourceWatcher(ResourceWatcher resourceWatcher) {
         if (resourceWatcher == null) {
             resourceWatcher = () -> false;
         }
-        dataSourceConfigFactory = new DataSourceConfigFactory(this, resourceWatcher, dbName);
-        dataSourceConfiguration = dataSourceConfigFactory.createConfiguration(provider, persistence);
+        return resourceWatcher;
     }
 
 
@@ -108,10 +103,10 @@ public class DataSourceProxy implements DataSourceProxyInterface {
             connectionHandler.conn.rollback();
             connectionHandler.conn.close();
             connections.remove(connectionHandler.conn.toString());
-            LOG.debug("rollback/close Connection " + connectionHandler + " Thread:" + Thread.currentThread());
+            LOG.debug("rollback/close Connection {} Thread: {}", connectionHandler, Thread.currentThread());
             rollbackRecursively(connectionHandler);
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataSourceRuntimeException(e);
         }
     }
 
@@ -139,28 +134,14 @@ public class DataSourceProxy implements DataSourceProxyInterface {
             connections.remove(connectionHandler.conn.toString());
             connectionHandler.conn.commit();
             connectionHandler.conn.close();
-            LOG.debug("commit/close Connection " + connectionHandler + " Thread:" + Thread.currentThread());
+            LOG.debug("commit/close Connection {} Thread: {}", connectionHandler, Thread.currentThread());
             commitRecursively(connectionHandler);
         } catch (SQLNonTransientConnectionException exception) {
             if (exception.getMessage().contains("connection does not exist")) {
                 LOG.debug("connection closed from the outside");
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void finalizeConnection(Connection connection) {
-        ConnectionHandler localConnection = threadLocal.get();
-        if (localConnection != null && localConnection.parent != null) {
-            threadLocal.set(localConnection.parent);
-        }
-    }
-
-    public void forceCreateNewConnection() {
-        ConnectionHandler connection = threadLocal.get();
-        if (connection != null) {
-            threadLocal.set(new ConnectionHandler(connection));
+            throw new DataSourceRuntimeException(e);
         }
     }
 
@@ -168,7 +149,7 @@ public class DataSourceProxy implements DataSourceProxyInterface {
         final ConnectionHandler connection = threadLocal.get();
 
         if (connection != null && connection.hasConnection()) {
-            LOG.debug("reusing Connection " + connection + " Thread:" + Thread.currentThread());
+            LOG.debug("reusing Connection {} Thread:{}", connection, Thread.currentThread());
             return connection.proxy;
         }
         try {
@@ -177,10 +158,7 @@ public class DataSourceProxy implements DataSourceProxyInterface {
             connections.put(conn.toString(), conn);
             conn.setAutoCommit(false);
             InvocationHandler invocationHandler = (proxy, method, args) -> {
-                if (method.getName().equals("close")) {
-                    // do nothing
-                    return null;
-                } else if (method.getName().equals("commit")) {
+                if (method.getName().equals("close") || method.getName().equals("commit")) {
                     // do nothing
                     return null;
                 }
@@ -193,16 +171,16 @@ public class DataSourceProxy implements DataSourceProxyInterface {
             if (connection != null && !connection.hasConnection()) {
                 connection.conn = conn;
                 connection.proxy = proxy;
-                LOG.debug(" new empty Connection " + connectionHandler);
+                LOG.debug(" new empty Connection {}", connectionHandler);
             } else {
                 connectionHandler.conn = conn;
                 connectionHandler.proxy = proxy;
-                LOG.debug(" new Connection " + connectionHandler + " Thread:" + Thread.currentThread());
+                LOG.debug(" new Connection {} Thread: {}", connectionHandler, Thread.currentThread());
                 threadLocal.set(connectionHandler);
             }
             return proxy;
         } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
+            throw new DataSourceRuntimeException(e);
         }
     }
 
@@ -211,16 +189,18 @@ public class DataSourceProxy implements DataSourceProxyInterface {
         return getConnection();
     }
 
+    @SuppressWarnings("squid:S106")
     public PrintWriter getLogWriter() throws SQLException {
+        // Dont feel like making this better right now
         return new PrintWriter(System.out);
     }
 
     public void setLogWriter(PrintWriter out) throws SQLException {
-
+        // we dont support this
     }
 
     public void setLoginTimeout(int seconds) throws SQLException {
-
+        // we dont support this
     }
 
     public int getLoginTimeout() throws SQLException {
@@ -243,18 +223,8 @@ public class DataSourceProxy implements DataSourceProxyInterface {
     private class ConnectionHandler {
         private Connection conn;
         private Connection proxy;
-
-        private ConnectionHandler parent;
         private Collection<ConnectionHandler> children = new ArrayList<ConnectionHandler>();
 
-
-        private ConnectionHandler() {
-        }
-
-        private ConnectionHandler(ConnectionHandler parent) {
-            this.parent = parent;
-            parent.children.add(this);
-        }
 
         private boolean hasConnection() {
             return conn != null;
