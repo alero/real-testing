@@ -17,15 +17,15 @@
 package org.hrodberaht.injection.plugin.junit.plugins;
 
 import org.hrodberaht.injection.core.internal.annotation.DefaultInjectionPointFinder;
-import org.hrodberaht.injection.plugin.junit.spi.Plugin;
-import org.hrodberaht.injection.plugin.junit.spi.annotation.InjectionPluginInjectionFinder;
-import org.hrodberaht.injection.plugin.junit.spi.annotation.InjectionPluginInjectionRegister;
+import org.hrodberaht.injection.core.register.InjectionRegister;
+import org.hrodberaht.injection.core.spi.ContainerConfigBuilder;
+import org.hrodberaht.injection.plugin.junit.api.Plugin;
+import org.hrodberaht.injection.plugin.junit.api.annotation.InjectionPluginInjectionFinder;
+import org.hrodberaht.injection.plugin.junit.api.annotation.InjectionPluginInjectionRegister;
 import org.hrodberaht.injection.plugin.junit.spring.beans.config.ContainerAllSpringConfig;
 import org.hrodberaht.injection.plugin.junit.spring.beans.config.ContainerSpringConfig;
 import org.hrodberaht.injection.plugin.junit.spring.injector.SpringBeanInjector;
 import org.hrodberaht.injection.plugin.junit.spring.injector.SpringInject;
-import org.hrodberaht.injection.core.register.InjectionRegister;
-import org.hrodberaht.injection.core.spi.ContainerConfigBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;

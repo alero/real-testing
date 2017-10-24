@@ -17,7 +17,7 @@
 package org.hrodberaht.injection.plugin.junit.inner;
 
 import org.hrodberaht.injection.core.internal.annotation.ReflectionUtils;
-import org.hrodberaht.injection.plugin.junit.spi.Plugin;
+import org.hrodberaht.injection.plugin.junit.api.Plugin;
 
 import java.lang.reflect.Method;
 import java.util.List;

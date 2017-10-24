@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.junit.spi;
+package org.hrodberaht.injection.plugin.junit.api;
 
 public interface Plugin {
 
@@ -34,6 +34,6 @@ public interface Plugin {
      */
     LifeCycle getLifeCycle();
 
-    enum LifeCycle {TEST_SUITE, TEST_CLASS, TEST_CONFIG}
+    enum LifeCycle {TEST_SUITE, TEST_CLASS, TEST_CONFIG, TEST}
 
 }

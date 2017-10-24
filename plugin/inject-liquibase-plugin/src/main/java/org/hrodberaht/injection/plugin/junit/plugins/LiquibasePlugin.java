@@ -17,8 +17,8 @@
 package org.hrodberaht.injection.plugin.junit.plugins;
 
 import liquibase.exception.LiquibaseException;
+import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.liquibase.LiquibaseManager;
-import org.hrodberaht.injection.plugin.junit.spi.Plugin;
 
 import javax.sql.DataSource;
 import java.sql.SQLException;

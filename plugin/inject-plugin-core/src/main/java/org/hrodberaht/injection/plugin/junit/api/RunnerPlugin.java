@@ -14,14 +14,22 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.junit.spi.annotation;
+package org.hrodberaht.injection.plugin.junit.api;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.hrodberaht.injection.core.register.InjectionRegister;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.METHOD)
-public @interface InjectionPluginInjectionRegister {
+public interface RunnerPlugin extends Plugin {
+
+    void beforeContainerCreation();
+
+    void afterContainerCreation(InjectionRegister injectionRegister);
+
+    void beforeTest(InjectionRegister injectionRegister);
+
+    void beforeTestClass(InjectionRegister injectionRegister);
+
+    void afterTestClass(InjectionRegister injectionRegister);
+
+    void afterTest(InjectionRegister injectionRegister);
+
 }

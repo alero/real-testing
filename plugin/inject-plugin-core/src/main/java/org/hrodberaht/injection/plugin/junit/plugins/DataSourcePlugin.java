@@ -17,18 +17,18 @@
 package org.hrodberaht.injection.plugin.junit.plugins;
 
 import org.hrodberaht.injection.core.InjectContainer;
-import org.hrodberaht.injection.plugin.datasource.DatasourceResourceCreator;
-import org.hrodberaht.injection.plugin.junit.datasource.DatasourceContainerService;
-import org.hrodberaht.injection.plugin.junit.datasource.ProxyResourceCreator;
-import org.hrodberaht.injection.plugin.junit.datasource.TransactionManager;
-import org.hrodberaht.injection.plugin.junit.spi.Plugin;
-import org.hrodberaht.injection.plugin.junit.spi.annotation.ResourcePluginFactory;
-import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginAfterContainerCreation;
-import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginAfterTest;
-import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginBeforeTest;
 import org.hrodberaht.injection.core.register.InjectionRegister;
 import org.hrodberaht.injection.core.spi.JavaResourceCreator;
 import org.hrodberaht.injection.core.spi.ResourceFactory;
+import org.hrodberaht.injection.plugin.datasource.DatasourceResourceCreator;
+import org.hrodberaht.injection.plugin.junit.api.Plugin;
+import org.hrodberaht.injection.plugin.junit.api.annotation.ResourcePluginFactory;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterContainerCreation;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterTest;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeTest;
+import org.hrodberaht.injection.plugin.junit.datasource.DatasourceContainerService;
+import org.hrodberaht.injection.plugin.junit.datasource.ProxyResourceCreator;
+import org.hrodberaht.injection.plugin.junit.datasource.TransactionManager;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;

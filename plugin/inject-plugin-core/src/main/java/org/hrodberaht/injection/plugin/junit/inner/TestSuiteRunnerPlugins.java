@@ -16,8 +16,8 @@
 
 package org.hrodberaht.injection.plugin.junit.inner;
 
-import org.hrodberaht.injection.plugin.junit.spi.Plugin;
-import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugin;
+import org.hrodberaht.injection.plugin.junit.api.Plugin;
+import org.hrodberaht.injection.plugin.junit.api.RunnerPlugin;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

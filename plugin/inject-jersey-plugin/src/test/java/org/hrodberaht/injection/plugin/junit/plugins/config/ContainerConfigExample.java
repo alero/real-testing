@@ -16,17 +16,19 @@
 
 package org.hrodberaht.injection.plugin.junit.plugins.config;
 
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
+import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.plugins.JerseyPlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.service.JerseyApplication;
 import org.hrodberaht.injection.plugin.junit.plugins.service.ObjectMapperResolver;
-import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 
 public class ContainerConfigExample extends ContainerContextConfigBase {
 
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
-        activatePlugin(JerseyPlugin.class).build()
+        activatePlugin(JerseyPlugin.class).builder()
+                .lifeCycle(Plugin.LifeCycle.TEST_SUITE)
                 .clientConfig(config -> config.register(ObjectMapperResolver.class))
                 .resourceConfig(JerseyApplication::new);
     }

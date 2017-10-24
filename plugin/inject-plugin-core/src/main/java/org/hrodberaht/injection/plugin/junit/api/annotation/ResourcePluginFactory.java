@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.junit.spi;
+package org.hrodberaht.injection.plugin.junit.api.annotation;
 
-import org.hrodberaht.injection.core.internal.annotation.InjectionFinder;
-import org.hrodberaht.injection.core.register.InjectionRegister;
-import org.hrodberaht.injection.core.spi.ContainerConfigBuilder;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public interface InjectionPlugin {
-
-    void setInjectionRegister(InjectionRegister injectionRegister);
-
-    InjectionFinder getInjectionFinder(ContainerConfigBuilder containerConfigBuilder);
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface ResourcePluginFactory {
 }

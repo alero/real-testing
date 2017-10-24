@@ -14,15 +14,14 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.junit.plugins;
+package org.hrodberaht.injection.plugin.junit.api.annotation;
 
-import org.hrodberaht.injection.plugin.junit.api.Plugin;
-import org.hrodberaht.injection.plugin.junit.resources.ResourcePluginBase;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class ResourcePlugin extends ResourcePluginBase implements Plugin {
-
-    @Override
-    public LifeCycle getLifeCycle() {
-        return LifeCycle.TEST_SUITE;
-    }
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
+public @interface InjectionPluginInjectionFinder {
 }

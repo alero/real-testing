@@ -18,10 +18,10 @@ package org.hrodberaht.injection.plugin.junit.plugins;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.hrodberaht.injection.core.register.InjectionRegister;
+import org.hrodberaht.injection.plugin.junit.api.RunnerPlugin;
 import org.hrodberaht.injection.plugin.junit.solr.SolrAssertions;
 import org.hrodberaht.injection.plugin.junit.solr.SolrTestRunner;
-import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugin;
-import org.hrodberaht.injection.core.register.InjectionRegister;
 
 import java.io.IOException;
 

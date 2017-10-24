@@ -17,10 +17,10 @@
 package org.hrodberaht.injection.plugin.junit.plugins;
 
 import org.hrodberaht.injection.core.internal.annotation.DefaultInjectionPointFinder;
-import org.hrodberaht.injection.plugin.junit.spi.InjectionPlugin;
-import org.hrodberaht.injection.plugin.junit.spi.Plugin;
 import org.hrodberaht.injection.core.register.InjectionRegister;
 import org.hrodberaht.injection.core.spi.ContainerConfigBuilder;
+import org.hrodberaht.injection.plugin.junit.api.InjectionPlugin;
+import org.hrodberaht.injection.plugin.junit.api.Plugin;
 
 /**
  * The SpringInjectionPlugin is intended to not "start" a spring container but to

@@ -23,22 +23,40 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.inmemory.InMemoryTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainer;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
+import org.hrodberaht.injection.core.register.InjectionRegister;
+import org.hrodberaht.injection.plugin.junit.api.Plugin;
+import org.hrodberaht.injection.plugin.junit.api.PluginContext;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterClassTest;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterContainerCreation;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterTest;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeClassTest;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeTest;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginContext;
 import org.hrodberaht.injection.plugin.junit.jersey.JerseyTestBuilder;
 import org.hrodberaht.injection.plugin.junit.jersey.JerseyTestRunner;
-import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugin;
-import org.hrodberaht.injection.core.register.InjectionRegister;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.LogManager;
 
-public class JerseyPlugin implements RunnerPlugin {
+public class JerseyPlugin implements Plugin {
+
+    private static final Logger LOG = LoggerFactory.getLogger(JerseyPlugin.class);
+
+    private static JerseyTestRunner suiteRunner;
+    private static Map<Class, JerseyTestRunner> classRunnerMap = new ConcurrentHashMap<>();
 
     private JerseyTestRunner jerseyTestRunner;
     private ClientConfigInterface clientConfigInterface;
     private ResourceConfigInterface resourceConfigInterface;
     private TestContainerFactoryInterface testContainerFactoryInterface;
+    private LifeCycle lifeCycle = LifeCycle.TEST;
+    private Class testClass;
 
     @FunctionalInterface
     public interface ClientConfigInterface {
@@ -55,7 +73,7 @@ public class JerseyPlugin implements RunnerPlugin {
         TestContainerFactory container();
     }
 
-    public JerseyPluginBuilder build() {
+    public JerseyPluginBuilder builder() {
         return new JerseyPluginBuilder(this);
     }
 
@@ -63,8 +81,13 @@ public class JerseyPlugin implements RunnerPlugin {
     public static class JerseyPluginBuilder {
         private final JerseyPlugin jerseyPlugin;
 
-        private JerseyPluginBuilder(JerseyPlugin jerseyPlugin) {
+        protected JerseyPluginBuilder(JerseyPlugin jerseyPlugin) {
             this.jerseyPlugin = jerseyPlugin;
+        }
+
+        public JerseyPluginBuilder lifeCycle(LifeCycle lifeCycle) {
+            jerseyPlugin.lifeCycle = lifeCycle;
+            return this;
         }
 
         public JerseyPluginBuilder clientConfig(ClientConfigInterface clientConfigInterface) {
@@ -85,10 +108,23 @@ public class JerseyPlugin implements RunnerPlugin {
     }
 
     private void initJerseyContainer() {
+        if (lifeCycle == LifeCycle.TEST_SUITE && suiteRunner == null) {
+            suiteRunner = createJerseyContainer();
+            jerseyTestRunner = suiteRunner;
+        } else if (lifeCycle == LifeCycle.TEST_CONFIG) {
+            jerseyTestRunner = classRunnerMap.computeIfAbsent(testClass, aClass -> createJerseyContainer());
+        } else {
+            jerseyTestRunner = createJerseyContainer();
+        }
+    }
+
+    private JerseyTestRunner createJerseyContainer() {
+
+        LOG.info("Creating JerseyTestRunner for Thread {}", Thread.currentThread());
 
         readLoggingSettings();
 
-        jerseyTestRunner = new JerseyTestRunner(new JerseyTest() {
+        return new JerseyTestRunner(new JerseyTest() {
             @Override
             protected ResourceConfig configure() {
                 return resourceConfigInterface == null ? new ResourceConfig() : resourceConfigInterface.config();
@@ -115,7 +151,6 @@ public class JerseyPlugin implements RunnerPlugin {
                 };
             }
         });
-
     }
 
     public JerseyTestBuilder testBuilder() {
@@ -134,49 +169,65 @@ public class JerseyPlugin implements RunnerPlugin {
     }
 
 
-    @Override
-    public void beforeContainerCreation() {
-
-
-    }
-
-    @Override
-    public void afterContainerCreation(InjectionRegister injectionRegister) {
+    @RunnerPluginAfterContainerCreation
+    private void beforeContainerCreation() {
         initJerseyContainer();
+        if (lifeCycle == LifeCycle.TEST_SUITE) {
+            startJersey();
+        }
     }
 
-    @Override
-    public void beforeTest(InjectionRegister injectionRegister) {
+    @RunnerPluginBeforeClassTest
+    private void beforeTestClass(InjectionRegister injectionRegister) {
+        if (lifeCycle == LifeCycle.TEST_CLASS || lifeCycle == LifeCycle.TEST_CONFIG) {
+            startJersey();
+        }
+    }
+
+    @RunnerPluginAfterClassTest
+    private void afterTestClass(InjectionRegister injectionRegister) {
+        if (lifeCycle == LifeCycle.TEST_CLASS) {
+            stopJersey();
+        }
+    }
+
+    @RunnerPluginBeforeTest
+    private void beforeTest(InjectionRegister injectionRegister) {
+        if (lifeCycle == LifeCycle.TEST) {
+            startJersey();
+        }
+    }
+
+    @RunnerPluginAfterTest
+    private void afterTest(InjectionRegister injectionRegister) {
+        if (lifeCycle == LifeCycle.TEST) {
+            stopJersey();
+        }
+    }
+
+    @RunnerPluginContext
+    private void testContext(PluginContext pluginContext) {
+        testClass = pluginContext.getTestClass();
+    }
+
+    private void startJersey() {
+        LOG.info("Starting JerseyTest Container for Thread {}", Thread.currentThread());
         jerseyTestRunner.initializeJersey();
-        /*
-        injectionRegister.register(new RegistrationModuleAnnotation() {
-            @Override
-            public void registrations() {
-                JerseyTestBuilder jerseyTestBuilder = new JerseyTestBuilder("http://localhost:9998", jerseyTest);
-                register(JerseyTestBuilder.class).withFactoryInstance(jerseyTestBuilder);
-            }
-        });
-        */
     }
 
-    @Override
-    public void beforeTestClass(InjectionRegister injectionRegister) {
-
-    }
-
-    @Override
-    public void afterTestClass(InjectionRegister injectionRegister) {
-
-    }
-
-    @Override
-    public void afterTest(InjectionRegister injectionRegister) {
+    private void stopJersey() {
+        LOG.info("Stopping JerseyTest Container for Thread {}", Thread.currentThread());
         jerseyTestRunner.shutdownJersey();
     }
 
+
+
+
+
+
     @Override
     public LifeCycle getLifeCycle() {
-        return LifeCycle.TEST_SUITE;
+        return lifeCycle;
     }
 
 

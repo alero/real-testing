@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.junit.spi;
+package org.hrodberaht.injection.plugin.junit.api;
 
 import org.hrodberaht.injection.plugin.junit.inner.RunnerPlugins;
 

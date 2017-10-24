@@ -16,15 +16,15 @@
 
 package org.hrodberaht.injection.plugin.junit.inner;
 
-import org.hrodberaht.injection.plugin.junit.spi.Plugin;
-import org.hrodberaht.injection.plugin.junit.spi.RunnerPlugin;
-import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginAfterClassTest;
-import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginAfterContainerCreation;
-import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginAfterTest;
-import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginBeforeClassTest;
-import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginBeforeContainerCreation;
-import org.hrodberaht.injection.plugin.junit.spi.annotation.RunnerPluginBeforeTest;
 import org.hrodberaht.injection.core.register.InjectionRegister;
+import org.hrodberaht.injection.plugin.junit.api.Plugin;
+import org.hrodberaht.injection.plugin.junit.api.RunnerPlugin;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterClassTest;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterContainerCreation;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterTest;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeClassTest;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeContainerCreation;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeTest;
 
 import java.util.Map;
 
@@ -50,10 +50,12 @@ public class RunnerPlugins {
 
     private RunnerPluginInterface getRunner(Plugin.LifeCycle lifeCycle) {
         switch (lifeCycle) {
-            case TEST_CONFIG:
-                return testConfigRunnerPlugins;
+            case TEST:
+                return testClassRunnerPlugins;
             case TEST_CLASS:
                 return testClassRunnerPlugins;
+            case TEST_CONFIG:
+                return testConfigRunnerPlugins;
             case TEST_SUITE:
                 return testSuiteRunnerPlugins;
             default:

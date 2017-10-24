@@ -19,11 +19,11 @@ package org.hrodberaht.injection.plugin.junit.inner;
 import org.hrodberaht.injection.core.internal.annotation.InjectionFinder;
 import org.hrodberaht.injection.core.internal.annotation.ReflectionUtils;
 import org.hrodberaht.injection.core.internal.exception.InjectRuntimeException;
-import org.hrodberaht.injection.plugin.junit.resources.ChainableInjectionPointProvider;
-import org.hrodberaht.injection.plugin.junit.spi.Plugin;
-import org.hrodberaht.injection.plugin.junit.spi.annotation.ResourcePluginChainableInjectionProvider;
-import org.hrodberaht.injection.plugin.junit.spi.annotation.ResourcePluginFactory;
 import org.hrodberaht.injection.core.spi.ResourceFactory;
+import org.hrodberaht.injection.plugin.junit.api.Plugin;
+import org.hrodberaht.injection.plugin.junit.api.annotation.ResourcePluginChainableInjectionProvider;
+import org.hrodberaht.injection.plugin.junit.api.annotation.ResourcePluginFactory;
+import org.hrodberaht.injection.plugin.junit.resources.ChainableInjectionPointProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

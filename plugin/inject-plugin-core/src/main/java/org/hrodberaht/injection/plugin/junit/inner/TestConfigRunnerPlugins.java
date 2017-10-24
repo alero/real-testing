@@ -16,7 +16,7 @@
 
 package org.hrodberaht.injection.plugin.junit.inner;
 
-import org.hrodberaht.injection.plugin.junit.spi.Plugin;
+import org.hrodberaht.injection.plugin.junit.api.Plugin;
 
 import java.util.HashMap;
 import java.util.Map;
