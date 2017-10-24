@@ -16,13 +16,16 @@
 
 package org.hrodberaht.injection.core.internal;
 
+import org.hrodberaht.injection.core.AbstractModule;
 import org.hrodberaht.injection.core.Module;
 import org.hrodberaht.injection.core.register.InjectionRegister;
 import org.hrodberaht.injection.core.register.RegistrationModule;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * Simple Java Utils
@@ -49,10 +52,14 @@ public class InjectionRegisterModule extends InjectionRegisterBase<InjectionRegi
     }
 
     public InjectionRegisterModule register(RegistrationModule... modules) {
-        for (RegistrationModule module : modules) {
-            registeredModules.add(module);
-        }
+        registeredModules.addAll(Arrays.asList(modules));
         container.register(modules);
+        return this;
+    }
+
+    public InjectionRegisterModule register(List<Module> modules) {
+        registeredModules.addAll(modules);
+        container.register(modules.toArray(new Module[modules.size()]));
         return this;
     }
 

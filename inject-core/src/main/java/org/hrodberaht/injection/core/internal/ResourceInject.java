@@ -17,6 +17,7 @@
 package org.hrodberaht.injection.core.internal;
 
 import org.hrodberaht.injection.core.internal.annotation.ReflectionUtils;
+import org.hrodberaht.injection.core.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.core.spi.ResourceKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,41 +25,76 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Resource;
 import java.lang.reflect.Field;
 import java.lang.reflect.Member;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Created by alexbrob on 2016-03-31.
- */
 public class ResourceInject {
 
     private static final Logger LOG = LoggerFactory.getLogger(ResourceInject.class);
 
+    private static final Map<Class, ResourceFields> foundTypedFields = new ConcurrentHashMap<>();
 
     public void injectResources(Map<Class, Object> typedResources, Map<ResourceKey, Object> namedResources, Object serviceInstance) {
 
-        List<Member> members = ReflectionUtils.findMembers(serviceInstance.getClass());
-        for (Member member : members) {
-            if (member instanceof Field) {
-                Field field = (Field) member;
-                if (field.isAnnotationPresent(Resource.class)) {
-                    Resource resource = field.getAnnotation(Resource.class);
-                    if (hasNameOrMappedName(resource)) {
-                        if (!injectNamedResource(namedResources, serviceInstance, field, resource)) {
-                            throw new RuntimeException("No resource found for " + descriptive(field, resource));
+        ResourceFields foundFields = foundTypedFields.computeIfAbsent(serviceInstance.getClass(), aClass -> {
+            ResourceFields resourceFields = new ResourceFields();
+            List<Member> members = ReflectionUtils.findMembers(serviceInstance.getClass());
+            for (Member member : members) {
+                if (member instanceof Field) {
+                    Field field = (Field) member;
+                    if (field.isAnnotationPresent(Resource.class)) {
+                        Resource resource = field.getAnnotation(Resource.class);
+                        if (hasNameOrMappedName(resource)) {
+                            resourceFields.namedFields.add(new ResourceValue(resource, field));
+                        } else {
+                            resourceFields.typedFields.add(field);
                         }
-                    } else {
-                        injectTypedResource(typedResources, serviceInstance, field);
                     }
                 }
             }
+            return resourceFields;
+        });
+
+        foundFields.typedFields.forEach(field -> {
+            injectTypedResource(typedResources, serviceInstance, field);
+        });
+
+        foundFields.namedFields.forEach(resourceValue -> {
+            if (!injectNamedResource(namedResources, serviceInstance, resourceValue.field, resourceValue.resource)) {
+                throw new InjectRuntimeException("No resource found for " + descriptive(resourceValue.field, resourceValue.resource));
+            }
+        });
+    }
+
+    private class ResourceFields{
+        List<ResourceValue> namedFields = new ArrayList<>();
+        List<Field> typedFields = new ArrayList<>();
+    }
+
+    private class ResourceValue{
+        private final Resource resource;
+        private final Field field;
+
+        private ResourceValue(Resource resource, Field field) {
+            this.resource = resource;
+            this.field = field;
         }
     }
 
     private String descriptive(Field field, Resource resource) {
         return hasName(resource) ?
-                "field:'" + field.getName() + "' name:'" + resource.name() + "'" :
-                hasMappedName(resource) ? "field:'" + field.getName() + "' mapped-name:'" + resource.mappedName() + "'" : "no name?";
+                getDescriptiveName(field, resource) :
+                getDescriptiveMappedName(field, resource);
+    }
+
+    private String getDescriptiveName(Field field, Resource resource) {
+        return "field:'" + field.getName() + "' name:'" + resource.name() + "'";
+    }
+
+    private String getDescriptiveMappedName(Field field, Resource resource) {
+        return hasMappedName(resource) ? "field:'" + field.getName() + "' mapped-name:'" + resource.mappedName() + "'" : "no name?";
     }
 
 

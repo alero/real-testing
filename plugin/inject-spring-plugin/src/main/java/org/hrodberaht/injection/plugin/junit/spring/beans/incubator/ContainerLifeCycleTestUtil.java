@@ -25,6 +25,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 
 import java.lang.annotation.Annotation;
+import java.util.Objects;
 import java.util.stream.Stream;
 
 public class ContainerLifeCycleTestUtil extends org.hrodberaht.injection.plugin.junit.ContainerLifeCycleTestUtil {
@@ -43,16 +44,6 @@ public class ContainerLifeCycleTestUtil extends org.hrodberaht.injection.plugin.
         super.registerServiceInstance(serviceDefinition, service);
     }
 
-    @Override
-    public void registerModule(RegistrationModule module) {
-        super.registerModule(module);
-    }
-
-    @Override
-    public <T> T getService(Class<T> aClass) {
-        return super.getService(aClass);
-    }
-
     private boolean isSpringBean(Class clazz) {
         return contains(
                 clazz.getAnnotation(Component.class),
@@ -63,10 +54,10 @@ public class ContainerLifeCycleTestUtil extends org.hrodberaht.injection.plugin.
     }
 
     private boolean contains(Annotation... annotations) {
-        return Stream.of(annotations).anyMatch(annotation -> annotation != null);
+        return Stream.of(annotations).anyMatch(Objects::nonNull);
     }
 
     public void reloadSpring() {
-        // applicationContextService.refresh();
+        // applicationContextService.getApplicationContext().
     }
 }

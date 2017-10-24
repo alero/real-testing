@@ -33,10 +33,6 @@ public class ClassScanningUtil {
 
     private static final Logger LOG = LoggerFactory.getLogger(ClassScanningUtil.class);
 
-    public static void setDetailedScanLogging(boolean detailedScanLogging) {
-        ClassScanningUtil.detailedScanLogging = detailedScanLogging;
-    }
-
     public static Class findServiceImplementation(Class theInterface, List<Class> listOfClasses) {
 
         Class foundServiceImplementation = null;

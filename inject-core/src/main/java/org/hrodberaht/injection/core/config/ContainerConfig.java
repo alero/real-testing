@@ -38,8 +38,8 @@ import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
  */
 public abstract class ContainerConfig<T extends InjectionRegister> implements ContainerConfigBuilder {
 
-    protected InjectionRegister originalRegister = null;
-    protected InjectionRegister activeRegister = null;
+    private InjectionRegister originalRegister = null;
+    private InjectionRegister activeRegister = null;
     protected final InjectionRegistryBuilder injectionRegistryBuilder = new InjectionRegistryBuilder(this);
 
     protected ResourceFactory resourceFactory = createResourceFactory();
@@ -50,13 +50,7 @@ public abstract class ContainerConfig<T extends InjectionRegister> implements Co
 
     protected abstract ResourceInject createResourceInject();
 
-    public abstract void injectResources(Object serviceInstance);
-
     protected abstract void appendResources(InjectionRegister registerModule);
-
-    protected void registerModules(InjectionRegister activeRegister) {
-        // This is intended for loading modules
-    }
 
     public void start() {
 

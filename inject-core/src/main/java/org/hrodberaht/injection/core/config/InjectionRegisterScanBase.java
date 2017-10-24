@@ -41,9 +41,9 @@ public abstract class InjectionRegisterScanBase<T extends InjectionRegisterScanB
 
     private static final Logger LOG = LoggerFactory.getLogger(InjectionRegisterScanBase.class);
 
-    protected InjectionRegister referedRegister;
+    private InjectionRegister referedRegister;
 
-    public InjectionRegisterScanBase() {
+    protected InjectionRegisterScanBase() {
     }
 
     public InjectionRegisterScanBase(InjectionRegister register) {

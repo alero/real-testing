@@ -18,9 +18,6 @@ package org.hrodberaht.injection.core;
 
 import org.hrodberaht.injection.core.register.RegistrationModuleAnnotationScanner;
 
-/**
- * Created by alexbrob on 2016-03-30.
- */
 public class Module extends RegistrationModuleAnnotationScanner {
 
     private InjectContainer injectionContainer;
@@ -36,7 +33,9 @@ public class Module extends RegistrationModuleAnnotationScanner {
     public void scan() {
     }
 
-    public InjectContainer getInjectionContainer() {
-        return injectionContainer;
+    public static Module toModule(AbstractModule abstractModule){
+        abstractModule.bindings();
+        return abstractModule.module;
     }
+
 }

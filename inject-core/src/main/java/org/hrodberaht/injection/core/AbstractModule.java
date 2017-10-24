@@ -14,35 +14,23 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.core.stream;
+package org.hrodberaht.injection.core;
 
-/**
- * Created by alexbrob on 2016-03-30.
- */
-public class ResourceDataSource {
+import org.hrodberaht.injection.core.register.internal.RegistrationExtended;
 
-    private String name;
-    private String packageName;
-    private String path;
+public abstract class AbstractModule {
 
-    public String getName() {
-        return name;
+    final Module module = new Module();
+
+    protected abstract void bindings();
+
+    public void scan(String... packages){
+        module.scanAndRegister(packages);
     }
 
-    public ResourceDataSource(String name) {
-        this.name = name;
+    public RegistrationExtended bind(Class bindingClass){
+        return module.register(bindingClass);
     }
 
-    public String getPackageName() {
-        return packageName;
-    }
 
-    public String getPath() {
-        return path;
-    }
-
-    public void loadSQLSchemas(String packageName, String path) {
-        this.packageName = packageName;
-        this.path = path;
-    }
 }

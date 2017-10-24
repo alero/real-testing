@@ -62,11 +62,11 @@ public class ClassScanner {
             List<File> filesToLoad = JarUtil.findTheJarFiles(packageName, classLoader);
 
             if (filesToLoad == null) {
-                return new ArrayList<Class>();
+                return new ArrayList<>();
             }
-            ArrayList<Class> classes = new ArrayList<Class>(200);
+            ArrayList<Class> classes = new ArrayList<>(200);
             for (File fileToLoad : filesToLoad) {
-                LOG.debug("findJarFiles fileToLoad = " + fileToLoad);
+                LOG.debug("findJarFiles fileToLoad = {}", fileToLoad);
                 try (JarFile jarFile = new JarFile(fileToLoad)) {
                     Enumeration<JarEntry> enumeration = jarFile.entries();
                     while (enumeration.hasMoreElements()) {
@@ -87,10 +87,10 @@ public class ClassScanner {
             String classPathName = classPath.substring(0, classPath.length() - 6);
             try {
                 Class aClass = Class.forName(classPathName);
-                LOG.debug("jar aClass: " + aClass + " for " + fileToLoad.getName());
+                LOG.debug("jar aClass: {} for {}",aClass,fileToLoad.getName());
                 classes.add(aClass);
             } catch (ClassNotFoundException e) {
-                LOG.info("jar error lookup: " + classPathName);
+                LOG.info("jar error lookup: {}", classPathName);
                 throw e;
             }
         }

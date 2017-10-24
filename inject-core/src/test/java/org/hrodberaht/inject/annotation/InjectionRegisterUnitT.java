@@ -30,7 +30,7 @@ import org.hrodberaht.inject.testservices.sortedinterfaces.BTestingServiceInnerI
 import org.hrodberaht.injection.core.InjectContainer;
 import org.hrodberaht.injection.core.InjectionRegistryPlain;
 import org.hrodberaht.injection.core.Module;
-import org.hrodberaht.injection.core.stream.InjectionRegistryStream;
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -78,7 +78,7 @@ public class InjectionRegisterUnitT {
     @Test
     public void moduleRegistrationLambda() throws Exception {
         InjectContainer injectionContainer =
-                new InjectionRegistryStream()
+                new InjectionRegistryBuilder()
                         .scan(() -> "org.hrodberaht.inject.testservices.largepackage")
                         .register(
                                 e -> {
@@ -97,7 +97,7 @@ public class InjectionRegisterUnitT {
     @Test
     public void moduleMultiScanRegistrationLambda() throws Exception {
         InjectContainer injectionContainer =
-                new InjectionRegistryStream()
+                new InjectionRegistryBuilder()
                         .scan(e -> e.packages(
                                 "org.hrodberaht.inject.testservices.largepackage"
                                 , "org.hrodberaht.inject.testservices.annotated"
@@ -120,7 +120,7 @@ public class InjectionRegisterUnitT {
 
     public void verifyGoodErrorHandlingForServiceWithoutConstructor() throws Exception {
         InjectContainer injectionContainer =
-                new InjectionRegistryStream()
+                new InjectionRegistryBuilder()
                         .register(
                                 e -> {
                                     e.register(AnyService.class).with(AnyServiceDoSomethingImpl.class);
@@ -142,7 +142,7 @@ public class InjectionRegisterUnitT {
     @Test
     public void multiModuleRegistrationLambda() throws Exception {
         Module moduleOne =
-                new InjectionRegistryStream()
+                new InjectionRegistryBuilder()
                         .scan(() -> "org.hrodberaht.inject.testservices.largepackage")
                         .register(
                                 e -> {
@@ -155,7 +155,7 @@ public class InjectionRegisterUnitT {
                         .getModule();
 
         Module moduleTwo =
-                new InjectionRegistryStream()
+                new InjectionRegistryBuilder()
                         .scan(() -> "org.hrodberaht.inject.testservices.interfaces")
                         .getModule();
 
