@@ -108,19 +108,21 @@ public class SolrTestRunner {
 
     private void perpareSolrHomeAndStart() throws IOException {
         String runnerName = runnerName();
-        CORE_CACHE.computeIfAbsent(runnerName, s -> {
+        CORE_CACHE.computeIfAbsent(runnerName, runnerNameInner -> {
             try {
-                LOG.info(" ----------- SolrTestRunner setup --- STARTING! performing tearDown, copyFiles and createContainer ");
+                LOG.info(" ----------- SolrTestRunner setup --- STARTING! name{} performing tearDown, copyFiles and createContainer ", runnerName);
                 tearDown();
                 moveConfigFiles();
                 LOG.info("Loading Solr container {}", runnerName);
-                return createSolrContainer(s);
+                SolrRunnerHolder solrRunnerHolder = createSolrContainer(runnerNameInner);
+                LOG.info("Loading Solr DONE container {}", runnerName);
+                return solrRunnerHolder;
             } catch (IOException e) {
                 LOG.error("Bad container", e);
-                throw new RuntimeException(e);
+                throw new PluginRuntimeException(e);
             }
         });
-        LOG.info("Loading Solr DONE container {}", runnerName);
+
     }
 
     private EmbeddedSolrServer getServer() {
@@ -148,7 +150,7 @@ public class SolrTestRunner {
         try {
             solrRunnerHolder.solr.close();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new PluginRuntimeException(e);
         }
         solrRunnerHolder.coreContainer.shutdown();
     }
@@ -168,7 +170,7 @@ public class SolrTestRunner {
     }
 
     private void moveConfigFiles() throws IOException {
-
+        // TODO : create a more configurable way to copy files for the SolR cores
         moveSolrConfigFile(home, "./solr/solr.xml", "solr.xml");
         moveFiles(home, coreName);
         moveFiles(home, coreName + "/conf");
@@ -176,7 +178,7 @@ public class SolrTestRunner {
         try {
             moveFiles(home, coreName + "/conf/lang");
         } catch (UnsupportedOperationException e) {
-
+            LOG.warn("found not files to copy at : '" + coreName + "/conf/lang'");
         }
     }
 
@@ -185,11 +187,8 @@ public class SolrTestRunner {
     }
 
     private void moveFiles(String solrHome, String path) throws IOException {
-
         for (String fileName : getResourceListing(SolrTestRunner.class, "solr/" + path)) {
-
             copyFile(solrHome + "/" + path, "./solr/" + path + "/" + fileName, fileName);
-
         }
     }
 
@@ -220,7 +219,7 @@ public class SolrTestRunner {
             }
         }
 
-        throw new UnsupportedOperationException("Found fo files using filesystem or jar parts for URL " + dirURL);
+        throw new UnsupportedOperationException("Found NO files using filesystem or jar parts for URL " + dirURL);
 
     }
 

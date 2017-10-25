@@ -52,8 +52,8 @@ public class GuicePlugin implements Plugin {
             @Override
             public Object extendedInjection(Object instance) {
                 // This will rewire the instance to become a "guice-instance"
-                instance = injector.getInstance(instance.getClass());
-                return super.extendedInjection(instance);
+                Object guiceInstance = injector.getInstance(instance.getClass());
+                return super.extendedInjection(guiceInstance);
             }
         };
     }

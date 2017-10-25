@@ -52,6 +52,10 @@ public class SolrJPlugin implements Plugin {
         return this;
     }
 
+    public ResourceLifeCycle getResourceLifeCycle() {
+        return lifeCycle;
+    }
+
     public SolrAssertions getAssertions() {
         return solrTestRunner.solrAssertions();
     }
@@ -80,7 +84,7 @@ public class SolrJPlugin implements Plugin {
         } else if (lifeCycle == ResourceLifeCycle.TEST_CLASS) {
             return home + "/" + pluginContext.getTestClass().getSimpleName();
         } else if (lifeCycle == ResourceLifeCycle.TEST_SUITE) {
-            return home;
+            return home + "/suite";
         }
         throw new PluginRuntimeException("No home was selected");
     }
