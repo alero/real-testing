@@ -124,7 +124,7 @@ public class SolrTestRunner {
     private EmbeddedSolrServer getServer() {
         String runnerName = runnerName();
         SolrRunnerHolder solrRunnerHolder = CORE_CACHE.get(runnerName);
-        LOG.debug("getServer using runnerholder {}", solrRunnerHolder.solr);
+        LOG.debug("getServer with name {}", runnerName);
         return solrRunnerHolder.solr;
     }
 
@@ -140,7 +140,7 @@ public class SolrTestRunner {
     public void shutdownServer() {
         String runnerName = runnerName();
         SolrRunnerHolder solrRunnerHolder = CORE_CACHE.get(runnerName);
-        LOG.info("shutdownServer of runnerholder {}", solrRunnerHolder);
+        LOG.info("shutdownServer of SolrRunnerHolder with name {}", runnerName);
         try {
             solrRunnerHolder.solr.close();
         } catch (IOException e) {

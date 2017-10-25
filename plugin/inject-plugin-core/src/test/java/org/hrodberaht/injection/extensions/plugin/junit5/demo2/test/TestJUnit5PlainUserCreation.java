@@ -22,8 +22,6 @@ import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.JUnit5Extension;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import javax.inject.Inject;
 
@@ -41,7 +39,6 @@ import static org.junit.Assert.assertTrue;
  */
 @ContainerContext(Course2ContainerConfigExample.class)
 @ExtendWith(JUnit5Extension.class)
-@RunWith(JUnitPlatform.class)
 public class TestJUnit5PlainUserCreation {
 
 

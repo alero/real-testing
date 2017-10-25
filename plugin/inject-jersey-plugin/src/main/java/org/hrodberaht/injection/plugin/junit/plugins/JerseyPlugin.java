@@ -31,6 +31,7 @@ import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterCon
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterTest;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeClassTest;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeTest;
+import org.hrodberaht.injection.plugin.junit.api.resource.FileLifeCycledResource;
 import org.hrodberaht.injection.plugin.junit.jersey.JerseyTestBuilder;
 import org.hrodberaht.injection.plugin.junit.jersey.JerseyTestRunner;
 import org.slf4j.Logger;
@@ -69,6 +70,15 @@ public class JerseyPlugin implements Plugin {
 
     public ResourceLifeCycle getResourceLifeCycle() {
         return lifeCycle;
+    }
+
+    public FileLifeCycledResource testFiles() {
+        return pluginLifeCycledResource;
+    }
+
+
+    protected ResourceConfig jerseyConfig(ResourceConfig resourceConfig) {
+        return resourceConfig;
     }
 
     public JerseyPluginBuilder builder() {
@@ -115,7 +125,7 @@ public class JerseyPlugin implements Plugin {
         return new JerseyTestRunner(new JerseyTest() {
             @Override
             protected ResourceConfig configure() {
-                return resourceConfigInterface == null ? new ResourceConfig() : resourceConfigInterface.config();
+                return jerseyConfig(resourceConfigInterface == null ? new ResourceConfig() : resourceConfigInterface.config());
             }
 
             @Override
@@ -182,6 +192,8 @@ public class JerseyPlugin implements Plugin {
     @RunnerPluginBeforeTest
     protected void beforeTest(PluginContext pluginContext) {
         if (lifeCycle == ResourceLifeCycle.TEST) {
+            stopJersey();
+            jerseyTestRunner = pluginLifeCycledResource.create(lifeCycle, pluginContext, this::createJerseyContainer);
             startJersey();
         }
     }

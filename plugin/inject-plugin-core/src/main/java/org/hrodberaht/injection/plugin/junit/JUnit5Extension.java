@@ -24,6 +24,8 @@ import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.Optional;
@@ -33,11 +35,15 @@ import static org.junit.platform.commons.util.Preconditions.notNull;
 public class JUnit5Extension implements BeforeAllCallback, AfterAllCallback, TestInstancePostProcessor,
         BeforeEachCallback, AfterEachCallback, ParameterResolver {
 
+    private static final Logger LOG = LoggerFactory.getLogger(JUnit5Extension.class);
+
     private JUnitContext jUnitContext;
 
     @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception {
-        jUnitContext = new JUnitContext(getRequiredTestClass(extensionContext));
+        Class clazz = getRequiredTestClass(extensionContext);
+        LOG.info("Starting tests for {}", clazz.getName());
+        jUnitContext = new JUnitContext(clazz);
         jUnitContext.runBeforeClass();
     }
 

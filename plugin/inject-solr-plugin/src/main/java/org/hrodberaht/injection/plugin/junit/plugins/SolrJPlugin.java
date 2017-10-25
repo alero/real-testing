@@ -121,9 +121,7 @@ public class SolrJPlugin implements Plugin {
     }
 
     private void shutdownSolr() {
-        if (lifeCycle == ResourceLifeCycle.TEST) {
-            solrTestRunner.shutdownServer();
-        }
+        solrTestRunner.shutdownServer();
     }
 
     @Override
