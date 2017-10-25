@@ -17,7 +17,6 @@
 package org.hrodberaht.injection.plugin.junit.plugins;
 
 import org.apache.solr.client.solrj.SolrClient;
-import org.hrodberaht.injection.plugin.exception.PluginRuntimeException;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.api.PluginContext;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterClassTest;
@@ -73,21 +72,19 @@ public class SolrJPlugin implements Plugin {
     }
 
     private void prepareSolr(PluginContext pluginContext) {
-        solrTestRunner.setup(solrHome == null ? getHome(SolrTestRunner.DEFAULT_HOME, pluginContext) : getHome(solrHome, pluginContext), coreName);
+        solrTestRunner.setup(getSolrHome(pluginContext), coreName);
     }
 
-    private String getHome(String home, PluginContext pluginContext) {
-        if (lifeCycle == ResourceLifeCycle.TEST) {
-            return home + "/" + pluginContext.getTestClass().getSimpleName() + "/" + pluginContext.getTestName();
-        } else if (lifeCycle == ResourceLifeCycle.TEST_CONFIG) {
-            return home + "/" + pluginContext.getConfigClass().getSimpleName();
-        } else if (lifeCycle == ResourceLifeCycle.TEST_CLASS) {
-            return home + "/" + pluginContext.getTestClass().getSimpleName();
-        } else if (lifeCycle == ResourceLifeCycle.TEST_SUITE) {
-            return home + "/suite";
-        }
-        throw new PluginRuntimeException("No home was selected");
+    private String getSolrHome(PluginContext pluginContext) {
+        return solrHome == null ?
+                getTestDirectoryForSolr(pluginContext, SolrTestRunner.DEFAULT_HOME) :
+                getTestDirectoryForSolr(pluginContext, solrHome);
     }
+
+    private String getTestDirectoryForSolr(PluginContext pluginContext, String home) {
+        return pluginLifeCycledResource.testDirectory(home, pluginContext, lifeCycle);
+    }
+
 
     private SolrTestRunner createSolrContainer() {
         return new SolrTestRunner();

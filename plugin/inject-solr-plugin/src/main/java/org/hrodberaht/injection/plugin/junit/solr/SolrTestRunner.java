@@ -178,7 +178,7 @@ public class SolrTestRunner {
         try {
             moveFiles(home, coreName + "/conf/lang");
         } catch (UnsupportedOperationException e) {
-            LOG.warn("found not files to copy at : '" + coreName + "/conf/lang'");
+            LOG.warn("found no files to copy at : '" + coreName + "/conf/lang'");
         }
     }
 
