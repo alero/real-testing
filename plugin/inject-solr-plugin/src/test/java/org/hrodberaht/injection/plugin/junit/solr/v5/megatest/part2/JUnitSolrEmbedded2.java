@@ -14,8 +14,6 @@ import javax.inject.Inject;
 
 @ContainerContext(SolrTestConfig2.class)
 @ExtendWith(JUnit5Extension.class)
-
-
 public class JUnitSolrEmbedded2 {
 
     TestSolrEmbedded testSolrEmbedded = new TestSolrEmbedded();
