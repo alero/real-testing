@@ -134,9 +134,7 @@ public class SolrTestRunner {
         coreContainer.load();
         LOG.info("Loading embedded container {}", runnerName);
         EmbeddedSolrServer solr = new EmbeddedSolrServer(coreContainer, coreName);
-        return new SolrRunnerHolder(
-                coreContainer, solr
-        );
+        return new SolrRunnerHolder(coreContainer, solr);
     }
 
     public void shutdownServer() {
