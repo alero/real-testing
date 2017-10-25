@@ -33,7 +33,7 @@ public class SolrJPlugin implements Plugin {
     private String solrHome;
     private String coreName;
     private ResourceLifeCycle lifeCycle = ResourceLifeCycle.TEST_CONFIG;
-    private PluginLifeCycledResource<SolrTestRunner> pluginLifeCycledResource = new PluginLifeCycledResource<>();
+    private PluginLifeCycledResource<SolrTestRunner> pluginLifeCycledResource = new PluginLifeCycledResource<>(SolrTestRunner.class);
 
 
     public SolrJPlugin lifeCycle(ResourceLifeCycle resourceLifeCycle) {

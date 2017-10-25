@@ -37,6 +37,7 @@ import org.hrodberaht.injection.plugin.junit.jersey.JerseyTestRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.ws.rs.client.Client;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -51,7 +52,7 @@ public class JerseyPlugin implements Plugin {
     private ResourceConfigInterface resourceConfigInterface;
     private TestContainerFactoryInterface testContainerFactoryInterface;
     private ResourceLifeCycle lifeCycle = ResourceLifeCycle.TEST_CLASS;
-    private PluginLifeCycledResource<JerseyTestRunner> pluginLifeCycledResource = new PluginLifeCycledResource<>();
+    private PluginLifeCycledResource<JerseyTestRunner> pluginLifeCycledResource = new PluginLifeCycledResource<>(JerseyTestRunner.class);
 
     @FunctionalInterface
     public interface ClientConfigInterface {
@@ -70,6 +71,10 @@ public class JerseyPlugin implements Plugin {
 
     public ResourceLifeCycle getResourceLifeCycle() {
         return lifeCycle;
+    }
+
+    public Client getClient() {
+        return jerseyTestRunner.getJerseyTest().client();
     }
 
     public FileLifeCycledResource testFiles() {

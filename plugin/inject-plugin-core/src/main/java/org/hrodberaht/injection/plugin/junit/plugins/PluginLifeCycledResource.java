@@ -15,8 +15,20 @@ public class PluginLifeCycledResource<T> implements FileLifeCycledResource {
 
 
     private static final Logger LOG = LoggerFactory.getLogger(PluginLifeCycledResource.class);
+    private static Map<Class, StateHolder> classCache = new ConcurrentHashMap<>();
 
-    private static InheritableThreadLocal<ThreadSafeState> threadState = new InheritableThreadLocal<>();
+
+    private final Class<T> instanceClass;
+    private final StateHolder stateHolder;
+
+    public PluginLifeCycledResource(Class<T> instanceClass) {
+        this.instanceClass = instanceClass;
+        stateHolder = classCache.computeIfAbsent(instanceClass, aClass -> new StateHolder());
+    }
+
+    private static class StateHolder<T> {
+        private InheritableThreadLocal<ThreadSafeState<T>> threadState = new InheritableThreadLocal<>();
+    }
 
     public interface InstanceCreator<T> {
         T create();
@@ -24,10 +36,10 @@ public class PluginLifeCycledResource<T> implements FileLifeCycledResource {
 
     public T create(Plugin.ResourceLifeCycle lifeCycle, PluginContext pluginContext, InstanceCreator<T> instanceCreator) {
 
-        ThreadSafeState<T> threadSafeState = threadState.get();
+        ThreadSafeState<T> threadSafeState = getThreadSafeState();
         if (threadSafeState == null) {
             threadSafeState = new ThreadSafeState<>();
-            threadState.set(threadSafeState);
+            stateHolder.threadState.set(threadSafeState);
         }
 
         if (lifeCycle == Plugin.ResourceLifeCycle.TEST_SUITE) {
@@ -42,6 +54,11 @@ public class PluginLifeCycledResource<T> implements FileLifeCycledResource {
         }
 
         return createAndLogInstance(lifeCycle, instanceCreator);
+    }
+
+    private ThreadSafeState<T> getThreadSafeState() {
+
+        return (ThreadSafeState<T>) stateHolder.threadState.get();
     }
 
     private T createAndLogInstance(Plugin.ResourceLifeCycle lifeCycle, InstanceCreator<T> instanceCreator) {

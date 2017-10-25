@@ -25,6 +25,7 @@ import org.hrodberaht.injection.core.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.plugin.datasource.DataSourceProxyInterface;
 import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCService;
 import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCServiceFactory;
+import org.hrodberaht.injection.plugin.datasource.jdbc.internal.JDBCException;
 import org.hrodberaht.injection.plugin.junit.ResourceWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -78,6 +79,8 @@ class LiquibaseRunner {
                         return true;
                     }
             );
+        } catch (JDBCException e) {
+            return false;
         } finally {
             dataSourceProxyInterface.clearDataSource();
         }
