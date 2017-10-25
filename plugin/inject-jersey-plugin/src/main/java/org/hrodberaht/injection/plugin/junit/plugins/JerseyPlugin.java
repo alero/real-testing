@@ -67,6 +67,10 @@ public class JerseyPlugin implements Plugin {
         TestContainerFactory container();
     }
 
+    public ResourceLifeCycle getResourceLifeCycle() {
+        return lifeCycle;
+    }
+
     public JerseyPluginBuilder builder() {
         return new JerseyPluginBuilder(this);
     }
