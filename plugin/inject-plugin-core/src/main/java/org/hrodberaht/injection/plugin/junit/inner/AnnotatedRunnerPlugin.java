@@ -17,8 +17,9 @@
 package org.hrodberaht.injection.plugin.junit.inner;
 
 import org.hrodberaht.injection.core.internal.annotation.ReflectionUtils;
-import org.hrodberaht.injection.core.register.InjectionRegister;
+import org.hrodberaht.injection.core.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
+import org.hrodberaht.injection.plugin.junit.api.PluginContext;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterClassTest;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterContainerCreation;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterTest;
@@ -70,7 +71,7 @@ public class AnnotatedRunnerPlugin {
     }
 
 
-    void findAnnotationAndInvokeMethod(PluginRunnerBase runnerBase, InjectionRegister injectionRegister, Class<Annotation> annotation) {
+    void findAnnotationAndInvokeMethod(PluginRunnerBase runnerBase, PluginContext pluginContext, Class<Annotation> annotation) {
         annotatedPlugin.forEach((aClass, plugin) -> runnerBase.runIfActive(aClass, () -> {
             AnnotationKey annotationKey = new AnnotationKey(aClass, annotation);
             List<Method> foundMethods = annotationKeyMethodsMap.computeIfAbsent(annotationKey, annotationKey1 -> {
@@ -89,13 +90,17 @@ public class AnnotatedRunnerPlugin {
 
             foundMethods.forEach(method -> {
                 try {
-                    if (injectionRegister != null && method.getParameterCount() == 1 && method.getParameterTypes()[0].isAssignableFrom(InjectionRegister.class)) {
-                        method.invoke(plugin, injectionRegister);
+                    if (pluginContext != null && method.getParameterCount() == 1) {
+                        if (method.getParameterTypes()[0].isAssignableFrom(PluginContext.class)) {
+                            method.invoke(plugin, pluginContext);
+                        } else {
+                            throw new InjectRuntimeException("parameter for annotated method (" + method.getName() + ") in class (" + plugin.getClass().getName() + ") must be of type (" + PluginContext.class + ") currently uses (" + method.getParameterTypes()[0] + ")");
+                        }
                     } else {
                         method.invoke(plugin);
                     }
                 } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new RuntimeException(e);
+                    throw new InjectRuntimeException(e);
                 }
             });
         }));

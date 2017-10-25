@@ -16,20 +16,18 @@
 
 package org.hrodberaht.injection.plugin.junit.api;
 
-import org.hrodberaht.injection.core.register.InjectionRegister;
-
 public interface RunnerPlugin extends Plugin {
 
-    void beforeContainerCreation();
+    void beforeContainerCreation(PluginContext pluginContext);
 
-    void afterContainerCreation(InjectionRegister injectionRegister);
+    void afterContainerCreation(PluginContext pluginContext);
 
-    void beforeTest(InjectionRegister injectionRegister);
+    void beforeTest(PluginContext pluginContext);
 
-    void beforeTestClass(InjectionRegister injectionRegister);
+    void beforeTestClass(PluginContext pluginContext);
 
-    void afterTestClass(InjectionRegister injectionRegister);
+    void afterTestClass(PluginContext pluginContext);
 
-    void afterTest(InjectionRegister injectionRegister);
+    void afterTest(PluginContext pluginContext);
 
 }

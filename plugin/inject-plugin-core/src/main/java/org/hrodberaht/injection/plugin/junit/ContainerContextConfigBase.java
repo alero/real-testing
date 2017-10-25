@@ -23,6 +23,7 @@ import org.hrodberaht.injection.core.register.InjectionRegister;
 import org.hrodberaht.injection.core.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.core.spi.ResourceFactory;
 import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
+import org.hrodberaht.injection.plugin.exception.PluginRuntimeException;
 import org.hrodberaht.injection.plugin.junit.api.InjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.api.RunnerPlugin;
@@ -52,6 +53,10 @@ public abstract class ContainerContextConfigBase implements ContainerContextConf
         return containerConfigInner.activatePlugin(pluginClass);
     }
 
+    protected <T extends Plugin> T activatePlugin(T plugin) {
+        return containerConfigInner.activatePlugin(plugin);
+    }
+
     RunnerPlugins getRunnerPlugins() {
         return runnerPlugins;
     }
@@ -73,6 +78,7 @@ public abstract class ContainerContextConfigBase implements ContainerContextConf
     void start() {
         containerConfigInner.start();
     }
+
 
     private static class ContainerConfigInner extends ContainerConfig {
         private final ContainerContextConfigBase base;
@@ -108,8 +114,17 @@ public abstract class ContainerContextConfigBase implements ContainerContextConf
             return super.createDefaultInjectionPointFinder();
         }
 
-        private <T extends Plugin> T activatePlugin(Class<T> pluginClass) {
-            final T plugin = createPlugin(pluginClass);
+        public <T extends Plugin> T activatePlugin(T plugin) {
+            createPlugin(plugin);
+            return activateCreatedPlugin((Class<T>) plugin.getClass(), plugin);
+        }
+
+        public <T extends Plugin> T activatePlugin(Class<T> pluginClass) {
+            final T plugin = createPlugin(createPluginInstance(pluginClass));
+            return activateCreatedPlugin(pluginClass, plugin);
+        }
+
+        private <T extends Plugin> T activateCreatedPlugin(Class<T> pluginClass, T plugin) {
             base.registerActivePlugin(pluginClass, plugin);
             injectionRegistryBuilder.register(registrations -> registrations.register(new RegistrationModuleAnnotation() {
                 @Override
@@ -138,40 +153,35 @@ public abstract class ContainerContextConfigBase implements ContainerContextConf
                 LOG.info("Activating annotated InjectionPlugin {}", plugin.getClass().getSimpleName());
                 if (this.injectionPlugin == null) {
                     if (chainableInjectionPointProvider != null) {
-                        throw new RuntimeException("A plugin that has created a Injection provider already exxists, change the order of the plugins to get the InjectionPlugin to go active first");
+                        throw new PluginRuntimeException("A plugin that has created a Injection provider already exxists, change the order of the plugins to get the InjectionPlugin to go active first");
                     }
                     this.injectionPlugin = AnnotatedInjectionPlugin.createPluginWrapper(plugin);
                 } else {
-                    throw new RuntimeException("There can be only one InjectionPlugin active at once");
-                }
-            }
-            if (plugin instanceof InjectionPlugin) {
-                LOG.info("Activating InjectionPlugin {}", plugin.getClass().getSimpleName());
-                InjectionPlugin injectionPlugin = (InjectionPlugin) plugin;
-                if (this.injectionPlugin == null) {
-                    this.injectionPlugin = injectionPlugin;
-                } else {
-                    throw new RuntimeException("There can be only one InjectionPlugin active at once");
+                    throw new PluginRuntimeException("There can be only one InjectionPlugin active at once");
                 }
             }
             return plugin;
         }
 
-        private <T extends Plugin> T createPlugin(Class<T> pluginClass) {
+        private <T extends Plugin> T createPlugin(T plugin) {
+            if (plugin instanceof RunnerPlugin) {
+                LOG.info("Activating RunnerPlugin {}", plugin.getClass().getSimpleName());
+                return base.runnerPlugins.addPlugin((RunnerPlugin) plugin);
+            }
+            if (containsRunnerAnnotation(plugin)) {
+                LOG.info("Activating Runner annotated Plugin {}", plugin.getClass().getSimpleName());
+                return base.runnerPlugins.addAnnotatedPlugin(plugin);
+            }
+            LOG.info("Plugin does not container runner info {}", plugin.getClass().getSimpleName());
+            return plugin;
+
+        }
+
+        private <T extends Plugin> T createPluginInstance(Class<T> pluginClass) {
             try {
-                T plugin = pluginClass.newInstance();
-                if (plugin instanceof RunnerPlugin) {
-                    LOG.info("Activating RunnerPlugin {}", plugin.getClass().getSimpleName());
-                    return base.runnerPlugins.addPlugin((RunnerPlugin) plugin);
-                }
-                if (containsRunnerAnnotation(plugin)) {
-                    LOG.info("Activating Runner annotated Plugin {}", plugin.getClass().getSimpleName());
-                    return base.runnerPlugins.addAnnotatedPlugin(plugin);
-                }
-                LOG.info("Plugin does not container runner info {}", plugin.getClass().getSimpleName());
-                return plugin;
+                return pluginClass.newInstance();
             } catch (InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException(e);
+                throw new PluginRuntimeException(e);
             }
         }
 
@@ -218,6 +228,8 @@ public abstract class ContainerContextConfigBase implements ContainerContextConf
                 injectionPlugin.setInjectionRegister(registryBuilder.getInjectionRegister());
             }
         }
+
+
     }
 
     private <T extends Plugin> void registerActivePlugin(Class<T> pluginClass, T plugin) {

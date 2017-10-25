@@ -23,7 +23,7 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.inmemory.InMemoryTestContainerFactory;
 import org.glassfish.jersey.test.spi.TestContainer;
 import org.glassfish.jersey.test.spi.TestContainerFactory;
-import org.hrodberaht.injection.core.register.InjectionRegister;
+import org.hrodberaht.injection.plugin.exception.PluginRuntimeException;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.api.PluginContext;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterClassTest;
@@ -31,7 +31,6 @@ import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterCon
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterTest;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeClassTest;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeTest;
-import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginContext;
 import org.hrodberaht.injection.plugin.junit.jersey.JerseyTestBuilder;
 import org.hrodberaht.injection.plugin.junit.jersey.JerseyTestRunner;
 import org.slf4j.Logger;
@@ -40,23 +39,18 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.LogManager;
 
 public class JerseyPlugin implements Plugin {
 
     private static final Logger LOG = LoggerFactory.getLogger(JerseyPlugin.class);
 
-    private static JerseyTestRunner suiteRunner;
-    private static Map<Class, JerseyTestRunner> classRunnerMap = new ConcurrentHashMap<>();
-
     private JerseyTestRunner jerseyTestRunner;
     private ClientConfigInterface clientConfigInterface;
     private ResourceConfigInterface resourceConfigInterface;
     private TestContainerFactoryInterface testContainerFactoryInterface;
-    private LifeCycle lifeCycle = LifeCycle.TEST;
-    private Class testClass;
+    private ResourceLifeCycle lifeCycle = ResourceLifeCycle.TEST_CLASS;
+    private PluginLifeCycledResource<JerseyTestRunner> pluginLifeCycledResource = new PluginLifeCycledResource<>();
 
     @FunctionalInterface
     public interface ClientConfigInterface {
@@ -85,7 +79,7 @@ public class JerseyPlugin implements Plugin {
             this.jerseyPlugin = jerseyPlugin;
         }
 
-        public JerseyPluginBuilder lifeCycle(LifeCycle lifeCycle) {
+        public JerseyPluginBuilder lifeCycle(ResourceLifeCycle lifeCycle) {
             jerseyPlugin.lifeCycle = lifeCycle;
             return this;
         }
@@ -107,16 +101,6 @@ public class JerseyPlugin implements Plugin {
 
     }
 
-    private void initJerseyContainer() {
-        if (lifeCycle == LifeCycle.TEST_SUITE && suiteRunner == null) {
-            suiteRunner = createJerseyContainer();
-            jerseyTestRunner = suiteRunner;
-        } else if (lifeCycle == LifeCycle.TEST_CONFIG) {
-            jerseyTestRunner = classRunnerMap.computeIfAbsent(testClass, aClass -> createJerseyContainer());
-        } else {
-            jerseyTestRunner = createJerseyContainer();
-        }
-    }
 
     private JerseyTestRunner createJerseyContainer() {
 
@@ -164,50 +148,45 @@ public class JerseyPlugin implements Plugin {
                 LogManager.getLogManager().readConfiguration(inputStream);
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new PluginRuntimeException(e);
         }
     }
 
 
     @RunnerPluginAfterContainerCreation
-    private void beforeContainerCreation() {
-        initJerseyContainer();
-        if (lifeCycle == LifeCycle.TEST_SUITE) {
+    protected void beforeContainerCreation(PluginContext pluginContext) {
+        jerseyTestRunner = pluginLifeCycledResource.create(lifeCycle, pluginContext, this::createJerseyContainer);
+        if (lifeCycle == ResourceLifeCycle.TEST_SUITE) {
             startJersey();
         }
     }
 
     @RunnerPluginBeforeClassTest
-    private void beforeTestClass(InjectionRegister injectionRegister) {
-        if (lifeCycle == LifeCycle.TEST_CLASS || lifeCycle == LifeCycle.TEST_CONFIG) {
+    protected void beforeTestClass(PluginContext pluginContext) {
+        if (lifeCycle == ResourceLifeCycle.TEST_CLASS || lifeCycle == ResourceLifeCycle.TEST_CONFIG) {
             startJersey();
         }
     }
 
     @RunnerPluginAfterClassTest
-    private void afterTestClass(InjectionRegister injectionRegister) {
-        if (lifeCycle == LifeCycle.TEST_CLASS) {
+    protected void afterTestClass(PluginContext pluginContext) {
+        if (lifeCycle == ResourceLifeCycle.TEST_CLASS) {
             stopJersey();
         }
     }
 
     @RunnerPluginBeforeTest
-    private void beforeTest(InjectionRegister injectionRegister) {
-        if (lifeCycle == LifeCycle.TEST) {
+    protected void beforeTest(PluginContext pluginContext) {
+        if (lifeCycle == ResourceLifeCycle.TEST) {
             startJersey();
         }
     }
 
     @RunnerPluginAfterTest
-    private void afterTest(InjectionRegister injectionRegister) {
-        if (lifeCycle == LifeCycle.TEST) {
+    protected void afterTest(PluginContext pluginContext) {
+        if (lifeCycle == ResourceLifeCycle.TEST) {
             stopJersey();
         }
-    }
-
-    @RunnerPluginContext
-    private void testContext(PluginContext pluginContext) {
-        testClass = pluginContext.getTestClass();
     }
 
     private void startJersey() {
@@ -220,15 +199,42 @@ public class JerseyPlugin implements Plugin {
         jerseyTestRunner.shutdownJersey();
     }
 
-
-
-
-
-
     @Override
     public LifeCycle getLifeCycle() {
-        return lifeCycle;
+        return LifeCycle.TEST_SUITE;
     }
 
 
+    static class TestContainerWrapper implements TestContainer {
+
+        private TestContainer innerContainer;
+
+        TestContainerWrapper(TestContainer innerContainer) {
+            this.innerContainer = innerContainer;
+        }
+
+        @Override
+        public ClientConfig getClientConfig() {
+            ClientConfig clientConfig = innerContainer.getClientConfig();
+            if (clientConfig != null) {
+                return clientConfig;
+            }
+            return new ClientConfig();
+        }
+
+        @Override
+        public URI getBaseUri() {
+            return innerContainer.getBaseUri();
+        }
+
+        @Override
+        public void start() {
+            innerContainer.start();
+        }
+
+        @Override
+        public void stop() {
+            innerContainer.stop();
+        }
+    }
 }

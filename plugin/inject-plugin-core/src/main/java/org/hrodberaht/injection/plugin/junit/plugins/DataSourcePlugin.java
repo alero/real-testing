@@ -17,11 +17,11 @@
 package org.hrodberaht.injection.plugin.junit.plugins;
 
 import org.hrodberaht.injection.core.InjectContainer;
-import org.hrodberaht.injection.core.register.InjectionRegister;
 import org.hrodberaht.injection.core.spi.JavaResourceCreator;
 import org.hrodberaht.injection.core.spi.ResourceFactory;
 import org.hrodberaht.injection.plugin.datasource.DatasourceResourceCreator;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
+import org.hrodberaht.injection.plugin.junit.api.PluginContext;
 import org.hrodberaht.injection.plugin.junit.api.annotation.ResourcePluginFactory;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterContainerCreation;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterTest;
@@ -58,7 +58,7 @@ public class DataSourcePlugin implements Plugin {
     }
 
     /**
-     * Will load files from the path using a filename pattern matcher
+     * Will load files from the path using a filename pattern matcher, will not look into child directories of the "classPathRoot"
      * First filter is a schema creator pattern as "create_schema_*.sql", example create_schema_user.sql
      * Second filter is a schema creator pattern as "create_schema_*.sql", example create_schema_user.sql
      * The order of the filters are guaranteed to follow create_schema first, insert_script second
@@ -69,6 +69,12 @@ public class DataSourcePlugin implements Plugin {
         return this;
     }
 
+    /**
+     * Will load files from the path using a filename pattern matcher, will not look into child directories of the "classPathRoot"
+     * First filter is a schema creator pattern as "create_schema_*.sql", example create_schema_user.sql
+     * Second filter is a schema creator pattern as "insert_script*.sql", example insert_script_user.sql
+     * The order of the filters are guaranteed to follow create_schema first, insert_script second
+     */
     public DataSourcePlugin loadSchema(String schemaName, DataSource dataSource, String classPathRoot) {
         DatasourceContainerService datasourceContainerService = new DatasourceContainerService(dataSource);
         datasourceContainerService.addSQLSchemas(schemaName, classPathRoot);
@@ -83,8 +89,8 @@ public class DataSourcePlugin implements Plugin {
 
 
     @RunnerPluginAfterContainerCreation
-    protected void afterContainerCreation(InjectionRegister injectionRegister) {
-        this.injectContainer = injectionRegister.getContainer();
+    protected void afterContainerCreation(PluginContext pluginContext) {
+        this.injectContainer = pluginContext.register().getContainer();
         if (!beforeSuite.isEmpty()) {
             transactionManager.beginTransaction();
             beforeSuite.forEach(resourceRunner -> {

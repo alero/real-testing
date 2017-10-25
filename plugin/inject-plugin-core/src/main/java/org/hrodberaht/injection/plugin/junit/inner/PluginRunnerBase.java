@@ -16,8 +16,8 @@
 
 package org.hrodberaht.injection.plugin.junit.inner;
 
-import org.hrodberaht.injection.core.register.InjectionRegister;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
+import org.hrodberaht.injection.plugin.junit.api.PluginContext;
 import org.hrodberaht.injection.plugin.junit.api.RunnerPlugin;
 
 import java.lang.annotation.Annotation;
@@ -50,10 +50,9 @@ public abstract class PluginRunnerBase implements RunnerPluginInterface {
         return annotatedPluginRunner.addPlugin(plugin);
     }
 
-    public void runInitBeforeContainer() {
-        runnerPlugins.forEach((aClass, runnerPlugin) -> runIfActive(aClass, runnerPlugin::beforeContainerCreation));
+    public void runInitBeforeContainer(PluginContext pluginContext) {
+        runnerPlugins.forEach((aClass, runnerPlugin) -> runIfActive(aClass, () -> runnerPlugin.beforeContainerCreation(pluginContext)));
     }
-
 
     interface RunnerPluginOp {
         void runOp();
@@ -65,28 +64,28 @@ public abstract class PluginRunnerBase implements RunnerPluginInterface {
         }
     }
 
-    public void runInitAfterContainer(InjectionRegister injectionRegister) {
-        runnerPlugins.forEach((aClass, runnerPlugin) -> runIfActive(aClass, () -> runnerPlugin.afterContainerCreation(injectionRegister)));
+    public void runInitAfterContainer(PluginContext pluginContext) {
+        runnerPlugins.forEach((aClass, runnerPlugin) -> runIfActive(aClass, () -> runnerPlugin.afterContainerCreation(pluginContext)));
     }
 
     @Override
-    public void findAnnotationAndInvokeMethod(InjectionRegister injectionRegister, Class<Annotation> annotation) {
-        annotatedPluginRunner.findAnnotationAndInvokeMethod(this, injectionRegister, annotation);
+    public void findAnnotationAndInvokeMethod(PluginContext pluginContext, Class<Annotation> annotation) {
+        annotatedPluginRunner.findAnnotationAndInvokeMethod(this, pluginContext, annotation);
     }
 
-    public void runBeforeTest(InjectionRegister injectionRegister) {
-        runnerPlugins.forEach((aClass, runnerPlugin) -> runIfActive(aClass, () -> runnerPlugin.beforeTest(injectionRegister)));
+    public void runBeforeTest(PluginContext pluginContext) {
+        runnerPlugins.forEach((aClass, runnerPlugin) -> runIfActive(aClass, () -> runnerPlugin.beforeTest(pluginContext)));
     }
 
-    public void runAfterTest(InjectionRegister injectionRegister) {
-        runnerPlugins.forEach((aClass, runnerPlugin) -> runIfActive(aClass, () -> runnerPlugin.afterTest(injectionRegister)));
+    public void runAfterTest(PluginContext pluginContext) {
+        runnerPlugins.forEach((aClass, runnerPlugin) -> runIfActive(aClass, () -> runnerPlugin.afterTest(pluginContext)));
     }
 
-    public void runBeforeTestClass(InjectionRegister injectionRegister) {
-        runnerPlugins.forEach((aClass, runnerPlugin) -> runIfActive(aClass, () -> runnerPlugin.beforeTestClass(injectionRegister)));
+    public void runBeforeTestClass(PluginContext pluginContext) {
+        runnerPlugins.forEach((aClass, runnerPlugin) -> runIfActive(aClass, () -> runnerPlugin.beforeTestClass(pluginContext)));
     }
 
-    public void runAfterTestClass(InjectionRegister injectionRegister) {
-        runnerPlugins.forEach((aClass, runnerPlugin) -> runIfActive(aClass, () -> runnerPlugin.afterTestClass(injectionRegister)));
+    public void runAfterTestClass(PluginContext pluginContext) {
+        runnerPlugins.forEach((aClass, runnerPlugin) -> runIfActive(aClass, () -> runnerPlugin.afterTestClass(pluginContext)));
     }
 }

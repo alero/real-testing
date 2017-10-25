@@ -17,6 +17,7 @@
 package org.hrodberaht.injection.plugin.junit.plugins;
 
 import liquibase.exception.LiquibaseException;
+import org.hrodberaht.injection.plugin.exception.PluginRuntimeException;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.liquibase.LiquibaseManager;
 
@@ -44,7 +45,7 @@ public class LiquibasePlugin extends DataSourcePlugin implements Plugin {
         try {
             liquibaseManager.liquiBaseSchemaCreation(dataSource, liquibaseSchema, watchers);
         } catch (SQLException | LiquibaseException e) {
-            throw new RuntimeException(e);
+            throw new PluginRuntimeException(e);
         }
         return this;
     }

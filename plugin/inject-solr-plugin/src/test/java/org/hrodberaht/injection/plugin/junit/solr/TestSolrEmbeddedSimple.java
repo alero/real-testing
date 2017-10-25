@@ -19,11 +19,11 @@ package org.hrodberaht.injection.plugin.junit.solr;
 import org.apache.solr.client.solrj.request.schema.SchemaRequest;
 import org.apache.solr.client.solrj.response.schema.SchemaResponse;
 import org.apache.solr.common.SolrInputDocument;
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
 import org.hrodberaht.injection.plugin.junit.plugins.SolrJPlugin;
-import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -37,9 +37,9 @@ import static org.hrodberaht.injection.plugin.junit.solr.SolrAssertions.Status.O
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@ContainerContext(SolrEmbeddedTestSimple.Config.class)
+@ContainerContext(TestSolrEmbeddedSimple.Config.class)
 @RunWith(JUnit4Runner.class)
-public class SolrEmbeddedTestSimple {
+public class TestSolrEmbeddedSimple {
 
     @Inject
     private SolrJPlugin solrJPlugin;

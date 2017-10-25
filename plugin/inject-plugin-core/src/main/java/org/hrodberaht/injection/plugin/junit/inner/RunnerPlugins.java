@@ -16,8 +16,8 @@
 
 package org.hrodberaht.injection.plugin.junit.inner;
 
-import org.hrodberaht.injection.core.register.InjectionRegister;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
+import org.hrodberaht.injection.plugin.junit.api.PluginContext;
 import org.hrodberaht.injection.plugin.junit.api.RunnerPlugin;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterClassTest;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterContainerCreation;
@@ -50,8 +50,6 @@ public class RunnerPlugins {
 
     private RunnerPluginInterface getRunner(Plugin.LifeCycle lifeCycle) {
         switch (lifeCycle) {
-            case TEST:
-                return testClassRunnerPlugins;
             case TEST_CLASS:
                 return testClassRunnerPlugins;
             case TEST_CONFIG:
@@ -63,85 +61,85 @@ public class RunnerPlugins {
         }
     }
 
-    private void runInitAfterContainerAnnotation(InjectionRegister injectionRegister) {
-        findAnnotationAndInvokeMethod(injectionRegister, getRunner(Plugin.LifeCycle.TEST_SUITE), RunnerPluginAfterContainerCreation.class);
-        findAnnotationAndInvokeMethod(injectionRegister, getRunner(Plugin.LifeCycle.TEST_CONFIG), RunnerPluginAfterContainerCreation.class);
-        findAnnotationAndInvokeMethod(injectionRegister, getRunner(Plugin.LifeCycle.TEST_CLASS), RunnerPluginAfterContainerCreation.class);
+    private void runInitAfterContainerAnnotation(PluginContext pluginContext) {
+        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_SUITE), RunnerPluginAfterContainerCreation.class);
+        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CONFIG), RunnerPluginAfterContainerCreation.class);
+        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CLASS), RunnerPluginAfterContainerCreation.class);
     }
 
-    private void runInitBeforerContainerAnnotation() {
-        findAnnotationAndInvokeMethod(null, getRunner(Plugin.LifeCycle.TEST_SUITE), RunnerPluginBeforeContainerCreation.class);
-        findAnnotationAndInvokeMethod(null, getRunner(Plugin.LifeCycle.TEST_CONFIG), RunnerPluginBeforeContainerCreation.class);
-        findAnnotationAndInvokeMethod(null, getRunner(Plugin.LifeCycle.TEST_CLASS), RunnerPluginBeforeContainerCreation.class);
+    private void runInitBeforerContainerAnnotation(PluginContext pluginContext) {
+        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_SUITE), RunnerPluginBeforeContainerCreation.class);
+        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CONFIG), RunnerPluginBeforeContainerCreation.class);
+        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CLASS), RunnerPluginBeforeContainerCreation.class);
     }
 
-    private void runBeforeTestAnnotation(InjectionRegister injectionRegister) {
-        findAnnotationAndInvokeMethod(injectionRegister, getRunner(Plugin.LifeCycle.TEST_SUITE), RunnerPluginBeforeTest.class);
-        findAnnotationAndInvokeMethod(injectionRegister, getRunner(Plugin.LifeCycle.TEST_CONFIG), RunnerPluginBeforeTest.class);
-        findAnnotationAndInvokeMethod(injectionRegister, getRunner(Plugin.LifeCycle.TEST_CLASS), RunnerPluginBeforeTest.class);
+    private void runBeforeTestAnnotation(PluginContext pluginContext) {
+        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_SUITE), RunnerPluginBeforeTest.class);
+        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CONFIG), RunnerPluginBeforeTest.class);
+        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CLASS), RunnerPluginBeforeTest.class);
     }
 
-    private void runAfterTestAnnotation(InjectionRegister injectionRegister) {
-        findAnnotationAndInvokeMethod(injectionRegister, getRunner(Plugin.LifeCycle.TEST_SUITE), RunnerPluginAfterTest.class);
-        findAnnotationAndInvokeMethod(injectionRegister, getRunner(Plugin.LifeCycle.TEST_CONFIG), RunnerPluginAfterTest.class);
-        findAnnotationAndInvokeMethod(injectionRegister, getRunner(Plugin.LifeCycle.TEST_CLASS), RunnerPluginAfterTest.class);
+    private void runAfterTestAnnotation(PluginContext pluginContext) {
+        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_SUITE), RunnerPluginAfterTest.class);
+        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CONFIG), RunnerPluginAfterTest.class);
+        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CLASS), RunnerPluginAfterTest.class);
     }
 
-    private void runAfterTestClassAnnotation(InjectionRegister injectionRegister) {
-        findAnnotationAndInvokeMethod(injectionRegister, getRunner(Plugin.LifeCycle.TEST_SUITE), RunnerPluginAfterClassTest.class);
-        findAnnotationAndInvokeMethod(injectionRegister, getRunner(Plugin.LifeCycle.TEST_CONFIG), RunnerPluginAfterClassTest.class);
-        findAnnotationAndInvokeMethod(injectionRegister, getRunner(Plugin.LifeCycle.TEST_CLASS), RunnerPluginAfterClassTest.class);
+    private void runAfterTestClassAnnotation(PluginContext pluginContext) {
+        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_SUITE), RunnerPluginAfterClassTest.class);
+        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CONFIG), RunnerPluginAfterClassTest.class);
+        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CLASS), RunnerPluginAfterClassTest.class);
     }
 
-    private void runBeforeTestClassAnnotation(InjectionRegister injectionRegister) {
-        findAnnotationAndInvokeMethod(injectionRegister, getRunner(Plugin.LifeCycle.TEST_SUITE), RunnerPluginBeforeClassTest.class);
-        findAnnotationAndInvokeMethod(injectionRegister, getRunner(Plugin.LifeCycle.TEST_CONFIG), RunnerPluginBeforeClassTest.class);
-        findAnnotationAndInvokeMethod(injectionRegister, getRunner(Plugin.LifeCycle.TEST_CLASS), RunnerPluginBeforeClassTest.class);
+    private void runBeforeTestClassAnnotation(PluginContext pluginContext) {
+        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_SUITE), RunnerPluginBeforeClassTest.class);
+        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CONFIG), RunnerPluginBeforeClassTest.class);
+        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CLASS), RunnerPluginBeforeClassTest.class);
     }
 
-    private void findAnnotationAndInvokeMethod(InjectionRegister injectionRegister, RunnerPluginInterface runner, Class annotation) {
-        runner.findAnnotationAndInvokeMethod(injectionRegister, annotation);
+    private void findAnnotationAndInvokeMethod(PluginContext pluginContext, RunnerPluginInterface runner, Class annotation) {
+        runner.findAnnotationAndInvokeMethod(pluginContext, annotation);
     }
 
-    public void runInitBeforeContainer() {
-        runInitBeforerContainerAnnotation();
-        getRunner(Plugin.LifeCycle.TEST_CONFIG).runInitBeforeContainer();
-        getRunner(Plugin.LifeCycle.TEST_CLASS).runInitBeforeContainer();
-        getRunner(Plugin.LifeCycle.TEST_SUITE).runInitBeforeContainer();
+    public void runInitBeforeContainer(PluginContext pluginContext) {
+        runInitBeforerContainerAnnotation(pluginContext);
+        getRunner(Plugin.LifeCycle.TEST_CONFIG).runInitBeforeContainer(pluginContext);
+        getRunner(Plugin.LifeCycle.TEST_CLASS).runInitBeforeContainer(pluginContext);
+        getRunner(Plugin.LifeCycle.TEST_SUITE).runInitBeforeContainer(pluginContext);
     }
 
-    public void runInitAfterContainer(InjectionRegister injectionRegister) {
-        runInitAfterContainerAnnotation(injectionRegister);
-        getRunner(Plugin.LifeCycle.TEST_CONFIG).runInitAfterContainer(injectionRegister);
-        getRunner(Plugin.LifeCycle.TEST_CLASS).runInitAfterContainer(injectionRegister);
-        getRunner(Plugin.LifeCycle.TEST_SUITE).runInitAfterContainer(injectionRegister);
+    public void runInitAfterContainer(PluginContext pluginContext) {
+        runInitAfterContainerAnnotation(pluginContext);
+        getRunner(Plugin.LifeCycle.TEST_CONFIG).runInitAfterContainer(pluginContext);
+        getRunner(Plugin.LifeCycle.TEST_CLASS).runInitAfterContainer(pluginContext);
+        getRunner(Plugin.LifeCycle.TEST_SUITE).runInitAfterContainer(pluginContext);
     }
 
-    public void runBeforeTest(InjectionRegister injectionRegister) {
-        runBeforeTestAnnotation(injectionRegister);
-        getRunner(Plugin.LifeCycle.TEST_CONFIG).runBeforeTest(injectionRegister);
-        getRunner(Plugin.LifeCycle.TEST_CLASS).runBeforeTest(injectionRegister);
-        getRunner(Plugin.LifeCycle.TEST_SUITE).runBeforeTest(injectionRegister);
+    public void runBeforeTest(PluginContext pluginContext) {
+        runBeforeTestAnnotation(pluginContext);
+        getRunner(Plugin.LifeCycle.TEST_CONFIG).runBeforeTest(pluginContext);
+        getRunner(Plugin.LifeCycle.TEST_CLASS).runBeforeTest(pluginContext);
+        getRunner(Plugin.LifeCycle.TEST_SUITE).runBeforeTest(pluginContext);
     }
 
-    public void runAfterTest(InjectionRegister injectionRegister) {
-        runAfterTestAnnotation(injectionRegister);
-        getRunner(Plugin.LifeCycle.TEST_CONFIG).runAfterTest(injectionRegister);
-        getRunner(Plugin.LifeCycle.TEST_CLASS).runAfterTest(injectionRegister);
-        getRunner(Plugin.LifeCycle.TEST_SUITE).runAfterTest(injectionRegister);
+    public void runAfterTest(PluginContext pluginContext) {
+        runAfterTestAnnotation(pluginContext);
+        getRunner(Plugin.LifeCycle.TEST_CONFIG).runAfterTest(pluginContext);
+        getRunner(Plugin.LifeCycle.TEST_CLASS).runAfterTest(pluginContext);
+        getRunner(Plugin.LifeCycle.TEST_SUITE).runAfterTest(pluginContext);
     }
 
-    public void runBeforeTestClass(InjectionRegister injectionRegister) {
-        runBeforeTestClassAnnotation(injectionRegister);
-        getRunner(Plugin.LifeCycle.TEST_CONFIG).runBeforeTestClass(injectionRegister);
-        getRunner(Plugin.LifeCycle.TEST_CLASS).runBeforeTestClass(injectionRegister);
-        getRunner(Plugin.LifeCycle.TEST_SUITE).runBeforeTestClass(injectionRegister);
+    public void runBeforeTestClass(PluginContext pluginContext) {
+        runBeforeTestClassAnnotation(pluginContext);
+        getRunner(Plugin.LifeCycle.TEST_CONFIG).runBeforeTestClass(pluginContext);
+        getRunner(Plugin.LifeCycle.TEST_CLASS).runBeforeTestClass(pluginContext);
+        getRunner(Plugin.LifeCycle.TEST_SUITE).runBeforeTestClass(pluginContext);
     }
 
-    public void runAfterTestClass(InjectionRegister injectionRegister) {
-        runAfterTestClassAnnotation(injectionRegister);
-        getRunner(Plugin.LifeCycle.TEST_CONFIG).runAfterTestClass(injectionRegister);
-        getRunner(Plugin.LifeCycle.TEST_CLASS).runAfterTestClass(injectionRegister);
-        getRunner(Plugin.LifeCycle.TEST_SUITE).runAfterTestClass(injectionRegister);
+    public void runAfterTestClass(PluginContext pluginContext) {
+        runAfterTestClassAnnotation(pluginContext);
+        getRunner(Plugin.LifeCycle.TEST_CONFIG).runAfterTestClass(pluginContext);
+        getRunner(Plugin.LifeCycle.TEST_CLASS).runAfterTestClass(pluginContext);
+        getRunner(Plugin.LifeCycle.TEST_SUITE).runAfterTestClass(pluginContext);
     }
 }

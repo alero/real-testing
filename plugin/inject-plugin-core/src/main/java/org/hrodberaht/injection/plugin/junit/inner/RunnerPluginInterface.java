@@ -16,8 +16,8 @@
 
 package org.hrodberaht.injection.plugin.junit.inner;
 
-import org.hrodberaht.injection.core.register.InjectionRegister;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
+import org.hrodberaht.injection.plugin.junit.api.PluginContext;
 import org.hrodberaht.injection.plugin.junit.api.RunnerPlugin;
 
 import java.lang.annotation.Annotation;
@@ -27,17 +27,17 @@ public interface RunnerPluginInterface {
 
     Plugin addAnnotatedPlugin(Plugin runnerPlugin);
 
-    void runInitBeforeContainer();
+    void runInitBeforeContainer(PluginContext pluginContext);
 
-    void runAfterTestClass(InjectionRegister injectionRegister);
+    void runAfterTestClass(PluginContext pluginContext);
 
-    void runBeforeTestClass(InjectionRegister injectionRegister);
+    void runBeforeTestClass(PluginContext pluginContext);
 
-    void runAfterTest(InjectionRegister injectionRegister);
+    void runAfterTest(PluginContext pluginContext);
 
-    void runBeforeTest(InjectionRegister injectionRegister);
+    void runBeforeTest(PluginContext pluginContext);
 
-    void runInitAfterContainer(InjectionRegister injectionRegister);
+    void runInitAfterContainer(PluginContext pluginContext);
 
-    void findAnnotationAndInvokeMethod(InjectionRegister injectionRegister, Class<Annotation> annotation);
+    void findAnnotationAndInvokeMethod(PluginContext pluginContext, Class<Annotation> annotation);
 }

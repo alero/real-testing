@@ -22,9 +22,11 @@ import org.junit.jupiter.api.extension.BeforeAllCallback;
 import org.junit.jupiter.api.extension.BeforeEachCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;
-import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 import org.junit.jupiter.api.extension.TestInstancePostProcessor;
+
+import java.lang.reflect.Method;
+import java.util.Optional;
 
 import static org.junit.platform.commons.util.Preconditions.notNull;
 
@@ -34,28 +36,36 @@ public class JUnit5Extension implements BeforeAllCallback, AfterAllCallback, Tes
     private JUnitContext jUnitContext;
 
     @Override
-    public void afterAll(ExtensionContext extensionContext) throws Exception {
-        jUnitContext.runAfterClass();
-    }
-
-    @Override
-    public void afterEach(ExtensionContext extensionContext) throws Exception {
-        jUnitContext.runAfterTest();
-    }
-
-    @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception {
         jUnitContext = new JUnitContext(getRequiredTestClass(extensionContext));
         jUnitContext.runBeforeClass();
     }
 
     @Override
-    public void beforeEach(ExtensionContext extensionContext) throws Exception {
-        jUnitContext.runBeforeTest(false);
+    public void afterAll(ExtensionContext extensionContext) throws Exception {
+        jUnitContext.runAfterClass();
     }
 
     @Override
-    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    public void afterEach(ExtensionContext extensionContext) throws Exception {
+        jUnitContext.runAfterTest(getName(extensionContext));
+    }
+
+    private String getName(ExtensionContext extensionContext) {
+        Optional<Method> testMethod = extensionContext.getTestMethod();
+        if (testMethod.isPresent()) {
+            return testMethod.get().getName();
+        }
+        return "noName";
+    }
+
+    @Override
+    public void beforeEach(ExtensionContext extensionContext) throws Exception {
+        jUnitContext.runBeforeTest(false, getName(extensionContext));
+    }
+
+    @Override
+    public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
         //Parameter parameter = parameterContext.getParameter();
         //Executable executable = parameter.getDeclaringExecutable();
         //return (executable instanceof Constructor && AnnotationUtil.hasAnnotation(executable, Inject.class));
@@ -63,7 +73,7 @@ public class JUnit5Extension implements BeforeAllCallback, AfterAllCallback, Tes
     }
 
     @Override
-    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) throws ParameterResolutionException {
+    public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
         //Class<?> testClass = getRequiredTestClass(extensionContext);
         //return jUnitContext.get(testClass);
         return null;
@@ -76,8 +86,8 @@ public class JUnit5Extension implements BeforeAllCallback, AfterAllCallback, Tes
     }
 
     @Override
-    public void postProcessTestInstance(Object o, ExtensionContext extensionContext) throws Exception {
+    public void postProcessTestInstance(Object test, ExtensionContext extensionContext) throws Exception {
         jUnitContext.activateContainer();
-        jUnitContext.createTest(() -> o);
+        jUnitContext.createTest(() -> test);
     }
 }

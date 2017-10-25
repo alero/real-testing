@@ -17,10 +17,12 @@
 package org.hrodberaht.injection.plugin.junit.plugins;
 
 import org.hrodberaht.injection.core.internal.annotation.DefaultInjectionPointFinder;
-import org.hrodberaht.injection.core.register.InjectionRegister;
 import org.hrodberaht.injection.core.spi.ContainerConfigBuilder;
-import org.hrodberaht.injection.plugin.junit.api.InjectionPlugin;
-import org.hrodberaht.injection.plugin.junit.api.RunnerPlugin;
+import org.hrodberaht.injection.plugin.junit.api.Plugin;
+import org.hrodberaht.injection.plugin.junit.api.PluginContext;
+import org.hrodberaht.injection.plugin.junit.api.annotation.InjectionPluginInjectionFinder;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterContainerCreation;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeContainerCreation;
 import org.hrodberaht.injection.plugin.junit.cdi.ApplicationCDIExtensions;
 import org.hrodberaht.injection.plugin.junit.cdi.CDIExtensions;
 
@@ -28,18 +30,12 @@ import javax.ejb.EJB;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-public class CDIInjectionPlugin implements InjectionPlugin, RunnerPlugin {
+public class CDIInjectionPlugin implements Plugin {
 
     private final CDIExtensions cdiExtensions = new ApplicationCDIExtensions();
 
-
-    @Override
-    public void setInjectionRegister(InjectionRegister injectionRegister) {
-
-    }
-
-    @Override
-    public DefaultInjectionPointFinder getInjectionFinder(ContainerConfigBuilder containerConfigBuilder) {
+    @InjectionPluginInjectionFinder
+    protected DefaultInjectionPointFinder getInjectionFinder(ContainerConfigBuilder containerConfigBuilder) {
         return new CDIInjectionPointFinder(containerConfigBuilder);
     }
 
@@ -49,36 +45,15 @@ public class CDIInjectionPlugin implements InjectionPlugin, RunnerPlugin {
     }
 
 
-    @Override
-    public void beforeContainerCreation() {
+    @RunnerPluginBeforeContainerCreation
+    protected void beforeContainerCreation(PluginContext pluginContext) {
         cdiExtensions.runBeforeBeanDiscovery();
     }
 
-    @Override
-    public void afterContainerCreation(InjectionRegister injectionRegister) {
-        cdiExtensions.runAfterBeanDiscovery(injectionRegister);
+    @RunnerPluginAfterContainerCreation
+    protected void afterContainerCreation(PluginContext pluginContext) {
+        cdiExtensions.runAfterBeanDiscovery(pluginContext.register());
     }
-
-    @Override
-    public void beforeTest(InjectionRegister injectionRegisterr) {
-
-    }
-
-    @Override
-    public void beforeTestClass(InjectionRegister injectionRegister) {
-
-    }
-
-    @Override
-    public void afterTestClass(InjectionRegister injectionRegister) {
-
-    }
-
-    @Override
-    public void afterTest(InjectionRegister injectionRegister) {
-
-    }
-
 
     private static class CDIInjectionPointFinder extends DefaultInjectionPointFinder {
         private boolean annotationForEJB = true;

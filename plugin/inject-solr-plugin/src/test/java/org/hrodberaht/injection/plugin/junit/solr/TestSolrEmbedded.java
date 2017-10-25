@@ -22,7 +22,6 @@ import org.apache.solr.common.SolrInputDocument;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
 import org.hrodberaht.injection.plugin.junit.plugins.SolrJPlugin;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -41,13 +40,13 @@ import static org.junit.Assert.assertTrue;
 
 @ContainerContext(ContainerConfigExample.class)
 @RunWith(JUnit4Runner.class)
-public class SolrEmbeddedTest2 {
+public class TestSolrEmbedded {
 
 
     @Inject
-    private SolrJPlugin solrJPlugin;
+    public SolrJPlugin solrJPlugin;
 
-    private SolrAssertions assertions;
+    public SolrAssertions assertions;
 
     @PostConstruct
     public void init() {
@@ -65,9 +64,9 @@ public class SolrEmbeddedTest2 {
         assertions.assertExistsAndReturn("1");
         assertions.assertCount(OK, 10);
 
-        assertions.cleanDataFromCollection();
+        // assertions.assertQuery(null, "(delete('/doc/1'),commit())");
+        // assertions.assertQuery(9L, "count(collection())");
 
-        assertions.assertCount(OK, 0);
 
         //assertions.assertQuery("OK", "('OK',delete('/doc/2'),commit())");
         //assertions.assertQuery(8L, "count(collection())");
@@ -124,7 +123,6 @@ public class SolrEmbeddedTest2 {
 
 
     @Test
-    @Ignore // TODO: Schema updates are persisted across tests ... not sure what to do about it
     public void testSchemaUpdate() throws Exception {
         String fieldName = "VerificationTest";
 

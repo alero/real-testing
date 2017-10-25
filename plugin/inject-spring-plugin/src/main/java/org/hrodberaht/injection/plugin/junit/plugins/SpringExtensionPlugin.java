@@ -96,6 +96,12 @@ public class SpringExtensionPlugin implements Plugin {
         return this;
     }
 
+    /**
+     * Makes it possible to use SpringEntityManager as autowirable resource in tests
+     *
+     * @return builder pattern
+     * @see org.hrodberaht.injection.plugin.junit.spring.beans.SpringEntityManager
+     */
     public SpringExtensionPlugin enableJPA() {
         enableJPA = true;
         return this;
@@ -139,12 +145,12 @@ public class SpringExtensionPlugin implements Plugin {
     }
 
     @InjectionPluginInjectionRegister
-    private void setInjectionRegister(InjectionRegister injectionRegister) {
+    protected void setInjectionRegister(InjectionRegister injectionRegister) {
         this.injectionRegister = injectionRegister;
     }
 
     @InjectionPluginInjectionFinder
-    private DefaultInjectionPointFinder getInjectionFinder(ContainerConfigBuilder containerConfigBuilder) {
+    protected DefaultInjectionPointFinder getInjectionFinder(ContainerConfigBuilder containerConfigBuilder) {
         return new SpringInjectionPointFinder(this, containerConfigBuilder);
     }
 }

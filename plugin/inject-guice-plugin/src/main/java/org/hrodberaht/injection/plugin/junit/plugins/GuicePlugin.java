@@ -35,7 +35,7 @@ public class GuicePlugin implements Plugin {
     private Injector injector;
 
     @InjectionPluginInjectionRegister
-    private void setInjectionRegister(InjectionRegister injectionRegister) {
+    protected void setInjectionRegister(InjectionRegister injectionRegister) {
         if (injector != null) {
             injectionRegister.register(new RegistrationModuleAnnotation() {
                 @Override
@@ -47,7 +47,7 @@ public class GuicePlugin implements Plugin {
     }
 
     @InjectionPluginInjectionFinder
-    private InjectionFinder getInjectionFinder(ContainerConfigBuilder containerConfigBuilder) {
+    protected InjectionFinder getInjectionFinder(ContainerConfigBuilder containerConfigBuilder) {
         return new DefaultInjectionPointFinder(containerConfigBuilder) {
             @Override
             public Object extendedInjection(Object instance) {

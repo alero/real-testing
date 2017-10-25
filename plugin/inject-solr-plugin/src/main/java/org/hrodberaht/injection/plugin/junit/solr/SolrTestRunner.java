@@ -21,6 +21,7 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.core.CoreContainer;
+import org.hrodberaht.injection.plugin.exception.PluginRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -47,7 +48,7 @@ public class SolrTestRunner {
     private static final Logger LOG = LoggerFactory.getLogger(SolrTestRunner.class);
     private static Map<String, SolrRunnerHolder> CORE_CACHE = new ConcurrentHashMap<>();
 
-    public static final String DEAFULT_HOME = "target/solr";
+    public static final String DEFAULT_HOME = "target/solr";
 
     private String home;
     private String coreName;
@@ -64,7 +65,7 @@ public class SolrTestRunner {
     }
 
     public void setup() throws Exception {
-        setup(DEAFULT_HOME);
+        setup(DEFAULT_HOME);
     }
 
     public void setup(String solrHome) throws Exception {
@@ -72,10 +73,14 @@ public class SolrTestRunner {
 
     }
 
-    public void setup(String solrHome, String coreName) throws Exception {
-        this.home = solrHome;
-        this.coreName = coreName;
-        setupSolr();
+    public void setup(String solrHome, String coreName) {
+        try {
+            this.home = solrHome;
+            this.coreName = coreName;
+            setupSolr();
+        } catch (IOException e) {
+            throw new PluginRuntimeException(e);
+        }
     }
 
     public SolrAssertions solrAssertions() {
@@ -87,8 +92,6 @@ public class SolrTestRunner {
     }
 
     private void setupSolr() throws IOException {
-        System.out.println(" ----------- SolrTestRunner setup --- STARTING! ");
-
         perpareSolrHomeAndStart();
 
     }
@@ -107,6 +110,7 @@ public class SolrTestRunner {
         String runnerName = runnerName();
         CORE_CACHE.computeIfAbsent(runnerName, s -> {
             try {
+                LOG.info(" ----------- SolrTestRunner setup --- STARTING! performing tearDown, copyFiles and createContainer ");
                 tearDown();
                 moveConfigFiles();
                 LOG.info("Loading Solr container {}", runnerName);
@@ -122,7 +126,7 @@ public class SolrTestRunner {
     private EmbeddedSolrServer getServer() {
         String runnerName = runnerName();
         SolrRunnerHolder solrRunnerHolder = CORE_CACHE.get(runnerName);
-        LOG.info("using runnerholder {}", solrRunnerHolder.solr);
+        LOG.debug("getServer using runnerholder {}", solrRunnerHolder.solr);
         return solrRunnerHolder.solr;
     }
 
@@ -137,14 +141,30 @@ public class SolrTestRunner {
         );
     }
 
+    public void shutdownServer() {
+        String runnerName = runnerName();
+        SolrRunnerHolder solrRunnerHolder = CORE_CACHE.get(runnerName);
+        LOG.info("shutdownServer of runnerholder {}", solrRunnerHolder);
+        try {
+            solrRunnerHolder.solr.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        solrRunnerHolder.coreContainer.shutdown();
+    }
+
     private String runnerName() {
         return home + "/" + coreName;
     }
 
-    public void cleanSolrInstance() throws SolrServerException, IOException {
-        EmbeddedSolrServer solr = getServer();
-        solr.deleteByQuery("*:*");
-        solr.commit(true, true, false);
+    public void cleanSolrInstance() {
+        try {
+            EmbeddedSolrServer solr = getServer();
+            solr.deleteByQuery("*:*");
+            solr.commit(true, true, false);
+        } catch (SolrServerException | IOException e) {
+            throw new PluginRuntimeException(e);
+        }
     }
 
     private void moveConfigFiles() throws IOException {
@@ -178,7 +198,7 @@ public class SolrTestRunner {
         List<String> foundFiles = new ArrayList<>();
         URL dirURL = clazz.getClassLoader().getResource(path);
         if (findFilesFromFilessystem(dirURL, foundFiles)) {
-            LOG.debug("Found files on filesystem : " + foundFiles.size());
+            LOG.debug("Found files on filesystem : {}", foundFiles.size());
             return foundFiles;
         }
 
@@ -195,7 +215,7 @@ public class SolrTestRunner {
             String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!")); //strip out only the JAR file
 
             if (findJarFilesInPath(path, foundFiles, jarPath)) {
-                LOG.debug("Found files in jar-resource : " + foundFiles.size());
+                LOG.debug("Found files in jar-resource : {}", foundFiles.size());
                 return foundFiles;
             }
         }

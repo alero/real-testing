@@ -1,0 +1,105 @@
+package org.hrodberaht.injection.plugin.junit.solr.megatest.part1;
+
+
+import org.hrodberaht.injection.plugin.junit.ContainerContext;
+import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
+import org.hrodberaht.injection.plugin.junit.plugins.SolrJPlugin;
+import org.hrodberaht.injection.plugin.junit.solr.TestSolrEmbedded;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import javax.annotation.PostConstruct;
+import javax.inject.Inject;
+
+@ContainerContext(SolrTestConfig.class)
+@RunWith(JUnit4Runner.class)
+public class JUnitSolrEmbedded7 {
+
+    TestSolrEmbedded testSolrEmbedded = new TestSolrEmbedded();
+
+    @Inject
+    public SolrJPlugin solrJPlugin;
+
+
+    @PostConstruct
+    public void init() {
+        testSolrEmbedded.solrJPlugin = solrJPlugin;
+        testSolrEmbedded.assertions = solrJPlugin.getAssertions();
+    }
+
+    @Test
+    public void test1() throws Exception {
+        testSolrEmbedded.testSolrIndexUpdate();
+    }
+
+    @Test
+    public void test2() throws Exception {
+        testSolrEmbedded.testSolrIndexUpdate();
+    }
+
+    @Test
+    public void test3() throws Exception {
+        testSolrEmbedded.testSolrIndexUpdate();
+    }
+
+    @Test
+    public void test4() throws Exception {
+        testSolrEmbedded.testSolrIndexUpdate();
+    }
+
+    @Test
+    public void test5() throws Exception {
+        testSolrEmbedded.testSolrIndexUpdate();
+    }
+
+    @Test
+    public void test6() throws Exception {
+        testSolrEmbedded.testSolrIndexUpdate();
+    }
+
+    @Test
+    public void test7() throws Exception {
+        testSolrEmbedded.testSolrIndexUpdate();
+    }
+
+    @Test
+    public void test8() throws Exception {
+        testSolrEmbedded.testSolrIndexUpdate();
+    }
+
+    @Test
+    public void test9() throws Exception {
+        testSolrEmbedded.testSolrIndexUpdate();
+    }
+
+    @Test
+    public void test10() throws Exception {
+        testSolrEmbedded.testSolrIndexUpdate();
+    }
+
+    @Test
+    public void test11() throws Exception {
+        testSolrEmbedded.testSolrIndexUpdate();
+    }
+
+    @Test
+    public void test12() throws Exception {
+        testSolrEmbedded.testSolrIndexUpdate();
+    }
+
+    @Test
+    public void test13() throws Exception {
+        testSolrEmbedded.testSolrIndexUpdate();
+    }
+
+    @Test
+    public void test14() throws Exception {
+        testSolrEmbedded.testSolrIndexUpdate();
+    }
+
+    @Test
+    public void test15() throws Exception {
+        testSolrEmbedded.testSolrIndexUpdate();
+    }
+
+}

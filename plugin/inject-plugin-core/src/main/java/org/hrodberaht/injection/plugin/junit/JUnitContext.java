@@ -18,6 +18,9 @@ package org.hrodberaht.injection.plugin.junit;
 
 import org.hrodberaht.injection.core.InjectContainer;
 import org.hrodberaht.injection.core.internal.exception.InjectRuntimeException;
+import org.hrodberaht.injection.core.register.InjectionRegister;
+import org.hrodberaht.injection.plugin.exception.JUnitRuntimeException;
+import org.hrodberaht.injection.plugin.junit.api.PluginContext;
 import org.hrodberaht.injection.plugin.junit.inner.RunnerPlugins;
 import org.junit.runners.model.FrameworkMethod;
 import org.junit.runners.model.InitializationError;
@@ -33,46 +36,50 @@ class JUnitContext {
     private InjectContainer activeContainer = null;
     private ContainerContextConfigBase containerConfig = null;
     private RunnerPlugins runnerPlugins = null;
-    private final Class<?> clazz;
+    private final Class<?> testClazz;
+    private final Class configClass;
 
     /**
      * Creates a BlockJUnit4ClassRunner to run
      *
      * @throws InitializationError if the test class is malformed.
      */
-    JUnitContext(Class<?> clazz) throws InitializationError {
-        this.clazz = clazz;
-        createContainerFromRegistration(clazz);
+    JUnitContext(Class<?> clazz) {
+        this.testClazz = clazz;
+        this.configClass = getConfigClass();
+        createUnitTestContext();
     }
 
-    private void createContainerFromRegistration(Class<?> clazz) {
+    private Class getConfigClass() {
+
+        Annotation[] annotations = testClazz.getAnnotations();
+        for (Annotation annotation : annotations) {
+            if (annotation.annotationType() == ContainerContext.class) {
+                return ((ContainerContext) annotation).value();
+            }
+        }
+        throw new JUnitRuntimeException("Could not find a ContainerContext annotation with config, this must exist when using the JUnitContext runner");
+
+    }
+
+    private void createUnitTestContext() {
         try {
-            Annotation[] annotations = clazz.getAnnotations();
-            for (Annotation annotation : annotations) {
-                if (annotation.annotationType() == ContainerContext.class) {
-                    createUnitTestContext((ContainerContext) annotation);
-                }
+            if (ContainerContextConfigBase.class.isAssignableFrom(configClass)) {
+                containerConfig = (ContainerContextConfigBase) configClass.newInstance();
+                runnerPlugins = getRunnerPlugins();
+                runnerPlugins.runInitBeforeContainer(createContext());
+                containerConfig.start();
+                runnerPlugins.runInitAfterContainer(createContext());
+
+                LOG.info("Creating creator for thread {}", Thread.currentThread().getName());
+            } else {
+                throw new IllegalAccessError("Currently the test config class must extend ContainerContextConfigBase, I am working on a solution to this limitation");
             }
         } catch (InstantiationException | IllegalAccessException e) {
             throw new InjectRuntimeException(e);
         }
     }
 
-    private void createUnitTestContext(ContainerContext annotation) throws InstantiationException, IllegalAccessException {
-        ContainerContext containerContext = annotation;
-        Class testConfigClass = containerContext.value();
-        if (ContainerContextConfigBase.class.isAssignableFrom(testConfigClass)) {
-            containerConfig = (ContainerContextConfigBase) testConfigClass.newInstance();
-            runnerPlugins = getRunnerPlugins();
-            runnerPlugins.runInitBeforeContainer();
-            containerConfig.start();
-            runnerPlugins.runInitAfterContainer(containerConfig.getActiveRegister());
-
-            LOG.info("Creating creator for thread {}", Thread.currentThread().getName());
-        } else {
-            throw new IllegalAccessError("Currently the test config class must extrend ContainerContextConfigBase");
-        }
-    }
 
     private RunnerPlugins getRunnerPlugins() {
         if (containerConfig != null) {
@@ -99,16 +106,14 @@ class JUnitContext {
      */
     void runChild(FrameworkMethod frameworkMethod, OperationsRunner operationsRunner, OperationsErrorHandler errorHandler) {
         try {
-            runBeforeTest(true);
+            runBeforeTest(true, frameworkMethod.getName());
             try {
                 // This will execute the createTest method below, the activeContainer handling relies on this.
-                LOG.info("START running test " +
-                        frameworkMethod.getName() + " for thread " + Thread.currentThread().getName());
+                LOG.info("Starting - test '{}' in class '{}' for thread '{}", frameworkMethod.getName(), testClazz.getSimpleName(), Thread.currentThread().getName());
                 operationsRunner.run();
-                LOG.info("END running test " +
-                        frameworkMethod.getName() + " for thread " + Thread.currentThread().getName());
+                LOG.debug("Ending - test '{}' in class '{}' for thread '{}", frameworkMethod.getName(), testClazz.getSimpleName(), Thread.currentThread().getName());
             } finally {
-                runAfterTest();
+                runAfterTest(frameworkMethod.getName());
             }
         } catch (Exception e) {
             LOG.error("Fatal test error :" + frameworkMethod.getName(), e);
@@ -116,8 +121,8 @@ class JUnitContext {
         }
     }
 
-    void runBeforeTest(boolean activateContainer) {
-        runnerPlugins.runBeforeTest(containerConfig.getActiveRegister());
+    void runBeforeTest(boolean activateContainer, String testName) {
+        runnerPlugins.runBeforeTest(createContext(testName));
 
         containerConfig.beforeRunChild();
 
@@ -126,16 +131,22 @@ class JUnitContext {
         }
     }
 
-    void activateContainer() {
-        activeContainer = containerConfig.getActiveRegister().getContainer();
-    }
-
-    void runAfterTest() {
-        runnerPlugins.runAfterTest(containerConfig.getActiveRegister());
-        // TransactionManager.endTransaction();
+    void runAfterTest(String testName) {
+        runnerPlugins.runAfterTest(createContext(testName));
         containerConfig.cleanActiveContainer();
     }
 
+    private PluginContext createContext() {
+        return new RunnerPluginContext(null, testClazz, configClass, containerConfig.getActiveRegister());
+    }
+
+    private PluginContext createContext(String testName) {
+        return new RunnerPluginContext(testName, testClazz, configClass, containerConfig.getActiveRegister());
+    }
+
+    void activateContainer() {
+        activeContainer = containerConfig.getActiveRegister().getContainer();
+    }
 
     public void run(OperationsRunner operationsRunner) {
         runBeforeClass();
@@ -144,11 +155,11 @@ class JUnitContext {
     }
 
     void runAfterClass() {
-        runnerPlugins.runAfterTestClass(containerConfig.getActiveRegister());
+        runnerPlugins.runAfterTestClass(createContext());
     }
 
     void runBeforeClass() {
-        runnerPlugins.runBeforeTestClass(containerConfig.getActiveRegister());
+        runnerPlugins.runBeforeTestClass(createContext());
     }
 
     /**
@@ -169,6 +180,41 @@ class JUnitContext {
 
     void autoWireTestObject(Object testInstance) {
         activeContainer.autowireAndPostConstruct(testInstance);
+    }
+
+    private static class RunnerPluginContext implements PluginContext {
+        private final Class<?> testClass;
+        private final Class<?> configClass;
+        private final InjectionRegister injectionRegister;
+        private final String testName;
+
+
+        private RunnerPluginContext(String testName, Class<?> testClass, Class<?> configClass, InjectionRegister injectionRegister) {
+            this.testName = testName;
+            this.testClass = testClass;
+            this.configClass = configClass;
+            this.injectionRegister = injectionRegister;
+        }
+
+        @Override
+        public String getTestName() {
+            return testName;
+        }
+
+        @Override
+        public Class<?> getTestClass() {
+            return testClass;
+        }
+
+        @Override
+        public Class<?> getConfigClass() {
+            return configClass;
+        }
+
+        @Override
+        public InjectionRegister register() {
+            return injectionRegister;
+        }
     }
 
 }

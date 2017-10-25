@@ -20,7 +20,11 @@ import org.hrodberaht.injection.core.register.InjectionRegister;
 
 public interface PluginContext {
 
+    String getTestName();
+
     Class getTestClass();
+
+    Class getConfigClass();
 
     InjectionRegister register();
 

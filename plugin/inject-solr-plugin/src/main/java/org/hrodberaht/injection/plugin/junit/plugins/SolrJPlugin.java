@@ -17,62 +17,29 @@
 package org.hrodberaht.injection.plugin.junit.plugins;
 
 import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.hrodberaht.injection.core.register.InjectionRegister;
-import org.hrodberaht.injection.plugin.junit.api.RunnerPlugin;
+import org.hrodberaht.injection.plugin.exception.PluginRuntimeException;
+import org.hrodberaht.injection.plugin.junit.api.Plugin;
+import org.hrodberaht.injection.plugin.junit.api.PluginContext;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterClassTest;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterContainerCreation;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterTest;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeClassTest;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeTest;
 import org.hrodberaht.injection.plugin.junit.solr.SolrAssertions;
 import org.hrodberaht.injection.plugin.junit.solr.SolrTestRunner;
 
-import java.io.IOException;
+public class SolrJPlugin implements Plugin {
 
-public class SolrJPlugin implements RunnerPlugin {
-
-    private SolrTestRunner solrTestRunner = new SolrTestRunner();
-    private String solrHome = null;
-    private String coreName = null;
-
-    @Override
-    public void beforeContainerCreation() {
-
-    }
-
-    @Override
-    public void afterContainerCreation(InjectionRegister injectionRegister) {
-        try {
-            solrTestRunner.setup(solrHome == null ? SolrTestRunner.DEAFULT_HOME : solrHome, coreName);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+    private SolrTestRunner solrTestRunner;
+    private String solrHome;
+    private String coreName;
+    private ResourceLifeCycle lifeCycle = ResourceLifeCycle.TEST_CONFIG;
+    private PluginLifeCycledResource<SolrTestRunner> pluginLifeCycledResource = new PluginLifeCycledResource<>();
 
 
-    @Override
-    public void beforeTestClass(InjectionRegister injectionRegister) {
-
-    }
-
-    @Override
-    public void afterTestClass(InjectionRegister injectionRegister) {
-
-    }
-
-    @Override
-    public void beforeTest(InjectionRegister injectionRegister) {
-        try {
-            solrTestRunner.cleanSolrInstance();
-        } catch (SolrServerException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void afterTest(InjectionRegister injectionRegister) {
-
-    }
-
-    @Override
-    public LifeCycle getLifeCycle() {
-        return LifeCycle.TEST_CONFIG;
+    public SolrJPlugin lifeCycle(ResourceLifeCycle resourceLifeCycle) {
+        this.lifeCycle = resourceLifeCycle;
+        return this;
     }
 
     public SolrJPlugin coreName(String coreName) {
@@ -92,4 +59,78 @@ public class SolrJPlugin implements RunnerPlugin {
     public SolrClient getClient() {
         return solrTestRunner.getClient();
     }
+
+    @RunnerPluginAfterContainerCreation
+    private void afterContainerCreation(PluginContext pluginContext) {
+        solrTestRunner = pluginLifeCycledResource.create(lifeCycle, pluginContext, this::createSolrContainer);
+        if (lifeCycle == ResourceLifeCycle.TEST_SUITE || lifeCycle == ResourceLifeCycle.TEST_CONFIG) {
+            prepareSolr(pluginContext);
+        }
+    }
+
+    private void prepareSolr(PluginContext pluginContext) {
+        solrTestRunner.setup(solrHome == null ? getHome(SolrTestRunner.DEFAULT_HOME, pluginContext) : getHome(solrHome, pluginContext), coreName);
+    }
+
+    private String getHome(String home, PluginContext pluginContext) {
+        if (lifeCycle == ResourceLifeCycle.TEST) {
+            return home + "/" + pluginContext.getTestClass().getSimpleName() + "/" + pluginContext.getTestName();
+        } else if (lifeCycle == ResourceLifeCycle.TEST_CONFIG) {
+            return home + "/" + pluginContext.getConfigClass().getSimpleName();
+        } else if (lifeCycle == ResourceLifeCycle.TEST_CLASS) {
+            return home + "/" + pluginContext.getTestClass().getSimpleName();
+        } else if (lifeCycle == ResourceLifeCycle.TEST_SUITE) {
+            return home;
+        }
+        throw new PluginRuntimeException("No home was selected");
+    }
+
+    private SolrTestRunner createSolrContainer() {
+        return new SolrTestRunner();
+    }
+
+    @RunnerPluginBeforeClassTest
+    protected void beforeTestClass(PluginContext pluginContext) {
+        if (lifeCycle == ResourceLifeCycle.TEST_CLASS) {
+            prepareSolr(pluginContext);
+        }
+    }
+
+    @RunnerPluginAfterClassTest
+    protected void afterTestClass(PluginContext pluginContext) {
+        if (lifeCycle == ResourceLifeCycle.TEST_CLASS) {
+            shutdownSolr();
+        }
+    }
+
+    @RunnerPluginBeforeTest
+    protected void beforeTest(PluginContext pluginContext) {
+        if (lifeCycle == ResourceLifeCycle.TEST) {
+            prepareSolr(pluginContext);
+        } else {
+            solrTestRunner.cleanSolrInstance();
+        }
+    }
+
+    @RunnerPluginAfterTest
+    protected void afterTest(PluginContext pluginContext) {
+        if (lifeCycle == ResourceLifeCycle.TEST) {
+            shutdownSolr();
+        }
+    }
+
+    private void shutdownSolr() {
+        if (lifeCycle == ResourceLifeCycle.TEST) {
+            solrTestRunner.shutdownServer();
+        }
+    }
+
+    @Override
+    public LifeCycle getLifeCycle() {
+        return LifeCycle.TEST_SUITE;
+    }
+
+
+
+
 }
