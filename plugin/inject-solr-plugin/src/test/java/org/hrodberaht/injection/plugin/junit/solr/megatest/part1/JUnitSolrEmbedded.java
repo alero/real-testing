@@ -20,7 +20,6 @@ public class JUnitSolrEmbedded {
     @Inject
     public SolrJPlugin solrJPlugin;
 
-
     @PostConstruct
     public void init() {
         testSolrEmbedded.solrJPlugin = solrJPlugin;
