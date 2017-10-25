@@ -64,11 +64,11 @@ public class SolrTestRunner {
         }
     }
 
-    public void setup() throws Exception {
+    public void setup() {
         setup(DEFAULT_HOME);
     }
 
-    public void setup(String solrHome) throws Exception {
+    public void setup(String solrHome) {
         setup(solrHome, "collection1");
 
     }
@@ -100,10 +100,6 @@ public class SolrTestRunner {
         final InputStream inputStream = SolrTestRunner.class.getClassLoader().getResourceAsStream(resourceStream);
         new File(copyToDir).mkdirs();
         Files.copy(inputStream, new File(copyToDir, fileName).toPath(), REPLACE_EXISTING);
-    }
-
-    private boolean hasCoreConfigDir() {
-        return new File(home, coreName).exists();
     }
 
     private void perpareSolrHomeAndStart() throws IOException {
@@ -211,7 +207,7 @@ public class SolrTestRunner {
 
         if ("jar".equals(dirURL.getProtocol())) {
             /* A JAR path */
-            String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf("!")); //strip out only the JAR file
+            String jarPath = dirURL.getPath().substring(5, dirURL.getPath().indexOf('!')); //strip out only the JAR file
 
             if (findJarFilesInPath(path, foundFiles, jarPath)) {
                 LOG.debug("Found files in jar-resource : {}", foundFiles.size());
