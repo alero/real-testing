@@ -17,13 +17,16 @@
 package org.hrodberaht.injection.plugin.junit.plugins;
 
 import org.hrodberaht.injection.core.internal.annotation.InjectionFinder;
+import org.hrodberaht.injection.plugin.datasource.embedded.vendors.TestDataSourceWrapper;
 import org.hrodberaht.injection.plugin.junit.api.annotation.ResourcePluginChainableInjectionProvider;
+import org.hrodberaht.injection.plugin.junit.datasource.SimpleDataSourceProxy;
 import org.hrodberaht.injection.plugin.junit.jpa.EntityManagerCreator;
 import org.hrodberaht.injection.plugin.junit.jpa.EntityManagerHolder;
 import org.hrodberaht.injection.plugin.junit.jpa.EntityManagerInjection;
 import org.hrodberaht.injection.plugin.junit.resources.ChainableInjectionPointProvider;
 
 import javax.persistence.EntityManager;
+import javax.sql.DataSource;
 
 public class JpaPlugin extends DataSourcePlugin {
 
@@ -32,8 +35,13 @@ public class JpaPlugin extends DataSourcePlugin {
     private final EntityManagerHolder entityManagerHolder = new EntityManagerHolder();
     private final EntityManagerInjection entityManagerInjection = new EntityManagerInjection();
 
-    public EntityManager createEntityManager(String name) {
-        return entityManagerInjection.addPersistenceContext(name, entityManagerCreator.createEntityManager(name));
+    public EntityManager createEntityManager(DataSource dataSource, String name) {
+        try {
+            return entityManagerInjection.addPersistenceContext(name, entityManagerCreator.createEntityManager(name));
+        }finally {
+            SimpleDataSourceProxy testDataSourceWrapper = (SimpleDataSourceProxy)dataSource;
+            testDataSourceWrapper.commitDataSource();
+        }
     }
 
     @ResourcePluginChainableInjectionProvider

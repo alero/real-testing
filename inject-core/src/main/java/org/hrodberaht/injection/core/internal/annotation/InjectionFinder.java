@@ -16,8 +16,6 @@
 
 package org.hrodberaht.injection.core.internal.annotation;
 
-import org.hrodberaht.injection.core.spi.ContainerConfig;
-
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -38,8 +36,6 @@ public interface InjectionFinder {
     Method findPostConstruct(Class instanceClass);
 
     Object extendedInjection(Object instanc);
-
-    ContainerConfig getContainerConfig();
 
     default InjectionType getInjectionType() {
         return InjectionType.EXTENDED;

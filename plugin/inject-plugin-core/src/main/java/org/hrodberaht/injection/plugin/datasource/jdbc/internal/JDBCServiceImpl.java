@@ -122,15 +122,10 @@ public class JDBCServiceImpl implements JDBCService {
 
     @Override
     public int execute(String sql, Object... args) {
-        try (Connection connection = dataSource.getConnection()) {
-            // Prepared statements?
-            PreparedStatement pstmt = null;
-            try {
-                pstmt = prepareAndAppend(sql, connection, args);
-                return pstmt.executeUpdate();
-            } finally {
-                close(pstmt);
-            }
+        try (Connection connection = dataSource.getConnection();
+            PreparedStatement pstmt = prepareAndAppend(sql, connection, args);
+        ) {
+            return pstmt.executeUpdate();
         } catch (SQLException e) {
             throw new JDBCException(e);
         }

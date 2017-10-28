@@ -31,7 +31,7 @@ public class JUnitConfigExample2 extends ContainerContextConfigBase {
     public void register(InjectionRegistryBuilder registryBuilder) {
         String dataSourceName = "MyDataSource2";
         DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class);
-        DataSource dataSource = dataSourcePlugin.getCreator(DataSource.class).create(dataSourceName);
+        DataSource dataSource = dataSourcePlugin.createDataSource(dataSourceName);
 
         dataSourcePlugin.loadSchema(dataSource, "sql");
         dataSourcePlugin.addBeforeTestSuite((loader) -> loader.get(LoadingTheTestWithData.class).run());

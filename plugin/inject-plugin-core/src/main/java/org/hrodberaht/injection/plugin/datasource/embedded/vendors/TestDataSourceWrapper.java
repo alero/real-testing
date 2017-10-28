@@ -16,34 +16,71 @@
 
 package org.hrodberaht.injection.plugin.datasource.embedded.vendors;
 
+import org.hrodberaht.injection.plugin.datasource.DataSourceException;
 import org.slf4j.LoggerFactory;
 
 import java.io.PrintWriter;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
-public class DataSourceWrapper implements javax.sql.DataSource {
+public class TestDataSourceWrapper implements javax.sql.DataSource {
 
-    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(DataSourceWrapper.class);
+    private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(TestDataSourceWrapper.class);
 
-    private final Connection connection;
+    private final VendorDriverManager vendorDriverManager;
+    private ThreadLocal<TestConnection> connectionThread = new ThreadLocal<>();
 
-    public DataSourceWrapper(Connection connection) {
-        this.connection = connection;
+    public TestDataSourceWrapper(VendorDriverManager vendorDriverManager) {
+        this.vendorDriverManager = vendorDriverManager;
     }
+
+    private void initConnection() {
+        try {
+            if(connectionThread.get() == null) {
+                this.connectionThread.set(vendorDriverManager.getConnection());
+                LOG.info("Creating connection {} - {}", this, connectionThread.get());
+                this.connectionThread.get().setAutoCommit(false);
+            }
+            LOG.info("reusing connection {} - {}", this, connectionThread.get());
+        } catch (SQLException e) {
+            throw new DataSourceException(e);
+        }
+    }
+
+    public void commitNativeConnection(){
+        try {
+            if(connectionThread.get() != null){
+                connectionThread.get().commitIt();
+            }
+        } catch (SQLException e) {
+            throw new DataSourceException(e);
+        }
+    }
+
+    public void clearDataSource() {
+        LOG.info("clearDataSource {} - {}", this, connectionThread.get());
+        TestConnection connection = connectionThread.get();
+        if(connection != null) {
+            connection.dontFailRollback();
+            connection.dontFailClose();
+            connectionThread.remove();
+        }
+    }
+
+
 
     @Override
     public Connection getConnection() throws SQLException {
-        return connection;
+        initConnection();
+        return connectionThread.get();
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        return connection;
+        initConnection();
+        return connectionThread.get();
     }
 
     @Override

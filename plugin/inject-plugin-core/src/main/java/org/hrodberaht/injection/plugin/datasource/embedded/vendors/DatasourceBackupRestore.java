@@ -17,6 +17,9 @@
 package org.hrodberaht.injection.plugin.datasource.embedded.vendors;
 
 public interface DatasourceBackupRestore {
+
+    TestDataSourceWrapper getTestDataSource(String name);
+
     void createSnapshot(String name);
 
     void loadSnapshot(String name);

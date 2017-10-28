@@ -21,6 +21,7 @@ import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCServiceFactory;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
 import org.hrodberaht.injection.plugin.junit.config.ContainerConfigExample;
+import org.hrodberaht.injection.plugin.junit.config.ContainerConfigExample2;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -33,7 +34,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@ContainerContext(ContainerConfigExample.class)
+@ContainerContext(ContainerConfigExample2.class)
 @RunWith(JUnit4Runner.class)
 public class LiquibasePluginTest2 {
     @Resource
@@ -51,7 +52,7 @@ public class LiquibasePluginTest2 {
         List<String> stringList =
                 jdbcService.query("select * from simple", (rs, iteration) -> rs.getString("name"));
 
-        assertEquals(0, stringList.size());
+        assertEquals(1, stringList.size());
 
         assertTrue(Paths.get("target/liquibase/main/backup.script").toFile().exists());
 

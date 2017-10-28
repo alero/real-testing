@@ -16,13 +16,19 @@
 
 package org.hrodberaht.injection.plugin.junit.resources;
 
+import org.hrodberaht.injection.plugin.context.ContextImpl;
 import org.hrodberaht.injection.plugin.context.ContextManager;
 import org.hrodberaht.injection.core.spi.JavaResourceCreator;
 import org.hrodberaht.injection.core.spi.ResourceFactory;
 import org.hrodberaht.injection.core.spi.ResourceKey;
+import org.hrodberaht.injection.plugin.context.InitialContextFactoryImpl;
+import org.hrodberaht.injection.plugin.exception.PluginRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.naming.NamingException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -161,7 +167,7 @@ public class PluggableResourceFactory implements ResourceFactory {
         contextManager.bind(asContextName(key), instance);
     }
 
-    private String asContextName(ResourceKey key) {
+    public static String asContextName(ResourceKey key) {
         return key.getType().getSimpleName() + "/" + key.getName();
     }
 

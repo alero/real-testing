@@ -31,12 +31,9 @@ public class CourseContainerConfigExample extends ContainerContextConfigBase {
     public void register(InjectionRegistryBuilder registryBuilder) {
         JpaPlugin jpaPlugin = activatePlugin(JpaPlugin.class);
 
-        DataSource dataSource = jpaPlugin.getCreator(DataSource.class).create(DATASOURCE_NAME);
+        DataSource dataSource = jpaPlugin.createDataSource(DATASOURCE_NAME);
 
-
-        // DataSource dataSourceTwo = getCreator(DataSource.class).create("secondDataSource");
-
-        jpaPlugin.createEntityManager("example-jpa");
+        jpaPlugin.createEntityManager(dataSource, "example-jpa");
 
         // Load schema is a custom method located in the plugin code, this creates clean separation
         jpaPlugin

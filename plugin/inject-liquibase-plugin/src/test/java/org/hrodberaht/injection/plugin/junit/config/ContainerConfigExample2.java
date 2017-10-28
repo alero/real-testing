@@ -16,13 +16,13 @@
 
 package org.hrodberaht.injection.plugin.junit.config;
 
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.LiquibasePlugin;
-import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 
 import javax.sql.DataSource;
 
-public class ContainerConfigExample extends ContainerContextConfigBase {
+public class ContainerConfigExample2 extends ContainerContextConfigBase {
 
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {

@@ -36,13 +36,14 @@ public class CDIContainerConfigExampleExternalResources extends ContainerContext
     public void register(InjectionRegistryBuilder injectionRegistryBuilder) {
         activatePlugin(CDIInjectionPlugin.class);
         JpaPlugin jpaPlugin = activatePlugin(JpaPlugin.class);
-        DataSource dataSource = jpaPlugin.getCreator(DataSource.class).create("ExampleDataSource");
-        jpaPlugin.createEntityManager("example-jpa");
+        jpaPlugin.usingContext(true);
+        DataSource dataSource = jpaPlugin.createDataSource("ExampleDataSource");
+        jpaPlugin.createEntityManager(dataSource, "example-jpa");
 
 
         injectionRegistryBuilder
                 .scan(() -> "org.hrodberaht.injection.extensions.cdi.example.service")
-                .resource(builder -> builder.resource("ExampleDataSource", dataSource))
+                .resource(builder -> builder.resource("ExampleDataSource", DataSource.class, dataSource))
         ;
     }
 

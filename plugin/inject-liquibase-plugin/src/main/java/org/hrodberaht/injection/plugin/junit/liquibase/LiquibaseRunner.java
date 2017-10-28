@@ -22,11 +22,11 @@ import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import org.hrodberaht.injection.core.internal.exception.InjectRuntimeException;
-import org.hrodberaht.injection.plugin.datasource.DataSourceProxyInterface;
 import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCService;
 import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCServiceFactory;
 import org.hrodberaht.injection.plugin.datasource.jdbc.internal.JDBCException;
 import org.hrodberaht.injection.plugin.junit.ResourceWatcher;
+import org.hrodberaht.injection.plugin.junit.datasource.DataSourceProxyInterface;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,7 +63,7 @@ class LiquibaseRunner {
         if (!isLoaded) {
             loadSchemaDataStore(dataSourceProxyInterface, liquiBaseSchema);
         } else {
-            LOG.debug("NOT - RUNNING Liquibase update on schema!");
+            LOG.info("Will not run Liquibase update on schema, as its already loaded : {}", liquiBaseSchema);
         }
     }
 
@@ -74,21 +74,20 @@ class LiquibaseRunner {
             isLoadedAlready = jdbcService.querySingle(verificationQuery
                     ,
                     (rs, iteration) -> {
-                        rs.next();
                         rs.getString(1);
                         return true;
                     }
             );
         } catch (JDBCException e) {
             return false;
-        } finally {
-            dataSourceProxyInterface.clearDataSource();
         }
         return isLoadedAlready == null ? false : isLoadedAlready;
     }
 
     private void loadSchemaDataStore(DataSourceProxyInterface dataSource, String liquiBaseSchema) throws SQLException, LiquibaseException {
         if (isTempStoreValid()) {
+            LOG.info("--------------- RUNNING RESTORE -------------");
+            LOG.info("Restoring schema from backup file : {}", liquiBaseSchema);
             readFromFile(dataSource);
         } else {
             loadSchemaFromConfig(dataSource, liquiBaseSchema);
@@ -113,7 +112,8 @@ class LiquibaseRunner {
         try {
             DataSourceProxyInterface dataSourceProxyInterface = init(dataSource);
             dataSourceProxyInterface.runWithConnectionAndCommit(con -> {
-                        LOG.debug("RUNNING Liquidbase update on schema!");
+                        LOG.info("--------------- RUNNING LIQUIBASE -------------");
+                        LOG.info("Running Liquidbase update on schema: {}", liquiBaseSchema);
                         return runLuqibaseUpdateWithConnection(liquiBaseSchema, con);
                     }
             );

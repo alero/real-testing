@@ -32,11 +32,11 @@ public class ExampleModuleExternal {
     private Module module;
 
     public ExampleModuleExternal(InjectionRegistryBuilder configBase, JpaPlugin jpaPlugin) {
-        DataSource dataSource = jpaPlugin.getCreator(DataSource.class).create(DATASOURCE);
-        jpaPlugin.createEntityManager("example-jpa");
+        DataSource dataSource = jpaPlugin.createDataSource(DATASOURCE);
+        jpaPlugin.createEntityManager(dataSource, "example-jpa");
         module = configBase
                 .scan(() -> "org.hrodberaht.injection.extensions.cdi.example.service")
-                .resource(builder -> builder.resource(DATASOURCE, dataSource))
+                .resource(builder -> builder.resource(DATASOURCE, DataSource.class, dataSource))
                 .getModule();
     }
 

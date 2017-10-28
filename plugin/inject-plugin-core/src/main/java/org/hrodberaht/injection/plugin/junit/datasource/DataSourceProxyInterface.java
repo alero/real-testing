@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.datasource;
+package org.hrodberaht.injection.plugin.junit.datasource;
 
 import java.sql.Connection;
 
@@ -23,8 +23,6 @@ public interface DataSourceProxyInterface extends javax.sql.DataSource {
     void clearDataSource();
 
     void commitDataSource();
-
-    Connection getNativeConnection();
 
     void loadSnapshot(String name);
 

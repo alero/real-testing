@@ -19,7 +19,9 @@ package org.hrodberaht.injection.plugin.junit.datasource;
 
 import org.hrodberaht.injection.core.config.JarUtil;
 import org.hrodberaht.injection.plugin.datasource.DataSourceException;
-import org.hrodberaht.injection.plugin.datasource.DataSourceProxyInterface;
+import org.hrodberaht.injection.plugin.datasource.embedded.vendors.DataSourceWrapper;
+import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCService;
+import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -242,20 +244,31 @@ class DataSourceExecution {
 
     private boolean verifyScriptExistence(String testPackageName, String initiatedTableName, Connection con) {
         try {
-            String tableName = cleanedName(initiatedTableName);
+            String queryName = cleanedName(initiatedTableName);
             String packageName = cleanedName(testPackageName);
-            final String query = createQuery(tableName, packageName);
-            try (PreparedStatement pstmt = con.prepareStatement(query)) {
-                pstmt.execute();
+            String tableName = getTableName(packageName, queryName) ;
+            String selectQuery = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '"+tableName+"'";
+            JDBCService jdbcService = JDBCServiceFactory.of(new DataSourceWrapper(con));
+            String foundTableName = jdbcService.querySingle(selectQuery, (rs, iteration) -> rs.getString(1));
+            if(foundTableName == null) {
+                final String query = createQuery(tableName);
+                try (PreparedStatement pstmt = con.prepareStatement(query)) {
+                    pstmt.execute();
+                }
+                return false;
             }
-            return false;
-        } catch (SQLException e) {
             return true;
+        } catch (SQLException e) {
+            throw new DataSourceRuntimeException(e);
         }
     }
 
-    private String createQuery(String tableName, String packageName) {
-        return "create table \"" + packageName + tableName + "\" (  control_it integer )";
+    private String getTableName(String packageName, String queryName) {
+        return packageName + queryName;
+    }
+
+    private String createQuery(String tableName) {
+        return "create table \"" + tableName + "\" (  control_it integer )";
     }
 
     private String cleanedName(String schemaName) {

@@ -29,7 +29,7 @@ public class SQLLoadingContainerConfig extends ContainerContextConfigBase {
     public void register(InjectionRegistryBuilder registryBuilder) {
 
         DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class);
-        DataSource dataSource = dataSourcePlugin.getCreator(DataSource.class).create("MyDataSource");
+        DataSource dataSource = dataSourcePlugin.createDataSource("MyDataSource");
 
         // Load schema is a custom method located in the plugin code, this creates clean separation
         dataSourcePlugin

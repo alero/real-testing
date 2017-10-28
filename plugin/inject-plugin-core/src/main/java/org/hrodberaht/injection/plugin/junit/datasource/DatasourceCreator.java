@@ -17,10 +17,12 @@
 package org.hrodberaht.injection.plugin.junit.datasource;
 
 import javax.sql.DataSource;
+import java.util.Collection;
 
 public interface DatasourceCreator {
 
     DataSource createDataSource(String dataSourceName);
 
+    Collection<DataSourceProxyInterface> getDataSources();
 
 }

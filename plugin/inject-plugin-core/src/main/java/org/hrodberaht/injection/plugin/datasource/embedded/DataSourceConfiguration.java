@@ -17,13 +17,15 @@
 package org.hrodberaht.injection.plugin.datasource.embedded;
 
 
-import org.hrodberaht.injection.plugin.datasource.DataSourceProxyInterface;
+import org.hrodberaht.injection.plugin.junit.datasource.DataSourceProxyInterface;
+import org.hrodberaht.injection.plugin.datasource.embedded.vendors.TestDataSourceWrapper;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 public interface DataSourceConfiguration {
-    Connection initateConnection() throws ClassNotFoundException, SQLException;
+
+    TestDataSourceWrapper getTestDataSource(String name);
 
     void createSnapshot(String name);
 

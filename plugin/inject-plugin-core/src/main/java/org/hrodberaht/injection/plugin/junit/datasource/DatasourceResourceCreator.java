@@ -14,14 +14,16 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.datasource;
+package org.hrodberaht.injection.plugin.junit.datasource;
 
-import org.hrodberaht.injection.plugin.junit.datasource.DatasourceCreator;
 import org.hrodberaht.injection.core.spi.JavaResourceCreator;
 
 import javax.sql.DataSource;
+import java.util.List;
 
 public class DatasourceResourceCreator implements JavaResourceCreator<DataSource> {
+
+    public static final String DEFAULT_NAME = "defaultDataSource";
 
     private final DatasourceCreator datasourceCreator;
 
@@ -40,7 +42,7 @@ public class DatasourceResourceCreator implements JavaResourceCreator<DataSource
 
     @Override
     public DataSource create() {
-        return datasourceCreator.createDataSource("defaultDataSource");
+        return datasourceCreator.createDataSource(DEFAULT_NAME);
     }
 
     @Override

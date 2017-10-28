@@ -16,10 +16,6 @@
 
 package org.hrodberaht.injection.core.spi;
 
-import org.hrodberaht.injection.core.InjectContainer;
-import org.hrodberaht.injection.core.register.InjectionRegister;
-
-
 /**
  * Created with IntelliJ IDEA.
  * User: alexbrob
@@ -28,15 +24,5 @@ import org.hrodberaht.injection.core.register.InjectionRegister;
  * To change this template use File | Settings | File Templates.
  */
 public interface ContainerConfig {
-    void cleanActiveContainer();
 
-    InjectionRegister getActiveRegister();
-
-    InjectContainer getActiveContainer();
-
-    void addSingletonActiveRegistry();
-
-    ResourceCreator getResourceCreator();
-
-    InjectContainer createContainer();
 }

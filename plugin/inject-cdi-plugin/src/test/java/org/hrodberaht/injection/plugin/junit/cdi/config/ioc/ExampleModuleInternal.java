@@ -32,11 +32,11 @@ public class ExampleModuleInternal {
     private Module module;
 
     public ExampleModuleInternal(InjectionRegistryBuilder configBase, DataSourcePlugin dataSourcePlugin) {
-        DataSource dataSource = dataSourcePlugin.getCreator(DataSource.class).create(DATASOURCE);
+        DataSource dataSource = dataSourcePlugin.createDataSource(DATASOURCE);
         dataSourcePlugin.loadSchema(dataSource, "test");
         module = configBase
                 .scan(() -> "org.hrodberaht.injection.plugin.junit.cdi.service2")
-                .resource(builder -> builder.resource(DATASOURCE, dataSource))
+                .resource(builder -> builder.resource(DATASOURCE, DataSource.class, dataSource))
                 .getModule();
     }
 

@@ -16,6 +16,9 @@
 
 package org.hrodberaht.injection.core.spi;
 
+import javax.naming.Context;
+import java.util.List;
+
 public interface JavaResourceCreator<T> {
     /**
      * Will create a resource and register it to the jndi space

@@ -16,15 +16,20 @@
 
 package org.hrodberaht.injection.plugin.datasource.embedded.vendors;
 
-import org.hrodberaht.injection.plugin.datasource.DataSourceProxyInterface;
 import org.hrodberaht.injection.plugin.datasource.embedded.DataSourceConfiguration;
 import org.hrodberaht.injection.plugin.junit.ResourceWatcher;
+import org.hrodberaht.injection.plugin.junit.datasource.DataSourceProxyInterface;
+import org.hrodberaht.injection.plugin.junit.datasource.DataSourceRuntimeException;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.SQLInvalidAuthorizationSpecException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfiguration {
 
@@ -44,34 +49,77 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
         this.resourceWatcher = resourceWatcher;
     }
 
-    public Connection initateConnection() throws ClassNotFoundException, SQLException {
+    @Override
+    public TestDataSourceWrapper getTestDataSource(String name) {
+        try {
+            initateManager();
+        } catch (ClassNotFoundException e) {
+            throw new DataSourceRuntimeException(e);
+        }
+        return datasourceBackupRestore.getTestDataSource(name);
+    }
+
+    private void initateManager() throws ClassNotFoundException {
 
         if (driverManager != null) {
-            return driverManager.getConnection();
+            return;
         }
 
         Class.forName(JDBC_DRIVER);
         driverManager = new HSQLBasicDriverManager();
         datasourceBackupRestore = new PlainHSqlBackupRestore(driverManager);
-        return driverManager.getConnection();
 
     }
 
-    interface HSQLDriverManager {
-        Connection getConnection() throws SQLException;
+    interface HSQLDriverManager extends VendorDriverManager{
+        PlainConnection getInnerConnection() throws SQLException;
     }
 
     class HSQLBasicDriverManager implements HSQLDriverManager {
 
+        private Map<String, TestConnection> borrowedTest = new HashMap<>();
+        private Map<String, TestConnection> borrowedPlain = new HashMap<>();
+
         @Override
-        public Connection getConnection() throws SQLException {
-            LOG.debug("-- Creating Connection HsqlBDDataSourceConfigurationRestorable from mem");
-            try {
-                return DriverManager.getConnection(datasourceBackupRestore.jdbcUrl() + dbName, JDBC_USERNAME, "");
-            } catch (SQLInvalidAuthorizationSpecException e) {
-                throw e;
+        public TestConnection getConnection() throws SQLException {
+            return createConnection();
+        }
+
+        private TestConnection createConnection() throws SQLException {
+            checkForOpenChanges(borrowedPlain);
+            return borrowConnnection(new TestConnection(createSQLConnextion()), borrowedTest);
+        }
+
+        private void checkForOpenChanges(Map<String, TestConnection> connectionMap) {
+            if(!connectionMap.isEmpty()){
+                connectionMap.values().forEach(testConnection -> {
+                    if(testConnection.isOpenChanges()){
+                        throw new IllegalAccessError("Open changes in other connection");
+                    }
+                });
             }
         }
+
+        private <T extends TestConnection> T borrowConnnection(T testConnection, Map<String, TestConnection> borrowed) throws SQLException {
+            if(!borrowed.isEmpty()){
+                throw new IllegalAccessError("Not allowed to borrow new connection until old one is closed");
+            }
+            testConnection.setBorrowed(borrowed);
+            borrowed.put(testConnection.getUuid(), testConnection);
+            return testConnection;
+        }
+
+        private Connection createSQLConnextion() throws SQLException {
+            return DriverManager.getConnection(datasourceBackupRestore.jdbcUrl() + dbName, JDBC_USERNAME, "");
+        }
+
+        @Override
+        public PlainConnection getInnerConnection() throws SQLException {
+            checkForOpenChanges(borrowedTest);
+            return borrowConnnection(new PlainConnection(createSQLConnextion()), borrowedPlain);
+        }
+
+
     }
 
     /**
@@ -96,12 +144,20 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
 
     @Override
     public boolean runWithConnectionAndCommit(DataSourceProxyInterface.ConnectionRunner connectionRunner) {
-        try (Connection conn = initateConnection()) {
-            boolean returnBool = connectionRunner.run(conn);
-            conn.commit();
+        PlainConnection connection = null;
+        try {
+            connection = driverManager.getInnerConnection();
+            LOG.info("-- runWithConnectionAndCommit -- Connection {}", connection);
+            connection.setAutoCommit(false);
+            boolean returnBool = connectionRunner.run(connection);
+            connection.commit();
             return returnBool;
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new DataSourceRuntimeException(e);
+        }finally {
+            if(connection != null){
+                connection.dontFailClose();
+            }
         }
     }
 

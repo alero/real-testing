@@ -17,9 +17,8 @@
 package org.hrodberaht.injection.plugin.junit.plugins;
 
 import org.hrodberaht.injection.core.InjectContainer;
-import org.hrodberaht.injection.core.spi.JavaResourceCreator;
 import org.hrodberaht.injection.core.spi.ResourceFactory;
-import org.hrodberaht.injection.plugin.datasource.DatasourceResourceCreator;
+import org.hrodberaht.injection.plugin.junit.datasource.DatasourceResourceCreator;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.api.PluginContext;
 import org.hrodberaht.injection.plugin.junit.api.annotation.ResourcePluginFactory;
@@ -45,16 +44,77 @@ public class DataSourcePlugin implements Plugin {
 
     private TransactionManager transactionManager;
     private InjectContainer injectContainer;
+
+    private static ResourceFactory contextualResourceFactory;
     private ResourceFactory resourceFactory;
+    private ResourceFactory initedResourceFactory;
+    private static ProxyResourceCreator contextualProxyResourceCreator;
+    private ProxyResourceCreator proxyResourceCreator;
+
+    private boolean usingContext = false;
+
+
+
+    /**
+     * Will store all resources in a shared mode to support java.context way of handling resources
+     * @param usingContext
+     * @return
+     */
+    public DataSourcePlugin usingContext(boolean usingContext){
+        this.usingContext = usingContext;
+        return this;
+    }
+
+    public DataSource createDataSource(){
+        return getContextAwareResourceFactory().getCreator(DataSource.class).create();
+    }
+
+    public DataSource createDataSource(String name){
+        return getContextAwareResourceFactory().getCreator(DataSource.class).create(name);
+    }
 
 
     protected DatasourceResourceCreator getDatasourceResourceCreator() {
-        ProxyResourceCreator proxyResourceCreator = new ProxyResourceCreator(
+        ProxyResourceCreator proxyResourceCreator = getContextAwareResourceCreator();
+        return new DatasourceResourceCreator(proxyResourceCreator);
+    }
+
+    private ProxyResourceCreator getContextAwareResourceCreator() {
+        if(this.usingContext){
+            if(contextualProxyResourceCreator == null){
+                contextualProxyResourceCreator = createContext();
+            }
+            return contextualProxyResourceCreator;
+        }
+        if(this.proxyResourceCreator == null){
+            this.proxyResourceCreator = createContext();
+        }
+        return this.proxyResourceCreator;
+    }
+
+    private ResourceFactory getContextAwareResourceFactory() {
+        initContextAwareResourceFactory();
+        return usingContext ? contextualResourceFactory : initedResourceFactory;
+    }
+
+    private void initContextAwareResourceFactory() {
+        if(initedResourceFactory == null){
+            if(usingContext){
+                if(contextualResourceFactory == null){
+                    contextualResourceFactory = this.resourceFactory;
+                    contextualResourceFactory.addResourceCrator(datasourceResourceCreator);
+                }
+            }else {
+                this.initedResourceFactory = this.resourceFactory;
+                this.initedResourceFactory.addResourceCrator(datasourceResourceCreator);
+            }
+        }
+    }
+
+    protected ProxyResourceCreator createContext() {
+        return new ProxyResourceCreator(
                 ProxyResourceCreator.DataSourceProvider.HSQLDB,
                 ProxyResourceCreator.DataSourcePersistence.RESTORABLE);
-        DatasourceResourceCreator datasourceResourceCreator = new DatasourceResourceCreator(proxyResourceCreator);
-        transactionManager = new TransactionManager(proxyResourceCreator);
-        return datasourceResourceCreator;
     }
 
     /**
@@ -84,25 +144,28 @@ public class DataSourcePlugin implements Plugin {
     @ResourcePluginFactory
     private void setResourceFactory(ResourceFactory resourceFactory) {
         this.resourceFactory = resourceFactory;
-        this.resourceFactory.addResourceCrator(datasourceResourceCreator);
     }
+
+
 
 
     @RunnerPluginAfterContainerCreation
     protected void afterContainerCreation(PluginContext pluginContext) {
         this.injectContainer = pluginContext.register().getContainer();
         if (!beforeSuite.isEmpty()) {
-            transactionManager.beginTransaction();
+            TransactionManager txM = new TransactionManager(getContextAwareResourceCreator());
+            txM.beginTransaction();
             beforeSuite.forEach(resourceRunner -> {
                 ResourceLoader resourceLoader = new ResourceLoader(resourceRunner);
                 resourceRunner.run(resourceLoader);
             });
-            transactionManager.endTransactionCommit();
+            txM.endTransactionCommit();
         }
     }
 
     @RunnerPluginBeforeTest
     protected void beforeTest() {
+        transactionManager = new TransactionManager(getContextAwareResourceCreator());
         transactionManager.beginTransaction();
     }
 
@@ -113,7 +176,7 @@ public class DataSourcePlugin implements Plugin {
 
     @Override
     public LifeCycle getLifeCycle() {
-        return LifeCycle.TEST_SUITE;
+        return LifeCycle.TEST_CONFIG;
     }
 
     /**
@@ -125,6 +188,8 @@ public class DataSourcePlugin implements Plugin {
         beforeSuite.add(runnable);
         return this;
     }
+
+
 
     public interface ResourceLoaderRunner {
         void run();
@@ -161,8 +226,4 @@ public class DataSourcePlugin implements Plugin {
         void run(ResourceLoader resourceLoader);
     }
 
-
-    public <T> JavaResourceCreator<T> getCreator(Class<T> typeClass) {
-        return resourceFactory.getCreator(typeClass);
-    }
 }

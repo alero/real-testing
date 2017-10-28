@@ -36,21 +36,10 @@ public class DatasourceContainerService {
 
     public void addSQLSchemas(String schemaName, String packageBase) {
         DataSourceExecution sourceExecution = new DataSourceExecution(dataSource);
-        LOG.debug("JunitSQLContainerService addSQLSchemas " + schemaName + ":" + packageBase);
+        LOG.debug("checking schema {}:{}", schemaName , packageBase);
         if (!sourceExecution.isInitiated(schemaName, packageBase)) {
-            LOG.info("addSQLSchemas for " + schemaName + ":" + packageBase);
+            LOG.info("add any found SQLSchemas for {}:{}",  schemaName, packageBase);
             sourceExecution.addSQLSchemas(schemaName, packageBase);
         }
     }
-
-
-    public void addSQLSchemas(String controllerPackageName, String schemaName, String packageBase) {
-        DataSourceExecution sourceExecution = new DataSourceExecution(dataSource);
-        LOG.debug("JunitSQLContainerService addSQLSchemas " +
-                controllerPackageName + ":" + schemaName + ":" + packageBase);
-        if (!sourceExecution.isInitiated(controllerPackageName, packageBase)) {
-            sourceExecution.addSQLSchemas(schemaName, packageBase);
-        }
-    }
-
 }

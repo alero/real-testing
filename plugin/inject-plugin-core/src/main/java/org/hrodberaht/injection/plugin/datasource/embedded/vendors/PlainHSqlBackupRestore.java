@@ -16,11 +16,13 @@
 
 package org.hrodberaht.injection.plugin.datasource.embedded.vendors;
 
+import org.hrodberaht.injection.plugin.datasource.DataSourceException;
 import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCService;
 import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -42,21 +44,30 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore {
     }
 
     @Override
+    public TestDataSourceWrapper getTestDataSource(String name) {
+        return new TestDataSourceWrapper(driverManager);
+    }
+
+    @Override
     public void createSnapshot(final String name) {
 
         final String fileName = getFilename(name);
 
         LOG.info("PlainHSqlBackupRestore backup to : {}", fileName);
 
-
-        try (final Connection connection = driverManager.getConnection()) {
-
+        PlainConnection connection = null;
+        try  {
+            connection = driverManager.getInnerConnection();
             JDBCService jdbcTemplate = createJdbcService(connection);
             String backup = "SCRIPT '" + fileName + "'";
             jdbcTemplate.execute(backup);
             connection.commit();
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            throw new DataSourceException(e);
+        }finally {
+            if(connection != null) {
+                connection.dontFailClose();
+            }
         }
     }
 
@@ -78,11 +89,12 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore {
         final String fileName = getFilename(name);
         LOG.debug("PlainHSqlBackupRestore restore from : {}", fileName);
 
-        try (Connection connection = driverManager.getConnection();) {
+        try (PlainConnection connection = driverManager.getInnerConnection()) {
 
             JDBCService jdbcTemplate = createJdbcService(connection);
             readFile(new File(fileName), jdbcTemplate);
             connection.commit();
+            connection.closeIt();
         } catch (IOException | SQLException e) {
             throw new RuntimeException(e);
         }

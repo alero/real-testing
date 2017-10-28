@@ -46,8 +46,4 @@ public class ChainableInjectionPointProvider implements InjectionFinder {
         return injectionFinder.extendedInjection(instance);
     }
 
-    @Override
-    public ContainerConfig getContainerConfig() {
-        return injectionFinder.getContainerConfig();
-    }
 }

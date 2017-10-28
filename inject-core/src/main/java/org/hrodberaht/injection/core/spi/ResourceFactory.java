@@ -17,11 +17,7 @@
 package org.hrodberaht.injection.core.spi;
 
 /**
- * Created with IntelliJ IDEA.
- * User: alexbrob
- * Date: 2012-11-28
- * Time: 13:55
- * To change this template use File | Settings | File Templates.
+ * Anything that is created via this factory will be available in the Jndi context under class.simpleName + name
  */
 public interface ResourceFactory {
 

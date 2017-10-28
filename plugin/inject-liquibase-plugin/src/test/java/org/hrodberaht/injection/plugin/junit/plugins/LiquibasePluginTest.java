@@ -51,7 +51,7 @@ public class LiquibasePluginTest {
         List<String> stringList =
                 jdbcService.query("select * from simple", (rs, iteration) -> rs.getString("name"));
 
-        assertEquals(0, stringList.size());
+        assertEquals(1, stringList.size());
 
         assertTrue(Paths.get("target/liquibase/main/backup.script").toFile().exists());
 

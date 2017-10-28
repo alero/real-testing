@@ -39,7 +39,7 @@ public class ServiceLoadingContainerConfig extends ContainerContextConfigBase {
 
         DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class);
 
-        DataSource dataSource = dataSourcePlugin.getCreator(DataSource.class).create("MyDataSource2");
+        DataSource dataSource = dataSourcePlugin.createDataSource("MyDataSource2");
 
         // Load schema is a custom method located in the plugin code, this creates clean separation
         dataSourcePlugin

@@ -46,7 +46,7 @@ public class TestSpringJPAPlugin {
             SpringExtensionPlugin springExtensionPlugin = activatePlugin(SpringExtensionPlugin.class);
 
             JpaPlugin jpaPlugin = activatePlugin(JpaPlugin.class);
-            jpaPlugin.getCreator(DataSource.class).create("MyDataSource");
+            jpaPlugin.createDataSource("MyDataSource");
             // jpaPlugin.createEntityManager("example-jpa");
 
             springExtensionPlugin

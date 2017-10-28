@@ -20,6 +20,7 @@ import org.hrodberaht.injection.plugin.junit.ResourceWatcher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -43,11 +44,12 @@ public class ProxyResourceCreator implements DatasourceCreator {
         MEM, RESTORABLE
     }
 
-    final Map<String, DataSourceProxy> DATASOURCES = new HashMap<>();
+    final Map<String, DataSourceProxyInterface> dataSources = new HashMap<>();
 
     private final DataSourceProvider provider;
     private final DataSourcePersistence persistence;
     private final ResourceWatcher resourceWatcher;
+    private TransactionManager transactionManager;
 
     public ProxyResourceCreator(DataSourceProvider provider, DataSourcePersistence persistence) {
         this(provider, persistence, null);
@@ -59,27 +61,36 @@ public class ProxyResourceCreator implements DatasourceCreator {
         this.resourceWatcher = resourceWatcher;
     }
 
-    public DataSourceProxy createDataSource(String dataSourceName) {
+    public void setTransactionManager(TransactionManager transactionManager) {
+        this.transactionManager = transactionManager;
+    }
 
+    public DataSourceProxyInterface createDataSource(String dataSourceName) {
         if (!hasDataSource(dataSourceName)) {
-            DataSourceProxy dataSourceProxy = createDataSourceProxy(dataSourceName);
-            DATASOURCES.put(dataSourceName, dataSourceProxy);
-            LOG.info("Created dataSourceProxy " + dataSourceProxy);
+            DataSourceProxyInterface dataSourceProxy = createDataSourceProxy(dataSourceName);
+            dataSources.put(dataSourceName, dataSourceProxy);
+            LOG.info("Created dataSourceProxy {}", dataSourceProxy);
             return dataSourceProxy;
         }
-        DataSourceProxy dataSourceProxy = DATASOURCES.get(dataSourceName);
-        LOG.info("Reused dataSourceProxy " + dataSourceProxy);
-        DATASOURCES.put(dataSourceName, dataSourceProxy);
+        DataSourceProxyInterface dataSourceProxy = dataSources.get(dataSourceName);
+        LOG.info("Reused dataSourceProxy {}", dataSourceProxy);
+        dataSources.put(dataSourceName, dataSourceProxy);
+
         return dataSourceProxy;
     }
 
+    @Override
+    public Collection<DataSourceProxyInterface> getDataSources() {
+        return dataSources.values();
+    }
 
-    private DataSourceProxy createDataSourceProxy(String dataSourceName) {
-        return new DataSourceProxy(dataSourceName, provider, persistence, resourceWatcher);
+
+    private DataSourceProxyInterface createDataSourceProxy(String dataSourceName) {
+        return new SimpleDataSourceProxy(dataSourceName, provider, persistence, resourceWatcher);
     }
 
     private boolean hasDataSource(String dataSourceName) {
-        return DATASOURCES.get(dataSourceName) != null;
+        return dataSources.get(dataSourceName) != null;
     }
 
 

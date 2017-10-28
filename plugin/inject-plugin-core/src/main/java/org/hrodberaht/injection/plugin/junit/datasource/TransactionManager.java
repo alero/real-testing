@@ -35,50 +35,57 @@ import java.util.List;
 public class TransactionManager {
 
     private final Logger LOG = LoggerFactory.getLogger(TransactionManager.class);
-    private final ThreadLocal<DataSources> DATA_SOURCES = new ThreadLocal<>();
-    private final ProxyResourceCreator proxyResourceCreator;
+    private final ThreadLocal<DataSources> dataSourcesThreadLocal = new ThreadLocal<>();
+    private final DatasourceCreator resourceCreator;
 
 
-    public TransactionManager(ProxyResourceCreator proxyResourceCreator) {
-        this.proxyResourceCreator = proxyResourceCreator;
+    public TransactionManager(DatasourceCreator proxyResourceCreator) {
+        this.resourceCreator = proxyResourceCreator;
     }
 
 
     public void endTransaction() {
-        DataSources dataSources = DATA_SOURCES.get();
+        DataSources dataSources = dataSourcesThreadLocal.get();
         dataSources.dataSourceList.forEach(dataSource -> {
+            try {
+                LOG.info("dataSource rollback {} - {}", dataSource, dataSource.getConnection());
+            } catch (SQLException e) {
+                throw new DataSourceRuntimeException(e);
+            }
             dataSource.clearDataSource();
-            LOG.debug("dataSource rollback " + dataSource);
         });
     }
 
     public void endTransactionCommit() {
-        DataSources dataSources = DATA_SOURCES.get();
+        DataSources dataSources = dataSourcesThreadLocal.get();
         dataSources.dataSourceList.forEach(dataSource -> {
+            try {
+                LOG.info("dataSource commit {} - {}", dataSource, dataSource.getConnection());
+            } catch (SQLException e) {
+                throw new DataSourceRuntimeException(e);
+            }
             dataSource.commitDataSource();
-            LOG.debug("dataSource committed " + dataSource);
         });
     }
 
     public void beginTransaction() {
 
-        DATA_SOURCES.set(new DataSources(proxyResourceCreator.DATASOURCES.values()));
-        DataSources dataSources = DATA_SOURCES.get();
+        dataSourcesThreadLocal.set(new DataSources(resourceCreator.getDataSources()));
+        DataSources dataSources = dataSourcesThreadLocal.get();
         dataSources.dataSourceList.forEach(dataSource -> {
             try {
-                dataSource.getConnection();
+                LOG.info("dataSource begin {} - {}", dataSource, dataSource.getConnection());
             } catch (SQLException e) {
-                throw new RuntimeException(e);
+                throw new DataSourceRuntimeException(e);
             }
-            LOG.debug("dataSource Begin " + dataSource);
 
         });
     }
 
     private class DataSources {
-        private final List<DataSourceProxy> dataSourceList;
+        private final List<DataSourceProxyInterface> dataSourceList;
 
-        public DataSources(Collection<DataSourceProxy> dataSourceList) {
+        public DataSources(Collection<DataSourceProxyInterface> dataSourceList) {
             this.dataSourceList = new ArrayList<>(dataSourceList);
         }
     }
