@@ -14,26 +14,24 @@
  * limitations under the License.
  */
 
-package org.services;
+package org.hrodberaht.inject.demo;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.common.params.DefaultSolrParams;
-import org.apache.solr.common.params.SolrParams;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;
 import java.io.IOException;
 
-@Repository
-public class SpringBeanWithSpringBean {
+@Component
+public class UserService {
 
 
     @Autowired()
@@ -49,9 +47,9 @@ public class SpringBeanWithSpringBean {
     @PostConstruct
     public void init() {
         jdbcTemplate = new JdbcTemplate(dataSource);
-        synchronized (SpringBeanWithSpringBean.class){
-            if( getName("init") == null){
-                createUser("init", "user");
+        synchronized (UserService.class){
+            if( getName("root") == null){
+                createUser("root", "pwd999");
             }
         }
     }
@@ -86,7 +84,7 @@ public class SpringBeanWithSpringBean {
     }
 
     public boolean existsInIndex(String username) {
-        SolrQuery solrQuery = new org.apache.solr.client.solrj.SolrQuery().setQuery("name:"+username) ;
+        SolrQuery solrQuery = new SolrQuery().setQuery("name:"+username) ;
         try {
             return 1 == solrClient.query(solrQuery).getResults().getNumFound();
         } catch (SolrServerException | IOException e) {
@@ -98,10 +96,10 @@ public class SpringBeanWithSpringBean {
         jdbcTemplate.update("insert into theUser (username, password, loginTries) values (?, ?, ?)", username, password, 0);
         SolrInputDocument document = new SolrInputDocument();
         document.addField("name", username);
-        document.addField("password", username);
+        document.addField("password", password);
         try {
             solrClient.add(document);
-            solrClient.commit(true, true, false);
+            solrClient.commit(false, false, true);
         } catch (SolrServerException | IOException e) {
             throw new RuntimeException(e);
         }

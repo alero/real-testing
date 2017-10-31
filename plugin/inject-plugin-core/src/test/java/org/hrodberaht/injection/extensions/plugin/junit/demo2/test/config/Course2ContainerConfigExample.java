@@ -30,9 +30,9 @@ public class Course2ContainerConfigExample extends ContainerContextConfigBase {
                 .scan(() -> "org.hrodberaht.injection.extensions.plugin.junit.demo2.service")
                 .resource(builder ->
                         builder
-                                .resource("myResource", new MyResource("named"))
-                                .resource("myMappedResource", new MyResource("mapped"))
-                                .resource(new MyResource("typed"))
+                            .resource("myResource", new MyResource("named"))
+                            .resource("myMappedResource", new MyResource("mapped"))
+                            .resource(new MyResource("typed"))
 
                 )
         ;

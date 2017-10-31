@@ -17,6 +17,7 @@
 package org.hrodberaht.injection.plugin.junit.spring.config;
 
 
+import org.hrodberaht.injection.core.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.SpringExtensionPlugin;
@@ -30,17 +31,19 @@ public class JUnitConfigExampleResourcesAsJndiJavaObjectsToSpring extends Contai
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
         String dataSourceName = "MyDataSource2";
-        DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class).usingJavaContext();
+        DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class)
+                .commitAfterContainerCreation()
+                .usingJavaContext();
         DataSource dataSource = dataSourcePlugin.createDataSource(dataSourceName);
 
         dataSourcePlugin.loadSchema(dataSource, "sql");
         dataSourcePlugin.addBeforeTestSuite((loader) -> loader.get(LoadingTheTestWithData.class).run());
 
         activatePlugin(SpringExtensionPlugin.class)
-                .withDataSource(dataSourcePlugin)
-                    .datasource().resourceAsSpringBeans()
-                    .datasource().commitAfterContainerCreation()
+                .with(dataSourcePlugin)
                 .springConfig(SpringConfigJavaSample2.class)
                 ;
+
+
     }
 }

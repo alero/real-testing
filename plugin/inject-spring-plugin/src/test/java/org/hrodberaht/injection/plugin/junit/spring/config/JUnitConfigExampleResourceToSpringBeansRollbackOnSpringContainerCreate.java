@@ -36,8 +36,7 @@ public class JUnitConfigExampleResourceToSpringBeansRollbackOnSpringContainerCre
         dataSourcePlugin.addBeforeTestSuite((loader) -> loader.get(LoadingTheTestWithDataAgain.class).run());
 
         activatePlugin(SpringExtensionPlugin.class)
-                .withDataSource(dataSourcePlugin)
-                .datasource().resourceAsSpringBeans()
+                .with(dataSourcePlugin)
                 .springConfig(SpringConfigTestService2Bean.class, SpringConfigDataSource3.class);
 
     }

@@ -20,15 +20,20 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.api.PluginContext;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterClassTest;
-import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterContainerCreation;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterTest;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeClassTest;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeContainerCreation;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeTest;
+import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProvider;
+import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProviderSupport;
 import org.hrodberaht.injection.plugin.junit.solr.SolrAssertions;
 import org.hrodberaht.injection.plugin.junit.solr.SolrTestRunner;
 
-public class SolrJPlugin implements Plugin {
+import javax.inject.Provider;
+import java.util.HashSet;
+import java.util.Set;
+
+public class SolrJPlugin implements Plugin, ResourceProviderSupport {
 
     public static final String DEFAULT_HOME = "target/solr";
 
@@ -37,6 +42,8 @@ public class SolrJPlugin implements Plugin {
     private String coreName;
     private ResourceLifeCycle lifeCycle = ResourceLifeCycle.TEST_CONFIG;
     private PluginLifeCycledResource<SolrTestRunner> pluginLifeCycledResource = new PluginLifeCycledResource<>(SolrTestRunner.class);
+    private Set<ResourceProvider> resourceProviders = new HashSet<>();
+
 
 
     public SolrJPlugin lifeCycle(ResourceLifeCycle resourceLifeCycle) {
@@ -51,6 +58,21 @@ public class SolrJPlugin implements Plugin {
 
     public SolrJPlugin solrHome(String solrHome) {
         this.solrHome = solrHome;
+        return this;
+    }
+
+    public SolrJPlugin namedResource(String name, Provider instance){
+        resourceProviders.add(new ResourceProvider(name, null, instance));
+        return this;
+    }
+
+    public SolrJPlugin typedResource(Class type, Provider instance){
+        resourceProviders.add(new ResourceProvider(null, type, instance));
+        return this;
+    }
+
+    public SolrJPlugin namedTypedResource(String name, Class type, Provider instance){
+        resourceProviders.add(new ResourceProvider(null, type, instance));
         return this;
     }
 
@@ -138,4 +160,8 @@ public class SolrJPlugin implements Plugin {
     }
 
 
+    @Override
+    public Set<ResourceProvider> resources() {
+        return resourceProviders;
+    }
 }

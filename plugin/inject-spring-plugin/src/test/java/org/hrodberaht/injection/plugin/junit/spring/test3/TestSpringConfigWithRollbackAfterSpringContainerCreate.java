@@ -39,18 +39,11 @@ public class TestSpringConfigWithRollbackAfterSpringContainerCreate {
 
     @Test
     public void testWiredBeanResource() throws Exception {
-
         assertNotNull(springBean);
-
         assertNotNull(springBean.getName("dude"));
-
-
     }
 
     @Test
-    @Ignore
-    // TODO: enable and solve the issues that we commit the init when :
-    // running multiple similar tests using different config
     public void testWiredBeanRollbackOnInit() throws Exception {
 
         assertNotNull(springBean);

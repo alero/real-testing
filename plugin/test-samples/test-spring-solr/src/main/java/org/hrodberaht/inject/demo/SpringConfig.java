@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package org.config;
+package org.hrodberaht.inject.demo;
 
-import org.services.SpringBeanWithSpringBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -27,7 +26,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import javax.sql.DataSource;
 
 @Configuration
-public class SpringConfigJavaSample2 {
+public class SpringConfig {
 
     @Bean
     @Autowired
@@ -40,8 +39,8 @@ public class SpringConfigJavaSample2 {
     }
 
     @Bean
-    public SpringBeanWithSpringBean springBeanWithSpringBean(){
-        return new SpringBeanWithSpringBean();
+    public UserService springBeanWithSpringBean(){
+        return new UserService();
     }
 
 

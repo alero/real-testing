@@ -18,6 +18,9 @@ package org.hrodberaht.injection.plugin.junit.plugins;
 
 import org.hrodberaht.injection.core.InjectContainer;
 import org.hrodberaht.injection.core.spi.ResourceFactory;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeContainerCreation;
+import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProvider;
+import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProviderSupport;
 import org.hrodberaht.injection.plugin.junit.datasource.DataSourceProxyInterface;
 import org.hrodberaht.injection.plugin.junit.datasource.DatasourceResourceCreator;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
@@ -29,16 +32,21 @@ import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeTe
 import org.hrodberaht.injection.plugin.junit.datasource.DatasourceContainerService;
 import org.hrodberaht.injection.plugin.junit.datasource.ProxyResourceCreator;
 import org.hrodberaht.injection.plugin.junit.datasource.TransactionManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class DataSourcePlugin implements Plugin {
+public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
 
+    private static final Logger LOG = LoggerFactory.getLogger(DataSourcePlugin.class);
     private static final Map<Class, ResourceRunner> resourceRunnerState = new ConcurrentHashMap<>();
 
     private final List<ResourceRunner> beforeSuite = new ArrayList<>();
@@ -50,6 +58,21 @@ public class DataSourcePlugin implements Plugin {
     private ResourceContext resourceContext;
     private static ResourceContext sharedResourceContext;
 
+    @Override
+    public Set<ResourceProvider> resources() {
+        Set<ResourceProvider> resourceProviderSupports = new HashSet<>();
+        getDataSources().forEach(
+                dataSource -> resourceProviderSupports.add(
+                        new ResourceProvider(dataSource.getName(), DataSource.class, () -> dataSource)
+                )
+        );
+        return resourceProviderSupports;
+    }
+
+
+    private enum CommitMode {COMMIT, ROLLBACK}
+
+    private CommitMode commitModeContainerLifeCycle = CommitMode.ROLLBACK;
 
     private boolean usingJavaContext = false;
 
@@ -73,8 +96,6 @@ public class DataSourcePlugin implements Plugin {
         return this;
     }
 
-
-
     public interface ResourceLoaderRunner {
         void run();
     }
@@ -86,6 +107,12 @@ public class DataSourcePlugin implements Plugin {
         this.usingJavaContext = true;
         return this;
     }
+
+    public DataSourcePlugin commitAfterContainerCreation() {
+        commitModeContainerLifeCycle = CommitMode.COMMIT;
+        return this;
+    }
+
 
     public DataSource createDataSource(){
         return getContextAwareResource().resourceFactory.getCreator(DataSource.class).create();
@@ -161,9 +188,22 @@ public class DataSourcePlugin implements Plugin {
         this.resourceContext = new ResourceContext(resourceFactory, null);
     }
 
+
+    @RunnerPluginBeforeContainerCreation
+    protected void beforeContainerCreation(PluginContext pluginContext) {
+        LOG.info("beforeContainerCreation for {}", this);
+        transactionManager = createTransactionManager();
+        transactionManager.beginTransaction();
+    }
+
     @RunnerPluginAfterContainerCreation
     protected void afterContainerCreation(PluginContext pluginContext) {
         this.injectContainer = pluginContext.register().getContainer();
+        if (commitModeContainerLifeCycle == CommitMode.COMMIT) {
+            transactionManager.endTransactionCommit();
+        } else {
+            transactionManager.endTransaction();
+        }
         if (!beforeSuite.isEmpty()) {
             TransactionManager txM = createTransactionManager();
             txM.beginTransaction();

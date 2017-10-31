@@ -19,14 +19,13 @@ package org.hrodberaht.injection.plugin.junit.plugins;
 import org.hrodberaht.injection.core.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.core.register.InjectionRegister;
 import org.hrodberaht.injection.core.spi.ContainerConfigBuilder;
-import org.hrodberaht.injection.plugin.exception.PluginRuntimeException;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.api.PluginContext;
 import org.hrodberaht.injection.plugin.junit.api.annotation.InjectionPluginInjectionFinder;
 import org.hrodberaht.injection.plugin.junit.api.annotation.InjectionPluginInjectionRegister;
-import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterContainerCreation;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeContainerCreation;
-import org.hrodberaht.injection.plugin.junit.datasource.TransactionManager;
+import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProvider;
+import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProviderSupport;
 import org.hrodberaht.injection.plugin.junit.spring.beans.config.ContainerAllSpringConfig;
 import org.hrodberaht.injection.plugin.junit.spring.beans.config.ContainerSpringConfig;
 import org.hrodberaht.injection.plugin.junit.spring.injector.SpringBeanInjector;
@@ -40,12 +39,12 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
  * The SpringExtensionPlugin will start a Spring Container and use it internally as bridge.
- * It currently can not automatically wire @Inject fields over to spring, so use @Autowired in the testclasses to get the bridge working.
- * This limitation will be fixed in a future release, coming soon.
  */
 public class SpringExtensionPlugin implements Plugin {
 
@@ -54,7 +53,7 @@ public class SpringExtensionPlugin implements Plugin {
     private PluginLifeCycledResource<SpringRunner> pluginLifeCycledResource = new PluginLifeCycledResource<>(SpringRunner.class);
 
     private ResourceLifeCycle lifeCycle = ResourceLifeCycle.TEST_CONFIG;
-    private Builder builder = new Builder(this);
+    private Builder builder = new Builder();
     private InjectionRegister injectionRegister;
     private SpringRunner springRunner;
 
@@ -79,34 +78,21 @@ public class SpringExtensionPlugin implements Plugin {
         return this;
     }
 
-    public SpringExtensionPlugin withDataSource(DataSourcePlugin dataSourcePlugin) {
-        builder.dataSourcePluginWrapper = new DataSourcePluginWrapper(dataSourcePlugin, builder);
+    public SpringExtensionPlugin with(Plugin plugin){
+        if(plugin instanceof ResourceProviderSupport) {
+            builder.resourceProviders.addAll(((ResourceProviderSupport)plugin).resources());
+        }
+        builder.hasJpaPlugin = hasJpaPLugin(plugin);
         return this;
     }
 
-    public DataSourcePluginWrapper datasource() {
-        if (builder.dataSourcePluginWrapper == null) {
-            throw new PluginRuntimeException("datasource is not yet added as dependency plugin");
-        }
-        return builder.dataSourcePluginWrapper;
-    }
-
-    public SpringExtensionPlugin withSolr(Plugin plugin) {
+    private boolean hasJpaPLugin(Plugin plugin) {
         try {
-            Class.forName(SolrJPlugin.class.getName());
-            SolrJPlugin solrJPlugin = (SolrJPlugin)plugin;
-            builder.solrJPluginWrapper = new SolrJPluginWrapper(solrJPlugin, builder);
+            Class.forName("org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin");
+            return plugin instanceof JpaPlugin;
         }catch (ClassNotFoundException e){
-            throw new PluginRuntimeException(e);
+            return false;
         }
-        return this;
-    }
-
-    public SolrJPluginWrapper solr() {
-        if (builder.solrJPluginWrapper == null) {
-            throw new PluginRuntimeException("solr is not yet added as dependency plugin");
-        }
-        return builder.solrJPluginWrapper;
     }
 
     private static class SpringRunner {
@@ -116,37 +102,12 @@ public class SpringExtensionPlugin implements Plugin {
         // Spring
         private final ApplicationContext context;
         private final DefaultListableBeanFactory parentBeanFactory = new DefaultListableBeanFactory();
-        // DataSource
-        private final TransactionManager transactionManager;
-        private final DataSourcePlugin dataSourcePlugin;
-        private final DataSourcePluginWrapper.CommitMode commitMode;
-        // Solr
-        private final SolrJPlugin solrJPlugin;
 
         private SpringRunner(SpringExtensionPlugin springExtensionPlugin) {
             Builder builder = springExtensionPlugin.builder;
             this.springExtensionPlugin = springExtensionPlugin;
-            if(builder.dataSourcePluginWrapper != null) {
-                this.dataSourcePlugin = builder.dataSourcePluginWrapper.dataSourcePlugin;
-                this.transactionManager = builder.dataSourcePluginWrapper.dataSourcePlugin.createTransactionManager();
-                this.commitMode = builder.dataSourcePluginWrapper.commitMode;
-                if(builder.dataSourcePluginWrapper.resourcesAsSpringBeans){
-                    dataSourcePluginResourcesAsSpringBeans();
-                }
-            }else{
-                this.dataSourcePlugin = null;
-                this.transactionManager = null;
-                this.commitMode = null;
-            }
 
-            if(builder.solrJPluginWrapper != null) {
-                this.solrJPlugin = builder.solrJPluginWrapper.solrJPlugin;
-                if(builder.solrJPluginWrapper.resourcesAsSpringBeans){
-                     solrPluginResourcesAsSpringBeans();
-                }
-            }else{
-               this.solrJPlugin = null;
-            }
+            resourcesAsSpringBeans();
 
             if(builder.springConfigsClasses != null){
                 context = loadConfig(builder.springConfigsClasses);
@@ -162,28 +123,21 @@ public class SpringExtensionPlugin implements Plugin {
             }
         }
 
-        private void solrPluginResourcesAsSpringBeans() {
-            parentBeanFactory.registerSingleton("solrSample/SolrClient", solrJPlugin.getClient());
-        }
-
-        private void dataSourcePluginResourcesAsSpringBeans() {
-            LOG.info("resourceAsSpringBeans for {}", this);
-            dataSourcePlugin.getDataSources().forEach(dataSourceProxyInterface -> {
-                parentBeanFactory.registerSingleton(dataSourceProxyInterface.getName(), dataSourceProxyInterface);
+        private void resourcesAsSpringBeans() {
+            LOG.info("resourcesAsSpringBeans for {}", this);
+            springExtensionPlugin.builder.resourceProviders.forEach(pluginResource -> {
+                Object instance = getInstance(pluginResource);
+                LOG.info("spring registerSingleton for {} using instance {}", pluginResource.getName(), instance);
+                parentBeanFactory.registerSingleton(pluginResource.getName(), instance);
             });
         }
 
-        private Class<?> getContainerSpringConfigClass() {
-            return hasJpaPLugin() ? ContainerAllSpringConfig.class : ContainerSpringConfig.class;
+        private Object getInstance(ResourceProvider resourceProvider) {
+            return resourceProvider.getInstance();
         }
 
-        private boolean hasJpaPLugin() {
-            try {
-                Class.forName("org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin");
-                return dataSourcePlugin != null && dataSourcePlugin instanceof JpaPlugin;
-            }catch (ClassNotFoundException e){
-                return false;
-            }
+        private Class<?> getContainerSpringConfigClass() {
+            return  springExtensionPlugin.builder.hasJpaPlugin ? ContainerAllSpringConfig.class : ContainerSpringConfig.class;
         }
 
         private ClassPathXmlApplicationContext loadConfig(String... springConfigs) {
@@ -221,60 +175,12 @@ public class SpringExtensionPlugin implements Plugin {
 
     }
 
-    public static class DataSourcePluginWrapper {
 
-        private enum CommitMode {COMMIT, ROLLBACK}
-
-        private DataSourcePluginWrapper(DataSourcePlugin dataSourcePlugin, Builder builder) {
-            this.dataSourcePlugin = dataSourcePlugin;
-            this.builder = builder;
-        }
-
-        private final DataSourcePlugin dataSourcePlugin;
-        private final Builder builder;
-
-        private CommitMode commitMode = CommitMode.ROLLBACK;
-        private boolean resourcesAsSpringBeans = false;
-
-        public SpringExtensionPlugin resourceAsSpringBeans() {
-            resourcesAsSpringBeans = true;
-            return builder.springExtensionPlugin;
-        }
-
-        public SpringExtensionPlugin commitAfterContainerCreation() {
-            builder.dataSourcePluginWrapper.commitMode = DataSourcePluginWrapper.CommitMode.COMMIT;
-            return builder.springExtensionPlugin;
-        }
-    }
-
-    public static class SolrJPluginWrapper {
-        private final SolrJPlugin solrJPlugin;
-        private final Builder builder;
-
-        private boolean resourcesAsSpringBeans = false;
-
-        private SolrJPluginWrapper(SolrJPlugin solrJPlugin, Builder builder) {
-            this.solrJPlugin = solrJPlugin;
-            this.builder = builder;
-        }
-
-        public SpringExtensionPlugin resourceAsSpringBeans() {
-            LOG.info("resourceAsSpringBeans for {}", this);
-            resourcesAsSpringBeans = true;
-            return builder.springExtensionPlugin;
-        }
-    }
-
-    public static class Builder {
-        private final SpringExtensionPlugin springExtensionPlugin;
+    private static class Builder {
         private String[] springConfigFiles = null;
         private Class[] springConfigsClasses = null;
-        private DataSourcePluginWrapper dataSourcePluginWrapper = null;
-        private SolrJPluginWrapper solrJPluginWrapper = null;
-
-        public Builder(SpringExtensionPlugin springExtensionPlugin) {
-            this.springExtensionPlugin = springExtensionPlugin;
-        }
+        private List<ResourceProvider> resourceProviders = new ArrayList<>();
+        private boolean hasJpaPlugin= false;
 
     }
 
@@ -309,23 +215,8 @@ public class SpringExtensionPlugin implements Plugin {
 
     @RunnerPluginBeforeContainerCreation
     protected void beforeContainerCreation(PluginContext pluginContext) {
-        springRunner = pluginLifeCycledResource.create(lifeCycle, pluginContext, () -> new SpringRunner(this));
         LOG.info("beforeContainerCreation for {}", this);
-        if (springRunner.dataSourcePlugin != null) {
-            springRunner.transactionManager.beginTransaction();
-        }
-    }
-
-    @RunnerPluginAfterContainerCreation
-    protected void afterContainerCreation(PluginContext pluginContext) {
-        LOG.info("afterContainerCreation for {}", this);
-        if (springRunner.dataSourcePlugin != null) {
-            if (springRunner.commitMode == DataSourcePluginWrapper.CommitMode.COMMIT) {
-                springRunner.transactionManager.endTransactionCommit();
-            } else {
-                springRunner.transactionManager.endTransaction();
-            }
-        }
+        springRunner = pluginLifeCycledResource.create(lifeCycle, pluginContext, () -> new SpringRunner(this));
     }
 
     @InjectionPluginInjectionRegister

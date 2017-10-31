@@ -48,7 +48,7 @@ public class TestSpringJPAPlugin {
             // jpaPlugin.createEntityManager("example-jpa");
 
             springExtensionPlugin
-                    .withDataSource(jpaPlugin)
+                    .with(jpaPlugin)
                     .springConfig(SpringConfig.class, PersistenceJPAConfig.class);
 
         }
