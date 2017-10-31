@@ -35,5 +35,6 @@
         <module>inject-cdi-junittest-service</module>
         <module>test-spring-jpa</module>
         <module>test-spring-solr</module>
+        <module>test-spring-solr-demo</module>
     </modules>
 </project>

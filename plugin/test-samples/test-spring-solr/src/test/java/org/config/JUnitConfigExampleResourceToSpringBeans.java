@@ -19,6 +19,7 @@ package org.config;
 
 import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
+import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.SolrJPlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.SpringExtensionPlugin;
@@ -30,6 +31,7 @@ public class JUnitConfigExampleResourceToSpringBeans extends ContainerContextCon
 
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
+        // TODO: change to use "no help" resourceNaming convention as default.
         String dataSourceName = "MyDataSource";
         DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class);
         DataSource dataSource = dataSourcePlugin.createDataSource(dataSourceName);
@@ -42,11 +44,12 @@ public class JUnitConfigExampleResourceToSpringBeans extends ContainerContextCon
                 .coreName("collection1");
 
         activatePlugin(SpringExtensionPlugin.class)
+                // .lifeCycle(Plugin.ResourceLifeCycle.TEST_SUITE)
                 .withDataSource(dataSourcePlugin)
-                .datasource().commitAfterContainerCreation()
-                .datasource().resourceAsSpringBeans()
+                    .datasource().commitAfterContainerCreation()
+                    .datasource().resourceAsSpringBeans()
                 .withSolr(solrJPlugin)
-                .solr().resourceAsSpringBeans()
+                    .solr().resourceAsSpringBeans()
                 .springConfig(SpringConfigJavaSample2.class);
 
     }

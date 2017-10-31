@@ -29,9 +29,8 @@ public class JUnitConfigExampleResourceToSpringBeansRollbackOnSpringContainerCre
 
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
-        String dataSourceName = "MyDataSource3";
         DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class);
-        DataSource dataSource = dataSourcePlugin.createDataSource(dataSourceName);
+        DataSource dataSource = dataSourcePlugin.createDataSource("MyDataSource3");
 
         dataSourcePlugin.loadSchema(dataSource, "sql");
         dataSourcePlugin.addBeforeTestSuite((loader) -> loader.get(LoadingTheTestWithDataAgain.class).run());

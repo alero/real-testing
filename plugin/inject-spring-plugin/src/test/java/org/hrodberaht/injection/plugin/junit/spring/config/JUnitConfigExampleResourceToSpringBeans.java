@@ -38,8 +38,8 @@ public class JUnitConfigExampleResourceToSpringBeans extends ContainerContextCon
 
         activatePlugin(SpringExtensionPlugin.class)
                 .withDataSource(dataSourcePlugin)
-                .datasource().resourceAsSpringBeans()
-                .datasource().commitAfterContainerCreation()
+                    .datasource().resourceAsSpringBeans()
+                    .datasource().commitAfterContainerCreation()
                 .springConfig(SpringConfigJavaSample2.class);
 
     }

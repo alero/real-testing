@@ -225,7 +225,7 @@ public class SpringExtensionPlugin implements Plugin {
 
         private enum CommitMode {COMMIT, ROLLBACK}
 
-        public DataSourcePluginWrapper(DataSourcePlugin dataSourcePlugin, Builder builder) {
+        private DataSourcePluginWrapper(DataSourcePlugin dataSourcePlugin, Builder builder) {
             this.dataSourcePlugin = dataSourcePlugin;
             this.builder = builder;
         }
@@ -253,7 +253,7 @@ public class SpringExtensionPlugin implements Plugin {
 
         private boolean resourcesAsSpringBeans = false;
 
-        public SolrJPluginWrapper(SolrJPlugin solrJPlugin, Builder builder) {
+        private SolrJPluginWrapper(SolrJPlugin solrJPlugin, Builder builder) {
             this.solrJPlugin = solrJPlugin;
             this.builder = builder;
         }

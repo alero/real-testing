@@ -23,11 +23,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.services.SpringBeanWithSpringBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 @ContainerContext(JUnitConfigExampleResourceToSpringBeans.class)
 @RunWith(JUnit4Runner.class)
@@ -46,9 +47,13 @@ public class TestJavaConfigOnlyInjectionQualifier2 {
 
         assertNull(springBean.getName("the"));
 
+        assertFalse(springBean.existsInIndex("the"));
+
         springBean.createUser("the", "man");
 
         assertNotNull(springBean.getName("the"));
+
+        assertTrue(springBean.existsInIndex("the"));
     }
 
     @Test
@@ -62,7 +67,6 @@ public class TestJavaConfigOnlyInjectionQualifier2 {
 
         assertEquals(Integer.valueOf( 1), springBean.getLoginCount("dude"));
 
-        springBean.existsInIndex("dude");
 
     }
 }
