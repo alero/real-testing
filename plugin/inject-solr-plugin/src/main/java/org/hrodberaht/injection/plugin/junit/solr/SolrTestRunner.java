@@ -42,13 +42,12 @@ import java.util.jar.JarFile;
 import java.util.stream.Stream;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+import static org.hrodberaht.injection.plugin.junit.plugins.SolrJPlugin.DEFAULT_HOME;
 
 public class SolrTestRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger(SolrTestRunner.class);
     private static Map<String, SolrRunnerHolder> CORE_CACHE = new ConcurrentHashMap<>();
-
-    public static final String DEFAULT_HOME = "target/solr";
 
     private String home;
     private String coreName;

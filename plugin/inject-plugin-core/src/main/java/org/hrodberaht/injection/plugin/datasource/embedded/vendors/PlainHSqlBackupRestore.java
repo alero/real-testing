@@ -45,7 +45,7 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore {
 
     @Override
     public TestDataSourceWrapper getTestDataSource(String name) {
-        return new TestDataSourceWrapper(driverManager);
+        return new TestDataSourceWrapper(name, driverManager);
     }
 
     @Override

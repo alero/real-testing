@@ -24,12 +24,11 @@ import org.hrodberaht.injection.core.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.core.spi.ResourceFactory;
 import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.exception.PluginRuntimeException;
-import org.hrodberaht.injection.plugin.junit.api.InjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
-import org.hrodberaht.injection.plugin.junit.api.RunnerPlugin;
 import org.hrodberaht.injection.plugin.junit.inner.AnnotatedInjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.inner.AnnotatedResourcePlugin;
 import org.hrodberaht.injection.plugin.junit.inner.AnnotatedRunnerPlugin;
+import org.hrodberaht.injection.plugin.junit.inner.InjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.inner.RunnerPlugins;
 import org.hrodberaht.injection.plugin.junit.resources.ChainableInjectionPointProvider;
 import org.hrodberaht.injection.plugin.junit.resources.PluggableResourceFactory;
@@ -37,14 +36,10 @@ import org.hrodberaht.injection.plugin.junit.resources.ResourcePluginBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 public abstract class ContainerContextConfigBase implements ContainerContextConfig {
 
     private static final Logger LOG = LoggerFactory.getLogger(ContainerContextConfigBase.class);
-    private final Map<Class<? extends Plugin>, Plugin> activePlugins = new ConcurrentHashMap<>();
-    private final RunnerPlugins runnerPlugins = new RunnerPlugins(activePlugins);
+    private final RunnerPlugins runnerPlugins = new RunnerPlugins();
     private final ContainerConfigInner containerConfigInner = new ContainerConfigInner(this);
 
     public abstract void register(InjectionRegistryBuilder registryBuilder);
@@ -75,8 +70,14 @@ public abstract class ContainerContextConfigBase implements ContainerContextConf
     }
 
 
-    void start() {
-        containerConfigInner.start();
+    void initiateConfig() {
+        LOG.info("initiateConfig : {}", this);
+        containerConfigInner.initiateConfig();
+    }
+
+    void buildConfig() {
+        LOG.info("buildConfig : {}", this);
+        containerConfigInner.buildConfig();
     }
 
 
@@ -132,23 +133,6 @@ public abstract class ContainerContextConfigBase implements ContainerContextConf
                     register(pluginClass).withFactoryInstance(plugin);
                 }
             }));
-            if (plugin instanceof ResourcePluginBase) {
-                LOG.info("adding PluggableResourceFactory for {}", plugin.getClass().getSimpleName());
-                PluggableResourceFactory.setPluggableResourceFactory(
-                        (ResourcePluginBase) plugin, resourceFactory
-                );
-            }
-            if (AnnotatedResourcePlugin.containsAnnotations(plugin)) {
-                LOG.info("Activating annotated ResourcePlugin {}", plugin.getClass().getSimpleName());
-                AnnotatedResourcePlugin.inject(resourceFactory, plugin);
-                if (AnnotatedResourcePlugin.hasChainableAnnotaion(plugin)) {
-                    if (chainableInjectionPointProvider == null) {
-                        chainableInjectionPointProvider = AnnotatedResourcePlugin.getChainableInjectionPointProvider(plugin, lookupInjectionPointFinder());
-                    } else {
-                        chainableInjectionPointProvider = AnnotatedResourcePlugin.getChainableInjectionPointProvider(plugin, chainableInjectionPointProvider);
-                    }
-                }
-            }
             if (AnnotatedInjectionPlugin.containsAnnotations(plugin)) {
                 LOG.info("Activating annotated InjectionPlugin {}", plugin.getClass().getSimpleName());
                 if (this.injectionPlugin == null) {
@@ -160,14 +144,27 @@ public abstract class ContainerContextConfigBase implements ContainerContextConf
                     throw new PluginRuntimeException("There can be only one InjectionPlugin active at once");
                 }
             }
+            if (plugin instanceof ResourcePluginBase) {
+                LOG.info("adding PluggableResourceFactory for {}", plugin.getClass().getSimpleName());
+                PluggableResourceFactory.setPluggableResourceFactory(
+                        (ResourcePluginBase) plugin, resourceFactory
+                );
+            }
+            if (AnnotatedResourcePlugin.containsAnnotations(plugin)) {
+                LOG.info("Activating annotated ContextResourcePlugin {}", plugin.getClass().getSimpleName());
+                AnnotatedResourcePlugin.inject(resourceFactory, plugin);
+                if (AnnotatedResourcePlugin.hasChainableAnnotaion(plugin)) {
+                    if (chainableInjectionPointProvider == null) {
+                        chainableInjectionPointProvider = AnnotatedResourcePlugin.getChainableInjectionPointProvider(plugin, lookupInjectionPointFinder());
+                    } else {
+                        chainableInjectionPointProvider = AnnotatedResourcePlugin.getChainableInjectionPointProvider(plugin, chainableInjectionPointProvider);
+                    }
+                }
+            }
             return plugin;
         }
 
         private <T extends Plugin> T createPlugin(T plugin) {
-            if (plugin instanceof RunnerPlugin) {
-                LOG.info("Activating RunnerPlugin {}", plugin.getClass().getSimpleName());
-                return base.runnerPlugins.addPlugin((RunnerPlugin) plugin);
-            }
             if (containsRunnerAnnotation(plugin)) {
                 LOG.info("Activating Runner annotated Plugin {}", plugin.getClass().getSimpleName());
                 return base.runnerPlugins.addAnnotatedPlugin(plugin);
@@ -233,7 +230,7 @@ public abstract class ContainerContextConfigBase implements ContainerContextConf
     }
 
     private <T extends Plugin> void registerActivePlugin(Class<T> pluginClass, T plugin) {
-        activePlugins.put(pluginClass, plugin);
+        runnerPlugins.addActivePlugin(pluginClass, plugin);
     }
 
 

@@ -36,7 +36,7 @@ public class JUnitJavaConfigExample extends ContainerContextConfigBase {
         dataSourcePlugin.loadSchema(dataSource, "sql");
         dataSourcePlugin.loadSchema(dataSource, "sql/insert");
 
-        activatePlugin(SpringExtensionPlugin.class).loadConfig(SpringConfigJavaSample.class);
+        activatePlugin(SpringExtensionPlugin.class).springConfig(SpringConfigJavaSample.class);
 
         registryBuilder.scan(() -> _package);
     }

@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.junit.api;
+package org.config;
 
-public interface RunnerPlugin extends Plugin {
+import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
+import org.services.SpringBeanWithSpringBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
-    void beforeContainerCreation(PluginContext pluginContext);
+public class LoadingTheTestWithData implements DataSourcePlugin.ResourceLoaderRunner {
 
-    void afterContainerCreation(PluginContext pluginContext);
+    @Autowired
+    private SpringBeanWithSpringBean springBean;
 
-    void beforeTest(PluginContext pluginContext);
-
-    void beforeTestClass(PluginContext pluginContext);
-
-    void afterTestClass(PluginContext pluginContext);
-
-    void afterTest(PluginContext pluginContext);
-
+    public void run() {
+        springBean.createUser("dude", "wheremycar");
+    }
 }

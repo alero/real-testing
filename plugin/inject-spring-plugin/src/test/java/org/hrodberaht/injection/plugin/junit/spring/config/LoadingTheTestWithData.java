@@ -17,8 +17,7 @@
 package org.hrodberaht.injection.plugin.junit.spring.config;
 
 import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
-import org.hrodberaht.injection.plugin.junit.spring.testservices.spring.SpringBean;
-import org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanV2;
+import org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanWithSpringBean;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -26,7 +25,7 @@ public class LoadingTheTestWithData implements DataSourcePlugin.ResourceLoaderRu
 
     @Autowired
     @Qualifier("springBean")
-    private SpringBeanV2 springBean;
+    private SpringBeanWithSpringBean springBean;
 
     public void run() {
         springBean.createUser("dude", "wheremycar");

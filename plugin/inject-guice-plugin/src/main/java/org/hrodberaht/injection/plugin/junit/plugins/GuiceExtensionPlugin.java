@@ -30,7 +30,7 @@ import org.hrodberaht.injection.plugin.junit.api.annotation.InjectionPluginInjec
 
 import java.util.List;
 
-public class GuicePlugin implements Plugin {
+public class GuiceExtensionPlugin implements Plugin {
 
     private Injector injector;
 
@@ -64,12 +64,12 @@ public class GuicePlugin implements Plugin {
     }
 
 
-    public GuicePlugin loadModules(Module... modules) {
+    public GuiceExtensionPlugin loadModules(Module... modules) {
         injector = Guice.createInjector(modules);
         return this;
     }
 
-    public GuicePlugin loadModules(List<Module> modules) {
+    public GuiceExtensionPlugin loadModules(List<Module> modules) {
         injector = Guice.createInjector(modules);
         return this;
     }

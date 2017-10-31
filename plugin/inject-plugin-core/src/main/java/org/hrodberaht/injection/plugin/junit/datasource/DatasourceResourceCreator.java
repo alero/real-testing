@@ -19,7 +19,7 @@ package org.hrodberaht.injection.plugin.junit.datasource;
 import org.hrodberaht.injection.core.spi.JavaResourceCreator;
 
 import javax.sql.DataSource;
-import java.util.List;
+import java.util.Collection;
 
 public class DatasourceResourceCreator implements JavaResourceCreator<DataSource> {
 
@@ -53,5 +53,9 @@ public class DatasourceResourceCreator implements JavaResourceCreator<DataSource
     @Override
     public DataSource create(DataSource instance) {
         return instance;
+    }
+
+    public Collection<DataSourceProxyInterface> getResources() {
+        return datasourceCreator.getDataSources();
     }
 }

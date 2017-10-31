@@ -33,7 +33,9 @@ public interface ContainerConfigBuilder {
 
     void addSingletonActiveRegistry();
 
-    void start();
+    void buildConfig();
+
+    void initiateConfig();
 
     void injectResources(Object service);
 }

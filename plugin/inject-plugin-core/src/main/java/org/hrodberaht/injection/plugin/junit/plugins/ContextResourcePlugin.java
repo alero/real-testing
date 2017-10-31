@@ -14,12 +14,15 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.junit.api;
+package org.hrodberaht.injection.plugin.junit.plugins;
 
-import org.hrodberaht.injection.plugin.junit.inner.RunnerPlugins;
+import org.hrodberaht.injection.plugin.junit.api.Plugin;
+import org.hrodberaht.injection.plugin.junit.resources.ResourcePluginBase;
 
-public interface PluginConfig {
+public class ContextResourcePlugin extends ResourcePluginBase implements Plugin {
 
-    RunnerPlugins getRunnerPlugins();
-
+    @Override
+    public LifeCycle getLifeCycle() {
+        return LifeCycle.TEST_SUITE;
+    }
 }

@@ -24,6 +24,6 @@ import java.util.Map;
 public class TestClassRunnerPlugins extends PluginRunnerBase {
 
     public TestClassRunnerPlugins(Map<Class<? extends Plugin>, Plugin> activePlugins) {
-        super(activePlugins, new HashMap<>(), new AnnotatedRunnerPlugin());
+        super(activePlugins, new AnnotatedRunnerPlugin());
     }
 }

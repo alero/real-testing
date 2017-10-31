@@ -31,6 +31,10 @@
     <version>3.0.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <properties>
+        <solr.version>6.5.0</solr.version>
+    </properties>
+
     <modules>
         <module>inject-plugin-core</module>
         <module>inject-jpa-plugin</module>

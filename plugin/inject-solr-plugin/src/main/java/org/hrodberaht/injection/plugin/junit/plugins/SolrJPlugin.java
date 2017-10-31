@@ -23,11 +23,14 @@ import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterCla
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterContainerCreation;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterTest;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeClassTest;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeContainerCreation;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeTest;
 import org.hrodberaht.injection.plugin.junit.solr.SolrAssertions;
 import org.hrodberaht.injection.plugin.junit.solr.SolrTestRunner;
 
 public class SolrJPlugin implements Plugin {
+
+    public static final String DEFAULT_HOME = "target/solr";
 
     private SolrTestRunner solrTestRunner;
     private String solrHome;
@@ -60,34 +63,19 @@ public class SolrJPlugin implements Plugin {
     }
 
     public SolrClient getClient() {
+        if(solrTestRunner == null){
+            throw new IllegalStateException("Client can not be fetched before container creation");
+        }
         return solrTestRunner.getClient();
     }
 
-    @RunnerPluginAfterContainerCreation
-    private void afterContainerCreation(PluginContext pluginContext) {
+
+    @RunnerPluginBeforeContainerCreation
+    protected void beforeContainerCreation(PluginContext pluginContext) {
         solrTestRunner = pluginLifeCycledResource.create(lifeCycle, pluginContext, this::createSolrContainer);
         if (lifeCycle == ResourceLifeCycle.TEST_SUITE || lifeCycle == ResourceLifeCycle.TEST_CONFIG) {
             prepareSolr(pluginContext);
         }
-    }
-
-    private void prepareSolr(PluginContext pluginContext) {
-        solrTestRunner.setup(getSolrHome(pluginContext), coreName);
-    }
-
-    private String getSolrHome(PluginContext pluginContext) {
-        return solrHome == null ?
-                getTestDirectoryForSolr(pluginContext, SolrTestRunner.DEFAULT_HOME) :
-                getTestDirectoryForSolr(pluginContext, solrHome);
-    }
-
-    private String getTestDirectoryForSolr(PluginContext pluginContext, String home) {
-        return pluginLifeCycledResource.testDirectory(home, pluginContext, lifeCycle);
-    }
-
-
-    private SolrTestRunner createSolrContainer() {
-        return new SolrTestRunner();
     }
 
     @RunnerPluginBeforeClassTest
@@ -120,16 +108,34 @@ public class SolrJPlugin implements Plugin {
         }
     }
 
-    private void shutdownSolr() {
-        solrTestRunner.shutdownServer();
-    }
-
     @Override
     public LifeCycle getLifeCycle() {
         return LifeCycle.TEST_SUITE;
     }
 
+    private void shutdownSolr() {
+        solrTestRunner.shutdownServer();
+    }
 
+
+    private void prepareSolr(PluginContext pluginContext) {
+        solrTestRunner.setup(getSolrHome(pluginContext), coreName);
+    }
+
+    private String getSolrHome(PluginContext pluginContext) {
+        return solrHome == null ?
+                getTestDirectoryForSolr(pluginContext, DEFAULT_HOME) :
+                getTestDirectoryForSolr(pluginContext, solrHome);
+    }
+
+    private String getTestDirectoryForSolr(PluginContext pluginContext, String home) {
+        return pluginLifeCycledResource.testDirectory(home, pluginContext, lifeCycle);
+    }
+
+
+    private SolrTestRunner createSolrContainer() {
+        return new SolrTestRunner();
+    }
 
 
 }

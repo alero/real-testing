@@ -16,11 +16,11 @@
 
 package org.hrodberaht.injection.plugin.junit.spring.config;
 
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.SpringExtensionPlugin;
 import org.hrodberaht.injection.plugin.junit.spring.beans.incubator.SpringBeanReplacementProxy;
-import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 
 import javax.sql.DataSource;
 
@@ -38,9 +38,10 @@ public class JUnitJavaConfigComboExample extends ContainerContextConfigBase {
         dataSourcePlugin.loadSchema(dataSource, "sql");
         dataSourcePlugin.loadSchema(dataSource, "sql/insert");
 
-        activatePlugin(SpringExtensionPlugin.class).loadConfig(
-                SpringConfigJavaComboSample.class,
-                SpringBeanReplacementProxy.class);
+        activatePlugin(SpringExtensionPlugin.class)
+                .springConfig(
+                        SpringConfigJavaComboSample.class,
+                        SpringBeanReplacementProxy.class);
 
         registryBuilder.scan(() -> _package);
     }

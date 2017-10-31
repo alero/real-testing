@@ -52,17 +52,19 @@ public abstract class ContainerConfig<T extends InjectionRegister> implements Co
 
     protected abstract void appendResources(InjectionRegister registerModule);
 
-    public void start() {
+    public void buildConfig() {
+        originalRegister = injectionRegistryBuilder.build();
+        appendResources(originalRegister);
+        activeRegister = originalRegister.copy();
+    }
 
+    public void initiateConfig() {
         register(injectionRegistryBuilder);
         injectionRegistryBuilder.register(
                 registrations -> registrations.register(
                         new CustomInjectionPointFinderModule(createDefaultInjectionPointFinder())
                 )
         );
-        originalRegister = injectionRegistryBuilder.build();
-        appendResources(originalRegister);
-        activeRegister = originalRegister.copy();
     }
 
     public abstract void register(InjectionRegistryBuilder registryBuilder);

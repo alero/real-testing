@@ -16,6 +16,9 @@
 
 package org.hrodberaht.injection.plugin.junit.spring.testservices2;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +27,7 @@ import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 @Repository
-public class SpringBeanV2 {
+public class SpringBeanWithContext {
 
 
     @Resource(lookup = "DataSource/MyDataSource2")
@@ -35,14 +38,23 @@ public class SpringBeanV2 {
     @PostConstruct
     public void init() {
         jdbcTemplate = new JdbcTemplate(dataSource);
+        synchronized (SpringBeanWithSpringBean.class){
+            if( getName("init") == null){
+                createUser("init", "user");
+            }
+        }
     }
 
     public String getName() {
         return "SpringBeanName";
     }
 
-    public String getNameFromDB() {
-        return jdbcTemplate.queryForObject("select username from theUser where username=?", String.class, "dude");
+    public String getName(String name) {
+        try {
+            return jdbcTemplate.queryForObject("select username from theUser where username=?", String.class, name);
+        }catch (EmptyResultDataAccessException e){
+            return null;
+        }
     }
 
     public void createUser(String username, String password) {

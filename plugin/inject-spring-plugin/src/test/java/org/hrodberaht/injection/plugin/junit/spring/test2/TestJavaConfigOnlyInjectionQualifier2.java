@@ -14,12 +14,13 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.junit.spring;
+package org.hrodberaht.injection.plugin.junit.spring.test2;
 
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
-import org.hrodberaht.injection.plugin.junit.spring.config.JUnitConfigExample2;
-import org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanV2;
+import org.hrodberaht.injection.plugin.junit.spring.config.JUnitConfigExampleResourcesAsJndiJavaObjectsToSpring;
+import org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanWithContext;
+import org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanWithSpringBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,34 +28,48 @@ import org.springframework.beans.factory.annotation.Qualifier;
 
 import static org.junit.Assert.assertNotNull;
 
-@ContainerContext(JUnitConfigExample2.class)
+@ContainerContext(JUnitConfigExampleResourcesAsJndiJavaObjectsToSpring.class)
 @RunWith(JUnit4Runner.class)
-public class TestJavaConfigOnlyInjectionQualifier {
+public class TestJavaConfigOnlyInjectionQualifier2 {
 
     @Autowired
     @Qualifier("springBean")
-    private SpringBeanV2 springBean;
+    private SpringBeanWithSpringBean springBean;
 
     @Autowired
     @Qualifier("springBean2")
-    private SpringBeanV2 springBean2;
+    private SpringBeanWithSpringBean springBean2;
+
+    @Autowired
+    @Qualifier("springBean3")
+    private SpringBeanWithContext springBean3;
 
     @Test
-    public void testWiredResource() throws Exception {
+    public void testWiredBeanResource() throws Exception {
 
         assertNotNull(springBean);
 
-        assertNotNull(springBean.getNameFromDB());
+        assertNotNull(springBean.getName("dude"));
 
 
     }
 
     @Test
-    public void testWiredResource2() throws Exception {
+    public void testWiredBeanResource2() throws Exception {
 
         assertNotNull(springBean2);
 
-        assertNotNull(springBean2.getNameFromDB());
+        assertNotNull(springBean2.getName("init"));
+
+
+    }
+
+    @Test
+    public void testWiredContextResource2() throws Exception {
+
+        assertNotNull(springBean3);
+
+        assertNotNull(springBean3.getName("dude"));
 
 
     }

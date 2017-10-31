@@ -30,9 +30,11 @@ public class TestDataSourceWrapper implements javax.sql.DataSource {
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(TestDataSourceWrapper.class);
 
     private final VendorDriverManager vendorDriverManager;
+    private final String name;
     private ThreadLocal<TestConnection> connectionThread = new ThreadLocal<>();
 
-    public TestDataSourceWrapper(VendorDriverManager vendorDriverManager) {
+    public TestDataSourceWrapper(String name, VendorDriverManager vendorDriverManager) {
+        this.name = name;
         this.vendorDriverManager = vendorDriverManager;
     }
 
@@ -120,7 +122,11 @@ public class TestDataSourceWrapper implements javax.sql.DataSource {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName()+"@"+Integer.toHexString(System.identityHashCode(this));
+        return this.getClass().getSimpleName()+"@"+Integer.toHexString(System.identityHashCode(this)) + "("+name+")";
+    }
+
+    public String getName() {
+        return name;
     }
 }
 

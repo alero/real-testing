@@ -18,7 +18,6 @@ package org.hrodberaht.injection.plugin.junit.inner;
 
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.api.PluginContext;
-import org.hrodberaht.injection.plugin.junit.api.RunnerPlugin;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterClassTest;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterContainerCreation;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterTest;
@@ -27,22 +26,21 @@ import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeCo
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeTest;
 
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RunnerPlugins {
 
+    private final Map<Class<? extends Plugin>, Plugin> activePlugins = new ConcurrentHashMap<>();
     private final TestConfigRunnerPlugins testConfigRunnerPlugins;
     private final TestClassRunnerPlugins testClassRunnerPlugins;
     private final TestSuiteRunnerPlugins testSuiteRunnerPlugins;
 
-    public RunnerPlugins(Map<Class<? extends Plugin>, Plugin> activePlugins) {
+    public RunnerPlugins() {
         testClassRunnerPlugins = new TestClassRunnerPlugins(activePlugins);
         testConfigRunnerPlugins = new TestConfigRunnerPlugins(activePlugins);
         testSuiteRunnerPlugins = new TestSuiteRunnerPlugins(activePlugins);
     }
 
-    public <T extends Plugin> T addPlugin(RunnerPlugin runnerPlugin) {
-        return (T) getRunner(runnerPlugin.getLifeCycle()).addPlugin(runnerPlugin);
-    }
 
     public <T extends Plugin> T addAnnotatedPlugin(Plugin runnerPlugin) {
         return (T) getRunner(runnerPlugin.getLifeCycle()).addAnnotatedPlugin(runnerPlugin);
@@ -103,43 +101,29 @@ public class RunnerPlugins {
 
     public void runInitBeforeContainer(PluginContext pluginContext) {
         runInitBeforerContainerAnnotation(pluginContext);
-        getRunner(Plugin.LifeCycle.TEST_CONFIG).runInitBeforeContainer(pluginContext);
-        getRunner(Plugin.LifeCycle.TEST_CLASS).runInitBeforeContainer(pluginContext);
-        getRunner(Plugin.LifeCycle.TEST_SUITE).runInitBeforeContainer(pluginContext);
     }
 
     public void runInitAfterContainer(PluginContext pluginContext) {
         runInitAfterContainerAnnotation(pluginContext);
-        getRunner(Plugin.LifeCycle.TEST_CONFIG).runInitAfterContainer(pluginContext);
-        getRunner(Plugin.LifeCycle.TEST_CLASS).runInitAfterContainer(pluginContext);
-        getRunner(Plugin.LifeCycle.TEST_SUITE).runInitAfterContainer(pluginContext);
     }
 
     public void runBeforeTest(PluginContext pluginContext) {
         runBeforeTestAnnotation(pluginContext);
-        getRunner(Plugin.LifeCycle.TEST_CONFIG).runBeforeTest(pluginContext);
-        getRunner(Plugin.LifeCycle.TEST_CLASS).runBeforeTest(pluginContext);
-        getRunner(Plugin.LifeCycle.TEST_SUITE).runBeforeTest(pluginContext);
     }
 
     public void runAfterTest(PluginContext pluginContext) {
         runAfterTestAnnotation(pluginContext);
-        getRunner(Plugin.LifeCycle.TEST_CONFIG).runAfterTest(pluginContext);
-        getRunner(Plugin.LifeCycle.TEST_CLASS).runAfterTest(pluginContext);
-        getRunner(Plugin.LifeCycle.TEST_SUITE).runAfterTest(pluginContext);
     }
 
     public void runBeforeTestClass(PluginContext pluginContext) {
         runBeforeTestClassAnnotation(pluginContext);
-        getRunner(Plugin.LifeCycle.TEST_CONFIG).runBeforeTestClass(pluginContext);
-        getRunner(Plugin.LifeCycle.TEST_CLASS).runBeforeTestClass(pluginContext);
-        getRunner(Plugin.LifeCycle.TEST_SUITE).runBeforeTestClass(pluginContext);
     }
 
     public void runAfterTestClass(PluginContext pluginContext) {
         runAfterTestClassAnnotation(pluginContext);
-        getRunner(Plugin.LifeCycle.TEST_CONFIG).runAfterTestClass(pluginContext);
-        getRunner(Plugin.LifeCycle.TEST_CLASS).runAfterTestClass(pluginContext);
-        getRunner(Plugin.LifeCycle.TEST_SUITE).runAfterTestClass(pluginContext);
+    }
+
+    public <T extends Plugin> void addActivePlugin(Class<T> pluginClass, T plugin) {
+        activePlugins.put(pluginClass, plugin);
     }
 }

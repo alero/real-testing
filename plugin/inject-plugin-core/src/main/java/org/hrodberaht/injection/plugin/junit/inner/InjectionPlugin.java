@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.junit.api;
+package org.hrodberaht.injection.plugin.junit.inner;
 
 import org.hrodberaht.injection.core.internal.annotation.InjectionFinder;
 import org.hrodberaht.injection.core.register.InjectionRegister;

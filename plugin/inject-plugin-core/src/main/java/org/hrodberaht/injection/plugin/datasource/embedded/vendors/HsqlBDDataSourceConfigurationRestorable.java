@@ -22,14 +22,11 @@ import org.hrodberaht.injection.plugin.junit.datasource.DataSourceProxyInterface
 import org.hrodberaht.injection.plugin.junit.datasource.DataSourceRuntimeException;
 import org.slf4j.LoggerFactory;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfiguration {
 
@@ -37,6 +34,7 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
     private static final String JDBC_DRIVER = "org.hsqldb.jdbcDriver";
     private static final String JDBC_USERNAME = "sa";
 
+    private boolean exceptioOnWarnings = "throw".equals(System.getProperty("hrodberaht.datasource.errorhandling"));
 
     private final String dbName;
     private final ResourceWatcher resourceWatcher;
@@ -87,36 +85,51 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
 
         private TestConnection createConnection() throws SQLException {
             checkForOpenChanges(borrowedPlain);
-            return borrowConnnection(new TestConnection(createSQLConnextion()), borrowedTest);
+            return borrowConnection(borrowedTest, () -> new TestConnection(createSQLConnextion()));
         }
 
         private void checkForOpenChanges(Map<String, TestConnection> connectionMap) {
             if(!connectionMap.isEmpty()){
                 connectionMap.values().forEach(testConnection -> {
                     if(testConnection.isOpenChanges()){
-                        throw new IllegalAccessError("Open changes in other connection");
+                        if(exceptioOnWarnings) {
+                            throw new IllegalAccessError("Open changes in other connection type");
+                        }
+                        else{
+                            LOG.error("Open changes in other connection type, meaning that a commit/rollback was not performed as expected");
+                        }
                     }
                 });
             }
         }
 
-        private <T extends TestConnection> T borrowConnnection(T testConnection, Map<String, TestConnection> borrowed) throws SQLException {
+        private <T extends TestConnection> T borrowConnection(Map<String, TestConnection> borrowed, CreateConnection<T> createConnection) throws SQLException {
             if(!borrowed.isEmpty()){
-                throw new IllegalAccessError("Not allowed to borrow new connection until old one is closed");
+                if(exceptioOnWarnings) {
+                    throw new IllegalAccessError("Not allowed to borrow new connection until old one is closed");
+                }else{
+                    LOG.warn("Borrow new connection before old one is closed, usually means multi-threaded tests");
+                    return (T) borrowed.values().iterator().next();
+                }
             }
+            T testConnection = createConnection.create();
             testConnection.setBorrowed(borrowed);
             borrowed.put(testConnection.getUuid(), testConnection);
             return testConnection;
         }
 
-        private Connection createSQLConnextion() throws SQLException {
-            return DriverManager.getConnection(datasourceBackupRestore.jdbcUrl() + dbName, JDBC_USERNAME, "");
+        private Connection createSQLConnextion() {
+            try {
+                return DriverManager.getConnection(datasourceBackupRestore.jdbcUrl() + dbName, JDBC_USERNAME, "");
+            } catch (SQLException e) {
+                throw new DataSourceRuntimeException(e);
+            }
         }
 
         @Override
         public PlainConnection getInnerConnection() throws SQLException {
             checkForOpenChanges(borrowedTest);
-            return borrowConnnection(new PlainConnection(createSQLConnextion()), borrowedPlain);
+            return borrowConnection(borrowedPlain, () -> new PlainConnection(createSQLConnextion()));
         }
 
 

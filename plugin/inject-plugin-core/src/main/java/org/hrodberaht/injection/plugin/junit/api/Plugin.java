@@ -18,6 +18,8 @@ package org.hrodberaht.injection.plugin.junit.api;
 
 public interface Plugin {
 
+    // void initPlugin(PluginContext pluginContext);
+
     /**
      * Determines the lifecycle of the plugin, meaning how often it will be created and kept managed by the JUnit4Runner
      *

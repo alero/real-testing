@@ -21,7 +21,6 @@ import org.hrodberaht.injection.core.internal.annotation.ReflectionUtils;
 import org.hrodberaht.injection.core.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.core.register.InjectionRegister;
 import org.hrodberaht.injection.core.spi.ContainerConfigBuilder;
-import org.hrodberaht.injection.plugin.junit.api.InjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.api.annotation.InjectionPluginInjectionFinder;
 import org.hrodberaht.injection.plugin.junit.api.annotation.InjectionPluginInjectionRegister;

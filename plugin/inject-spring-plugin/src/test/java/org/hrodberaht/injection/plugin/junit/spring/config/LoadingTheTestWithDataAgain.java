@@ -14,15 +14,19 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.junit.plugins;
+package org.hrodberaht.injection.plugin.junit.spring.config;
 
-import org.hrodberaht.injection.plugin.junit.api.Plugin;
-import org.hrodberaht.injection.plugin.junit.resources.ResourcePluginBase;
+import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
+import org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanWithSpringBean;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
-public class ResourcePlugin extends ResourcePluginBase implements Plugin {
+public class LoadingTheTestWithDataAgain implements DataSourcePlugin.ResourceLoaderRunner {
 
-    @Override
-    public LifeCycle getLifeCycle() {
-        return LifeCycle.TEST_SUITE;
+    @Autowired
+    private SpringBeanWithSpringBean springBean;
+
+    public void run() {
+        springBean.createUser("dude", "wheremycar");
     }
 }

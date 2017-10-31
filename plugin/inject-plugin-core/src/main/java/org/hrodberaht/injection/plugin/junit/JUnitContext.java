@@ -67,8 +67,9 @@ class JUnitContext {
             if (ContainerContextConfigBase.class.isAssignableFrom(configClass)) {
                 containerConfig = (ContainerContextConfigBase) configClass.newInstance();
                 runnerPlugins = getRunnerPlugins();
+                containerConfig.initiateConfig();
                 runnerPlugins.runInitBeforeContainer(createContext());
-                containerConfig.start();
+                containerConfig.buildConfig();
                 runnerPlugins.runInitAfterContainer(createContext());
 
                 LOG.info("Creating creator for thread {}", Thread.currentThread().getName());
@@ -85,7 +86,7 @@ class JUnitContext {
         if (containerConfig != null) {
             return containerConfig.getRunnerPlugins();
         } else {
-            return new RunnerPlugins(new ConcurrentHashMap<>());
+            return new RunnerPlugins();
         }
     }
 

@@ -17,26 +17,29 @@
 package org.hrodberaht.injection.plugin.junit.spring.config;
 
 
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.SpringExtensionPlugin;
-import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 
 import javax.sql.DataSource;
 
-public class JUnitConfigExample2 extends ContainerContextConfigBase {
+public class JUnitConfigExampleResourceToSpringBeansRollbackOnSpringContainerCreate extends ContainerContextConfigBase {
 
 
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
-        String dataSourceName = "MyDataSource2";
+        String dataSourceName = "MyDataSource3";
         DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class);
         DataSource dataSource = dataSourcePlugin.createDataSource(dataSourceName);
 
         dataSourcePlugin.loadSchema(dataSource, "sql");
-        dataSourcePlugin.addBeforeTestSuite((loader) -> loader.get(LoadingTheTestWithData.class).run());
+        dataSourcePlugin.addBeforeTestSuite((loader) -> loader.get(LoadingTheTestWithDataAgain.class).run());
 
-        activatePlugin(SpringExtensionPlugin.class).loadConfig(SpringConfigJavaSample2.class);
+        activatePlugin(SpringExtensionPlugin.class)
+                .withDataSource(dataSourcePlugin)
+                .datasource().resourceAsSpringBeans()
+                .springConfig(SpringConfigTestService2Bean.class, SpringConfigDataSource3.class);
 
     }
 }

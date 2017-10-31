@@ -59,6 +59,11 @@ public class SimpleDataSourceProxy implements DataSourceProxyInterface {
     }
 
     @Override
+    public String getName() {
+        return "DataSource/"+dataSource.getName();
+    }
+
+    @Override
     public Connection getConnection() throws SQLException {
         return dataSource.getConnection();
     }

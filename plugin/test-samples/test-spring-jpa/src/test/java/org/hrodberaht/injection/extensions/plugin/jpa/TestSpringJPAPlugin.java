@@ -30,8 +30,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.sql.DataSource;
-
 import static org.junit.Assert.assertEquals;
 
 @ContainerContext(TestSpringJPAPlugin.Config.class)
@@ -50,9 +48,8 @@ public class TestSpringJPAPlugin {
             // jpaPlugin.createEntityManager("example-jpa");
 
             springExtensionPlugin
-                    .enableJPA()
-                    // .withDataSource("MyDataSource")
-                    .loadConfig(SpringConfig.class, PersistenceJPAConfig.class);
+                    .withDataSource(jpaPlugin)
+                    .springConfig(SpringConfig.class, PersistenceJPAConfig.class);
 
         }
     }

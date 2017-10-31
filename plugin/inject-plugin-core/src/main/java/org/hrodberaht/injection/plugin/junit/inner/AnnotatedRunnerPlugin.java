@@ -78,6 +78,7 @@ public class AnnotatedRunnerPlugin {
                 List<Method> foundMethodsInner = new ArrayList<>();
                 for (Method method : ReflectionUtils.findMethods(aClass)) {
                     if (method.getAnnotation(annotation) != null) {
+                        LOG.info("found method {} in class {} with annotation {} ", method.getName(), aClass.getSimpleName(), annotation.getSimpleName());
                         if (!method.isAccessible()) {
                             method.setAccessible(true);
                         }

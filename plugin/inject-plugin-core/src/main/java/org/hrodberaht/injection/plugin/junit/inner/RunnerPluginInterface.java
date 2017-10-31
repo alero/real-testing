@@ -18,26 +18,12 @@ package org.hrodberaht.injection.plugin.junit.inner;
 
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.api.PluginContext;
-import org.hrodberaht.injection.plugin.junit.api.RunnerPlugin;
 
 import java.lang.annotation.Annotation;
 
 public interface RunnerPluginInterface {
-    RunnerPlugin addPlugin(RunnerPlugin runnerPlugin);
 
     Plugin addAnnotatedPlugin(Plugin runnerPlugin);
-
-    void runInitBeforeContainer(PluginContext pluginContext);
-
-    void runAfterTestClass(PluginContext pluginContext);
-
-    void runBeforeTestClass(PluginContext pluginContext);
-
-    void runAfterTest(PluginContext pluginContext);
-
-    void runBeforeTest(PluginContext pluginContext);
-
-    void runInitAfterContainer(PluginContext pluginContext);
 
     void findAnnotationAndInvokeMethod(PluginContext pluginContext, Class<Annotation> annotation);
 }

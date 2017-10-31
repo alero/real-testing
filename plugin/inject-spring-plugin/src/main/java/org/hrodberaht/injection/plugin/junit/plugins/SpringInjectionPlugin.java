@@ -16,10 +16,6 @@
 
 package org.hrodberaht.injection.plugin.junit.plugins;
 
-import org.hrodberaht.injection.core.internal.annotation.DefaultInjectionPointFinder;
-import org.hrodberaht.injection.core.register.InjectionRegister;
-import org.hrodberaht.injection.core.spi.ContainerConfigBuilder;
-import org.hrodberaht.injection.plugin.junit.api.InjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 
 /**
@@ -28,21 +24,12 @@ import org.hrodberaht.injection.plugin.junit.api.Plugin;
  *
  * @see org.hrodberaht.injection.core.internal.InjectionContainer
  */
-public class SpringInjectionPlugin implements InjectionPlugin, Plugin {
+public class SpringInjectionPlugin implements Plugin {
 
     public SpringInjectionPlugin() {
         throw new RuntimeException("Not yet supported");
     }
 
-    @Override
-    public void setInjectionRegister(InjectionRegister containerConfigBuilder) {
-
-    }
-
-    @Override
-    public DefaultInjectionPointFinder getInjectionFinder(ContainerConfigBuilder containerConfigBuilder) {
-        return null;
-    }
 
     @Override
     public LifeCycle getLifeCycle() {

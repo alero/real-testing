@@ -49,7 +49,6 @@ public class ProxyResourceCreator implements DatasourceCreator {
     private final DataSourceProvider provider;
     private final DataSourcePersistence persistence;
     private final ResourceWatcher resourceWatcher;
-    private TransactionManager transactionManager;
 
     public ProxyResourceCreator(DataSourceProvider provider, DataSourcePersistence persistence) {
         this(provider, persistence, null);
@@ -59,10 +58,6 @@ public class ProxyResourceCreator implements DatasourceCreator {
         this.provider = provider;
         this.persistence = persistence;
         this.resourceWatcher = resourceWatcher;
-    }
-
-    public void setTransactionManager(TransactionManager transactionManager) {
-        this.transactionManager = transactionManager;
     }
 
     public DataSourceProxyInterface createDataSource(String dataSourceName) {

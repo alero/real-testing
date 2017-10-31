@@ -39,12 +39,13 @@ public class TransactionManager {
     private final DatasourceCreator resourceCreator;
 
 
-    public TransactionManager(DatasourceCreator proxyResourceCreator) {
-        this.resourceCreator = proxyResourceCreator;
+    public TransactionManager(DatasourceCreator resourceCreator) {
+        this.resourceCreator = resourceCreator;
     }
 
 
     public void endTransaction() {
+        LOG.info("endTransaction on thread {}", Thread.currentThread().getName());
         DataSources dataSources = dataSourcesThreadLocal.get();
         dataSources.dataSourceList.forEach(dataSource -> {
             try {
@@ -57,6 +58,7 @@ public class TransactionManager {
     }
 
     public void endTransactionCommit() {
+        LOG.info("endTransactionCommit on thread {}", Thread.currentThread().getName());
         DataSources dataSources = dataSourcesThreadLocal.get();
         dataSources.dataSourceList.forEach(dataSource -> {
             try {
@@ -69,12 +71,12 @@ public class TransactionManager {
     }
 
     public void beginTransaction() {
-
+        LOG.info("beginTransaction on thread {}", Thread.currentThread().getName());
         dataSourcesThreadLocal.set(new DataSources(resourceCreator.getDataSources()));
         DataSources dataSources = dataSourcesThreadLocal.get();
         dataSources.dataSourceList.forEach(dataSource -> {
             try {
-                LOG.info("dataSource begin {} - {}", dataSource, dataSource.getConnection());
+                LOG.info("dataSource begin {} - {} on thread {}", dataSource, dataSource.getConnection(), Thread.currentThread().getName());
             } catch (SQLException e) {
                 throw new DataSourceRuntimeException(e);
             }

@@ -1,7 +1,9 @@
 insert into theUser(
   username,
-  password
+  password,
+  loginTries
 ) values (
   'dude',
-  'wheremycar'
+  'wheremycar',
+  0
 );

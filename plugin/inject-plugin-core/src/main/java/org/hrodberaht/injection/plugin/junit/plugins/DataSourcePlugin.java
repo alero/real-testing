@@ -18,6 +18,7 @@ package org.hrodberaht.injection.plugin.junit.plugins;
 
 import org.hrodberaht.injection.core.InjectContainer;
 import org.hrodberaht.injection.core.spi.ResourceFactory;
+import org.hrodberaht.injection.plugin.junit.datasource.DataSourceProxyInterface;
 import org.hrodberaht.injection.plugin.junit.datasource.DatasourceResourceCreator;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.api.PluginContext;
@@ -31,90 +32,67 @@ import org.hrodberaht.injection.plugin.junit.datasource.TransactionManager;
 
 import javax.sql.DataSource;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class DataSourcePlugin implements Plugin {
 
-    private final DatasourceResourceCreator datasourceResourceCreator = getDatasourceResourceCreator();
-    private static final Map<Class, ResourceRunnerHolder> resourceRunnereState = new ConcurrentHashMap<>();
+    private static final Map<Class, ResourceRunner> resourceRunnerState = new ConcurrentHashMap<>();
 
     private final List<ResourceRunner> beforeSuite = new ArrayList<>();
 
     private TransactionManager transactionManager;
     private InjectContainer injectContainer;
 
-    private static ResourceFactory contextualResourceFactory;
-    private ResourceFactory resourceFactory;
-    private ResourceFactory initedResourceFactory;
-    private static ProxyResourceCreator contextualProxyResourceCreator;
-    private ProxyResourceCreator proxyResourceCreator;
-
-    private boolean usingContext = false;
+    private DatasourceResourceCreator datasourceResourceCreator;
+    private ResourceContext resourceContext;
+    private static ResourceContext sharedResourceContext;
 
 
+    private boolean usingJavaContext = false;
+
+    class ResourceContext {
+        private final ResourceFactory resourceFactory;
+        private final ProxyResourceCreator proxyResourceCreator;
+
+        ResourceContext(ResourceFactory resourceFactory, ProxyResourceCreator proxyResourceCreator) {
+            this.resourceFactory = resourceFactory;
+            this.proxyResourceCreator = proxyResourceCreator;
+        }
+    }
 
     /**
-     * Will store all resources in a shared mode to support java.context way of handling resources
-     * @param usingContext
-     * @return
+     * This is useful if there is a need to run any code before the actual tests are executed, any results from code executed like this is commited to the underlying datasources and entitymanagers
+     *
+     * @param runnable the runnable to be added to run before tests start, comparable to @BeforeClass from JUnit, but with a but reusability over testsuites not onlt testclasses
      */
-    public DataSourcePlugin usingContext(boolean usingContext){
-        this.usingContext = usingContext;
+    public DataSourcePlugin addBeforeTestSuite(ResourceRunner runnable) {
+        beforeSuite.add(runnable);
+        return this;
+    }
+
+
+
+    public interface ResourceLoaderRunner {
+        void run();
+    }
+    /**
+     * Will store all resources in a shared mode to support java.context way of handling resources
+     * @return same instance with changed value of usingContext
+     */
+    public DataSourcePlugin usingJavaContext(){
+        this.usingJavaContext = true;
         return this;
     }
 
     public DataSource createDataSource(){
-        return getContextAwareResourceFactory().getCreator(DataSource.class).create();
+        return getContextAwareResource().resourceFactory.getCreator(DataSource.class).create();
     }
 
     public DataSource createDataSource(String name){
-        return getContextAwareResourceFactory().getCreator(DataSource.class).create(name);
-    }
-
-
-    protected DatasourceResourceCreator getDatasourceResourceCreator() {
-        ProxyResourceCreator proxyResourceCreator = getContextAwareResourceCreator();
-        return new DatasourceResourceCreator(proxyResourceCreator);
-    }
-
-    private ProxyResourceCreator getContextAwareResourceCreator() {
-        if(this.usingContext){
-            if(contextualProxyResourceCreator == null){
-                contextualProxyResourceCreator = createContext();
-            }
-            return contextualProxyResourceCreator;
-        }
-        if(this.proxyResourceCreator == null){
-            this.proxyResourceCreator = createContext();
-        }
-        return this.proxyResourceCreator;
-    }
-
-    private ResourceFactory getContextAwareResourceFactory() {
-        initContextAwareResourceFactory();
-        return usingContext ? contextualResourceFactory : initedResourceFactory;
-    }
-
-    private void initContextAwareResourceFactory() {
-        if(initedResourceFactory == null){
-            if(usingContext){
-                if(contextualResourceFactory == null){
-                    contextualResourceFactory = this.resourceFactory;
-                    contextualResourceFactory.addResourceCrator(datasourceResourceCreator);
-                }
-            }else {
-                this.initedResourceFactory = this.resourceFactory;
-                this.initedResourceFactory.addResourceCrator(datasourceResourceCreator);
-            }
-        }
-    }
-
-    protected ProxyResourceCreator createContext() {
-        return new ProxyResourceCreator(
-                ProxyResourceCreator.DataSourceProvider.HSQLDB,
-                ProxyResourceCreator.DataSourcePersistence.RESTORABLE);
+        return getContextAwareResource().resourceFactory.getCreator(DataSource.class).create(name);
     }
 
     /**
@@ -141,19 +119,53 @@ public class DataSourcePlugin implements Plugin {
         return this;
     }
 
-    @ResourcePluginFactory
-    private void setResourceFactory(ResourceFactory resourceFactory) {
-        this.resourceFactory = resourceFactory;
+
+    DatasourceResourceCreator getDatasourceResourceCreator(ProxyResourceCreator proxyResourceCreator) {
+        return new DatasourceResourceCreator(proxyResourceCreator);
+    }
+
+    private ResourceContext getContextAwareResource() {
+        if(this.usingJavaContext){
+            if(sharedResourceContext == null){
+                sharedResourceContext = new ResourceContext(this.resourceContext.resourceFactory, createContext());
+            }
+            if(datasourceResourceCreator == null){
+                datasourceResourceCreator = getDatasourceResourceCreator(sharedResourceContext.proxyResourceCreator);
+                sharedResourceContext.resourceFactory.addResourceCrator(datasourceResourceCreator);
+            }
+            return sharedResourceContext;
+        }
+        if(this.resourceContext.proxyResourceCreator == null){
+            this.resourceContext = new ResourceContext(this.resourceContext.resourceFactory, createContext());
+        }
+        if(datasourceResourceCreator == null){
+            datasourceResourceCreator = getDatasourceResourceCreator(resourceContext.proxyResourceCreator);
+            resourceContext.resourceFactory.addResourceCrator(datasourceResourceCreator);
+        }
+        return this.resourceContext;
     }
 
 
+    Collection<DataSourceProxyInterface> getDataSources(){
+        return datasourceResourceCreator.getResources();
+    }
 
+    private ProxyResourceCreator createContext() {
+        return new ProxyResourceCreator(
+                ProxyResourceCreator.DataSourceProvider.HSQLDB,
+                ProxyResourceCreator.DataSourcePersistence.RESTORABLE);
+    }
+
+    @ResourcePluginFactory
+    private void setResourceFactory(ResourceFactory resourceFactory) {
+        this.resourceContext = new ResourceContext(resourceFactory, null);
+    }
 
     @RunnerPluginAfterContainerCreation
     protected void afterContainerCreation(PluginContext pluginContext) {
         this.injectContainer = pluginContext.register().getContainer();
         if (!beforeSuite.isEmpty()) {
-            TransactionManager txM = new TransactionManager(getContextAwareResourceCreator());
+            TransactionManager txM = createTransactionManager();
             txM.beginTransaction();
             beforeSuite.forEach(resourceRunner -> {
                 ResourceLoader resourceLoader = new ResourceLoader(resourceRunner);
@@ -165,7 +177,7 @@ public class DataSourcePlugin implements Plugin {
 
     @RunnerPluginBeforeTest
     protected void beforeTest() {
-        transactionManager = new TransactionManager(getContextAwareResourceCreator());
+        transactionManager = createTransactionManager();
         transactionManager.beginTransaction();
     }
 
@@ -179,21 +191,6 @@ public class DataSourcePlugin implements Plugin {
         return LifeCycle.TEST_CONFIG;
     }
 
-    /**
-     * This is useful if there is a need to run any code before the actual tests are executed, any results from code executed like this is commited to the underlying datasources and entitymanagers
-     *
-     * @param runnable the runnable to be added to run before tests start, comparable to @BeforeClass from JUnit, but with a but reusability over testsuites not onlt testclasses
-     */
-    public DataSourcePlugin addBeforeTestSuite(ResourceRunner runnable) {
-        beforeSuite.add(runnable);
-        return this;
-    }
-
-
-
-    public interface ResourceLoaderRunner {
-        void run();
-    }
 
     public class ResourceLoader {
         private final ResourceRunner resourceRunner;
@@ -203,24 +200,19 @@ public class DataSourcePlugin implements Plugin {
         }
 
         public ResourceLoaderRunner get(Class<? extends ResourceLoaderRunner> aClass) {
-            ResourceRunnerHolder resourceRunnerHolder = resourceRunnereState.get(aClass);
+            ResourceRunner resourceRunnerHolder = resourceRunnerState.get(aClass);
             if (resourceRunnerHolder == null) {
-                resourceRunnereState.put(aClass, new ResourceRunnerHolder(resourceRunner));
+                resourceRunnerState.put(aClass, resourceRunner);
                 return injectContainer.get(aClass);
             }
-            return () -> {
-            };
+            return () -> {};
         }
     }
 
-    public class ResourceRunnerHolder {
-        private final ResourceRunner resourceRunner;
-        private boolean hasRun = false;
-
-        public ResourceRunnerHolder(ResourceRunner resourceRunner) {
-            this.resourceRunner = resourceRunner;
-        }
+    TransactionManager createTransactionManager() {
+        return new TransactionManager(getContextAwareResource().proxyResourceCreator);
     }
+
 
     public interface ResourceRunner {
         void run(ResourceLoader resourceLoader);
