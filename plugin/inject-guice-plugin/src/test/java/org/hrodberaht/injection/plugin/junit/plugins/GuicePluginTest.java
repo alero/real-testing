@@ -39,7 +39,7 @@ public class GuicePluginTest {
     public static class Config extends ContainerContextConfigBase {
         @Override
         public void register(InjectionRegistryBuilder registryBuilder) {
-            activatePlugin(GuiceExtensionPlugin.class).loadModules(new GuiceModule());
+            activatePlugin(GuiceExtensionPlugin.class).guiceModules(new GuiceModule());
         }
     }
 

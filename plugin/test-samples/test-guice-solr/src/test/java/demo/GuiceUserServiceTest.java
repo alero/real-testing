@@ -1,4 +1,4 @@
-package org.hrodberaht.inject.demo;
+package demo;
 
 import org.apache.solr.client.solrj.SolrClient;
 import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
@@ -7,8 +7,8 @@ import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
 import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProviderBuilder;
 import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
+import org.hrodberaht.injection.plugin.junit.plugins.GuiceExtensionPlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.SolrJPlugin;
-import org.hrodberaht.injection.plugin.junit.plugins.SpringExtensionPlugin;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -21,9 +21,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-@ContainerContext(UserServiceTest.LocalConfig.class)
+@ContainerContext(GuiceUserServiceTest.LocalConfig.class)
 @RunWith(JUnit4Runner.class)
-public class UserServiceTest {
+public class GuiceUserServiceTest {
 
     @Inject
     private UserService userService;
@@ -53,7 +53,7 @@ public class UserServiceTest {
         public void register(InjectionRegistryBuilder registryBuilder) {
 
             DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class);
-            DataSource dataSource = dataSourcePlugin.createDataSource("MyDataSource");
+            DataSource dataSource = dataSourcePlugin.createDataSource();
 
             dataSourcePlugin.loadSchema(dataSource, "sql");
 
@@ -61,11 +61,12 @@ public class UserServiceTest {
                     .solrHome(SolrJPlugin.DEFAULT_HOME)
                     .coreName("collection1");
 
-
-            activatePlugin(SpringExtensionPlugin.class)
+            activatePlugin(GuiceExtensionPlugin.class)
                     .with(dataSourcePlugin)
                     .withResources(ResourceProviderBuilder.of().resource(SolrClient.class, solrJPlugin::getClient))
-                    .springConfig(SpringConfig.class);
+                    .guiceModules(new GuiceConfig());
+
+
         }
     }
 }

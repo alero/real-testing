@@ -28,9 +28,9 @@ import javax.sql.DataSource;
 @Configuration
 public class SpringConfigDataSource3 {
 
-    @Bean("DataSource/MyDataSource2")
+    @Bean("MyDataSource2")
     public DataSource platformTransactionManager(
-            @Qualifier("DataSource/MyDataSource3") DataSource dataSource ) {
+            @Qualifier("MyDataSource3") DataSource dataSource ) {
         return dataSource;
     }
 }

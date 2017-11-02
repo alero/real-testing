@@ -44,7 +44,7 @@ public class InjectionContainerManager implements ScopeContainer, InjectContaine
     }
 
     public enum RegisterType {
-        WEAK, NORMAL, OVERRIDE_NORMAL, FINAL
+        WEAK, NORMAL, OVERRIDE_NORMAL, FINAL, EXTENDED
     }
 
 

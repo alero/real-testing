@@ -23,8 +23,8 @@ public abstract class ResourcePluginBase {
 
     ResourceFactory resourceFactory;
 
-    public <T> JavaResourceCreator<T> getCreator(Class<T> aClass) {
-        return resourceFactory.getCreator(aClass);
+    public <T> JavaResourceCreator<T> getCreator(Class<T> aClass, boolean bindToContext) {
+        return resourceFactory.getCreator(aClass, bindToContext);
     }
 
 }

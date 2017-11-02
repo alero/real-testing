@@ -16,6 +16,7 @@
 
 package org.hrodberaht.injection.core.internal.annotation;
 
+import org.hrodberaht.injection.core.internal.InjectionKey;
 import org.hrodberaht.injection.core.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.core.spi.ContainerConfig;
 import org.hrodberaht.injection.core.spi.ContainerConfigBuilder;
@@ -100,6 +101,11 @@ public class DefaultInjectionPointFinder implements InjectionFinder {
             builder.injectResources(service);
         }
         return service;
+    }
+
+    @Override
+    public Object extendedInjection(InjectionKey instanceClass) {
+        return null;
     }
 
     public ContainerConfig getContainerConfig() {

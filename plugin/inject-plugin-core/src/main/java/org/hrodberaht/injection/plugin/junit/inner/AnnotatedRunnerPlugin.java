@@ -54,6 +54,7 @@ public class AnnotatedRunnerPlugin {
     ));
 
     private final Map<Class, Plugin> annotatedPlugin = new ConcurrentHashMap<>();
+    private List<Class> annotatedPluginList = new ArrayList<>();
 
     public static boolean containsRunnerAnnotations(Plugin plugin) {
         return AnnotatedRunnerBase.containsRunnerAnnotations(plugin, supporedAnnotations);
@@ -67,44 +68,49 @@ public class AnnotatedRunnerPlugin {
         }
         LOG.info("added plugin " + plugin.getClass());
         annotatedPlugin.put(plugin.getClass(), plugin);
+        annotatedPluginList.add(plugin.getClass());
         return plugin;
     }
 
 
     void findAnnotationAndInvokeMethod(PluginRunnerBase runnerBase, PluginContext pluginContext, Class<Annotation> annotation) {
-        annotatedPlugin.forEach((aClass, plugin) -> runnerBase.runIfActive(aClass, () -> {
-            AnnotationKey annotationKey = new AnnotationKey(aClass, annotation);
-            List<Method> foundMethods = annotationKeyMethodsMap.computeIfAbsent(annotationKey, annotationKey1 -> {
-                List<Method> foundMethodsInner = new ArrayList<>();
-                for (Method method : ReflectionUtils.findMethods(aClass)) {
-                    if (method.getAnnotation(annotation) != null) {
-                        LOG.info("found method {} in class {} with annotation {} ", method.getName(), aClass.getSimpleName(), annotation.getSimpleName());
-                        if (!method.isAccessible()) {
-                            method.setAccessible(true);
+        annotatedPluginList.forEach(aClass -> {
+            Plugin plugin = annotatedPlugin.get(aClass);
+            runnerBase.runIfActive(aClass, () -> {
+                AnnotationKey annotationKey = new AnnotationKey(aClass, annotation);
+                List<Method> foundMethods = annotationKeyMethodsMap.computeIfAbsent(annotationKey, annotationKey1 -> {
+                    List<Method> foundMethodsInner = new ArrayList<>();
+                    for (Method method : ReflectionUtils.findMethods(aClass)) {
+                        if (method.getAnnotation(annotation) != null) {
+                            LOG.info("found method {} in class {} with annotation {} ", method.getName(), aClass.getSimpleName(), annotation.getSimpleName());
+                            if (!method.isAccessible()) {
+                                method.setAccessible(true);
+                            }
+                            foundMethodsInner.add(method);
                         }
-                        foundMethodsInner.add(method);
                     }
-                }
-                return foundMethodsInner;
-            });
+                    return foundMethodsInner;
+                });
 
 
-            foundMethods.forEach(method -> {
-                try {
-                    if (pluginContext != null && method.getParameterCount() == 1) {
-                        if (method.getParameterTypes()[0].isAssignableFrom(PluginContext.class)) {
-                            method.invoke(plugin, pluginContext);
+                foundMethods.forEach(method -> {
+                    try {
+                        if (pluginContext != null && method.getParameterCount() == 1) {
+                            if (method.getParameterTypes()[0].isAssignableFrom(PluginContext.class)) {
+                                method.invoke(plugin, pluginContext);
+                            } else {
+                                throw new InjectRuntimeException("parameter for annotated method (" + method.getName() + ") in class (" + plugin.getClass().getName() + ") must be of type (" + PluginContext.class + ") currently uses (" + method.getParameterTypes()[0] + ")");
+                            }
                         } else {
-                            throw new InjectRuntimeException("parameter for annotated method (" + method.getName() + ") in class (" + plugin.getClass().getName() + ") must be of type (" + PluginContext.class + ") currently uses (" + method.getParameterTypes()[0] + ")");
+                            method.invoke(plugin);
                         }
-                    } else {
-                        method.invoke(plugin);
+                    } catch (IllegalAccessException | InvocationTargetException e) {
+                        throw new InjectRuntimeException(e);
                     }
-                } catch (IllegalAccessException | InvocationTargetException e) {
-                    throw new InjectRuntimeException(e);
-                }
+                });
             });
-        }));
+        });
+
 
     }
 

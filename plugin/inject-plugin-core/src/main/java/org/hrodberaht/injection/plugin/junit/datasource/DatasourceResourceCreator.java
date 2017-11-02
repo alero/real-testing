@@ -23,7 +23,6 @@ import java.util.Collection;
 
 public class DatasourceResourceCreator implements JavaResourceCreator<DataSource> {
 
-    public static final String DEFAULT_NAME = "defaultDataSource";
 
     private final DatasourceCreator datasourceCreator;
 
@@ -42,7 +41,7 @@ public class DatasourceResourceCreator implements JavaResourceCreator<DataSource
 
     @Override
     public DataSource create() {
-        return datasourceCreator.createDataSource(DEFAULT_NAME);
+        return datasourceCreator.createDataSource(null);
     }
 
     @Override

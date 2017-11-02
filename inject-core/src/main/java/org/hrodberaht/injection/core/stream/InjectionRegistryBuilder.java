@@ -132,29 +132,15 @@ public class InjectionRegistryBuilder<T extends Module> implements InjectionRegi
         ResourcesBuilder registrations = new ResourcesBuilder();
         registerResourceFunc.createResource(registrations);
 
-        /*for(ResourceEntityManager resourceEntityManager:registrations.getEntityManagers()) {
-            String dataSourceName = resourceEntityManager.getResourceDataSource().getName();
-            DataSource dataSource = createRegisterDataSource(resourceEntityManager.getResourceDataSource());
-
-            String entityManagerName = resourceEntityManager.getName();
-            EntityManager entityManager = configBase.
-                    createEntityManager(entityManagerName, dataSourceName, dataSource);
-            configBase.addPersistenceContext(entityManagerName, entityManager);
-
-        }*/
-
-        /*for(ResourceDataSource resourceDataSource:registrations.getDataSources()) {
-            createRegisterDataSource(resourceDataSource);
-        }*/
         registrations.getNamedInstances().entrySet().forEach(
                 entry -> configBase.getResourceFactory()
-                        .getCreator(entry.getKey().getType())
+                        .getCreator(entry.getKey().getType(), true)
                         .create(entry.getKey().getName(), entry.getValue())
         );
 
         registrations.getTypedInstances().entrySet().forEach(
                 entry -> configBase.getResourceFactory()
-                        .getCreator(entry.getKey())
+                        .getCreator(entry.getKey(), true)
                         .create(entry.getValue())
         );
 

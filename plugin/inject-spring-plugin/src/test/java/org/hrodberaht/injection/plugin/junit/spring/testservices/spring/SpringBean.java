@@ -31,7 +31,7 @@ public class SpringBean {
     @SpringInject
     private AnyServiceInner anyServiceInner;
 
-    @Resource(lookup = "DataSource/MyDataSource")
+    @Resource(lookup = "MyDataSource")
     private DataSource dataSource;
 
     private JdbcTemplate jdbcTemplate;

@@ -34,6 +34,7 @@ import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeTe
 import org.hrodberaht.injection.plugin.junit.api.resource.FileLifeCycledResource;
 import org.hrodberaht.injection.plugin.junit.jersey.JerseyTestBuilder;
 import org.hrodberaht.injection.plugin.junit.jersey.JerseyTestRunner;
+import org.hrodberaht.injection.plugin.junit.plugins.common.PluginLifeCycledResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

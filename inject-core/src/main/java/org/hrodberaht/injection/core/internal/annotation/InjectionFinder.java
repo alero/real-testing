@@ -16,6 +16,8 @@
 
 package org.hrodberaht.injection.core.internal.annotation;
 
+import org.hrodberaht.injection.core.internal.InjectionKey;
+
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -35,7 +37,9 @@ public interface InjectionFinder {
 
     Method findPostConstruct(Class instanceClass);
 
-    Object extendedInjection(Object instanc);
+    Object extendedInjection(Object instance);
+
+    Object extendedInjection(InjectionKey instanceClass);
 
     default InjectionType getInjectionType() {
         return InjectionType.EXTENDED;

@@ -58,6 +58,10 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
     private ResourceContext resourceContext;
     private static ResourceContext sharedResourceContext;
 
+    public DataSourcePlugin() {
+        LOG.info("created {}", this);
+    }
+
     @Override
     public Set<ResourceProvider> resources() {
         Set<ResourceProvider> resourceProviderSupports = new HashSet<>();
@@ -115,11 +119,11 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
 
 
     public DataSource createDataSource(){
-        return getContextAwareResource().resourceFactory.getCreator(DataSource.class).create();
+        return getContextAwareResource().resourceFactory.getCreator(DataSource.class, usingJavaContext).create();
     }
 
     public DataSource createDataSource(String name){
-        return getContextAwareResource().resourceFactory.getCreator(DataSource.class).create(name);
+        return getContextAwareResource().resourceFactory.getCreator(DataSource.class, usingJavaContext).create(name);
     }
 
     /**

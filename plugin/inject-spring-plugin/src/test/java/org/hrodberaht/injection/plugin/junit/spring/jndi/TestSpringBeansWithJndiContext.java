@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.junit.spring.test2;
+package org.hrodberaht.injection.plugin.junit.spring.jndi;
 
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
@@ -30,7 +30,7 @@ import static org.junit.Assert.assertNotNull;
 
 @ContainerContext(JUnitConfigExampleResourcesAsJndiJavaObjectsToSpring.class)
 @RunWith(JUnit4Runner.class)
-public class TestJavaConfigOnlyInjectionQualifier {
+public class TestSpringBeansWithJndiContext {
 
     @Autowired
     @Qualifier("springBean")

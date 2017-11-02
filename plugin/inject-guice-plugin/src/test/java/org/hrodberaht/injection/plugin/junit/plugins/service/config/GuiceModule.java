@@ -17,6 +17,7 @@
 package org.hrodberaht.injection.plugin.junit.plugins.service.config;
 
 import com.google.inject.AbstractModule;
+import com.google.inject.Inject;
 import org.hrodberaht.injection.plugin.junit.plugins.service.AService;
 import org.hrodberaht.injection.plugin.junit.plugins.service.AnInterface;
 import org.hrodberaht.injection.plugin.junit.plugins.service.MoreServices;
@@ -26,5 +27,10 @@ public class GuiceModule extends AbstractModule {
     protected void configure() {
         bind(AnInterface.class).to(AService.class).asEagerSingleton();
         bind(MoreServices.class).asEagerSingleton();
+    }
+
+    @Inject
+    public void init(AService aService){
+        aService.init();
     }
 }

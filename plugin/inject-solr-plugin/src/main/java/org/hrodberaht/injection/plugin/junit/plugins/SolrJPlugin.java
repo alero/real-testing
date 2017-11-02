@@ -26,6 +26,7 @@ import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeCo
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeTest;
 import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProvider;
 import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProviderSupport;
+import org.hrodberaht.injection.plugin.junit.plugins.common.PluginLifeCycledResource;
 import org.hrodberaht.injection.plugin.junit.solr.SolrAssertions;
 import org.hrodberaht.injection.plugin.junit.solr.SolrTestRunner;
 
@@ -33,7 +34,7 @@ import javax.inject.Provider;
 import java.util.HashSet;
 import java.util.Set;
 
-public class SolrJPlugin implements Plugin, ResourceProviderSupport {
+public class SolrJPlugin implements Plugin {
 
     public static final String DEFAULT_HOME = "target/solr";
 
@@ -42,8 +43,6 @@ public class SolrJPlugin implements Plugin, ResourceProviderSupport {
     private String coreName;
     private ResourceLifeCycle lifeCycle = ResourceLifeCycle.TEST_CONFIG;
     private PluginLifeCycledResource<SolrTestRunner> pluginLifeCycledResource = new PluginLifeCycledResource<>(SolrTestRunner.class);
-    private Set<ResourceProvider> resourceProviders = new HashSet<>();
-
 
 
     public SolrJPlugin lifeCycle(ResourceLifeCycle resourceLifeCycle) {
@@ -61,20 +60,6 @@ public class SolrJPlugin implements Plugin, ResourceProviderSupport {
         return this;
     }
 
-    public SolrJPlugin namedResource(String name, Provider instance){
-        resourceProviders.add(new ResourceProvider(name, null, instance));
-        return this;
-    }
-
-    public SolrJPlugin typedResource(Class type, Provider instance){
-        resourceProviders.add(new ResourceProvider(null, type, instance));
-        return this;
-    }
-
-    public SolrJPlugin namedTypedResource(String name, Class type, Provider instance){
-        resourceProviders.add(new ResourceProvider(null, type, instance));
-        return this;
-    }
 
     public ResourceLifeCycle getResourceLifeCycle() {
         return lifeCycle;
@@ -160,8 +145,5 @@ public class SolrJPlugin implements Plugin, ResourceProviderSupport {
     }
 
 
-    @Override
-    public Set<ResourceProvider> resources() {
-        return resourceProviders;
-    }
+
 }

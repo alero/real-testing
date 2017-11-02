@@ -16,17 +16,21 @@
 
 package org.hrodberaht.injection.plugin.junit.plugins.service;
 
-import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 
 public class AService implements AnInterface {
 
     String something = "empty";
 
-    @Inject
-    private MoreServices moreServices;
+    private final MoreServices moreServices;
 
-    @PostConstruct
+    @Inject
+    public AService(MoreServices moreServices) {
+        this.moreServices = moreServices;
+        init();
+    }
+
+
     public void init() {
         something = "inited";
     }

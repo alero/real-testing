@@ -60,7 +60,7 @@ public class SimpleDataSourceProxy implements DataSourceProxyInterface {
 
     @Override
     public String getName() {
-        return "DataSource/"+dataSource.getName();
+        return dataSource.getName();
     }
 
     @Override

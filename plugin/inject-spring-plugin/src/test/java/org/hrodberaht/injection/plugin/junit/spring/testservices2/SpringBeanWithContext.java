@@ -16,8 +16,6 @@
 
 package org.hrodberaht.injection.plugin.junit.spring.testservices2;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -30,7 +28,7 @@ import javax.sql.DataSource;
 public class SpringBeanWithContext {
 
 
-    @Resource(lookup = "DataSource/MyDataSource2")
+    @Resource(lookup = "MyDataSource2")
     private DataSource dataSource;
 
     private JdbcTemplate jdbcTemplate;

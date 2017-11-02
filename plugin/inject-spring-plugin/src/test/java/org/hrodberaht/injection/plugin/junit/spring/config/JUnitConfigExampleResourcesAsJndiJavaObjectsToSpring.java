@@ -17,11 +17,10 @@
 package org.hrodberaht.injection.plugin.junit.spring.config;
 
 
-import org.hrodberaht.injection.core.register.RegistrationModuleAnnotation;
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.SpringExtensionPlugin;
-import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 
 import javax.sql.DataSource;
 
@@ -33,7 +32,8 @@ public class JUnitConfigExampleResourcesAsJndiJavaObjectsToSpring extends Contai
         String dataSourceName = "MyDataSource2";
         DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class)
                 .commitAfterContainerCreation()
-                .usingJavaContext();
+                .usingJavaContext()
+        ;
         DataSource dataSource = dataSourcePlugin.createDataSource(dataSourceName);
 
         dataSourcePlugin.loadSchema(dataSource, "sql");

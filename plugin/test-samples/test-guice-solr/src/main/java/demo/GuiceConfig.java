@@ -14,14 +14,25 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.core.spi;
+package demo;
 
-/**
- * Anything that is created via this factory will be available in the Jndi context under class.simpleName + name
- */
-public interface ResourceFactory {
+import com.google.inject.AbstractModule;
 
-    <T> JavaResourceCreator<T> getCreator(Class<T> type, boolean bindToContext);
+import javax.inject.Inject;
 
-    <T> void addResourceCrator(JavaResourceCreator<T> tJavaResourceCreator);
+public class GuiceConfig extends AbstractModule{
+
+
+
+    @Override
+    protected void configure() {
+        bind(UserService.class);
+    }
+
+
+    @Inject
+    void initMyClass(UserService instance) {
+        instance.init();
+    }
+
 }

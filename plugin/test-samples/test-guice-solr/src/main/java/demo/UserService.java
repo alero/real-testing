@@ -14,34 +14,41 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.junit.spring.testservices2;
+package demo;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.common.SolrInputDocument;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Repository;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import javax.sql.DataSource;
+import java.io.IOException;
 
-@Repository
-public class SpringBeanWithSpringBean {
+@Singleton
+public class UserService {
 
 
-    @Autowired()
-    @Qualifier("MyDataSource2")
-    private DataSource dataSource;
+    private final DataSource dataSource;
+    private final SolrClient solrClient;
+    private final JdbcTemplate jdbcTemplate;
 
-    private JdbcTemplate jdbcTemplate;
-
-    @PostConstruct
-    public void init() {
+    @Inject
+    public UserService(DataSource dataSource, SolrClient solrClient) {
+        this.dataSource = dataSource;
+        this.solrClient = solrClient;
         jdbcTemplate = new JdbcTemplate(dataSource);
-        synchronized (SpringBeanWithSpringBean.class){
-            if( getName("init") == null){
-                createUser("init", "user");
+        init();
+    }
+
+    public void init() {
+        synchronized (UserService.class){
+            if( getName("root") == null){
+                createUser("root", "pwd999");
             }
         }
     }
@@ -75,8 +82,26 @@ public class SpringBeanWithSpringBean {
         }
     }
 
+    public boolean existsInIndex(String username) {
+        SolrQuery solrQuery = new SolrQuery().setQuery("name:"+username) ;
+        try {
+            return 1 == solrClient.query(solrQuery).getResults().getNumFound();
+        } catch (SolrServerException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public void createUser(String username, String password) {
         jdbcTemplate.update("insert into theUser (username, password, loginTries) values (?, ?, ?)", username, password, 0);
+        SolrInputDocument document = new SolrInputDocument();
+        document.addField("name", username);
+        document.addField("password", password);
+        try {
+            solrClient.add(document);
+            solrClient.commit(false, false, true);
+        } catch (SolrServerException | IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean login(String username, String password) {

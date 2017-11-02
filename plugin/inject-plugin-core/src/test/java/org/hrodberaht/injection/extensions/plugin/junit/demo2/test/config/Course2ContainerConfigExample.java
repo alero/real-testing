@@ -16,10 +16,10 @@
 
 package org.hrodberaht.injection.extensions.plugin.junit.demo2.test.config;
 
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.extensions.plugin.junit.demo2.service.MyResource;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.ContextResourcePlugin;
-import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 
 public class Course2ContainerConfigExample extends ContainerContextConfigBase {
 
@@ -30,9 +30,9 @@ public class Course2ContainerConfigExample extends ContainerContextConfigBase {
                 .scan(() -> "org.hrodberaht.injection.extensions.plugin.junit.demo2.service")
                 .resource(builder ->
                         builder
-                            .resource("myResource", new MyResource("named"))
-                            .resource("myMappedResource", new MyResource("mapped"))
-                            .resource(new MyResource("typed"))
+                                .resource("myResource", new MyResource("named"))
+                                .resource("myMappedResource", new MyResource("mapped"))
+                                .resource(new MyResource("typed"))
 
                 )
         ;

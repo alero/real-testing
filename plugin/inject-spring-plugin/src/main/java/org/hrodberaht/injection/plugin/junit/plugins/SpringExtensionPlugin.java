@@ -26,6 +26,7 @@ import org.hrodberaht.injection.plugin.junit.api.annotation.InjectionPluginInjec
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeContainerCreation;
 import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProvider;
 import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProviderSupport;
+import org.hrodberaht.injection.plugin.junit.plugins.common.PluginLifeCycledResource;
 import org.hrodberaht.injection.plugin.junit.spring.beans.config.ContainerAllSpringConfig;
 import org.hrodberaht.injection.plugin.junit.spring.beans.config.ContainerSpringConfig;
 import org.hrodberaht.injection.plugin.junit.spring.injector.SpringBeanInjector;
@@ -86,6 +87,11 @@ public class SpringExtensionPlugin implements Plugin {
         return this;
     }
 
+    public SpringExtensionPlugin withResources(ResourceProviderSupport resourceProviderSupport){
+        builder.resourceProviders.addAll(resourceProviderSupport.resources());
+        return this;
+    }
+
     private boolean hasJpaPLugin(Plugin plugin) {
         try {
             Class.forName("org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin");
@@ -104,6 +110,7 @@ public class SpringExtensionPlugin implements Plugin {
         private final DefaultListableBeanFactory parentBeanFactory = new DefaultListableBeanFactory();
 
         private SpringRunner(SpringExtensionPlugin springExtensionPlugin) {
+            LOG.info("SpringRunner - Creating SpringApplication", this.getClass());
             Builder builder = springExtensionPlugin.builder;
             this.springExtensionPlugin = springExtensionPlugin;
 
@@ -141,7 +148,7 @@ public class SpringExtensionPlugin implements Plugin {
         }
 
         private ClassPathXmlApplicationContext loadConfig(String... springConfigs) {
-            LOG.info("SpringContainerConfigBase - Creating SpringApplication XML for " + this.getClass());
+            LOG.info("SpringContainerConfigBase - Creating SpringApplication XML for {}", this.getClass());
             validateEmptyContext(context);
             // TODO: we have no "jpa enabled" spring bean XML file ...
             String testSpringConfig = "/META-INF/container-spring-config.xml";
@@ -154,7 +161,7 @@ public class SpringExtensionPlugin implements Plugin {
         }
 
         private AnnotationConfigApplicationContext loadConfig(Class... springConfigs) {
-            LOG.info("SpringContainerConfigBase - Creating SpringApplication Java for " + this.getClass());
+            LOG.info("SpringContainerConfigBase - Creating SpringApplication Java for {}", this.getClass());
             validateEmptyContext(context);
             Class[] config = new Class[]{getContainerSpringConfigClass()};
             if (springConfigs != null) {

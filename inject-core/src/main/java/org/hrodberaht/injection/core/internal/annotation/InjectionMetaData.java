@@ -35,6 +35,7 @@ public class InjectionMetaData {
     private InjectionKey key;
     private Class serviceClass;
     private boolean preDefined = false;
+    private boolean extendedInjection = false;
     private Boolean accessible = null;
     private ScopeHandler scopeHandler;
 
@@ -91,6 +92,14 @@ public class InjectionMetaData {
         this.preDefined = preDefined;
     }
 
+    void setExtendedInjection(boolean extendedInjection) {
+        this.extendedInjection = extendedInjection;
+    }
+
+    boolean isExtendedInjection() {
+        return extendedInjection;
+    }
+
     public Class getServiceClass() {
         return this.serviceClass;
     }
@@ -119,7 +128,6 @@ public class InjectionMetaData {
 
     ObjectAndScope createNewInstance(Object[] parameters) {
         verifyAccess();
-
         Object newInstance = instanceCreator.createInstance(constructor, parameters);
         scopeHandler.addInstance(newInstance);
         return new ObjectAndScope(newInstance, true);

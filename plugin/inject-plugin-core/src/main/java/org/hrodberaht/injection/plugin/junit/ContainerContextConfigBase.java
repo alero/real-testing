@@ -30,6 +30,7 @@ import org.hrodberaht.injection.plugin.junit.inner.AnnotatedResourcePlugin;
 import org.hrodberaht.injection.plugin.junit.inner.AnnotatedRunnerPlugin;
 import org.hrodberaht.injection.plugin.junit.inner.InjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.inner.RunnerPlugins;
+import org.hrodberaht.injection.plugin.junit.plugins.common.PluginLifeCycle;
 import org.hrodberaht.injection.plugin.junit.resources.ChainableInjectionPointProvider;
 import org.hrodberaht.injection.plugin.junit.resources.PluggableResourceFactory;
 import org.hrodberaht.injection.plugin.junit.resources.ResourcePluginBase;
@@ -85,6 +86,7 @@ public abstract class ContainerContextConfigBase implements ContainerContextConf
         private final ContainerContextConfigBase base;
         private InjectionPlugin injectionPlugin;
         private ChainableInjectionPointProvider chainableInjectionPointProvider;
+
 
         private ContainerConfigInner(ContainerContextConfigBase base) {
             this.base = base;

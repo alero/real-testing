@@ -1,4 +1,4 @@
-package org.hrodberaht.injection.plugin.junit.plugins;
+package org.hrodberaht.injection.plugin.junit.plugins.common;
 
 import org.hrodberaht.injection.plugin.exception.PluginRuntimeException;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;

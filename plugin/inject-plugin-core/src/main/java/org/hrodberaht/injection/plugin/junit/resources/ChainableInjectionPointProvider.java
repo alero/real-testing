@@ -16,6 +16,7 @@
 
 package org.hrodberaht.injection.plugin.junit.resources;
 
+import org.hrodberaht.injection.core.internal.InjectionKey;
 import org.hrodberaht.injection.core.internal.annotation.AnnotationInjection;
 import org.hrodberaht.injection.core.internal.annotation.InjectionFinder;
 import org.hrodberaht.injection.core.internal.annotation.InjectionPoint;
@@ -44,6 +45,11 @@ public class ChainableInjectionPointProvider implements InjectionFinder {
     @Override
     public Object extendedInjection(Object instance) {
         return injectionFinder.extendedInjection(instance);
+    }
+
+    @Override
+    public Object extendedInjection(InjectionKey instanceClass) {
+        return injectionFinder.extendedInjection(instanceClass);
     }
 
 }

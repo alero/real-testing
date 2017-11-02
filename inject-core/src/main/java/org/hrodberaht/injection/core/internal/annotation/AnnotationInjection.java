@@ -263,7 +263,9 @@ public class AnnotationInjection {
 
 
     private Object callConstructor(InjectionMetaData injectionMetaData, boolean enforceNew) {
-
+        if(injectionMetaData.isExtendedInjection()){
+            return injectionMetaData.createInstance(null).getInstance();
+        }
         List<InjectionMetaData> dependencies = injectionMetaData.getConstructorDependencies();
         if (dependencies == null) { // no constructor was able to be defined, hopefully a scoped one is provided.
             ObjectAndScope service = createInstanceObjectAndScope(injectionMetaData, enforceNew);
