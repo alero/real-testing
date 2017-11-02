@@ -25,6 +25,7 @@ import org.hrodberaht.injection.core.spi.ResourceFactory;
 import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.exception.PluginRuntimeException;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
+import org.hrodberaht.injection.plugin.junit.api.PluginContext;
 import org.hrodberaht.injection.plugin.junit.inner.AnnotatedInjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.inner.AnnotatedResourcePlugin;
 import org.hrodberaht.injection.plugin.junit.inner.AnnotatedRunnerPlugin;
@@ -42,7 +43,6 @@ public abstract class ContainerContextConfigBase implements ContainerContextConf
     private static final Logger LOG = LoggerFactory.getLogger(ContainerContextConfigBase.class);
     private final RunnerPlugins runnerPlugins = new RunnerPlugins();
     private final ContainerConfigInner containerConfigInner = new ContainerConfigInner(this);
-
     public abstract void register(InjectionRegistryBuilder registryBuilder);
 
     protected <T extends Plugin> T activatePlugin(Class<T> pluginClass) {
@@ -71,7 +71,8 @@ public abstract class ContainerContextConfigBase implements ContainerContextConf
     }
 
 
-    void initiateConfig() {
+    void initiateConfig(PluginContext context) {
+        containerConfigInner.context = context;
         LOG.info("initiateConfig : {}", this);
         containerConfigInner.initiateConfig();
     }
@@ -85,6 +86,7 @@ public abstract class ContainerContextConfigBase implements ContainerContextConf
     private static class ContainerConfigInner extends ContainerConfig {
         private final ContainerContextConfigBase base;
         private InjectionPlugin injectionPlugin;
+        private PluginContext context;
         private ChainableInjectionPointProvider chainableInjectionPointProvider;
 
 
@@ -154,7 +156,7 @@ public abstract class ContainerContextConfigBase implements ContainerContextConf
             }
             if (AnnotatedResourcePlugin.containsAnnotations(plugin)) {
                 LOG.info("Activating annotated ContextResourcePlugin {}", plugin.getClass().getSimpleName());
-                AnnotatedResourcePlugin.inject(resourceFactory, plugin);
+                AnnotatedResourcePlugin.inject(context, resourceFactory, plugin);
                 if (AnnotatedResourcePlugin.hasChainableAnnotaion(plugin)) {
                     if (chainableInjectionPointProvider == null) {
                         chainableInjectionPointProvider = AnnotatedResourcePlugin.getChainableInjectionPointProvider(plugin, lookupInjectionPointFinder());

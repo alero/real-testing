@@ -28,7 +28,7 @@ public class ContainerConfigExample extends ContainerContextConfigBase {
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
         activatePlugin(JerseyPlugin.class).builder()
-                .lifeCycle(Plugin.ResourceLifeCycle.TEST_SUITE)
+                .lifeCycle(Plugin.LifeCycle.TEST_SUITE)
                 .clientConfig(config -> config.register(ObjectMapperResolver.class))
                 .resourceConfig(JerseyApplication::new);
     }

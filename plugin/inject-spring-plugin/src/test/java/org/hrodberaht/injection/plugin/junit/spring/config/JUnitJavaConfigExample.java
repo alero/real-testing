@@ -30,7 +30,7 @@ public class JUnitJavaConfigExample extends ContainerContextConfigBase {
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
         String dataSourceName = "MyDataSource";
-        DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class);
+        DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class).usingJavaContext();
         DataSource dataSource = dataSourcePlugin.createDataSource(dataSourceName);
 
         dataSourcePlugin.loadSchema(dataSource, "sql");

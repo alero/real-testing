@@ -21,7 +21,7 @@
 
     <persistence-unit name="example-jpa" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
-        <non-jta-data-source>DataSource/MyDataSource</non-jta-data-source>
+        <non-jta-data-source>MyDataSource</non-jta-data-source>
         <properties>
 
             <property name="hibernate.hbm2ddl.auto" value="create-drop"/>

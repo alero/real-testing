@@ -41,11 +41,11 @@ public class SolrJPlugin implements Plugin {
     private SolrTestRunner solrTestRunner;
     private String solrHome;
     private String coreName;
-    private ResourceLifeCycle lifeCycle = ResourceLifeCycle.TEST_CONFIG;
+    private LifeCycle lifeCycle = LifeCycle.TEST_CONFIG;
     private PluginLifeCycledResource<SolrTestRunner> pluginLifeCycledResource = new PluginLifeCycledResource<>(SolrTestRunner.class);
 
 
-    public SolrJPlugin lifeCycle(ResourceLifeCycle resourceLifeCycle) {
+    public SolrJPlugin lifeCycle(LifeCycle resourceLifeCycle) {
         this.lifeCycle = resourceLifeCycle;
         return this;
     }
@@ -58,11 +58,6 @@ public class SolrJPlugin implements Plugin {
     public SolrJPlugin solrHome(String solrHome) {
         this.solrHome = solrHome;
         return this;
-    }
-
-
-    public ResourceLifeCycle getResourceLifeCycle() {
-        return lifeCycle;
     }
 
     public SolrAssertions getAssertions() {
@@ -80,28 +75,28 @@ public class SolrJPlugin implements Plugin {
     @RunnerPluginBeforeContainerCreation
     protected void beforeContainerCreation(PluginContext pluginContext) {
         solrTestRunner = pluginLifeCycledResource.create(lifeCycle, pluginContext, this::createSolrContainer);
-        if (lifeCycle == ResourceLifeCycle.TEST_SUITE || lifeCycle == ResourceLifeCycle.TEST_CONFIG) {
+        if (lifeCycle == LifeCycle.TEST_SUITE || lifeCycle == LifeCycle.TEST_CONFIG) {
             prepareSolr(pluginContext);
         }
     }
 
     @RunnerPluginBeforeClassTest
     protected void beforeTestClass(PluginContext pluginContext) {
-        if (lifeCycle == ResourceLifeCycle.TEST_CLASS) {
+        if (lifeCycle == LifeCycle.TEST_CLASS) {
             prepareSolr(pluginContext);
         }
     }
 
     @RunnerPluginAfterClassTest
     protected void afterTestClass(PluginContext pluginContext) {
-        if (lifeCycle == ResourceLifeCycle.TEST_CLASS) {
+        if (lifeCycle == LifeCycle.TEST_CLASS) {
             shutdownSolr();
         }
     }
 
     @RunnerPluginBeforeTest
     protected void beforeTest(PluginContext pluginContext) {
-        if (lifeCycle == ResourceLifeCycle.TEST) {
+        if (lifeCycle == LifeCycle.TEST) {
             prepareSolr(pluginContext);
         } else {
             solrTestRunner.cleanSolrInstance();
@@ -110,7 +105,7 @@ public class SolrJPlugin implements Plugin {
 
     @RunnerPluginAfterTest
     protected void afterTest(PluginContext pluginContext) {
-        if (lifeCycle == ResourceLifeCycle.TEST) {
+        if (lifeCycle == LifeCycle.TEST) {
             shutdownSolr();
         }
     }

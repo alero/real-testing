@@ -52,7 +52,7 @@ public class JerseyPlugin implements Plugin {
     private ClientConfigInterface clientConfigInterface;
     private ResourceConfigInterface resourceConfigInterface;
     private TestContainerFactoryInterface testContainerFactoryInterface;
-    private ResourceLifeCycle lifeCycle = ResourceLifeCycle.TEST_CLASS;
+    private LifeCycle lifeCycle = LifeCycle.TEST_CLASS;
     private PluginLifeCycledResource<JerseyTestRunner> pluginLifeCycledResource = new PluginLifeCycledResource<>(JerseyTestRunner.class);
 
     @FunctionalInterface
@@ -68,10 +68,6 @@ public class JerseyPlugin implements Plugin {
     @FunctionalInterface
     public interface TestContainerFactoryInterface {
         TestContainerFactory container();
-    }
-
-    public ResourceLifeCycle getResourceLifeCycle() {
-        return lifeCycle;
     }
 
     public Client getClient() {
@@ -99,7 +95,7 @@ public class JerseyPlugin implements Plugin {
             this.jerseyPlugin = jerseyPlugin;
         }
 
-        public JerseyPluginBuilder lifeCycle(ResourceLifeCycle lifeCycle) {
+        public JerseyPluginBuilder lifeCycle(LifeCycle lifeCycle) {
             jerseyPlugin.lifeCycle = lifeCycle;
             return this;
         }
@@ -176,28 +172,28 @@ public class JerseyPlugin implements Plugin {
     @RunnerPluginAfterContainerCreation
     protected void beforeContainerCreation(PluginContext pluginContext) {
         jerseyTestRunner = pluginLifeCycledResource.create(lifeCycle, pluginContext, this::createJerseyContainer);
-        if (lifeCycle == ResourceLifeCycle.TEST_SUITE) {
+        if (lifeCycle == LifeCycle.TEST_SUITE) {
             startJersey();
         }
     }
 
     @RunnerPluginBeforeClassTest
     protected void beforeTestClass(PluginContext pluginContext) {
-        if (lifeCycle == ResourceLifeCycle.TEST_CLASS || lifeCycle == ResourceLifeCycle.TEST_CONFIG) {
+        if (lifeCycle == LifeCycle.TEST_CLASS || lifeCycle == LifeCycle.TEST_CONFIG) {
             startJersey();
         }
     }
 
     @RunnerPluginAfterClassTest
     protected void afterTestClass(PluginContext pluginContext) {
-        if (lifeCycle == ResourceLifeCycle.TEST_CLASS) {
+        if (lifeCycle == LifeCycle.TEST_CLASS) {
             stopJersey();
         }
     }
 
     @RunnerPluginBeforeTest
     protected void beforeTest(PluginContext pluginContext) {
-        if (lifeCycle == ResourceLifeCycle.TEST) {
+        if (lifeCycle == LifeCycle.TEST) {
             stopJersey();
             jerseyTestRunner = pluginLifeCycledResource.create(lifeCycle, pluginContext, this::createJerseyContainer);
             startJersey();
@@ -206,7 +202,7 @@ public class JerseyPlugin implements Plugin {
 
     @RunnerPluginAfterTest
     protected void afterTest(PluginContext pluginContext) {
-        if (lifeCycle == ResourceLifeCycle.TEST) {
+        if (lifeCycle == LifeCycle.TEST) {
             stopJersey();
         }
     }

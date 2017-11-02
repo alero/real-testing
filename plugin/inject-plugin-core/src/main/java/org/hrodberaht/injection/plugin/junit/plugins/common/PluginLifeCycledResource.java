@@ -34,7 +34,7 @@ public class PluginLifeCycledResource<T> implements FileLifeCycledResource {
         T create();
     }
 
-    public T create(Plugin.ResourceLifeCycle lifeCycle, PluginContext pluginContext, InstanceCreator<T> instanceCreator) {
+    public T create(Plugin.LifeCycle lifeCycle, PluginContext pluginContext, InstanceCreator<T> instanceCreator) {
 
         ThreadSafeState<T> threadSafeState = getThreadSafeState();
         if (threadSafeState == null) {
@@ -42,14 +42,14 @@ public class PluginLifeCycledResource<T> implements FileLifeCycledResource {
             stateHolder.threadState.set(threadSafeState);
         }
 
-        if (lifeCycle == Plugin.ResourceLifeCycle.TEST_SUITE) {
+        if (lifeCycle == Plugin.LifeCycle.TEST_SUITE) {
             if (threadSafeState.suiteRunner == null) {
                 threadSafeState.suiteRunner = createAndLogInstance(lifeCycle, instanceCreator);
             }
             return threadSafeState.suiteRunner;
-        } else if (lifeCycle == Plugin.ResourceLifeCycle.TEST_CONFIG) {
+        } else if (lifeCycle == Plugin.LifeCycle.TEST_CONFIG) {
             return threadSafeState.configClassRunner.computeIfAbsent(pluginContext.getConfigClass(), aClass -> createAndLogInstance(lifeCycle, instanceCreator));
-        } else if (lifeCycle == Plugin.ResourceLifeCycle.TEST_CLASS) {
+        } else if (lifeCycle == Plugin.LifeCycle.TEST_CLASS) {
             return threadSafeState.testClassRunner.computeIfAbsent(pluginContext.getTestClass(), aClass -> createAndLogInstance(lifeCycle, instanceCreator));
         }
 
@@ -61,7 +61,7 @@ public class PluginLifeCycledResource<T> implements FileLifeCycledResource {
         return (ThreadSafeState<T>) stateHolder.threadState.get();
     }
 
-    private T createAndLogInstance(Plugin.ResourceLifeCycle lifeCycle, InstanceCreator<T> instanceCreator) {
+    private T createAndLogInstance(Plugin.LifeCycle lifeCycle, InstanceCreator<T> instanceCreator) {
         T instance = instanceCreator.create();
         LOG.info("Created new resource {} using lifeCycle:{}", instance.getClass().getName(), lifeCycle);
         return instance;
@@ -81,15 +81,15 @@ public class PluginLifeCycledResource<T> implements FileLifeCycledResource {
      * @param lifeCycle     the selected lifecycle of the resource to store
      * @return a new threadsafe and test-lifecycle unique directory
      */
-    public String testDirectory(String base, PluginContext pluginContext, Plugin.ResourceLifeCycle lifeCycle) {
+    public String testDirectory(String base, PluginContext pluginContext, Plugin.LifeCycle lifeCycle) {
         String threadName = Thread.currentThread().getName();
-        if (lifeCycle == Plugin.ResourceLifeCycle.TEST) {
+        if (lifeCycle == Plugin.LifeCycle.TEST) {
             return base + File.separator + threadName + File.separator + pluginContext.getTestClass().getSimpleName() + File.separator + pluginContext.getTestName();
-        } else if (lifeCycle == Plugin.ResourceLifeCycle.TEST_CONFIG) {
+        } else if (lifeCycle == Plugin.LifeCycle.TEST_CONFIG) {
             return base + File.separator + threadName + File.separator + pluginContext.getConfigClass().getSimpleName();
-        } else if (lifeCycle == Plugin.ResourceLifeCycle.TEST_CLASS) {
+        } else if (lifeCycle == Plugin.LifeCycle.TEST_CLASS) {
             return base + File.separator + threadName + File.separator + pluginContext.getTestClass().getSimpleName();
-        } else if (lifeCycle == Plugin.ResourceLifeCycle.TEST_SUITE) {
+        } else if (lifeCycle == Plugin.LifeCycle.TEST_SUITE) {
             return base + File.separator + threadName + File.separator + "suite";
         }
         throw new PluginRuntimeException("No home was selected");

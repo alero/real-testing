@@ -9,7 +9,7 @@ public class SolrTestConfig extends ContainerContextConfigBase {
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
         activatePlugin(SolrJPlugin.class)
-                .lifeCycle(Plugin.ResourceLifeCycle.TEST_CONFIG)
+                .lifeCycle(Plugin.LifeCycle.TEST_CONFIG)
                 .coreName("collection1");
     }
 }

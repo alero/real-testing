@@ -67,7 +67,7 @@ class JUnitContext {
             if (ContainerContextConfigBase.class.isAssignableFrom(configClass)) {
                 containerConfig = (ContainerContextConfigBase) configClass.newInstance();
                 runnerPlugins = getRunnerPlugins();
-                containerConfig.initiateConfig();
+                containerConfig.initiateConfig(createContext());
                 runnerPlugins.runInitBeforeContainer(createContext());
                 containerConfig.buildConfig();
                 runnerPlugins.runInitAfterContainer(createContext());

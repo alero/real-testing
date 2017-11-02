@@ -32,6 +32,7 @@ import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeTe
 import org.hrodberaht.injection.plugin.junit.datasource.DatasourceContainerService;
 import org.hrodberaht.injection.plugin.junit.datasource.ProxyResourceCreator;
 import org.hrodberaht.injection.plugin.junit.datasource.TransactionManager;
+import org.hrodberaht.injection.plugin.junit.plugins.common.PluginLifeCycledResource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,10 +54,13 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
 
     private TransactionManager transactionManager;
     private InjectContainer injectContainer;
-
-    private DatasourceResourceCreator datasourceResourceCreator;
     private ResourceContext resourceContext;
-    private static ResourceContext sharedResourceContext;
+    private enum CommitMode {COMMIT, ROLLBACK}
+    private CommitMode commitModeContainerLifeCycle = CommitMode.ROLLBACK;
+    private boolean usingJavaContext = false;
+    private LifeCycle lifeCycle = LifeCycle.TEST_CONFIG;
+
+    private PluginLifeCycledResource<ResourceContext> pluginLifeCycledResource = new PluginLifeCycledResource<>(ResourceContext.class);
 
     public DataSourcePlugin() {
         LOG.info("created {}", this);
@@ -73,20 +77,16 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
         return resourceProviderSupports;
     }
 
-
-    private enum CommitMode {COMMIT, ROLLBACK}
-
-    private CommitMode commitModeContainerLifeCycle = CommitMode.ROLLBACK;
-
-    private boolean usingJavaContext = false;
-
-    class ResourceContext {
+    private class ResourceContext {
+        private final DatasourceResourceCreator datasourceResourceCreator;
         private final ResourceFactory resourceFactory;
         private final ProxyResourceCreator proxyResourceCreator;
 
-        ResourceContext(ResourceFactory resourceFactory, ProxyResourceCreator proxyResourceCreator) {
+        private ResourceContext(ResourceFactory resourceFactory, ProxyResourceCreator proxyResourceCreator) {
             this.resourceFactory = resourceFactory;
             this.proxyResourceCreator = proxyResourceCreator;
+            this.datasourceResourceCreator =  new DatasourceResourceCreator(proxyResourceCreator);
+
         }
     }
 
@@ -109,6 +109,7 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
      */
     public DataSourcePlugin usingJavaContext(){
         this.usingJavaContext = true;
+        lifeCycle = LifeCycle.TEST_SUITE;
         return this;
     }
 
@@ -118,12 +119,15 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
     }
 
 
+
     public DataSource createDataSource(){
-        return getContextAwareResource().resourceFactory.getCreator(DataSource.class, usingJavaContext).create();
+        return resourceContext.resourceFactory.getCreator(DataSource.class, usingJavaContext).create();
     }
 
+
+
     public DataSource createDataSource(String name){
-        return getContextAwareResource().resourceFactory.getCreator(DataSource.class, usingJavaContext).create(name);
+        return resourceContext.resourceFactory.getCreator(DataSource.class, usingJavaContext).create(name);
     }
 
     /**
@@ -151,10 +155,8 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
     }
 
 
-    DatasourceResourceCreator getDatasourceResourceCreator(ProxyResourceCreator proxyResourceCreator) {
-        return new DatasourceResourceCreator(proxyResourceCreator);
-    }
 
+    /*
     private ResourceContext getContextAwareResource() {
         if(this.usingJavaContext){
             if(sharedResourceContext == null){
@@ -175,21 +177,32 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
         }
         return this.resourceContext;
     }
+    */
 
 
     Collection<DataSourceProxyInterface> getDataSources(){
-        return datasourceResourceCreator.getResources();
+        return resourceContext.datasourceResourceCreator.getResources();
     }
 
-    private ProxyResourceCreator createContext() {
+    protected ProxyResourceCreator createContext() {
         return new ProxyResourceCreator(
                 ProxyResourceCreator.DataSourceProvider.HSQLDB,
-                ProxyResourceCreator.DataSourcePersistence.RESTORABLE);
+                ProxyResourceCreator.DataSourcePersistence.RESTORABLE
+        );
     }
 
     @ResourcePluginFactory
-    private void setResourceFactory(ResourceFactory resourceFactory) {
-        this.resourceContext = new ResourceContext(resourceFactory, null);
+    private void setResourceFactory(PluginContext context, ResourceFactory resourceFactory) {
+        resourceContext = pluginLifeCycledResource.create(
+                getLifeCycle(), context, () -> createResource(resourceFactory)
+        );
+    }
+
+    private ResourceContext createResource(ResourceFactory resourceFactory) {
+        LOG.info("createResource for {}", this);
+        ResourceContext resourceContext = new ResourceContext(resourceFactory, createContext());
+        resourceContext.resourceFactory.addResourceCrator(resourceContext.datasourceResourceCreator);
+        return resourceContext;
     }
 
 
@@ -232,7 +245,7 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
 
     @Override
     public LifeCycle getLifeCycle() {
-        return LifeCycle.TEST_CONFIG;
+        return lifeCycle;
     }
 
 
@@ -254,7 +267,7 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
     }
 
     TransactionManager createTransactionManager() {
-        return new TransactionManager(getContextAwareResource().proxyResourceCreator);
+        return new TransactionManager(resourceContext.proxyResourceCreator);
     }
 
 

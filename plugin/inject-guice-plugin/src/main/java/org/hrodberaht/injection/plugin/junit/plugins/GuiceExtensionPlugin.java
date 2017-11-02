@@ -52,9 +52,9 @@ public class GuiceExtensionPlugin implements Plugin {
     private List<Module> guiceModules = new ArrayList<>();
     private Set<ResourceProvider> resourceProviders = new HashSet<>();
     private PluginLifeCycledResource<Injector> pluginLifeCycledResource = new PluginLifeCycledResource<>(Injector.class);
-    private ResourceLifeCycle lifeCycle = ResourceLifeCycle.TEST_CONFIG;
+    private LifeCycle lifeCycle = LifeCycle.TEST_CONFIG;
 
-    public GuiceExtensionPlugin lifeCycle(ResourceLifeCycle lifeCycle){
+    public GuiceExtensionPlugin lifeCycle(LifeCycle lifeCycle){
         this.lifeCycle = lifeCycle;
         return this;
     }

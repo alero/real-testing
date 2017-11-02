@@ -21,6 +21,7 @@ import org.hrodberaht.injection.core.internal.annotation.ReflectionUtils;
 import org.hrodberaht.injection.core.internal.exception.InjectRuntimeException;
 import org.hrodberaht.injection.core.spi.ResourceFactory;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
+import org.hrodberaht.injection.plugin.junit.api.PluginContext;
 import org.hrodberaht.injection.plugin.junit.api.annotation.ResourcePluginChainableInjectionProvider;
 import org.hrodberaht.injection.plugin.junit.api.annotation.ResourcePluginFactory;
 import org.hrodberaht.injection.plugin.junit.resources.ChainableInjectionPointProvider;
@@ -53,7 +54,7 @@ public class AnnotatedResourcePlugin {
         return AnnotatedRunnerBase.containsRunnerAnnotations(plugin, supporedAnnotations);
     }
 
-    public static <T extends Plugin> void inject(ResourceFactory resourceFactory, T plugin) {
+    public static <T extends Plugin> void inject(PluginContext context, ResourceFactory resourceFactory, T plugin) {
         List<Method> methodList = classResourcePluginFactoryMethodMap.computeIfAbsent(plugin.getClass(), aClass -> {
             List<Method> methodListInner = new ArrayList<>();
             for (Method method : ReflectionUtils.findMethods(aClass)) {
@@ -70,8 +71,10 @@ public class AnnotatedResourcePlugin {
 
         methodList.forEach(method -> {
             try {
-                if (method.getParameterCount() == 1 && method.getParameterTypes()[0].isAssignableFrom(ResourceFactory.class)) {
-                    method.invoke(plugin, resourceFactory);
+                if (method.getParameterCount() == 2
+                        && method.getParameterTypes()[0].isAssignableFrom(PluginContext.class)
+                        && method.getParameterTypes()[1].isAssignableFrom(ResourceFactory.class)) {
+                    method.invoke(plugin, context, resourceFactory);
                 } else {
                     throw new InjectRuntimeException("method with ResourcePluginFactory must have a parameter of type ResourceFactory");
                 }

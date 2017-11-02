@@ -30,7 +30,7 @@ public class CourseContainerConfigExample extends ContainerContextConfigBase {
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
         JpaPlugin jpaPlugin = activatePlugin(JpaPlugin.class);
-
+        jpaPlugin.usingJavaContext();
         DataSource dataSource = jpaPlugin.createDataSource(DATASOURCE_NAME);
 
         jpaPlugin.createEntityManager(dataSource, "example-jpa");

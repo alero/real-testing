@@ -35,7 +35,7 @@ public class EntityManagerCreator {
         if (entityManagerMap.get(name) == null) {
 
             EntityManager entityManager = Persistence.createEntityManagerFactory(name).createEntityManager();
-            LOG.info("Created entity manager " + entityManager);
+            LOG.info("Created entity manager {}", entityManager);
             entityManagerMap.put(name, entityManager);
             return entityManager;
         }

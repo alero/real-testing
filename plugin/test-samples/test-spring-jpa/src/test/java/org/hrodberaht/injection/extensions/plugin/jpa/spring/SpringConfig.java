@@ -36,7 +36,7 @@ public class SpringConfig {
     @Qualifier("MyDataSource")
     public DataSource dataSource() {
         final JndiDataSourceLookup jndiLookup = new JndiDataSourceLookup();
-        return jndiLookup.getDataSource("DataSource/MyDataSource");
+        return jndiLookup.getDataSource("MyDataSource");
     }
 
 }

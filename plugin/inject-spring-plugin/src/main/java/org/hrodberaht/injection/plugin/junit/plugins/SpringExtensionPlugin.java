@@ -53,7 +53,7 @@ public class SpringExtensionPlugin implements Plugin {
 
     private PluginLifeCycledResource<SpringRunner> pluginLifeCycledResource = new PluginLifeCycledResource<>(SpringRunner.class);
 
-    private ResourceLifeCycle lifeCycle = ResourceLifeCycle.TEST_CONFIG;
+    private LifeCycle lifeCycle = LifeCycle.TEST_CONFIG;
     private Builder builder = new Builder();
     private InjectionRegister injectionRegister;
     private SpringRunner springRunner;
@@ -61,7 +61,7 @@ public class SpringExtensionPlugin implements Plugin {
     @Override
     public LifeCycle getLifeCycle() {
         LOG.info("using lifeCycle:{} for plugin {}", lifeCycle, this);
-        return  LifeCycle.TEST_CONFIG;
+        return lifeCycle;
     }
 
     public SpringExtensionPlugin springConfig(String... config){
@@ -74,7 +74,7 @@ public class SpringExtensionPlugin implements Plugin {
         return this;
     }
 
-    public SpringExtensionPlugin lifeCycle(ResourceLifeCycle lifeCycle){
+    public SpringExtensionPlugin lifeCycle(LifeCycle lifeCycle){
         this.lifeCycle = lifeCycle;
         return this;
     }
@@ -134,8 +134,10 @@ public class SpringExtensionPlugin implements Plugin {
             LOG.info("resourcesAsSpringBeans for {}", this);
             springExtensionPlugin.builder.resourceProviders.forEach(pluginResource -> {
                 Object instance = getInstance(pluginResource);
-                LOG.info("spring registerSingleton for {} using instance {}", pluginResource.getName(), instance);
-                parentBeanFactory.registerSingleton(pluginResource.getName(), instance);
+                if(pluginResource.getName() != null) {
+                    LOG.info("spring registerSingleton for {} using instance {}", pluginResource.getName(), instance);
+                    parentBeanFactory.registerSingleton(pluginResource.getName(), instance);
+                }
             });
         }
 

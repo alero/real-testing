@@ -23,12 +23,15 @@ import org.hrodberaht.injection.extensions.plugin.jpa.spring.SpringConfig;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
+import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.SpringExtensionPlugin;
 import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import javax.sql.DataSource;
 
 import static org.junit.Assert.assertEquals;
 
@@ -43,9 +46,9 @@ public class TestSpringJPAPlugin {
 
             SpringExtensionPlugin springExtensionPlugin = activatePlugin(SpringExtensionPlugin.class);
 
-            JpaPlugin jpaPlugin = activatePlugin(JpaPlugin.class);
+            DataSourcePlugin jpaPlugin = activatePlugin(JpaPlugin.class)
+                    .usingJavaContext();
             jpaPlugin.createDataSource("MyDataSource");
-            // jpaPlugin.createEntityManager("example-jpa");
 
             springExtensionPlugin
                     .with(jpaPlugin)

@@ -40,9 +40,6 @@ public class TestJavaConfigOnlyInjectionQualifier {
     @Qualifier("springBean2")
     private SpringBeanWithSpringBean springBean2;
 
-    @Autowired
-    @Qualifier("springBean3")
-    private SpringBeanWithContext springBean3;
 
     @Test
     public void testWiredBeanResource() throws Exception {
@@ -64,14 +61,5 @@ public class TestJavaConfigOnlyInjectionQualifier {
 
     }
 
-    @Test
-    public void testWiredContextResource2() throws Exception {
-
-        assertNotNull(springBean3);
-
-        assertNotNull(springBean3.getName("dude"));
-
-
-    }
 
 }

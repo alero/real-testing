@@ -53,7 +53,7 @@ public class UserServiceTest {
         public void register(InjectionRegistryBuilder registryBuilder) {
 
             DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class);
-            DataSource dataSource = dataSourcePlugin.createDataSource("MyDataSource");
+            DataSource dataSource = dataSourcePlugin.createDataSource("DataSource/MyDataSource");
 
             dataSourcePlugin.loadSchema(dataSource, "sql");
 
@@ -64,7 +64,7 @@ public class UserServiceTest {
 
             activatePlugin(SpringExtensionPlugin.class)
                     .with(dataSourcePlugin)
-                    .withResources(ResourceProviderBuilder.of().resource(SolrClient.class, solrJPlugin::getClient))
+                    .withResources(ResourceProviderBuilder.of().resource("solrSample/SolrClient", SolrClient.class, solrJPlugin::getClient))
                     .springConfig(SpringConfig.class);
         }
     }
