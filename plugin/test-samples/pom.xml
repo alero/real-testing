@@ -23,16 +23,17 @@
     <parent>
         <groupId>org.hrodberaht.inject.plugin</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.0-beta1</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
     <artifactId>test-samples</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0-beta1</version>
     <packaging>pom</packaging>
 
     <modules>
-        <module>inject-cdi-junittest-service</module>
+        <module>junittest-service-solr</module>
+        <module>junittest-service-cdi</module>
         <module>test-spring-jpa</module>
         <module>test-spring-solr</module>
         <module>test-guice-solr</module>

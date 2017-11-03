@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.hrodberaht.inject.plugin</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.0.0-SNAPSHOT</version>
+        <version>3.0.0-beta1</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
     <artifactId>inject-cdi-plugin</artifactId>
-    <version>3.0.0-SNAPSHOT</version>
+    <version>3.0.0-beta1</version>
 
     <build>
         <testResources>
@@ -84,7 +84,7 @@
 
         <dependency>
             <groupId>org.hrodberaht.inject.plugin</groupId>
-            <artifactId>inject-cdi-junittest-service</artifactId>
+            <artifactId>junittest-service-cdi</artifactId>
             <version>${project.version}</version>
             <optional>true</optional>
             <scope>test</scope>

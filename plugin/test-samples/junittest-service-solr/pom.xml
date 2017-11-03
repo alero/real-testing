@@ -11,15 +11,10 @@
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
-    <artifactId>test-spring-solr</artifactId>
+    <artifactId>junittest-service-solr</artifactId>
     <version>3.0.0-beta1</version>
 
     <dependencies>
-        <dependency>
-            <groupId>org.hrodberaht.inject.plugin</groupId>
-            <artifactId>junittest-service-solr</artifactId>
-            <version>${project.version}</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
@@ -49,26 +44,6 @@
             <version>${solr.version}</version>
             <scope>compile</scope>
         </dependency>
-
-        <dependency>
-            <groupId>org.hrodberaht.inject.plugin</groupId>
-            <artifactId>inject-spring-plugin</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.hrodberaht.inject.plugin</groupId>
-            <artifactId>inject-solr-plugin</artifactId>
-            <version>${project.version}</version>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
-
 
 </project>

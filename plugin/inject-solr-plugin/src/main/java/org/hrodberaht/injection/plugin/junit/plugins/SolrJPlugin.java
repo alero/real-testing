@@ -29,6 +29,8 @@ import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProviderSuppor
 import org.hrodberaht.injection.plugin.junit.plugins.common.PluginLifeCycledResource;
 import org.hrodberaht.injection.plugin.junit.solr.SolrAssertions;
 import org.hrodberaht.injection.plugin.junit.solr.SolrTestRunner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Provider;
 import java.util.HashSet;
@@ -36,10 +38,14 @@ import java.util.Set;
 
 public class SolrJPlugin implements Plugin {
 
-    public static final String DEFAULT_HOME = "target/solr";
+    private static final Logger LOG = LoggerFactory.getLogger(SolrJPlugin.class);
+
+    public static final String DEFAULT_HOME = "classpath:solr";
+    public static final String DEFAULT_RUNNER_HOME = "target/solr";
 
     private SolrTestRunner solrTestRunner;
-    private String solrHome;
+    private String solrHome = DEFAULT_HOME;
+    private String sealRunnerHome = DEFAULT_RUNNER_HOME;
     private String coreName;
     private LifeCycle lifeCycle = LifeCycle.TEST_CONFIG;
     private PluginLifeCycledResource<SolrTestRunner> pluginLifeCycledResource = new PluginLifeCycledResource<>(SolrTestRunner.class);
@@ -57,6 +63,11 @@ public class SolrJPlugin implements Plugin {
 
     public SolrJPlugin solrHome(String solrHome) {
         this.solrHome = solrHome;
+        return this;
+    }
+
+    public SolrJPlugin solrRunnerHome(String solrRunnerHome) {
+        this.sealRunnerHome = solrRunnerHome;
         return this;
     }
 
@@ -121,13 +132,13 @@ public class SolrJPlugin implements Plugin {
 
 
     private void prepareSolr(PluginContext pluginContext) {
-        solrTestRunner.setup(getSolrHome(pluginContext), coreName);
+        solrTestRunner.setup(solrHome, getSolrHome(pluginContext), coreName);
     }
 
     private String getSolrHome(PluginContext pluginContext) {
-        return solrHome == null ?
+        return sealRunnerHome == null ?
                 getTestDirectoryForSolr(pluginContext, DEFAULT_HOME) :
-                getTestDirectoryForSolr(pluginContext, solrHome);
+                getTestDirectoryForSolr(pluginContext, sealRunnerHome);
     }
 
     private String getTestDirectoryForSolr(PluginContext pluginContext, String home) {
@@ -136,6 +147,7 @@ public class SolrJPlugin implements Plugin {
 
 
     private SolrTestRunner createSolrContainer() {
+        LOG.info("createSolrContainer");
         return new SolrTestRunner();
     }
 

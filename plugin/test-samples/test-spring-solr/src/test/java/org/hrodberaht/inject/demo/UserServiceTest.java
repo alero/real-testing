@@ -58,7 +58,6 @@ public class UserServiceTest {
             dataSourcePlugin.loadSchema(dataSource, "sql");
 
             SolrJPlugin solrJPlugin = activatePlugin(SolrJPlugin.class)
-                    .solrHome(SolrJPlugin.DEFAULT_HOME)
                     .coreName("collection1");
 
 

@@ -51,7 +51,7 @@ public class TestSolrEmbeddedSimple {
         @Override
         public void register(InjectionRegistryBuilder registryBuilder) {
             activatePlugin(SolrJPlugin.class)
-                    .solrHome("target/solr2")
+                    .solrRunnerHome("target/solr2")
                     .coreName("collection2");
         }
     }
