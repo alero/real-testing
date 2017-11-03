@@ -64,15 +64,15 @@ All the Injection Container plugins support a "with" method that can take in typ
 * Spring Light, as spring contains alot of variations and code the Glue version was created. But this makes it a bit slow!
 
 ##Resources support
-[ContextResourcePlugin](plugin/inject-core-plugin/README.md)
+[ContextResourcePlugin](plugin/inject-plugin-core/README.md)
 * Create managed JNDI objects
 
-[DataSourcePlugin](plugin/inject-core-plugin/README.md)
+[DataSourcePlugin](plugin/inject-plugin-core/README.md)
 * Create managed datasources for an in-memory database (hsql)
 * Loading SQL schema files to create tables(*.sql)
 * Loading SQL data files to insert base data for all tests to share (*.sql)
 
-[DataSourcePlugin](plugin/inject-core-plugin/README.md)
+[LiquibasePlugin](plugin/inject-liquibase-plugin/README.md)
 * loading luquibase schema manager against registered datasources from datasource plugin
 * Snapshot / restore function to get good throughput on large test suites (thousands of tests)
 
