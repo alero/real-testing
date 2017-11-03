@@ -17,11 +17,11 @@ It is built to be extendable so that the developers can use the frameworks they 
 The main focus has been on CDI, Guice and Spring supported development.
 
 
-##JUnit support
+## JUnit support
 The support for JUnit has been extended to include JUnit5 (jupiter) as well as JUnit4
 JUnit 5.0.1 and JUnit 4.12 are used to verify the compatibility
 
-##Plugins
+## Plugins
 Plugins have three different scenarions they support to make it easy to adapt to underlying JUnit framework.
 
 **Lifecycle management**
@@ -34,12 +34,12 @@ The lifecycles are explained in order of shortest living "life", shortest first
 **Runner Plugin** 
 The runner plugin is what connects the plugin to the before/after of the lifecycle management
   
-#JUnit config annotation
+## JUnit config annotation
 The config is a design style of this JUnitRunner and enforces a good packaging of the test variations, these configurations are then used as the base for alot of Plugins as the default lifecycle
 All configurations for tests are managed by the runner (JUnit4Runner & JUnit5Runner) and can be safely reused between tests.
 
 
-##IoC Container Extension or Injection support
+## IoC Container Extension or Injection support
 The difference between Extension & Injection is that an extension uses the actual underlying framework as a extension to perform its IoC while the Injected means that the hrodberaht inject container reacts to the annotations in the code.
 The Extended way of doing this is always the recommended way, but sometimes this is not good enough. (TODO: add samples in the details of these plugins README.md files)
 
@@ -93,7 +93,7 @@ All the Injection Container plugins support a "with" method that can take in typ
 * start/stop of the underlying server will honor the selected lifecycle, recommended usage is test_config lifecycle
 
 
-##Planded Resources support to come in a future not so far away
+## Planded Resource Plugins, to come in a future not so far away
 * ActiveMQ
 * Kafka
 * Zookeeper
