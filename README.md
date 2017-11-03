@@ -16,6 +16,11 @@ It was built to be used in tests and to be as fast as possible.
 It is built to be extendable so that the developers can use the frameworks they are used to:
 The main focus has been on CDI, Guice and Spring supported development.
 
+
+##JUnit support
+The support for JUnit has been extended to include JUnit5 (jupiter) as well as JUnit4
+JUnit 5.0.1 and JUnit 4.12 are used to verify the compatibility
+
 ##Plugins
 Plugins have three different scenarions they support to make it easy to adapt to underlying JUnit framework.
 
@@ -29,6 +34,10 @@ The lifecycles are explained in order of shortest living "life", shortest first
 **Runner Plugin** 
 The runner plugin is what connects the plugin to the before/after of the lifecycle management
   
+#JUnit config annotation
+The config is a design style of this JUnitRunner and enforces a good packaging of the test variations, these configurations are then used as the base for alot of Plugins as the default lifecycle
+All configurations for tests are managed by the runner (JUnit4Runner & JUnit5Runner) and can be safely reused between tests.
+
 
 ##IoC Container Extension or Injection support
 The difference between Extension & Injection is that an extension uses the actual underlying framework as a extension to perform its IoC while the Injected means that the hrodberaht inject container reacts to the annotations in the code.
@@ -67,11 +76,22 @@ All the Injection Container plugins support a "with" method that can take in typ
 * loading luquibase schema manager against registered datasources from datasource plugin
 * Snapshot / restore function to get good throughput on large test suites (thousands of tests)
 
-[DJPAPlugin](plugin/inject-jpa-plugin/README.md) 
+[JPAPlugin](plugin/inject-jpa-plugin/README.md) 
 * Create Entity Managers (manages the lifecycle of JPA creation, easy to combine with Datasource)
 * Utility to help with "flush/clear cache" testing problems to actaully ensure testing is done on the underlying SQL store
  
 
-**Single config placeholder**
-All configurations for tests are centralized into a "application type config" and can be safely reused between tests.
+[SolrPlugin](plugin/inject-solr-plugin/README.md) 
+* Creates a SolrJPlugin that starts and collects a solr server with cores against the Lifecycle management
+* Uses a test "safe" copy of the solr config files depending on the lifecycle selected, starting cores against them
+
+[JerseyPlugin](plugin/inject-jersey-plugin/README.md)
+* Creates a Jersey inmemory connectd test base and connects it to the Lifecycle management
+* start/stop of the underlying server will honor the selected lifecycle, recommended usage is test_config lifecycle
+
+
+##Planded Resources support to come in a future not so far away
+* ActiveMQ
+* Kafka
+* Zookeeper
 
