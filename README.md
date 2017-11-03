@@ -71,6 +71,9 @@ All the Injection Container plugins support a "with" method that can take in typ
 * Create managed datasources for an in-memory database (hsql)
 * Loading SQL schema files to create tables(*.sql)
 * Loading SQL data files to insert base data for all tests to share (*.sql)
+* Supports multithreading tests (reuses connection to enabled shared state within a test)
+* Supports transaction isolaiton on the test level
+* Sopports loading a "base" of data to share for all tests (uses into the IoC container with extensions)
 
 [LiquibasePlugin](plugin/inject-liquibase-plugin/README.md)
 * loading luquibase schema manager against registered datasources from datasource plugin
