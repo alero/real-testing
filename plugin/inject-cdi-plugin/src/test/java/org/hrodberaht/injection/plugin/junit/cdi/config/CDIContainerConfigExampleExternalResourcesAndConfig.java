@@ -36,6 +36,7 @@ public class CDIContainerConfigExampleExternalResourcesAndConfig extends Contain
     public void register(InjectionRegistryBuilder injectionRegistryBuilder) {
         activatePlugin(CDIInjectionPlugin.class);
         JpaPlugin jpaPlugin = activatePlugin(JpaPlugin.class);
+        jpaPlugin.usingJavaContext();
         new ExampleModuleInternal(injectionRegistryBuilder, jpaPlugin);
         new ExampleModuleExternal(injectionRegistryBuilder, jpaPlugin);
 
