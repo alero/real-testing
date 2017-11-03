@@ -63,7 +63,7 @@ All the Injection Container plugins support a "with" method that can take in typ
 **Planned Container Implemented support**
 * Spring Light, as spring contains alot of variations and code the Glue version was created. But this makes it a bit slow!
 
-##Resources support
+## Resources support
 [ContextResourcePlugin](plugin/inject-plugin-core/README.md)
 * Create managed JNDI objects
 
