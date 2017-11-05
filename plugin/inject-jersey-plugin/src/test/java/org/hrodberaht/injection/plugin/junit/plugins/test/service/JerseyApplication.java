@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.junit.plugins.service;
+package org.hrodberaht.injection.plugin.junit.plugins.test.service;
 
 
 import org.glassfish.jersey.logging.LoggingFeature;

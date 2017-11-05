@@ -1,6 +1,6 @@
-package org.hrodberaht.injection.plugin.junit.plugins.spring;
+package org.hrodberaht.injection.plugin.junit.plugins.test.spring;
 
-import org.hrodberaht.injection.plugin.junit.plugins.service.ConsumerSimple;
+import org.hrodberaht.injection.plugin.junit.plugins.test.service.ConsumerSimple;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
@@ -10,7 +10,7 @@ import javax.jms.ConnectionFactory;
 
 @Configuration
 @EnableJms
-public class ReceiverConfig {
+public class ConsumerSimpleConfig {
 
     @Bean
     public DefaultJmsListenerContainerFactory jmsListenerContainerFactory(ConnectionFactory connectionFactory) {
@@ -24,4 +24,6 @@ public class ReceiverConfig {
     public ConsumerSimple receiver() {
         return new ConsumerSimple();
     }
+
+
 }

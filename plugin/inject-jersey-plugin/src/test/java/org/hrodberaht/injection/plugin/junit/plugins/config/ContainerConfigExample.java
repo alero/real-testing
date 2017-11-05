@@ -20,8 +20,8 @@ import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.plugins.JerseyPlugin;
-import org.hrodberaht.injection.plugin.junit.plugins.service.JerseyApplication;
-import org.hrodberaht.injection.plugin.junit.plugins.service.ObjectMapperResolver;
+import org.hrodberaht.injection.plugin.junit.plugins.test.service.JerseyApplication;
+import org.hrodberaht.injection.plugin.junit.plugins.test.service.ObjectMapperResolver;
 
 public class ContainerConfigExample extends ContainerContextConfigBase {
 

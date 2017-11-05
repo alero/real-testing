@@ -14,13 +14,13 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.junit.plugins.service.config;
+package org.hrodberaht.injection.plugin.junit.plugins.test.service.config;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
-import org.hrodberaht.injection.plugin.junit.plugins.service.AService;
-import org.hrodberaht.injection.plugin.junit.plugins.service.AnInterface;
-import org.hrodberaht.injection.plugin.junit.plugins.service.MoreServices;
+import org.hrodberaht.injection.plugin.junit.plugins.test.service.AService;
+import org.hrodberaht.injection.plugin.junit.plugins.test.service.AnInterface;
+import org.hrodberaht.injection.plugin.junit.plugins.test.service.MoreServices;
 
 public class GuiceModule extends AbstractModule {
     @Override

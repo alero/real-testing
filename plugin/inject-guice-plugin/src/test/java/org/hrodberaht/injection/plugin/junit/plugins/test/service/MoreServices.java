@@ -14,12 +14,7 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.junit.plugins.service;
+package org.hrodberaht.injection.plugin.junit.plugins.test.service;
 
-public interface AnInterface {
-
-    String doSomething();
-
-    MoreServices getService();
-
+public class MoreServices {
 }

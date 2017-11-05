@@ -81,7 +81,12 @@ public class SpringExtensionPlugin implements Plugin {
 
     public SpringExtensionPlugin with(Plugin plugin){
         if(plugin instanceof ResourceProviderSupport) {
-            builder.resourceProviders.addAll(((ResourceProviderSupport)plugin).resources());
+            for(ResourceProvider resourceProvider:((ResourceProviderSupport)plugin).resources()){
+                LOG.info("Adding resource {} - {}", resourceProvider.getName(), resourceProvider.getType());
+                builder.resourceProviders.add(resourceProvider);
+            }
+        }else{
+            LOG.warn("Plugin {} does not implement ResourceProviderSupport to exponse resources", plugin.getClass().getName());
         }
         builder.hasJpaPlugin = hasJpaPLugin(plugin);
         return this;
@@ -137,6 +142,11 @@ public class SpringExtensionPlugin implements Plugin {
                 if(pluginResource.getName() != null) {
                     LOG.info("spring registerSingleton for {} using instance {}", pluginResource.getName(), instance);
                     parentBeanFactory.registerSingleton(pluginResource.getName(), instance);
+                }else if(pluginResource.getType() != null){
+                    LOG.info("spring registerResolvableDependency for {} using instance {}", pluginResource.getType(), instance);
+                    parentBeanFactory.registerResolvableDependency(pluginResource.getType(), instance);
+                }else{
+                    LOG.warn("No name or type was provided for {}", pluginResource);
                 }
             });
         }
@@ -203,12 +213,13 @@ public class SpringExtensionPlugin implements Plugin {
         }
 
         @Override
-        public Object extendedInjection(Object service) {
-            super.extendedInjection(service);
+        public Object extendedInjection(Object instance) {
+            super.extendedInjection(instance);
             if(springExtensionPlugin.springRunner.springBeanInjector != null) {
-                springExtensionPlugin.springRunner.springBeanInjector.inject(service, springExtensionPlugin.injectionRegister.getContainer());
+
+                springExtensionPlugin.springRunner.springBeanInjector.inject(instance, springExtensionPlugin.injectionRegister.getContainer());
             }
-            return service;
+            return instance;
         }
 
         @Override

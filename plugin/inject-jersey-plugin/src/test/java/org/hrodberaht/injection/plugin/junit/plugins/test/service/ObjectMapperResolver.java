@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.junit.plugins.service;
+package org.hrodberaht.injection.plugin.junit.plugins.test.service;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -14,7 +14,34 @@
  * limitations under the License.
  */
 
-package org.hrodberaht.injection.plugin.junit.plugins.service;
+package org.hrodberaht.injection.plugin.junit.plugins.test.service;
 
-public class MoreServices {
+import javax.inject.Inject;
+
+public class AService implements AnInterface {
+
+    String something = "empty";
+
+    private final MoreServices moreServices;
+
+    @Inject
+    public AService(MoreServices moreServices) {
+        this.moreServices = moreServices;
+        init();
+    }
+
+
+    public void init() {
+        something = "inited";
+    }
+
+    @Override
+    public String doSomething() {
+        return something;
+    }
+
+    @Override
+    public MoreServices getService() {
+        return moreServices;
+    }
 }
