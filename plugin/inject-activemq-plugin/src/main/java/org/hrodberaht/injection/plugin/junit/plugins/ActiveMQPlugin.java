@@ -21,6 +21,7 @@ public class ActiveMQPlugin implements Plugin, ResourceProviderSupport {
     private PluginLifeCycledResource<EmbeddedActiveMQBroker> pluginLifeCycledResource = new PluginLifeCycledResource<>(EmbeddedActiveMQBroker.class);
 
     private EmbeddedActiveMQBroker embedded;
+    private String name = null;
     private LifeCycle lifeCycle = LifeCycle.TEST_SUITE;
 
     @Override
@@ -36,6 +37,16 @@ public class ActiveMQPlugin implements Plugin, ResourceProviderSupport {
         return this;
     }
 
+    /**
+     * To be able to give the resource a name
+     * @param name of the Resource that is exposed for type ConnectionFactory
+     * @return builder
+     */
+    public ActiveMQPlugin name(final String name){
+        this.name = name;
+        return this;
+    }
+
     @RunnerPluginBeforeContainerCreation
     public void beforeContainer(final PluginContext pluginContext){
         embedded = pluginLifeCycledResource.create(getLifeCycle(), pluginContext, () -> {
@@ -45,7 +56,6 @@ public class ActiveMQPlugin implements Plugin, ResourceProviderSupport {
             }
             return embeddedActiveMQBroker;
         });
-
     }
 
     @RunnerPluginBeforeClassTest
@@ -86,7 +96,7 @@ public class ActiveMQPlugin implements Plugin, ResourceProviderSupport {
             throw new IllegalArgumentException("Lifecycle can not be TEST or TEST_CLASS when connecting resources, this is because the MQ has to be started before the Resource is used");
         }
         Set<ResourceProvider> resourceProviders = new HashSet<>();
-        resourceProviders.add(new ResourceProvider(null, ConnectionFactory.class, () -> embedded.createConnectionFactory()));
+        resourceProviders.add(new ResourceProvider(name, ConnectionFactory.class, () -> embedded.createConnectionFactory()));
         return resourceProviders;
     }
 }

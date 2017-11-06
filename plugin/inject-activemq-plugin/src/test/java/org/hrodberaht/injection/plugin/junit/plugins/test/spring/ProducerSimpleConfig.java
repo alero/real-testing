@@ -2,6 +2,7 @@ package org.hrodberaht.injection.plugin.junit.plugins.test.spring;
 
 import org.hrodberaht.injection.plugin.junit.plugins.test.service.ConsumerSimple;
 import org.hrodberaht.injection.plugin.junit.plugins.test.service.ProducerSimple;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.jms.connection.CachingConnectionFactory;
 import org.springframework.jms.core.JmsTemplate;
@@ -16,7 +17,8 @@ public class ProducerSimpleConfig {
     }
 
     @Bean
-    public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {
+    public JmsTemplate jmsTemplate(
+            @Qualifier("myFactory") ConnectionFactory connectionFactory) {
         return new JmsTemplate(cachingConnectionFactory(connectionFactory));
     }
 

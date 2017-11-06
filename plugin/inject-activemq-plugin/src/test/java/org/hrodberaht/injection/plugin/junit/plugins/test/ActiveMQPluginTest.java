@@ -54,7 +54,8 @@ public class ActiveMQPluginTest {
     public static class InnerConfig extends ContainerContextConfigBase {
         @Override
         public void register(InjectionRegistryBuilder registryBuilder) {
-            ActiveMQPlugin activatePlugin = activatePlugin(ActiveMQPlugin.class);
+            ActiveMQPlugin activatePlugin = activatePlugin(ActiveMQPlugin.class)
+                    .name("myFactory");
 
             activatePlugin(SpringExtensionPlugin.class)
                     .with(activatePlugin)

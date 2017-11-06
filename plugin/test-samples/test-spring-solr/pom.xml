@@ -7,14 +7,18 @@
     <parent>
         <groupId>org.hrodberaht.inject.plugin</groupId>
         <artifactId>test-samples</artifactId>
-        <version>3.0.0-beta1</version>
+        <version>3.0.0-beta2</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
     <artifactId>test-spring-solr</artifactId>
-    <version>3.0.0-beta1</version>
+    <version>3.0.0-beta2</version>
 
     <dependencies>
+        <dependency>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
+        </dependency>
         <dependency>
             <groupId>org.hrodberaht.inject.plugin</groupId>
             <artifactId>junittest-service-solr</artifactId>

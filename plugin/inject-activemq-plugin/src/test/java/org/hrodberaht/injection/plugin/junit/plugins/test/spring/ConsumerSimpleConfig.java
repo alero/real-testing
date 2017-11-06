@@ -1,6 +1,7 @@
 package org.hrodberaht.injection.plugin.junit.plugins.test.spring;
 
 import org.hrodberaht.injection.plugin.junit.plugins.test.service.ConsumerSimple;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
@@ -13,7 +14,8 @@ import javax.jms.ConnectionFactory;
 public class ConsumerSimpleConfig {
 
     @Bean
-    public DefaultJmsListenerContainerFactory jmsListenerContainerFactory(ConnectionFactory connectionFactory) {
+    public DefaultJmsListenerContainerFactory jmsListenerContainerFactory(
+            @Qualifier("myFactory") ConnectionFactory connectionFactory) {
         DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
         factory.setConnectionFactory(connectionFactory);
         factory.setConcurrency("3-10");

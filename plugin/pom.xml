@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.hrodberaht.inject</groupId>
         <artifactId>injection-parent</artifactId>
-        <version>3.0.0-beta1</version>
+        <version>3.0.0-beta2</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
     <artifactId>plugin</artifactId>
-    <version>3.0.0-beta1</version>
+    <version>3.0.0-beta2</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -40,6 +40,7 @@
         <module>inject-jpa-plugin</module>
         <module>inject-activemq-plugin</module>
         <module>inject-artemismq-plugin</module>
+        <module>inject-kafka-plugin</module>
         <module>inject-guice-plugin</module>
         <module>inject-liquibase-plugin</module>
         <module>inject-spring-plugin</module>
