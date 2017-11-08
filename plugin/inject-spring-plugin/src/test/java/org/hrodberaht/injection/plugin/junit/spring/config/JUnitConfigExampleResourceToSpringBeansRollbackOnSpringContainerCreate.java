@@ -33,7 +33,7 @@ public class JUnitConfigExampleResourceToSpringBeansRollbackOnSpringContainerCre
         DataSource dataSource = dataSourcePlugin.createDataSource("MyDataSource3");
 
         dataSourcePlugin.loadSchema(dataSource, "sql");
-        dataSourcePlugin.addBeforeTestSuite((loader) -> loader.get(LoadingTheTestWithDataAgain.class).run());
+        dataSourcePlugin.addBeforeTestSuite(LoadingTheTestWithDataAgain.class);
 
         activatePlugin(SpringExtensionPlugin.class)
                 .with(dataSourcePlugin)

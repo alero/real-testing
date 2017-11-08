@@ -37,7 +37,7 @@ public class JUnitConfigExampleResourcesAsJndiJavaObjectsToSpring extends Contai
         DataSource dataSource = dataSourcePlugin.createDataSource(dataSourceName);
 
         dataSourcePlugin.loadSchema(dataSource, "sql");
-        dataSourcePlugin.addBeforeTestSuite((loader) -> loader.get(LoadingTheTestWithData.class).run());
+        dataSourcePlugin.addBeforeTestSuite(LoadingTheTestWithData.class);
 
         activatePlugin(SpringExtensionPlugin.class)
                 .with(dataSourcePlugin)

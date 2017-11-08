@@ -48,9 +48,9 @@ import java.util.concurrent.ConcurrentHashMap;
 public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
 
     private static final Logger LOG = LoggerFactory.getLogger(DataSourcePlugin.class);
-    private static final Map<Class, ResourceRunner> resourceRunnerState = new ConcurrentHashMap<>();
+    private static final Map<Class, ResourceLoaderRunner> resourceRunnerState = new ConcurrentHashMap<>();
 
-    private final List<ResourceRunner> beforeSuite = new ArrayList<>();
+    private final List<Class<? extends ResourceLoaderRunner>> beforeSuite = new ArrayList<>();
 
     private TransactionManager transactionManager;
     private InjectContainer injectContainer;
@@ -93,10 +93,10 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
     /**
      * This is useful if there is a need to run any code before the actual tests are executed, any results from code executed like this is commited to the underlying datasources and entitymanagers
      *
-     * @param runnable the runnable to be added to run before tests start, comparable to @BeforeClass from JUnit, but with a but reusability over testsuites not onlt testclasses
+     * @param loaderRunnerClass the runnable to be added to run before tests start, comparable to @BeforeClass from JUnit, but with a but reusability over testsuites not onlt testclasses
      */
-    public DataSourcePlugin addBeforeTestSuite(ResourceRunner runnable) {
-        beforeSuite.add(runnable);
+    public DataSourcePlugin addBeforeTestSuite(Class<? extends ResourceLoaderRunner> loaderRunnerClass) {
+        beforeSuite.add(loaderRunnerClass);
         return this;
     }
 
@@ -226,7 +226,7 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
             txM.beginTransaction();
             beforeSuite.forEach(resourceRunner -> {
                 ResourceLoader resourceLoader = new ResourceLoader(resourceRunner);
-                resourceRunner.run(resourceLoader);
+                resourceLoader.get().run();
             });
             txM.endTransactionCommit();
         }
@@ -250,17 +250,18 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
 
 
     public class ResourceLoader {
-        private final ResourceRunner resourceRunner;
+        private final Class<? extends ResourceLoaderRunner> aClass;
 
-        ResourceLoader(ResourceRunner resourceRunner) {
-            this.resourceRunner = resourceRunner;
+        ResourceLoader(Class<? extends ResourceLoaderRunner> aClass) {
+            this.aClass = aClass;
         }
 
-        public ResourceLoaderRunner get(Class<? extends ResourceLoaderRunner> aClass) {
-            ResourceRunner resourceRunnerHolder = resourceRunnerState.get(aClass);
+        public ResourceLoaderRunner get() {
+            ResourceLoaderRunner resourceRunnerHolder = resourceRunnerState.get(aClass);
             if (resourceRunnerHolder == null) {
-                resourceRunnerState.put(aClass, resourceRunner);
-                return injectContainer.get(aClass);
+                ResourceLoaderRunner resourceLoaderRunner = injectContainer.get(aClass);
+                resourceRunnerState.put(aClass, resourceLoaderRunner);
+                return resourceLoaderRunner;
             }
             return () -> {};
         }
@@ -271,8 +272,5 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
     }
 
 
-    public interface ResourceRunner {
-        void run(ResourceLoader resourceLoader);
-    }
 
 }

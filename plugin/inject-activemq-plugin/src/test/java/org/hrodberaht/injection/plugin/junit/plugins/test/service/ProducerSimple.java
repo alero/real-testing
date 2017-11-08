@@ -14,7 +14,6 @@ public class ProducerSimple {
     private final JmsTemplate jmsTemplate;
     private final ConsumerSimple consumerSimple;
 
-
     @Inject
     public ProducerSimple(JmsTemplate jmsTemplate, ConsumerSimple consumerSimple) {
         this.jmsTemplate = jmsTemplate;
