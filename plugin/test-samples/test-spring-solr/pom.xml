@@ -7,12 +7,12 @@
     <parent>
         <groupId>org.hrodberaht.inject.plugin</groupId>
         <artifactId>test-samples</artifactId>
-        <version>3.0.0-beta3</version>
+        <version>3.0.0-beta4</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
     <artifactId>test-spring-solr</artifactId>
-    <version>3.0.0-beta3</version>
+    <version>3.0.0-beta4</version>
 
     <dependencies>
         <dependency>

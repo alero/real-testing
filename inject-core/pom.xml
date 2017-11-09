@@ -19,7 +19,7 @@
     <modelVersion>4.0.0</modelVersion>
 
 
-    <version>3.0.0-beta3</version>
+    <version>3.0.0-beta4</version>
     <groupId>org.hrodberaht.inject.core</groupId>
 
     <artifactId>inject-core</artifactId>
