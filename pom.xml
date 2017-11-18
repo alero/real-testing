@@ -20,7 +20,7 @@
 
     <groupId>org.hrodberaht.inject</groupId>
     <artifactId>injection-parent</artifactId>
-    <version>3.0.0-beta4</version>
+    <version>3.0.0-beta5</version>
     <packaging>pom</packaging>
     <name>Injection Parent POM</name>
     <description>A gathering of projects for simpler java development</description>
@@ -83,18 +83,21 @@
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-api</artifactId>
                 <version>5.0.1</version>
+                <scope>provided</scope>
                 <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>org.junit.jupiter</groupId>
                 <artifactId>junit-jupiter-engine</artifactId>
                 <version>5.0.1</version>
+                <scope>provided</scope>
                 <optional>true</optional>
             </dependency>
             <dependency>
                 <groupId>org.junit.platform</groupId>
                 <artifactId>junit-platform-runner</artifactId>
                 <version>1.0.1</version>
+                <scope>provided</scope>
                 <optional>true</optional>
             </dependency>
             <dependency>

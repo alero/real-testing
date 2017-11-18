@@ -7,12 +7,12 @@
     <parent>
         <groupId>org.hrodberaht.inject.plugin</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.0.0-beta4</version>
+        <version>3.0.0-beta5</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
     <artifactId>inject-activemq-plugin</artifactId>
-    <version>3.0.0-beta4</version>
+    <version>3.0.0-beta5</version>
     <properties>
         <activemq-junit-version>5.15.2</activemq-junit-version>
         <activemq-version>5.15.2</activemq-version>
@@ -67,9 +67,13 @@
         </dependency>
 
         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <scope>provided</scope>
         </dependency>
 
 

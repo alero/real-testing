@@ -179,6 +179,7 @@ public class JerseyPlugin implements Plugin {
 
     @RunnerPluginBeforeClassTest
     protected void beforeTestClass(PluginContext pluginContext) {
+        jerseyTestRunner = pluginLifeCycledResource.create(lifeCycle, pluginContext, this::createJerseyContainer);
         if (lifeCycle == LifeCycle.TEST_CLASS || lifeCycle == LifeCycle.TEST_CONFIG) {
             startJersey();
         }
@@ -193,9 +194,8 @@ public class JerseyPlugin implements Plugin {
 
     @RunnerPluginBeforeTest
     protected void beforeTest(PluginContext pluginContext) {
+        jerseyTestRunner = pluginLifeCycledResource.create(lifeCycle, pluginContext, this::createJerseyContainer);
         if (lifeCycle == LifeCycle.TEST) {
-            stopJersey();
-            jerseyTestRunner = pluginLifeCycledResource.create(lifeCycle, pluginContext, this::createJerseyContainer);
             startJersey();
         }
     }

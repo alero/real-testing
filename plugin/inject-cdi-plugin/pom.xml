@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.hrodberaht.inject.plugin</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.0.0-beta4</version>
+        <version>3.0.0-beta5</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
     <artifactId>inject-cdi-plugin</artifactId>
-    <version>3.0.0-beta4</version>
+    <version>3.0.0-beta5</version>
 
     <build>
         <testResources>
@@ -59,6 +59,11 @@
         </dependency>
 
         <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
         </dependency>
@@ -71,6 +76,7 @@
         <dependency>
             <groupId>org.hsqldb</groupId>
             <artifactId>hsqldb</artifactId>
+            <scope>test</scope>
         </dependency>
 
         <dependency>

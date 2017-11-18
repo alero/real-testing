@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.hrodberaht.inject</groupId>
         <artifactId>injection-parent</artifactId>
-        <version>3.0.0-beta4</version>
+        <version>3.0.0-beta5</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
     <artifactId>plugin</artifactId>
-    <version>3.0.0-beta4</version>
+    <version>3.0.0-beta5</version>
     <packaging>pom</packaging>
 
     <properties>

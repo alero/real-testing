@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.hrodberaht.inject.plugin</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.0.0-beta4</version>
+        <version>3.0.0-beta5</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
     <artifactId>inject-solr-plugin</artifactId>
-    <version>3.0.0-beta4</version>
+    <version>3.0.0-beta5</version>
 
     <dependencies>
         <dependency>
@@ -46,7 +46,6 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
@@ -63,5 +62,11 @@
             <artifactId>junit-platform-runner</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.hrodberaht.inject.plugin</groupId>
         <artifactId>test-samples</artifactId>
-        <version>3.0.0-beta4</version>
+        <version>3.0.0-beta5</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
     <artifactId>test-spring-jpa</artifactId>
-    <version>3.0.0-beta4</version>
+    <version>3.0.0-beta5</version>
 
     <properties>
         <spring.version>5.0.0.RELEASE</spring.version>
@@ -84,6 +84,11 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>

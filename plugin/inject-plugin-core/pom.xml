@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.hrodberaht.inject.plugin</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.0.0-beta4</version>
+        <version>3.0.0-beta5</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
     <artifactId>inject-plugin-core</artifactId>
-    <version>3.0.0-beta4</version>
+    <version>3.0.0-beta5</version>
 
 
     <dependencies>
@@ -36,6 +36,10 @@
             <groupId>org.hrodberaht.inject.core</groupId>
             <artifactId>inject-core</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
