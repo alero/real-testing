@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
@@ -50,6 +51,7 @@ public class SpringBeanWithSpringBean {
         return "SpringBeanName";
     }
 
+    @Transactional(readOnly = true)
     public String getName(String name) {
         try {
             return jdbcTemplate.queryForObject("select username from theUser where username=?", String.class, name);
@@ -58,6 +60,7 @@ public class SpringBeanWithSpringBean {
         }
     }
 
+    @Transactional(readOnly = true)
     public Integer getLoginCount(String name) {
         try {
             return jdbcTemplate.queryForObject("select loginTries from theUser where username=?", Integer.class, name);
@@ -74,11 +77,12 @@ public class SpringBeanWithSpringBean {
             return false;
         }
     }
-
+    @Transactional
     public void createUser(String username, String password) {
         jdbcTemplate.update("insert into theUser (username, password, loginTries) values (?, ?, ?)", username, password, 0);
     }
 
+    @Transactional
     public boolean login(String username, String password) {
         jdbcTemplate.update("update theUser set loginTries = loginTries + 1");
         if(checkPassword(username, password)){

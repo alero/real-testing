@@ -19,6 +19,7 @@ package org.hrodberaht.injection.plugin.junit.spring;
 
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
+import org.hrodberaht.injection.plugin.junit.SpringJUnit4Runner;
 import org.hrodberaht.injection.plugin.junit.spring.beans.incubator.ContainerLifeCycleTestUtil;
 import org.hrodberaht.injection.plugin.junit.spring.config.JUnitConfigExample;
 import org.hrodberaht.injection.plugin.junit.spring.testservices.simple.AnyServiceDoSomethingImpl;

@@ -18,6 +18,7 @@ package org.hrodberaht.injection.plugin.junit.plugins;
 
 import org.hrodberaht.injection.core.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.core.register.InjectionRegister;
+import org.hrodberaht.injection.core.register.RegistrationModuleAnnotation;
 import org.hrodberaht.injection.core.spi.ContainerConfigBuilder;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.api.PluginContext;
@@ -216,7 +217,6 @@ public class SpringExtensionPlugin implements Plugin {
         public Object extendedInjection(Object instance) {
             super.extendedInjection(instance);
             if(springExtensionPlugin.springRunner.springBeanInjector != null) {
-
                 springExtensionPlugin.springRunner.springBeanInjector.inject(instance, springExtensionPlugin.injectionRegister.getContainer());
             }
             return instance;
@@ -237,6 +237,12 @@ public class SpringExtensionPlugin implements Plugin {
     protected void beforeContainerCreation(PluginContext pluginContext) {
         LOG.info("beforeContainerCreation for {}", this);
         springRunner = pluginLifeCycledResource.create(lifeCycle, pluginContext, () -> new SpringRunner(this));
+        injectionRegister.register(new RegistrationModuleAnnotation() {
+            @Override
+            public void registrations() {
+                register(ApplicationContext.class).withFactoryInstance(springRunner.context);
+            }
+        });
     }
 
     @InjectionPluginInjectionRegister

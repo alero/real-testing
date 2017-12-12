@@ -18,6 +18,7 @@ package org.hrodberaht.injection.plugin.junit.spring.test3;
 
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
+import org.hrodberaht.injection.plugin.junit.SpringJUnit4Runner;
 import org.hrodberaht.injection.plugin.junit.spring.config.JUnitConfigExampleResourceToSpringBeans;
 import org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanWithContext;
 import org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanWithSpringBean;
@@ -25,11 +26,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.Assert.assertNotNull;
 
 @ContainerContext(JUnitConfigExampleResourceToSpringBeans.class)
-@RunWith(JUnit4Runner.class)
+@RunWith(SpringJUnit4Runner.class)
+@Transactional
 public class TestJavaConfigOnlyInjectionQualifier2 {
 
     @Autowired
