@@ -16,6 +16,8 @@
 
 package org.hrodberaht.injection.plugin.junit.jersey;
 
+import org.glassfish.jersey.client.JerseyClient;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
@@ -31,7 +33,7 @@ public class JerseyClientRestassuredRequest {
     private String jsonStringBody;
     private Object entityObject;
 
-    private Client client;
+    private JerseyClient client;
     private String uri;
     private JerseyClientRestassured jerseyClientRestassured;
 
@@ -40,7 +42,7 @@ public class JerseyClientRestassuredRequest {
     private Mode mode = Mode.PREPARE;
     private Integer expectedStatusCode = null;
 
-    JerseyClientRestassuredRequest(Client client, String uri) {
+    JerseyClientRestassuredRequest(JerseyClient client, String uri) {
         this.client = client;
         this.uri = uri;
     }

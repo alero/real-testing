@@ -45,8 +45,8 @@ class JerseyClientRestassured {
     private HttpMethod httpMethod;
     private Response response;
 
-    JerseyClientRestassured(Client client, String uri, String path, HttpMethod httpMethod) {
-        this.jClient = (JerseyClient) client;
+    JerseyClientRestassured(JerseyClient client, String uri, String path, HttpMethod httpMethod) {
+        this.jClient =  client;
         this.jClient = this.jClient.property(LoggingFeature.LOGGING_FEATURE_VERBOSITY_CLIENT, LoggingFeature.Verbosity.PAYLOAD_ANY);
         this.webTarget = jClient.target(uri).path(path);
         this.httpMethod = httpMethod;

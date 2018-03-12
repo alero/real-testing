@@ -17,16 +17,15 @@
 package org.hrodberaht.injection.plugin.junit.jersey;
 
 import org.glassfish.jersey.client.JerseyClient;
-import org.glassfish.jersey.test.JerseyTest;
 
-public class JerseyTestBuilder {
+public class JerseyBuilder {
 
     private final String url;
-    private final JerseyTest jerseyTest;
+    private final JerseyClient jerseyClient;
 
-    public JerseyTestBuilder(String url, JerseyTest jerseyTest) {
+    public JerseyBuilder(String url, JerseyClient jerseyClient) {
         this.url = url;
-        this.jerseyTest = jerseyTest;
+        this.jerseyClient = jerseyClient;
     }
 
     public String getUrl() {
@@ -34,17 +33,16 @@ public class JerseyTestBuilder {
     }
 
     public JerseyClientRestassuredResponse get(String path) {
-        return new JerseyClientRestassuredRequest((JerseyClient)jerseyTest.client(), url).get(path);
+        return new JerseyClientRestassuredRequest(jerseyClient, url).get(path);
     }
 
     public JerseyClientRestassuredResponse get(String path, Object... values) {
-        return new JerseyClientRestassuredRequest((JerseyClient)jerseyTest.client(), url).get(path, values);
+        return new JerseyClientRestassuredRequest(jerseyClient, url).get(path, values);
     }
 
     public JerseyClientRestassuredRequest given() {
-        return new JerseyClientRestassuredRequest((JerseyClient)jerseyTest.client(), url);
+        return new JerseyClientRestassuredRequest(jerseyClient, url);
     }
-
 
 
 }
