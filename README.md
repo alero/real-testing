@@ -16,6 +16,8 @@ It was built to be used in tests and to be as fast as possible.
 It is built to be extendable so that the developers can use the frameworks they are used to:
 The main focus has been on CDI, Guice and Spring supported development.
 
+## CI integration (Travis)
+[Travis CI for injection](https://travis-ci.org/alero/injection)
 
 ## JUnit support
 The support for JUnit has been extended to include JUnit5 (jupiter) as well as JUnit4
@@ -97,4 +99,12 @@ All the Injection Container plugins support a "with" method that can take in typ
 * ActiveMQ
 * Kafka
 * Zookeeper
+
+## Planned development for lifecycle management
+* Extend with more fine-grained control using JUnit5 as it has a lot more pre/post extensions built in.
+- Pre/Post test (method)
+- Pre/Post test class 
+- Pre/Post config class
+- Pre/Post test suite (If a suite is used)
+- Pre/Post test runner (the complete execution of all tests)
 
