@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.hrodberaht.inject.plugin</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.0.0-beta7</version>
+        <version>3.0.0-beta9</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
     <artifactId>inject-jpa-plugin</artifactId>
-    <version>3.0.0-beta7</version>
+    <version>3.0.0-beta9</version>
 
     <dependencies>
         <dependency>

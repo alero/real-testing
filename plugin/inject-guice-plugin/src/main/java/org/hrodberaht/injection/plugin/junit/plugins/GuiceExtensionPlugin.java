@@ -16,13 +16,11 @@
 
 package org.hrodberaht.injection.plugin.junit.plugins;
 
-import com.google.inject.Binder;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.google.inject.Module;
 import com.google.inject.name.Names;
-import javafx.scene.effect.MotionBlurBuilder;
 import org.hrodberaht.injection.core.internal.InjectionKey;
 import org.hrodberaht.injection.core.internal.annotation.DefaultInjectionPointFinder;
 import org.hrodberaht.injection.core.internal.annotation.InjectionFinder;
@@ -44,7 +42,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class GuiceExtensionPlugin implements Plugin {
     private static final Logger LOG = LoggerFactory.getLogger(GuiceExtensionPlugin.class);
@@ -52,11 +52,17 @@ public class GuiceExtensionPlugin implements Plugin {
     private List<Module> guiceModules = new ArrayList<>();
     private Set<ResourceProvider> resourceProviders = new HashSet<>();
     private PluginLifeCycledResource<Injector> pluginLifeCycledResource = new PluginLifeCycledResource<>(Injector.class);
-    private LifeCycle lifeCycle = LifeCycle.TEST_CONFIG;
+    private final LifeCycle lifeCycle;
 
-    public GuiceExtensionPlugin lifeCycle(LifeCycle lifeCycle){
+    private Map<Class, Injector> loadedModules = new ConcurrentHashMap<>();
+
+
+    public GuiceExtensionPlugin() {
+        lifeCycle = LifeCycle.TEST_CLASS;
+    }
+
+    public GuiceExtensionPlugin(LifeCycle lifeCycle) {
         this.lifeCycle = lifeCycle;
-        return this;
     }
 
     @InjectionPluginInjectionRegister
@@ -103,12 +109,16 @@ public class GuiceExtensionPlugin implements Plugin {
     @RunnerPluginBeforeContainerCreation
     protected void beforeContainerCreation(PluginContext pluginContext) {
         LOG.info("beforeContainerCreation for {}", this);
-        injector = pluginLifeCycledResource.create(lifeCycle, pluginContext, () -> createInjector(guiceModules));
+        injector = pluginLifeCycledResource.create(lifeCycle, pluginContext, () -> createInjector(pluginContext, guiceModules));
+    }
+
+    public Injector getInjector() {
+        return injector;
     }
 
     @Override
     public LifeCycle getLifeCycle() {
-        return LifeCycle.TEST_SUITE;
+        return lifeCycle;
     }
 
 
@@ -117,18 +127,31 @@ public class GuiceExtensionPlugin implements Plugin {
         return this;
     }
 
-    private Injector createInjector(List<Module> modules) {
-        if(!resourceProviders.isEmpty()) {
-            Module module = binder -> resourceProviders.forEach(resourceProvider -> {
-                if (resourceProvider.getName() == null) {
-                    binder.bind(resourceProvider.getType()).toInstance(resourceProvider.getInstance());
-                } else {
-                    binder.bind(resourceProvider.getType()).annotatedWith(Names.named(resourceProvider.getName())).toInstance(resourceProvider.getInstance());
-                }
-            });
-            modules.add(module);
+    private Injector createInjector(final PluginContext pluginContext, List<Module> modules) {
+        return loadedModules.computeIfAbsent(getKey(pluginContext), aClass -> {
+            if (!resourceProviders.isEmpty()) {
+                Module module = binder -> resourceProviders.forEach(resourceProvider -> {
+                    if (resourceProvider.getName() == null) {
+                        binder.bind(resourceProvider.getType()).toInstance(resourceProvider.getInstance());
+                    } else {
+                        binder.bind(resourceProvider.getType()).annotatedWith(Names.named(resourceProvider.getName())).toInstance(resourceProvider.getInstance());
+                    }
+                });
+                modules.add(module);
+            }
+            return Guice.createInjector(modules);
+        });
+    }
+
+    private Class getKey(PluginContext pluginContext) {
+        if (lifeCycle == LifeCycle.TEST_CONFIG) {
+            return pluginContext.getConfigClass();
+        } else if (lifeCycle == LifeCycle.TEST_CLASS) {
+            return pluginContext.getTestClass();
+        } else if (lifeCycle == LifeCycle.TEST_SUITE) {
+            return GuiceExtensionPlugin.class;
         }
-        return Guice.createInjector(modules);
+        throw new UnsupportedOperationException("LifeCycle is not supported by Plugin : " + lifeCycle);
     }
 
     public GuiceExtensionPlugin guiceModules(List<Module> modules) {

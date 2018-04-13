@@ -20,13 +20,19 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Inject;
 import org.hrodberaht.injection.plugin.junit.plugins.test.service.AService;
 import org.hrodberaht.injection.plugin.junit.plugins.test.service.AnInterface;
+import org.hrodberaht.injection.plugin.junit.plugins.test.service.InstanceInterface;
 import org.hrodberaht.injection.plugin.junit.plugins.test.service.MoreServices;
 
 public class GuiceModule extends AbstractModule {
+
+    private InstanceInterface anInstance = () -> "something";
+
     @Override
     protected void configure() {
         bind(AnInterface.class).to(AService.class).asEagerSingleton();
         bind(MoreServices.class).asEagerSingleton();
+        bind(InstanceInterface.class).toInstance(anInstance);
+
     }
 
     @Inject

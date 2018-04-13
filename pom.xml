@@ -20,7 +20,7 @@
 
     <groupId>org.hrodberaht.inject</groupId>
     <artifactId>injection-parent</artifactId>
-    <version>3.0.0-beta7</version>
+    <version>3.0.0-beta9</version>
     <packaging>pom</packaging>
     <name>Injection Parent POM</name>
     <description>A gathering of projects for simpler java development</description>

@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.hrodberaht.inject</groupId>
         <artifactId>injection-parent</artifactId>
-        <version>3.0.0-beta7</version>
+        <version>3.0.0-beta9</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.extension</groupId>
