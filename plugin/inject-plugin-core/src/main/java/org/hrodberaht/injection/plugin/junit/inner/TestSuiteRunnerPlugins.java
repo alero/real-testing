@@ -19,12 +19,11 @@ package org.hrodberaht.injection.plugin.junit.inner;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class TestSuiteRunnerPlugins extends PluginRunnerBase {
 
 
-    private static final AnnotatedRunnerPlugin annotatedPluginRunner = new AnnotatedRunnerPlugin();
+    private static final AnnotatedRunnerPlugin annotatedPluginRunner = new AnnotatedRunnerPlugin(Plugin.LifeCycle.TEST_SUITE);
 
 
     public TestSuiteRunnerPlugins(Map<Class<? extends Plugin>, Plugin> activePlugins) {

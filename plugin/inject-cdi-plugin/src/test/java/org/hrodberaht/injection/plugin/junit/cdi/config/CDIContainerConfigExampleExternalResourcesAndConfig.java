@@ -16,12 +16,12 @@
 
 package org.hrodberaht.injection.plugin.junit.cdi.config;
 
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.cdi.config.ioc.ExampleModuleExternal;
 import org.hrodberaht.injection.plugin.junit.cdi.config.ioc.ExampleModuleInternal;
 import org.hrodberaht.injection.plugin.junit.plugins.CDIInjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin;
-import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 
 /**
  * Unit Test JUnit (using @Inject)
@@ -35,8 +35,7 @@ public class CDIContainerConfigExampleExternalResourcesAndConfig extends Contain
     @Override
     public void register(InjectionRegistryBuilder injectionRegistryBuilder) {
         activatePlugin(CDIInjectionPlugin.class);
-        JpaPlugin jpaPlugin = activatePlugin(JpaPlugin.class);
-        jpaPlugin.usingJavaContext();
+        JpaPlugin jpaPlugin = activatePlugin(new JpaPlugin.JpaPluginBuilder().usingJavaContext().build());
         new ExampleModuleInternal(injectionRegistryBuilder, jpaPlugin);
         new ExampleModuleExternal(injectionRegistryBuilder, jpaPlugin);
 

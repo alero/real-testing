@@ -41,10 +41,13 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class AnnotatedRunnerPlugin {
+
     private static final Logger LOG = LoggerFactory.getLogger(AnnotatedRunnerPlugin.class);
     private static Map<AnnotationKey, List<Method>> annotationKeyMethodsMap = new ConcurrentHashMap<>();
 
-    private static Set<Class> supporedAnnotations = new HashSet<>(Arrays.asList(
+    private final Plugin.LifeCycle lifeCycle;
+
+    private static Set<Class> supportedAnnotations = new HashSet<>(Arrays.asList(
             RunnerPluginBeforeContainerCreation.class,
             RunnerPluginAfterContainerCreation.class,
             RunnerPluginBeforeClassTest.class,
@@ -54,64 +57,74 @@ public class AnnotatedRunnerPlugin {
     ));
 
     private final Map<Class, Plugin> annotatedPlugin = new ConcurrentHashMap<>();
-    private List<Class> annotatedPluginList = new ArrayList<>();
+
+    public AnnotatedRunnerPlugin(Plugin.LifeCycle lifeCycle) {
+        this.lifeCycle = lifeCycle;
+    }
 
     public static boolean containsRunnerAnnotations(Plugin plugin) {
-        return AnnotatedRunnerBase.containsRunnerAnnotations(plugin, supporedAnnotations);
+        return AnnotatedRunnerBase.containsRunnerAnnotations(plugin, supportedAnnotations);
     }
 
 
     Plugin addPlugin(Plugin plugin) {
         if (annotatedPlugin.get(plugin.getClass()) != null) {
-            LOG.info("reused plugin " + plugin.getClass());
+            LOG.info("reused plugin {}", plugin.getClass());
             return annotatedPlugin.get(plugin.getClass());
         }
-        LOG.info("added plugin " + plugin.getClass());
+        LOG.info("added plugin {} for lifecycle:{}", plugin.getClass(), lifeCycle);
         annotatedPlugin.put(plugin.getClass(), plugin);
-        annotatedPluginList.add(plugin.getClass());
         return plugin;
     }
 
 
-    void findAnnotationAndInvokeMethod(PluginRunnerBase runnerBase, PluginContext pluginContext, Class<Annotation> annotation) {
-        annotatedPluginList.forEach(aClass -> {
-            Plugin plugin = annotatedPlugin.get(aClass);
-            runnerBase.runIfActive(aClass, () -> {
-                AnnotationKey annotationKey = new AnnotationKey(aClass, annotation);
-                List<Method> foundMethods = annotationKeyMethodsMap.computeIfAbsent(annotationKey, annotationKey1 -> {
-                    List<Method> foundMethodsInner = new ArrayList<>();
-                    for (Method method : ReflectionUtils.findMethods(aClass)) {
-                        if (method.getAnnotation(annotation) != null) {
-                            LOG.info("found method {} in class {} with annotation {} ", method.getName(), aClass.getSimpleName(), annotation.getSimpleName());
-                            if (!method.isAccessible()) {
-                                method.setAccessible(true);
-                            }
-                            foundMethodsInner.add(method);
-                        }
-                    }
-                    return foundMethodsInner;
-                });
+    void findAnnotationAndInvokeMethod(Class pluginClass, PluginRunnerBase runnerBase, PluginContext pluginContext, Class<Annotation> annotation) {
+
+        Plugin plugin = annotatedPlugin.get(pluginClass);
+        if (plugin == null) {
+            LOG.info("pluginClass {} was not a runner plugin for lifecycle:{}", pluginClass, lifeCycle);
+            throw new IllegalStateException("The plugin was not a runner, this means the lifecycle has changed from usage and activation : " + pluginClass.getName());
+        }
+        LOG.info("pluginClass {} found a runner plugin for lifecycle:{}", pluginClass, lifeCycle);
+        runnerBase.runIfActive(pluginClass, () -> {
+            AnnotationKey annotationKey = new AnnotationKey(pluginClass, annotation);
+            List<Method> foundMethods = annotationKeyMethodsMap.computeIfAbsent(annotationKey, annotationKey1 ->
+                    findMethodsToCall(pluginClass, annotation)
+            );
 
 
-                foundMethods.forEach(method -> {
-                    try {
-                        if (pluginContext != null && method.getParameterCount() == 1) {
-                            if (method.getParameterTypes()[0].isAssignableFrom(PluginContext.class)) {
-                                method.invoke(plugin, pluginContext);
-                            } else {
-                                throw new InjectRuntimeException("parameter for annotated method (" + method.getName() + ") in class (" + plugin.getClass().getName() + ") must be of type (" + PluginContext.class + ") currently uses (" + method.getParameterTypes()[0] + ")");
-                            }
+            foundMethods.forEach(method -> {
+                try {
+                    if (pluginContext != null && method.getParameterCount() == 1) {
+                        if (method.getParameterTypes()[0].isAssignableFrom(PluginContext.class)) {
+                            LOG.info("calling method {} in class {} with annotation {} ", method.getName(), pluginClass.getSimpleName(), annotation.getSimpleName());
+                            method.invoke(plugin, pluginContext);
                         } else {
-                            method.invoke(plugin);
+                            throw new InjectRuntimeException("parameter for annotated method (" + method.getName() + ") in class (" + plugin.getClass().getName() + ") must be of type (" + PluginContext.class + ") currently uses (" + method.getParameterTypes()[0] + ")");
                         }
-                    } catch (IllegalAccessException | InvocationTargetException e) {
-                        throw new InjectRuntimeException(e);
+                    } else {
+                        method.invoke(plugin);
                     }
-                });
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    throw new InjectRuntimeException(e);
+                }
             });
         });
 
+    }
 
+    private List<Method> findMethodsToCall(Class pluginClass, Class<Annotation> annotation) {
+        List<Method> foundMethodsInner = new ArrayList<>();
+        for (Method method : ReflectionUtils.findMethods(pluginClass)) {
+            if (method.getAnnotation(annotation) != null) {
+                LOG.info("found method {} in class {} with annotation {} ", method.getName(), pluginClass.getSimpleName(), annotation.getSimpleName());
+                if (!method.isAccessible()) {
+                    method.setAccessible(true);
+                }
+                foundMethodsInner.add(method);
+            }
+        }
+        return foundMethodsInner;
     }
 
     private class AnnotationKey {

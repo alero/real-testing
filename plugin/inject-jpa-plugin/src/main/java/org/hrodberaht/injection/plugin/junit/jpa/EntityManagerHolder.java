@@ -35,8 +35,7 @@ public class EntityManagerHolder {
                 if (entityManager != null) {
 
                     entityManager.getTransaction().begin();
-                    // entityManager.close();
-                    LOG.debug("entityManager begin " + entityManager);
+                    LOG.info("entityManager begin {}", entityManager.toString());
                 }
             }
         }
@@ -50,8 +49,7 @@ public class EntityManagerHolder {
 
                     entityManager.getTransaction().rollback();
                     entityManager.clear();
-                    // entityManager.close();
-                    LOG.debug("entityManager rollback " + entityManager);
+                    LOG.info("entityManager rollback {}", entityManager.toString());
                 }
             }
         }

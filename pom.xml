@@ -20,7 +20,7 @@
 
     <groupId>org.hrodberaht.inject</groupId>
     <artifactId>injection-parent</artifactId>
-    <version>3.0.0-beta9</version>
+    <version>3.0.0-RC1</version>
     <packaging>pom</packaging>
     <name>Injection Parent POM</name>
     <description>A gathering of projects for simpler java development</description>
@@ -320,17 +320,26 @@
         </profile>
         <profile>
             <id>release-sign-artifacts-to-sonatype-nexus</id>
+            <properties>
+                <gpg.executable>gpg</gpg.executable>
+                <gpg.passphrase>!B%ver2018</gpg.passphrase>
+            </properties>
             <distributionManagement>
                 <snapshotRepository>
                     <id>ossrh</id>
                     <url>https://oss.sonatype.org/content/repositories/snapshots</url>
                 </snapshotRepository>
+                <repository>
+                    <id>ossrh</id>
+                    <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+                </repository>
             </distributionManagement>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.6.7</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>ossrh</serverId>
@@ -340,17 +349,8 @@
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-release-plugin</artifactId>
-                        <configuration>
-                            <autoVersionSubmodules>true</autoVersionSubmodules>
-                            <useReleaseProfile>false</useReleaseProfile>
-                            <releaseProfiles>release</releaseProfiles>
-                            <goals>deploy</goals>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
+                        <version>1.5</version>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -383,7 +383,7 @@
                                     <goal>jar</goal>
                                 </goals>
                                 <configuration>
-                                    <additionalparam>-Xdoclint:none</additionalparam>
+                                    <doclint>none</doclint>
                                 </configuration>
                             </execution>
                         </executions>

@@ -17,7 +17,6 @@
 package org.hrodberaht.injection.plugin.junit.plugins;
 
 import org.hrodberaht.injection.core.internal.annotation.InjectionFinder;
-import org.hrodberaht.injection.plugin.datasource.embedded.vendors.TestDataSourceWrapper;
 import org.hrodberaht.injection.plugin.junit.api.annotation.ResourcePluginChainableInjectionProvider;
 import org.hrodberaht.injection.plugin.junit.datasource.SimpleDataSourceProxy;
 import org.hrodberaht.injection.plugin.junit.jpa.EntityManagerCreator;
@@ -35,12 +34,39 @@ public class JpaPlugin extends DataSourcePlugin {
     private final EntityManagerHolder entityManagerHolder = new EntityManagerHolder();
     private final EntityManagerInjection entityManagerInjection = new EntityManagerInjection();
 
+    public JpaPlugin() {
+        super();
+    }
+
+    private JpaPlugin(boolean usingJavaContext,
+                      LifeCycle lifeCycle,
+                      CommitMode commitModeContainerLifeCycle) {
+        super(usingJavaContext, lifeCycle, commitModeContainerLifeCycle);
+    }
+
     public EntityManager createEntityManager(DataSource dataSource, String name) {
         try {
             return entityManagerInjection.addPersistenceContext(name, entityManagerCreator.createEntityManager(name));
         }finally {
             SimpleDataSourceProxy testDataSourceWrapper = (SimpleDataSourceProxy)dataSource;
             testDataSourceWrapper.commitDataSource();
+        }
+    }
+
+    public static class JpaPluginBuilder extends DataSourcePluginBuilder {
+
+        public JpaPluginBuilder usingJavaContext() {
+            super.usingJavaContext();
+            return this;
+        }
+
+        public JpaPluginBuilder commitAfterContainerCreation() {
+            super.commitAfterContainerCreation();
+            return this;
+        }
+
+        public JpaPlugin build() {
+            return new JpaPlugin(usingJavaContext, lifeCycle, commitModeContainerLifeCycle);
         }
     }
 

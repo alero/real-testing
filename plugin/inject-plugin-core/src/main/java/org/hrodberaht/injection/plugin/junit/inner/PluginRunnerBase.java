@@ -51,7 +51,7 @@ public abstract class PluginRunnerBase implements RunnerPluginInterface {
 
 
     @Override
-    public void findAnnotationAndInvokeMethod(PluginContext pluginContext, Class<Annotation> annotation) {
-        annotatedPluginRunner.findAnnotationAndInvokeMethod(this, pluginContext, annotation);
+    public void findAnnotationAndInvokeMethod(Class pluginClass, PluginContext pluginContext, Class<Annotation> annotation) {
+        annotatedPluginRunner.findAnnotationAndInvokeMethod(pluginClass, this, pluginContext, annotation);
     }
 }

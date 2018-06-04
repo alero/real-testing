@@ -16,9 +16,9 @@
 
 package org.hrodberaht.injection.extensions.plugin.demo.test.config;
 
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin;
-import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 
 import javax.sql.DataSource;
 
@@ -29,8 +29,7 @@ public class CourseContainerConfigExample extends ContainerContextConfigBase {
 
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
-        JpaPlugin jpaPlugin = activatePlugin(JpaPlugin.class);
-        jpaPlugin.usingJavaContext();
+        JpaPlugin jpaPlugin = activatePlugin(new JpaPlugin.JpaPluginBuilder().usingJavaContext().build());
         DataSource dataSource = jpaPlugin.createDataSource(DATASOURCE_NAME);
 
         jpaPlugin.createEntityManager(dataSource, "example-jpa");

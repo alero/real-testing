@@ -25,5 +25,5 @@ public interface RunnerPluginInterface {
 
     Plugin addAnnotatedPlugin(Plugin runnerPlugin);
 
-    void findAnnotationAndInvokeMethod(PluginContext pluginContext, Class<Annotation> annotation);
+    void findAnnotationAndInvokeMethod(Class pluginClass, PluginContext pluginContext, Class<Annotation> annotation);
 }

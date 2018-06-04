@@ -18,12 +18,11 @@ package org.hrodberaht.injection.plugin.junit.inner;
 
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 
-import java.util.HashMap;
 import java.util.Map;
 
 public class TestConfigRunnerPlugins extends PluginRunnerBase {
 
     public TestConfigRunnerPlugins(Map<Class<? extends Plugin>, Plugin> activePlugins) {
-        super(activePlugins, new AnnotatedRunnerPlugin());
+        super(activePlugins, new AnnotatedRunnerPlugin(Plugin.LifeCycle.TEST_CONFIG));
     }
 }

@@ -25,12 +25,15 @@ import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeCl
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeContainerCreation;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeTest;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class RunnerPlugins {
 
     private final Map<Class<? extends Plugin>, Plugin> activePlugins = new ConcurrentHashMap<>();
+    private final List<Plugin> sortedRunnerPlugins = new ArrayList<>();
     private final TestConfigRunnerPlugins testConfigRunnerPlugins;
     private final TestClassRunnerPlugins testClassRunnerPlugins;
     private final TestSuiteRunnerPlugins testSuiteRunnerPlugins;
@@ -43,6 +46,7 @@ public class RunnerPlugins {
 
 
     public <T extends Plugin> T addAnnotatedPlugin(Plugin runnerPlugin) {
+        sortedRunnerPlugins.add(runnerPlugin);
         return (T) getRunner(runnerPlugin.getLifeCycle()).addAnnotatedPlugin(runnerPlugin);
     }
 
@@ -60,47 +64,48 @@ public class RunnerPlugins {
     }
 
     private void runInitAfterContainerAnnotation(PluginContext pluginContext) {
-        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_SUITE), RunnerPluginAfterContainerCreation.class);
-        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CONFIG), RunnerPluginAfterContainerCreation.class);
-        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CLASS), RunnerPluginAfterContainerCreation.class);
+        for (Plugin plugin : sortedRunnerPlugins) {
+            findAnnotationAndInvokeMethod(plugin.getClass(), pluginContext, getRunner(plugin.getLifeCycle()), RunnerPluginAfterContainerCreation.class);
+        }
     }
 
-    private void runInitBeforerContainerAnnotation(PluginContext pluginContext) {
-        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_SUITE), RunnerPluginBeforeContainerCreation.class);
-        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CONFIG), RunnerPluginBeforeContainerCreation.class);
-        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CLASS), RunnerPluginBeforeContainerCreation.class);
-    }
-
-    private void runBeforeTestAnnotation(PluginContext pluginContext) {
-        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_SUITE), RunnerPluginBeforeTest.class);
-        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CONFIG), RunnerPluginBeforeTest.class);
-        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CLASS), RunnerPluginBeforeTest.class);
-    }
-
-    private void runAfterTestAnnotation(PluginContext pluginContext) {
-        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_SUITE), RunnerPluginAfterTest.class);
-        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CONFIG), RunnerPluginAfterTest.class);
-        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CLASS), RunnerPluginAfterTest.class);
+    private void runInitBeforeContainerAnnotation(PluginContext pluginContext) {
+        for (Plugin plugin : sortedRunnerPlugins) {
+            findAnnotationAndInvokeMethod(plugin.getClass(), pluginContext, getRunner(plugin.getLifeCycle()), RunnerPluginBeforeContainerCreation.class);
+        }
     }
 
     private void runAfterTestClassAnnotation(PluginContext pluginContext) {
-        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_SUITE), RunnerPluginAfterClassTest.class);
-        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CONFIG), RunnerPluginAfterClassTest.class);
-        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CLASS), RunnerPluginAfterClassTest.class);
+        for (Plugin plugin : sortedRunnerPlugins) {
+            findAnnotationAndInvokeMethod(plugin.getClass(), pluginContext, getRunner(plugin.getLifeCycle()), RunnerPluginAfterClassTest.class);
+        }
     }
 
     private void runBeforeTestClassAnnotation(PluginContext pluginContext) {
-        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_SUITE), RunnerPluginBeforeClassTest.class);
-        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CONFIG), RunnerPluginBeforeClassTest.class);
-        findAnnotationAndInvokeMethod(pluginContext, getRunner(Plugin.LifeCycle.TEST_CLASS), RunnerPluginBeforeClassTest.class);
+        for (Plugin plugin : sortedRunnerPlugins) {
+            findAnnotationAndInvokeMethod(plugin.getClass(), pluginContext, getRunner(plugin.getLifeCycle()), RunnerPluginBeforeClassTest.class);
+        }
     }
 
-    private void findAnnotationAndInvokeMethod(PluginContext pluginContext, RunnerPluginInterface runner, Class annotation) {
-        runner.findAnnotationAndInvokeMethod(pluginContext, annotation);
+    private void runBeforeTestAnnotation(PluginContext pluginContext) {
+        for (Plugin plugin : sortedRunnerPlugins) {
+            findAnnotationAndInvokeMethod(plugin.getClass(), pluginContext, getRunner(plugin.getLifeCycle()), RunnerPluginBeforeTest.class);
+        }
+    }
+
+    private void runAfterTestAnnotation(PluginContext pluginContext) {
+        for (Plugin plugin : sortedRunnerPlugins) {
+            findAnnotationAndInvokeMethod(plugin.getClass(), pluginContext, getRunner(plugin.getLifeCycle()), RunnerPluginAfterTest.class);
+        }
+    }
+
+
+    private void findAnnotationAndInvokeMethod(Class pluginClass, PluginContext pluginContext, RunnerPluginInterface runner, Class annotation) {
+        runner.findAnnotationAndInvokeMethod(pluginClass, pluginContext, annotation);
     }
 
     public void runInitBeforeContainer(PluginContext pluginContext) {
-        runInitBeforerContainerAnnotation(pluginContext);
+        runInitBeforeContainerAnnotation(pluginContext);
     }
 
     public void runInitAfterContainer(PluginContext pluginContext) {

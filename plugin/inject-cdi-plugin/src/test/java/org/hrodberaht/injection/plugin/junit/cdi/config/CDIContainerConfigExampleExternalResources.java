@@ -16,10 +16,10 @@
 
 package org.hrodberaht.injection.plugin.junit.cdi.config;
 
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.plugins.CDIInjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin;
-import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 
 import javax.sql.DataSource;
 
@@ -35,8 +35,7 @@ public class CDIContainerConfigExampleExternalResources extends ContainerContext
     @Override
     public void register(InjectionRegistryBuilder injectionRegistryBuilder) {
         activatePlugin(CDIInjectionPlugin.class);
-        JpaPlugin jpaPlugin = activatePlugin(JpaPlugin.class);
-        jpaPlugin.usingJavaContext();
+        JpaPlugin jpaPlugin = activatePlugin(new JpaPlugin.JpaPluginBuilder().usingJavaContext().build());
         DataSource dataSource = jpaPlugin.createDataSource("ExampleDataSource");
         jpaPlugin.createEntityManager(dataSource, "example-jpa");
 

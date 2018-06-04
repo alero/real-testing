@@ -18,18 +18,18 @@ package org.hrodberaht.injection.plugin.junit.plugins;
 
 import org.hrodberaht.injection.core.InjectContainer;
 import org.hrodberaht.injection.core.spi.ResourceFactory;
-import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeContainerCreation;
-import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProvider;
-import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProviderSupport;
-import org.hrodberaht.injection.plugin.junit.datasource.DataSourceProxyInterface;
-import org.hrodberaht.injection.plugin.junit.datasource.DatasourceResourceCreator;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.api.PluginContext;
 import org.hrodberaht.injection.plugin.junit.api.annotation.ResourcePluginFactory;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterContainerCreation;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterTest;
+import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeContainerCreation;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeTest;
+import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProvider;
+import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProviderSupport;
+import org.hrodberaht.injection.plugin.junit.datasource.DataSourceProxyInterface;
 import org.hrodberaht.injection.plugin.junit.datasource.DatasourceContainerService;
+import org.hrodberaht.injection.plugin.junit.datasource.DatasourceResourceCreator;
 import org.hrodberaht.injection.plugin.junit.datasource.ProxyResourceCreator;
 import org.hrodberaht.injection.plugin.junit.datasource.TransactionManager;
 import org.hrodberaht.injection.plugin.junit.plugins.common.PluginLifeCycledResource;
@@ -50,20 +50,59 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
     private static final Logger LOG = LoggerFactory.getLogger(DataSourcePlugin.class);
     private static final Map<Class, ResourceLoaderRunner> resourceRunnerState = new ConcurrentHashMap<>();
 
-    private final List<Class<? extends ResourceLoaderRunner>> beforeSuite = new ArrayList<>();
+    protected enum CommitMode {COMMIT, ROLLBACK}
 
+    private final List<Class<? extends ResourceLoaderRunner>> beforeSuite = new ArrayList<>();
     private TransactionManager transactionManager;
     private InjectContainer injectContainer;
     private ResourceContext resourceContext;
-    private enum CommitMode {COMMIT, ROLLBACK}
-    private CommitMode commitModeContainerLifeCycle = CommitMode.ROLLBACK;
-    private boolean usingJavaContext = false;
-    private LifeCycle lifeCycle = LifeCycle.TEST_CONFIG;
+
+    private final CommitMode commitModeContainerLifeCycle;
+    private final boolean usingJavaContext;
+    private final LifeCycle lifeCycle;
 
     private PluginLifeCycledResource<ResourceContext> pluginLifeCycledResource = new PluginLifeCycledResource<>(ResourceContext.class);
 
     public DataSourcePlugin() {
+        usingJavaContext = false;
+        lifeCycle = LifeCycle.TEST_CONFIG;
+        commitModeContainerLifeCycle = CommitMode.ROLLBACK;
         LOG.info("created {}", this);
+    }
+
+    protected DataSourcePlugin(boolean usingJavaContext,
+                               LifeCycle lifeCycle,
+                               CommitMode commitModeContainerLifeCycle) {
+        this.usingJavaContext = usingJavaContext;
+        this.lifeCycle = lifeCycle;
+        this.commitModeContainerLifeCycle = commitModeContainerLifeCycle;
+    }
+
+
+    public static class DataSourcePluginBuilder {
+        protected boolean usingJavaContext = false;
+        protected LifeCycle lifeCycle = LifeCycle.TEST_CONFIG;
+        protected CommitMode commitModeContainerLifeCycle = CommitMode.ROLLBACK;
+
+        public DataSourcePluginBuilder usingJavaContext() {
+            this.usingJavaContext = true;
+            this.lifeCycle = LifeCycle.TEST_CONFIG;
+            return this;
+        }
+
+        public DataSourcePluginBuilder lifeCycle(LifeCycle lifeCycle) {
+            this.lifeCycle = lifeCycle;
+            return this;
+        }
+
+        public DataSourcePluginBuilder commitAfterContainerCreation() {
+            this.commitModeContainerLifeCycle = CommitMode.COMMIT;
+            return this;
+        }
+
+        public DataSourcePlugin build() {
+            return new DataSourcePlugin(usingJavaContext, lifeCycle, commitModeContainerLifeCycle);
+        }
     }
 
     @Override
@@ -107,16 +146,7 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
      * Will store all resources in a shared mode to support java.context way of handling resources
      * @return same instance with changed value of usingContext
      */
-    public DataSourcePlugin usingJavaContext(){
-        this.usingJavaContext = true;
-        lifeCycle = LifeCycle.TEST_SUITE;
-        return this;
-    }
 
-    public DataSourcePlugin commitAfterContainerCreation() {
-        commitModeContainerLifeCycle = CommitMode.COMMIT;
-        return this;
-    }
 
 
 
@@ -153,31 +183,6 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
         datasourceContainerService.addSQLSchemas(schemaName, classPathRoot);
         return this;
     }
-
-
-
-    /*
-    private ResourceContext getContextAwareResource() {
-        if(this.usingJavaContext){
-            if(sharedResourceContext == null){
-                sharedResourceContext = new ResourceContext(this.resourceContext.resourceFactory, createContext());
-            }
-            if(datasourceResourceCreator == null){
-                datasourceResourceCreator = getDatasourceResourceCreator(sharedResourceContext.proxyResourceCreator);
-                sharedResourceContext.resourceFactory.addResourceCrator(datasourceResourceCreator);
-            }
-            return sharedResourceContext;
-        }
-        if(this.resourceContext.proxyResourceCreator == null){
-            this.resourceContext = new ResourceContext(this.resourceContext.resourceFactory, createContext());
-        }
-        if(datasourceResourceCreator == null){
-            datasourceResourceCreator = getDatasourceResourceCreator(resourceContext.proxyResourceCreator);
-            resourceContext.resourceFactory.addResourceCrator(datasourceResourceCreator);
-        }
-        return this.resourceContext;
-    }
-    */
 
 
     Collection<DataSourceProxyInterface> getDataSources(){

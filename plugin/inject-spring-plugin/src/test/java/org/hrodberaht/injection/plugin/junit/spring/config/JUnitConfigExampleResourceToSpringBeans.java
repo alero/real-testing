@@ -30,8 +30,9 @@ public class JUnitConfigExampleResourceToSpringBeans extends ContainerContextCon
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
         String dataSourceName = "MyDataSource2";
-        DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class)
-                .commitAfterContainerCreation();
+        DataSourcePlugin dataSourcePlugin = activatePlugin(
+                new DataSourcePlugin.DataSourcePluginBuilder().commitAfterContainerCreation().build()
+        );
         DataSource dataSource = dataSourcePlugin.createDataSource(dataSourceName);
 
         dataSourcePlugin.loadSchema(dataSource, "sql");

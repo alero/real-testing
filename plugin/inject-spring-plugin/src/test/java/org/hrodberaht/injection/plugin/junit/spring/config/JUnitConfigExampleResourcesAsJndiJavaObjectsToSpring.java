@@ -30,10 +30,12 @@ public class JUnitConfigExampleResourcesAsJndiJavaObjectsToSpring extends Contai
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
         String dataSourceName = "MyDataSource2";
-        DataSourcePlugin dataSourcePlugin = activatePlugin(DataSourcePlugin.class)
-                .commitAfterContainerCreation()
-                .usingJavaContext()
-        ;
+        DataSourcePlugin dataSourcePlugin = activatePlugin(
+                new DataSourcePlugin.DataSourcePluginBuilder()
+                        .usingJavaContext()
+                        .commitAfterContainerCreation()
+                        .build()
+        );
         DataSource dataSource = dataSourcePlugin.createDataSource(dataSourceName);
 
         dataSourcePlugin.loadSchema(dataSource, "sql");
