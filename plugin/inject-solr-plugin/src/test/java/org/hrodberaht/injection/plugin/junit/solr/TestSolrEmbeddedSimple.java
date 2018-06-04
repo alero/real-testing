@@ -46,21 +46,10 @@ public class TestSolrEmbeddedSimple {
 
     private SolrAssertions assertions;
 
-    public static class Config extends ContainerContextConfigBase {
-
-        @Override
-        public void register(InjectionRegistryBuilder registryBuilder) {
-            activatePlugin(SolrJPlugin.class)
-                    .solrRunnerHome("target/solr2")
-                    .coreName("collection2");
-        }
-    }
-
     @PostConstruct
     public void init() {
         assertions = solrJPlugin.getAssertions();
     }
-
 
     @Test
     public void testSolrIndex() throws Exception {
@@ -85,7 +74,6 @@ public class TestSolrEmbeddedSimple {
         assertions.assertCount(OK, 10);
 
     }
-
 
     @Test
     public void testSchemaUpdate() throws Exception {
@@ -126,6 +114,16 @@ public class TestSolrEmbeddedSimple {
         document.addField("id", String.valueOf(i));
         document.addField("text", "<doc><title id='" + i + "'>" + (101 - i) + "</title><test>cat</test></doc>");
         return document;
+    }
+
+    public static class Config extends ContainerContextConfigBase {
+
+        @Override
+        public void register(InjectionRegistryBuilder registryBuilder) {
+            activatePlugin(SolrJPlugin.class)
+                    .solrRunnerHome("target/solr2")
+                    .coreName("collection2");
+        }
     }
 
 

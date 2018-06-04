@@ -26,14 +26,6 @@ public class PluginLifeCycledResource<T> implements FileLifeCycledResource {
         stateHolder = classCache.computeIfAbsent(instanceClass, aClass -> new StateHolder());
     }
 
-    private static class StateHolder<T> {
-        private InheritableThreadLocal<ThreadSafeState<T>> threadState = new InheritableThreadLocal<>();
-    }
-
-    public interface InstanceCreator<T> {
-        T create();
-    }
-
     public T create(Plugin.LifeCycle lifeCycle, PluginContext pluginContext, InstanceCreator<T> instanceCreator) {
 
         ThreadSafeState<T> threadSafeState = getThreadSafeState();
@@ -67,12 +59,6 @@ public class PluginLifeCycledResource<T> implements FileLifeCycledResource {
         return instance;
     }
 
-    private static class ThreadSafeState<T> {
-        private T suiteRunner;
-        private Map<Class, T> testClassRunner = new ConcurrentHashMap<>();
-        private Map<Class, T> configClassRunner = new ConcurrentHashMap<>();
-    }
-
     /**
      * Append separators to a file directory that is unique for each test resource depending on lifecycle selection (cares about multi-threading)
      *
@@ -93,6 +79,20 @@ public class PluginLifeCycledResource<T> implements FileLifeCycledResource {
             return base + File.separator + threadName + File.separator + "suite";
         }
         throw new PluginRuntimeException("No home was selected");
+    }
+
+    public interface InstanceCreator<T> {
+        T create();
+    }
+
+    private static class StateHolder<T> {
+        private InheritableThreadLocal<ThreadSafeState<T>> threadState = new InheritableThreadLocal<>();
+    }
+
+    private static class ThreadSafeState<T> {
+        private T suiteRunner;
+        private Map<Class, T> testClassRunner = new ConcurrentHashMap<>();
+        private Map<Class, T> configClassRunner = new ConcurrentHashMap<>();
     }
 
 }

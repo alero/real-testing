@@ -43,11 +43,6 @@ public class InjectionContainerManager implements ScopeContainer, InjectContaine
         return injectionContainer;
     }
 
-    public enum RegisterType {
-        WEAK, NORMAL, OVERRIDE_NORMAL, FINAL, EXTENDED
-    }
-
-
     /**
      * Will retrieve a service as it has been registered,
      * scope's supported today are {@link Scope#SINGLETON} and {@link Scope#NEW}
@@ -90,7 +85,6 @@ public class InjectionContainerManager implements ScopeContainer, InjectContaine
         return injectionContainer.getService(service, null, qualifier);
     }
 
-
     public <T, K> T get(Class<T> service, K variable) {
         return injectionContainer.getService(service, variable);
     }
@@ -116,7 +110,6 @@ public class InjectionContainerManager implements ScopeContainer, InjectContaine
     public <T> T getSingleton(Class<T> service) {
         return injectionContainer.getService(service, Scope.SINGLETON);
     }
-
 
     protected void register(Class serviceDefinition, Class service, Scope scope, RegisterType type) {
         injectionContainer.register(new InjectionKey(serviceDefinition, false), service, scope, type, true);
@@ -148,5 +141,9 @@ public class InjectionContainerManager implements ScopeContainer, InjectContaine
         InjectionContainerManager injectionContainerManager = new InjectionContainerManager();
         injectionContainerManager.injectionContainer = this.injectionContainer.copy(injectionContainerManager);
         return injectionContainerManager;
+    }
+
+    public enum RegisterType {
+        WEAK, NORMAL, OVERRIDE_NORMAL, FINAL, EXTENDED
     }
 }

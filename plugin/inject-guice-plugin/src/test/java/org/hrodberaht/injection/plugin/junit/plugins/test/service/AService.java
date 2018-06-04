@@ -20,9 +20,8 @@ import javax.inject.Inject;
 
 public class AService implements AnInterface {
 
-    String something = "empty";
-
     private final MoreServices moreServices;
+    String something = "empty";
 
     @Inject
     public AService(MoreServices moreServices) {

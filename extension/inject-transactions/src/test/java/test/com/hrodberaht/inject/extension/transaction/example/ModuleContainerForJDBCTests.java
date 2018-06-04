@@ -32,22 +32,6 @@ public class ModuleContainerForJDBCTests implements InjectionContainerCreator, T
     public ModuleContainerForJDBCTests() {
     }
 
-    public InjectContainer createContainer() {
-        InjectionRegisterModule register = new InjectionRegisterModule();
-
-        register.register(TransactedApplication.class, JDBCTransactedApplication.class);
-
-        // This pre-creates all the tables and metadata, very useful
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("example-jpa");
-        // Just hook the data-source to the entity-manager, this is ugly but useful in a JUnit
-        DataSource dataSource = getDataSource(entityManagerFactory);
-        register.register(new JdbcModule(dataSource));
-        InjectContainer injectContainer = register.getContainer();
-        container = injectContainer;
-        return injectContainer;
-    }
-
-
     public static DataSource getDataSource(final EntityManagerFactory entityManagerFactory) {
 
         DataSource simpleDataSource = new DataSource() {
@@ -91,12 +75,12 @@ public class ModuleContainerForJDBCTests implements InjectionContainerCreator, T
                 printWriter = out;
             }
 
-            public void setLoginTimeout(int seconds) throws SQLException {
-
-            }
-
             public int getLoginTimeout() throws SQLException {
                 return 600;
+            }
+
+            public void setLoginTimeout(int seconds) throws SQLException {
+
             }
 
             public Logger getParentLogger() throws SQLFeatureNotSupportedException {
@@ -114,5 +98,20 @@ public class ModuleContainerForJDBCTests implements InjectionContainerCreator, T
         return simpleDataSource;
 
 
+    }
+
+    public InjectContainer createContainer() {
+        InjectionRegisterModule register = new InjectionRegisterModule();
+
+        register.register(TransactedApplication.class, JDBCTransactedApplication.class);
+
+        // This pre-creates all the tables and metadata, very useful
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("example-jpa");
+        // Just hook the data-source to the entity-manager, this is ugly but useful in a JUnit
+        DataSource dataSource = getDataSource(entityManagerFactory);
+        register.register(new JdbcModule(dataSource));
+        InjectContainer injectContainer = register.getContainer();
+        container = injectContainer;
+        return injectContainer;
     }
 }

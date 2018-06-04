@@ -18,9 +18,9 @@ public class SimpleDataSourceProxy implements DataSourceProxyInterface {
     private final TestDataSourceWrapper dataSource;
 
     SimpleDataSourceProxy(String dataSourceName,
-                                 ProxyResourceCreator.DataSourceProvider provider,
-                                 ProxyResourceCreator.DataSourcePersistence persistence,
-                                 ResourceWatcher resourceWatcher) {
+                          ProxyResourceCreator.DataSourceProvider provider,
+                          ProxyResourceCreator.DataSourcePersistence persistence,
+                          ResourceWatcher resourceWatcher) {
         dataSourceConfigFactory = new DataSourceConfigFactory(this, getResourceWatcher(resourceWatcher), dataSourceName);
         dataSourceConfiguration = dataSourceConfigFactory.createConfiguration(provider, persistence);
         dataSource = dataSourceConfiguration.getTestDataSource(dataSourceName);
@@ -84,13 +84,13 @@ public class SimpleDataSourceProxy implements DataSourceProxyInterface {
     }
 
     @Override
-    public void setLoginTimeout(int seconds) throws SQLException {
-
+    public int getLoginTimeout() throws SQLException {
+        return 0;
     }
 
     @Override
-    public int getLoginTimeout() throws SQLException {
-        return 0;
+    public void setLoginTimeout(int seconds) throws SQLException {
+
     }
 
     @Override

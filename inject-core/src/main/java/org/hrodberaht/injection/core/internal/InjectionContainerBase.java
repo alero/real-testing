@@ -36,6 +36,13 @@ public abstract class InjectionContainerBase {
 
     protected ServiceRegistryForInjection registeredServices;
 
+    protected static InjectionContainerManager.RegisterType normalizeType(InjectionContainerManager.RegisterType type) {
+        if (type == InjectionContainerManager.RegisterType.OVERRIDE_NORMAL) {
+            return InjectionContainerManager.RegisterType.NORMAL;
+        }
+        return type;
+    }
+
     public Collection<ServiceRegister> getServiceRegister() {
         return registeredServices.getServiceRegisterCollection();
     }
@@ -67,14 +74,6 @@ public abstract class InjectionContainerBase {
             serviceRegister.setSingleton(createInstance(serviceRegister, key));
         }
         return serviceRegister.getSingleton();
-    }
-
-
-    protected static InjectionContainerManager.RegisterType normalizeType(InjectionContainerManager.RegisterType type) {
-        if (type == InjectionContainerManager.RegisterType.OVERRIDE_NORMAL) {
-            return InjectionContainerManager.RegisterType.NORMAL;
-        }
-        return type;
     }
 
     protected abstract Object createNewInstance(ServiceRegister serviceRegister, InjectionKey key);

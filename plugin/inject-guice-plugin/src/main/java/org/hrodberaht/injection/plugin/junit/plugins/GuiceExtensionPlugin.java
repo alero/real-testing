@@ -48,12 +48,11 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GuiceExtensionPlugin implements Plugin {
     private static final Logger LOG = LoggerFactory.getLogger(GuiceExtensionPlugin.class);
+    private final LifeCycle lifeCycle;
     private Injector injector;
     private List<Module> guiceModules = new ArrayList<>();
     private Set<ResourceProvider> resourceProviders = new HashSet<>();
     private PluginLifeCycledResource<Injector> pluginLifeCycledResource = new PluginLifeCycledResource<>(Injector.class);
-    private final LifeCycle lifeCycle;
-
     private Map<Class, Injector> loadedModules = new ConcurrentHashMap<>();
 
 
@@ -83,10 +82,10 @@ public class GuiceExtensionPlugin implements Plugin {
 
             @Override
             public Object extendedInjection(InjectionKey injectionKey) {
-                if (injectionKey.getAnnotation() != null){
+                if (injectionKey.getAnnotation() != null) {
                     Key key = Key.get(injectionKey.getServiceDefinition(), injectionKey.getAnnotation());
                     return injector.getInstance(key);
-                }else{
+                } else {
                     Key key = Key.get(injectionKey.getServiceDefinition());
                     return injector.getInstance(key);
                 }
@@ -94,14 +93,14 @@ public class GuiceExtensionPlugin implements Plugin {
         };
     }
 
-    public GuiceExtensionPlugin with(Plugin plugin){
-        if(plugin instanceof ResourceProviderSupport) {
-            resourceProviders.addAll(((ResourceProviderSupport)plugin).resources());
+    public GuiceExtensionPlugin with(Plugin plugin) {
+        if (plugin instanceof ResourceProviderSupport) {
+            resourceProviders.addAll(((ResourceProviderSupport) plugin).resources());
         }
         return this;
     }
 
-    public GuiceExtensionPlugin withResources(ResourceProviderSupport resourceProviderSupport){
+    public GuiceExtensionPlugin withResources(ResourceProviderSupport resourceProviderSupport) {
         resourceProviders.addAll(resourceProviderSupport.resources());
         return this;
     }

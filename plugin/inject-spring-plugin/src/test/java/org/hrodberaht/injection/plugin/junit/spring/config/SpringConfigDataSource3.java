@@ -16,12 +16,9 @@
 
 package org.hrodberaht.injection.plugin.junit.spring.config;
 
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.transaction.PlatformTransactionManager;
 
 import javax.sql.DataSource;
 
@@ -30,7 +27,7 @@ public class SpringConfigDataSource3 {
 
     @Bean("MyDataSource2")
     public DataSource platformTransactionManager(
-            @Qualifier("MyDataSource3") DataSource dataSource ) {
+            @Qualifier("MyDataSource3") DataSource dataSource) {
         return dataSource;
     }
 }

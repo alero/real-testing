@@ -20,7 +20,6 @@ import org.hrodberaht.injection.core.internal.InjectionKey;
 import org.hrodberaht.injection.core.internal.annotation.AnnotationInjection;
 import org.hrodberaht.injection.core.internal.annotation.InjectionFinder;
 import org.hrodberaht.injection.core.internal.annotation.InjectionPoint;
-import org.hrodberaht.injection.core.spi.ContainerConfig;
 
 import java.lang.reflect.Method;
 import java.util.List;

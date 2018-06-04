@@ -47,8 +47,8 @@ public class UserService {
     @PostConstruct
     public void init() {
         jdbcTemplate = new JdbcTemplate(dataSource);
-        synchronized (UserService.class){
-            if( getName("root") == null){
+        synchronized (UserService.class) {
+            if (getName("root") == null) {
                 createUser("root", "pwd999");
             }
         }
@@ -61,7 +61,7 @@ public class UserService {
     public String getName(String name) {
         try {
             return jdbcTemplate.queryForObject("select username from theUser where username=?", String.class, name);
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
@@ -69,7 +69,7 @@ public class UserService {
     public Integer getLoginCount(String name) {
         try {
             return jdbcTemplate.queryForObject("select loginTries from theUser where username=?", Integer.class, name);
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
@@ -78,13 +78,13 @@ public class UserService {
         try {
             jdbcTemplate.queryForObject("select username from theUser where username=? and password=?", String.class, username, password);
             return true;
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return false;
         }
     }
 
     public boolean existsInIndex(String username) {
-        SolrQuery solrQuery = new SolrQuery().setQuery("name:"+username) ;
+        SolrQuery solrQuery = new SolrQuery().setQuery("name:" + username);
         try {
             return 1 == solrClient.query(solrQuery).getResults().getNumFound();
         } catch (SolrServerException | IOException e) {
@@ -107,7 +107,7 @@ public class UserService {
 
     public boolean login(String username, String password) {
         jdbcTemplate.update("update theUser set loginTries = loginTries + 1");
-        if(checkPassword(username, password)){
+        if (checkPassword(username, password)) {
             jdbcTemplate.update("update theUser set loginTries = 0");
             return true;
         }

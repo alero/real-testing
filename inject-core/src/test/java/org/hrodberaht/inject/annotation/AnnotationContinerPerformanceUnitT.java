@@ -46,9 +46,9 @@ import java.util.Collection;
 @Category({PerformanceTests.class})
 public class AnnotationContinerPerformanceUnitT {
 
-    private InjectionRegister registerVolvo;
     final int threadCount = 100;
     final int threadIterations = 1000;
+    private InjectionRegister registerVolvo;
 
     @Before
     public void init() {

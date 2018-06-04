@@ -5,9 +5,9 @@ import com.hrodberaht.inject.extensions.transaction.junit.TransactionManagedTest
 import com.hrodberaht.inject.extensions.transaction.manager.JdbcModule;
 import liquibase.exception.LiquibaseException;
 import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.core.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.extensions.junit.datasource.FileTimestampResourceWatcher;
 import org.hrodberaht.injection.extensions.junit.datasource.liquibase.LiquibaseUtil;
-import org.hrodberaht.injection.core.internal.InjectionRegisterModule;
 
 import javax.sql.DataSource;
 import java.io.File;
@@ -28,6 +28,19 @@ import java.util.stream.Stream;
  */
 public class JUnitModuleConfig extends TDDCDIContainerConfigBase implements InjectionContainerCreator, TransactionManagedTesting {
 
+    private String dataStoreDir = "target/liquibase/";
+    private String liquieBaseSchema = "db.changelog-test.xml";
+
+    protected static void createDirectoryIfNotExists(File dir) {
+        if (!dir.exists()) {
+            try {
+                Files.createDirectories(dir.toPath());
+            } catch (final IOException e) {
+                throw new IllegalStateException("Failed to create test directories " + dir.toPath(), e);
+            }
+        }
+    }
+
     public InjectContainer createContainer() {
         // TransactionLogging.enableLogging = true;
 
@@ -46,10 +59,6 @@ public class JUnitModuleConfig extends TDDCDIContainerConfigBase implements Inje
         return register.getContainer();
     }
 
-
-    private String dataStoreDir = "target/liquibase/";
-    private String liquieBaseSchema = "db.changelog-test.xml";
-
     private void createLiquibaseSchema(DataSource dataSource, String... watchers) {
         try {
             createDirectoryIfNotExists(new File(dataStoreDir));
@@ -64,16 +73,6 @@ public class JUnitModuleConfig extends TDDCDIContainerConfigBase implements Inje
                     .liquiBaseSchemaCreation(dataSource, liquieBaseSchema);
         } catch (SQLException | LiquibaseException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    protected static void createDirectoryIfNotExists(File dir) {
-        if (!dir.exists()) {
-            try {
-                Files.createDirectories(dir.toPath());
-            } catch (final IOException e) {
-                throw new IllegalStateException("Failed to create test directories " + dir.toPath(), e);
-            }
         }
     }
 

@@ -35,10 +35,10 @@ import java.util.List;
  */
 public class AnnotationQualifierUtil {
 
+    private static final Class<Qualifier> QUALIFIER = Qualifier.class;
+
     private AnnotationQualifierUtil() {
     }
-
-    private static final Class<Qualifier> QUALIFIER = Qualifier.class;
 
     public static InjectionKey getQualifierKey(Class owner, Annotation[] annotations, boolean provider) {
         final List<InjectionKey> qualifierAnnotations = new ArrayList<InjectionKey>();

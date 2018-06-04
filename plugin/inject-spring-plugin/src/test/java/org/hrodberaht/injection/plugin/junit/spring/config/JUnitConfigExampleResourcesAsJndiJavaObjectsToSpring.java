@@ -44,7 +44,7 @@ public class JUnitConfigExampleResourcesAsJndiJavaObjectsToSpring extends Contai
         activatePlugin(SpringExtensionPlugin.class)
                 .with(dataSourcePlugin)
                 .springConfig(SpringConfigJavaSample2.class)
-                ;
+        ;
 
 
     }

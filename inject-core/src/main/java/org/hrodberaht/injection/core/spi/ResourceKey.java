@@ -21,21 +21,21 @@ public class ResourceKey {
     private final Class type;
 
 
-    public String getName() {
-        return name;
-    }
-
-    public Class getType() {
-        return type;
+    private ResourceKey(String name, Class type) {
+        this.name = name;
+        this.type = type;
     }
 
     public static ResourceKey of(String name, Class type) {
         return new ResourceKey(name, type);
     }
 
-    private ResourceKey(String name, Class type) {
-        this.name = name;
-        this.type = type;
+    public String getName() {
+        return name;
+    }
+
+    public Class getType() {
+        return type;
     }
 
     @Override

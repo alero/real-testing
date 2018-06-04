@@ -32,21 +32,20 @@ public class ActiveMQPluginTest {
     public void testForProducerConsumer() throws Exception {
 
         producerSimple.send("testqueue", "hello");
-        assertEquals(1, consumerSimple.getLatch().getCount());
 
         consumerSimple.getLatch().await(10000, TimeUnit.MILLISECONDS);
         assertEquals(0, consumerSimple.getLatch().getCount());
-
+        assertEquals("hello", consumerSimple.getMessages().get(0));
     }
 
     @Test
     public void testForProducerConsumer2() throws Exception {
 
-        producerSimple.send("testqueue", "hello");
-        assertEquals(1, consumerSimple.getLatch().getCount());
+        producerSimple.send("testqueue", "hello again");
 
         consumerSimple.getLatch().await(10000, TimeUnit.MILLISECONDS);
         assertEquals(0, consumerSimple.getLatch().getCount());
+        assertEquals("hello again", consumerSimple.getMessages().get(0));
 
     }
 

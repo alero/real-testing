@@ -114,14 +114,14 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
         ServiceRegister serviceRegister = registeredServices.get(key);
         if (serviceRegister == null) {
             Object extendedInstance = injectionFinder != null ? injectionFinder.extendedInjection(key) : null;
-            if(extendedInstance != null) {
+            if (extendedInstance != null) {
                 return createExtendedRegisterInstance(key, service, extendedInstance);
-            }else if(Modifier.isAbstract(service.getModifiers()) && !service.isInterface()){
+            } else if (Modifier.isAbstract(service.getModifiers()) && !service.isInterface()) {
                 throw new DependencyLocationError(service.getName() +
                         " is abstract and not registered in container, fix this by registering an implementation");
-            }else if(!service.isInterface()){
+            } else if (!service.isInterface()) {
                 serviceRegister = register(key, false);
-            }else if(service.isInterface()){
+            } else if (service.isInterface()) {
                 serviceRegister = registerForInterface(key, false);
             }
         }
@@ -258,7 +258,7 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
 
     @SuppressWarnings(value = "unchecked")
     private <T> T getQualifiedService(Class<T> service, InjectionContainerManager.Scope forcedScope, InjectionKey key) {
-        if (!registeredServices.containsKey(key) && service.getClass().isInterface()) {
+        if (!registeredServices.containsKey(key) && service.isInterface()) {
             throw new InjectRuntimeException(
                     "Service {0} not registered in SimpleInjection and is an interface", service
             );
@@ -364,11 +364,11 @@ public class AnnotationInjectionContainer extends InjectionContainerBase
 
     private InjectionMetaData createInjectionMetaData(RegistrationInstanceSimple instance, InjectionKey key) {
         InjectionMetaData injectionMetaData = createInjectionMetaData(instance.getService(), key);
-        if(instance.getRegisterType() == InjectionContainerManager.RegisterType.EXTENDED) {
+        if (instance.getRegisterType() == InjectionContainerManager.RegisterType.EXTENDED) {
             FactoryScopeHandler scopeHandler = new FactoryScopeHandler(instance.getTheFactory());
             injectionMetaData.setScopeHandler(scopeHandler);
             injectionMetaData.setExtendedInjection(true);
-        }else if (instance.getTheInstance() != null) {
+        } else if (instance.getTheInstance() != null) {
             SingletonScopeHandler scopeHandler = new SingletonScopeHandler();
             scopeHandler.addInstance(instance.getTheInstance());
             injectionMetaData.setScopeHandler(scopeHandler);

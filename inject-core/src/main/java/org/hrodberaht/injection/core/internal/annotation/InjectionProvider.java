@@ -29,7 +29,7 @@ import javax.inject.Provider;
  * @version 1.0
  * @since 1.0
  */
-public class InjectionProvider implements Provider {
+public class InjectionProvider<T> implements Provider<T> {
 
     private InjectionKey injectionKey;
     private InjectionContainerManager injection;
@@ -39,14 +39,14 @@ public class InjectionProvider implements Provider {
         this.injection = injection;
     }
 
-    @SuppressWarnings(value = "unchecked")
-    public Object get() {
+    @Override
+    public T get() {
         if (injectionKey.getAnnotation() != null) {
-            return injection.get(injectionKey.getServiceDefinition(), injectionKey.getAnnotation());
+            return (T) injection.get(injectionKey.getServiceDefinition(), injectionKey.getAnnotation());
         } else if (injectionKey.getName() != null) {
-            return injection.get(injectionKey.getServiceDefinition(), injectionKey.getName());
+            return (T) injection.get(injectionKey.getServiceDefinition(), injectionKey.getName());
         }
-        return injection.get(injectionKey.getServiceDefinition());
+        return (T) injection.get(injectionKey.getServiceDefinition());
 
 
     }

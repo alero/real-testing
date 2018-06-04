@@ -16,10 +16,10 @@
 
 package org.hrodberaht.injection.plugin.junit.resources;
 
-import org.hrodberaht.injection.plugin.context.ContextManager;
 import org.hrodberaht.injection.core.spi.JavaResourceCreator;
 import org.hrodberaht.injection.core.spi.ResourceFactory;
 import org.hrodberaht.injection.core.spi.ResourceKey;
+import org.hrodberaht.injection.plugin.context.ContextManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,17 +29,19 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PluggableResourceFactory implements ResourceFactory {
 
 
-    public static void setPluggableResourceFactory(ResourcePluginBase pluginBase, ResourceFactory resourceFactory) {
-        pluginBase.resourceFactory = resourceFactory;
-    }
-
     private static final Logger LOG = LoggerFactory.getLogger(PluggableResourceFactory.class);
-
     private final Map<Class, Object> typedMap = new ConcurrentHashMap<>();
     private final Map<ResourceKey, Object> namedMap = new ConcurrentHashMap<>();
     private final Map<Class, JavaResourceCreator> customCreator = new ConcurrentHashMap<>();
     private final ContextManager contextManager = new ContextManager();
 
+    public static void setPluggableResourceFactory(ResourcePluginBase pluginBase, ResourceFactory resourceFactory) {
+        pluginBase.resourceFactory = resourceFactory;
+    }
+
+    public static String asContextName(ResourceKey key) {
+        return key.getName();
+    }
 
     public Map<Class, Object> getTypedMap() {
         return typedMap;
@@ -154,17 +156,13 @@ public class PluggableResourceFactory implements ResourceFactory {
 
     private <T> void registerInstance(T instance, ResourceKey key, boolean bindToContext) {
         namedMap.put(key, instance);
-        if(bindToContext){
+        if (bindToContext) {
             putToContext(key, instance);
         }
     }
 
     private <T> void putToContext(ResourceKey key, T instance) {
         contextManager.bind(asContextName(key), instance);
-    }
-
-    public static String asContextName(ResourceKey key) {
-        return key.getName();
     }
 
 }

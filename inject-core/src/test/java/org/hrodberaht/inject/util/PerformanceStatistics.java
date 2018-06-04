@@ -24,9 +24,9 @@ import java.time.temporal.ChronoUnit;
  */
 public class PerformanceStatistics {
 
-    private String name;
     LocalDateTime start = LocalDateTime.now();
     LocalDateTime end;
+    private String name;
 
     public PerformanceStatistics(String name) {
         this.name = name;

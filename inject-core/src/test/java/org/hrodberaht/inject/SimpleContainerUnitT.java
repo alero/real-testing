@@ -75,7 +75,7 @@ public class SimpleContainerUnitT {
     }
 
     @Test
-    public void testNothingServiceWrappingWithAbstractModule(){
+    public void testNothingServiceWrappingWithAbstractModule() {
 
         AbstractModule abstractModule = new AbstractModule() {
             @Override

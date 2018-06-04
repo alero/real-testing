@@ -246,11 +246,11 @@ class DataSourceExecution {
         try {
             String queryName = cleanedName(initiatedTableName);
             String packageName = cleanedName(testPackageName);
-            String tableName = getTableName(packageName, queryName) ;
-            String selectQuery = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '"+tableName+"'";
+            String tableName = getTableName(packageName, queryName);
+            String selectQuery = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '" + tableName + "'";
             JDBCService jdbcService = JDBCServiceFactory.of(new DataSourceWrapper(con));
             String foundTableName = jdbcService.querySingle(selectQuery, (rs, iteration) -> rs.getString(1));
-            if(foundTableName == null) {
+            if (foundTableName == null) {
                 final String query = createQuery(tableName);
                 try (PreparedStatement pstmt = con.prepareStatement(query)) {
                     pstmt.execute();

@@ -30,18 +30,22 @@ public class SingletonScopeHandler implements ScopeHandler {
 
     private Object singleton;
 
+    @Override
     public Object getInstance() {
         return singleton;
     }
 
+    @Override
     public void addInstance(Object instance) {
         singleton = instance;
     }
 
+    @Override
     public InjectionContainerManager.Scope getScope() {
         return InjectionContainerManager.Scope.SINGLETON;
     }
 
+    @Override
     public boolean isInstanceCreated() {
         return false;
     }

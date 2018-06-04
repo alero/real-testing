@@ -29,13 +29,13 @@ public class Module extends RegistrationModuleAnnotationScanner {
         this.injectionContainer = injectionContainer;
     }
 
-    @Override
-    public void scan() {
-    }
-
-    public static Module toModule(AbstractModule abstractModule){
+    public static Module toModule(AbstractModule abstractModule) {
         abstractModule.bindings();
         return abstractModule.module;
+    }
+
+    @Override
+    public void scan() {
     }
 
 }

@@ -27,7 +27,6 @@ import javax.json.JsonObject;
 import javax.json.JsonReader;
 import javax.json.JsonString;
 import javax.json.JsonValue;
-import javax.ws.rs.client.Client;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
@@ -46,7 +45,7 @@ class JerseyClientRestassured {
     private Response response;
 
     JerseyClientRestassured(JerseyClient client, String uri, String path, HttpMethod httpMethod) {
-        this.jClient =  client;
+        this.jClient = client;
         this.jClient = this.jClient.property(LoggingFeature.LOGGING_FEATURE_VERBOSITY_CLIENT, LoggingFeature.Verbosity.PAYLOAD_ANY);
         this.webTarget = jClient.target(uri).path(path);
         this.httpMethod = httpMethod;

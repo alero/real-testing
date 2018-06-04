@@ -36,9 +36,9 @@ public class DatasourceContainerService {
 
     public void addSQLSchemas(String schemaName, String packageBase) {
         DataSourceExecution sourceExecution = new DataSourceExecution(dataSource);
-        LOG.debug("checking schema {}:{}", schemaName , packageBase);
+        LOG.debug("checking schema {}:{}", schemaName, packageBase);
         if (!sourceExecution.isInitiated(schemaName, packageBase)) {
-            LOG.info("add any found SQLSchemas for {}:{}",  schemaName, packageBase);
+            LOG.info("add any found SQLSchemas for {}:{}", schemaName, packageBase);
             sourceExecution.addSQLSchemas(schemaName, packageBase);
         }
     }

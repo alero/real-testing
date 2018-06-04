@@ -38,20 +38,19 @@ public abstract class PluginRunnerBase implements RunnerPluginInterface {
         return annotatedPluginRunner.addPlugin(plugin);
     }
 
-
-    interface RunnerPluginOp {
-        void runOp();
-    }
-
     void runIfActive(Class pluginClass, RunnerPluginOp runnerPluginOp) {
         if (activePlugins.get(pluginClass) != null) {
             runnerPluginOp.runOp();
         }
     }
 
-
     @Override
     public void findAnnotationAndInvokeMethod(Class pluginClass, PluginContext pluginContext, Class<Annotation> annotation) {
         annotatedPluginRunner.findAnnotationAndInvokeMethod(pluginClass, this, pluginContext, annotation);
+    }
+
+
+    interface RunnerPluginOp {
+        void runOp();
     }
 }

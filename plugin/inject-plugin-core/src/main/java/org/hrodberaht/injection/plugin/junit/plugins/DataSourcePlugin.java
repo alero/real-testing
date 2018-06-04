@@ -49,18 +49,13 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
 
     private static final Logger LOG = LoggerFactory.getLogger(DataSourcePlugin.class);
     private static final Map<Class, ResourceLoaderRunner> resourceRunnerState = new ConcurrentHashMap<>();
-
-    protected enum CommitMode {COMMIT, ROLLBACK}
-
     private final List<Class<? extends ResourceLoaderRunner>> beforeSuite = new ArrayList<>();
-    private TransactionManager transactionManager;
-    private InjectContainer injectContainer;
-    private ResourceContext resourceContext;
-
     private final CommitMode commitModeContainerLifeCycle;
     private final boolean usingJavaContext;
     private final LifeCycle lifeCycle;
-
+    private TransactionManager transactionManager;
+    private InjectContainer injectContainer;
+    private ResourceContext resourceContext;
     private PluginLifeCycledResource<ResourceContext> pluginLifeCycledResource = new PluginLifeCycledResource<>(ResourceContext.class);
 
     public DataSourcePlugin() {
@@ -78,33 +73,6 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
         this.commitModeContainerLifeCycle = commitModeContainerLifeCycle;
     }
 
-
-    public static class DataSourcePluginBuilder {
-        protected boolean usingJavaContext = false;
-        protected LifeCycle lifeCycle = LifeCycle.TEST_CONFIG;
-        protected CommitMode commitModeContainerLifeCycle = CommitMode.ROLLBACK;
-
-        public DataSourcePluginBuilder usingJavaContext() {
-            this.usingJavaContext = true;
-            this.lifeCycle = LifeCycle.TEST_CONFIG;
-            return this;
-        }
-
-        public DataSourcePluginBuilder lifeCycle(LifeCycle lifeCycle) {
-            this.lifeCycle = lifeCycle;
-            return this;
-        }
-
-        public DataSourcePluginBuilder commitAfterContainerCreation() {
-            this.commitModeContainerLifeCycle = CommitMode.COMMIT;
-            return this;
-        }
-
-        public DataSourcePlugin build() {
-            return new DataSourcePlugin(usingJavaContext, lifeCycle, commitModeContainerLifeCycle);
-        }
-    }
-
     @Override
     public Set<ResourceProvider> resources() {
         Set<ResourceProvider> resourceProviderSupports = new HashSet<>();
@@ -114,19 +82,6 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
                 )
         );
         return resourceProviderSupports;
-    }
-
-    private class ResourceContext {
-        private final DatasourceResourceCreator datasourceResourceCreator;
-        private final ResourceFactory resourceFactory;
-        private final ProxyResourceCreator proxyResourceCreator;
-
-        private ResourceContext(ResourceFactory resourceFactory, ProxyResourceCreator proxyResourceCreator) {
-            this.resourceFactory = resourceFactory;
-            this.proxyResourceCreator = proxyResourceCreator;
-            this.datasourceResourceCreator =  new DatasourceResourceCreator(proxyResourceCreator);
-
-        }
     }
 
     /**
@@ -139,24 +94,18 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
         return this;
     }
 
-    public interface ResourceLoaderRunner {
-        void run();
-    }
     /**
      * Will store all resources in a shared mode to support java.context way of handling resources
+     *
      * @return same instance with changed value of usingContext
      */
 
 
-
-
-    public DataSource createDataSource(){
+    public DataSource createDataSource() {
         return resourceContext.resourceFactory.getCreator(DataSource.class, usingJavaContext).create();
     }
 
-
-
-    public DataSource createDataSource(String name){
+    public DataSource createDataSource(String name) {
         return resourceContext.resourceFactory.getCreator(DataSource.class, usingJavaContext).create(name);
     }
 
@@ -184,8 +133,7 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
         return this;
     }
 
-
-    Collection<DataSourceProxyInterface> getDataSources(){
+    Collection<DataSourceProxyInterface> getDataSources() {
         return resourceContext.datasourceResourceCreator.getResources();
     }
 
@@ -209,7 +157,6 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
         resourceContext.resourceFactory.addResourceCrator(resourceContext.datasourceResourceCreator);
         return resourceContext;
     }
-
 
     @RunnerPluginBeforeContainerCreation
     protected void beforeContainerCreation(PluginContext pluginContext) {
@@ -253,6 +200,54 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
         return lifeCycle;
     }
 
+    TransactionManager createTransactionManager() {
+        return new TransactionManager(resourceContext.proxyResourceCreator);
+    }
+
+    protected enum CommitMode {COMMIT, ROLLBACK}
+
+    public interface ResourceLoaderRunner {
+        void run();
+    }
+
+    public static class DataSourcePluginBuilder {
+        protected boolean usingJavaContext = false;
+        protected LifeCycle lifeCycle = LifeCycle.TEST_CONFIG;
+        protected CommitMode commitModeContainerLifeCycle = CommitMode.ROLLBACK;
+
+        public DataSourcePluginBuilder usingJavaContext() {
+            this.usingJavaContext = true;
+            this.lifeCycle = LifeCycle.TEST_CONFIG;
+            return this;
+        }
+
+        public DataSourcePluginBuilder lifeCycle(LifeCycle lifeCycle) {
+            this.lifeCycle = lifeCycle;
+            return this;
+        }
+
+        public DataSourcePluginBuilder commitAfterContainerCreation() {
+            this.commitModeContainerLifeCycle = CommitMode.COMMIT;
+            return this;
+        }
+
+        public DataSourcePlugin build() {
+            return new DataSourcePlugin(usingJavaContext, lifeCycle, commitModeContainerLifeCycle);
+        }
+    }
+
+    private class ResourceContext {
+        private final DatasourceResourceCreator datasourceResourceCreator;
+        private final ResourceFactory resourceFactory;
+        private final ProxyResourceCreator proxyResourceCreator;
+
+        private ResourceContext(ResourceFactory resourceFactory, ProxyResourceCreator proxyResourceCreator) {
+            this.resourceFactory = resourceFactory;
+            this.proxyResourceCreator = proxyResourceCreator;
+            this.datasourceResourceCreator = new DatasourceResourceCreator(proxyResourceCreator);
+
+        }
+    }
 
     public class ResourceLoader {
         private final Class<? extends ResourceLoaderRunner> aClass;
@@ -268,14 +263,10 @@ public class DataSourcePlugin implements Plugin, ResourceProviderSupport {
                 resourceRunnerState.put(aClass, resourceLoaderRunner);
                 return resourceLoaderRunner;
             }
-            return () -> {};
+            return () -> {
+            };
         }
     }
-
-    TransactionManager createTransactionManager() {
-        return new TransactionManager(resourceContext.proxyResourceCreator);
-    }
-
 
 
 }

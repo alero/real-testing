@@ -61,16 +61,16 @@ public class ServiceRegister {
         return singleton;
     }
 
+    public void setSingleton(Object singleton) {
+        this.singleton = singleton;
+    }
+
     public InjectionContainerManager.Scope getScope() {
         return scope;
     }
 
     public InjectionContainerManager.RegisterType getRegisterType() {
         return registerType;
-    }
-
-    public void setSingleton(Object singleton) {
-        this.singleton = singleton;
     }
 
     public ServiceRegister getOverriddenService() {

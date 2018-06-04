@@ -16,7 +16,6 @@
 
 package org.hrodberaht.injection.core.internal;
 
-import org.hrodberaht.injection.core.InjectContainer;
 import org.hrodberaht.injection.core.Module;
 import org.hrodberaht.injection.core.register.InjectionRegister;
 import org.hrodberaht.injection.core.register.RegistrationModule;

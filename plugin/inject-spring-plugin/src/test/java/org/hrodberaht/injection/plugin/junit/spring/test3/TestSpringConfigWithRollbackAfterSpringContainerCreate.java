@@ -19,13 +19,10 @@ package org.hrodberaht.injection.plugin.junit.spring.test3;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
 import org.hrodberaht.injection.plugin.junit.spring.config.JUnitConfigExampleResourceToSpringBeansRollbackOnSpringContainerCreate;
-import org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanWithContext;
 import org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanWithSpringBean;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;

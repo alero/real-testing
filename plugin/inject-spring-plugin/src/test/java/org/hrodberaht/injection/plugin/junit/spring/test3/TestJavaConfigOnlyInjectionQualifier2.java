@@ -17,10 +17,8 @@
 package org.hrodberaht.injection.plugin.junit.spring.test3;
 
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
-import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
 import org.hrodberaht.injection.plugin.junit.SpringJUnit4Runner;
 import org.hrodberaht.injection.plugin.junit.spring.config.JUnitConfigExampleResourceToSpringBeans;
-import org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanWithContext;
 import org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanWithSpringBean;
 import org.junit.Test;
 import org.junit.runner.RunWith;

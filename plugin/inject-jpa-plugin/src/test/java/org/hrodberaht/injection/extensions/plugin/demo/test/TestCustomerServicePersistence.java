@@ -38,10 +38,9 @@ public class TestCustomerServicePersistence {
 
 
     @Inject
-    private CustomerService customerService;
-
-    @Inject
     JPATestUtil jpaTestUtil;
+    @Inject
+    private CustomerService customerService;
 
     /**
      * Test Persistence register/read

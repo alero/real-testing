@@ -17,13 +17,13 @@
 package org.hrodberaht.injection.plugin.junit.plugins;
 
 import com.google.inject.Injector;
+import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
 import org.hrodberaht.injection.plugin.junit.plugins.test.service.AService;
 import org.hrodberaht.injection.plugin.junit.plugins.test.service.MoreServices;
 import org.hrodberaht.injection.plugin.junit.plugins.test.service.config.GuiceModule;
-import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -36,22 +36,12 @@ import static org.junit.Assert.assertSame;
 @RunWith(JUnit4Runner.class)
 public class GuicePluginTest {
 
-    public static class Config extends ContainerContextConfigBase {
-        @Override
-        public void register(InjectionRegistryBuilder registryBuilder) {
-            activatePlugin(GuiceExtensionPlugin.class).guiceModules(new GuiceModule());
-        }
-    }
-
     @Inject
     private AService aService;
-
     @Inject
     private MoreServices moreServices;
-
     @Inject
     private Injector injector;
-
 
     @Test
     public void testForServiceWiring() throws Exception {
@@ -60,5 +50,12 @@ public class GuicePluginTest {
         assertSame(moreServices, aService.getService());
 
         assertSame(injector.getInstance(MoreServices.class), aService.getService());
+    }
+
+    public static class Config extends ContainerContextConfigBase {
+        @Override
+        public void register(InjectionRegistryBuilder registryBuilder) {
+            activatePlugin(GuiceExtensionPlugin.class).guiceModules(new GuiceModule());
+        }
     }
 }

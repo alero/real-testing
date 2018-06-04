@@ -38,10 +38,10 @@ import java.util.Map;
  */
 public abstract class RegistrationModuleAnnotation implements RegistrationModule<RegistrationInstanceSimple> {
 
-    private InjectionFinder injectionFinderImplementation;
-    private InstanceCreator instanceCreatorImplementation;
     protected Map<RegistrationInstanceSimple, RegistrationInstanceSimple>
             registrations = new HashMap<RegistrationInstanceSimple, RegistrationInstanceSimple>();
+    private InjectionFinder injectionFinderImplementation;
+    private InstanceCreator instanceCreatorImplementation;
 
     protected RegistrationModuleAnnotation() {
         registrations();

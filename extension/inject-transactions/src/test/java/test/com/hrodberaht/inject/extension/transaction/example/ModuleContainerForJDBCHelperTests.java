@@ -32,24 +32,6 @@ public class ModuleContainerForJDBCHelperTests implements InjectionContainerCrea
     public ModuleContainerForJDBCHelperTests() {
     }
 
-    public InjectContainer createContainer() {
-        InjectionRegisterModule register = new InjectionRegisterModule();
-
-        // This is just done to simplify the test application
-        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("example-jpa");
-
-
-        register.register(JDBCHelperApplication.class);
-        // Create the JdbcModule for a data-source
-        DataSource dataSource = getDataSource(entityManagerFactory);
-        register.register(new JdbcModule(dataSource));
-
-        InjectContainer injectContainer = register.getContainer();
-        container = injectContainer;
-        return injectContainer;
-    }
-
-
     public static DataSource getDataSource(final EntityManagerFactory entityManagerFactory) {
 
         DataSource simpleDataSource = new DataSource() {
@@ -93,12 +75,12 @@ public class ModuleContainerForJDBCHelperTests implements InjectionContainerCrea
                 printWriter = out;
             }
 
-            public void setLoginTimeout(int seconds) throws SQLException {
-
-            }
-
             public int getLoginTimeout() throws SQLException {
                 return 600;
+            }
+
+            public void setLoginTimeout(int seconds) throws SQLException {
+
             }
 
             public Logger getParentLogger() throws SQLFeatureNotSupportedException {
@@ -116,5 +98,22 @@ public class ModuleContainerForJDBCHelperTests implements InjectionContainerCrea
         return simpleDataSource;
 
 
+    }
+
+    public InjectContainer createContainer() {
+        InjectionRegisterModule register = new InjectionRegisterModule();
+
+        // This is just done to simplify the test application
+        EntityManagerFactory entityManagerFactory = Persistence.createEntityManagerFactory("example-jpa");
+
+
+        register.register(JDBCHelperApplication.class);
+        // Create the JdbcModule for a data-source
+        DataSource dataSource = getDataSource(entityManagerFactory);
+        register.register(new JdbcModule(dataSource));
+
+        InjectContainer injectContainer = register.getContainer();
+        container = injectContainer;
+        return injectContainer;
     }
 }

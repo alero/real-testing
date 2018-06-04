@@ -4,10 +4,10 @@ import com.hrodberaht.inject.extensions.transaction.junit.InjectionContainerCrea
 import com.hrodberaht.inject.extensions.transaction.junit.TransactionManagedTesting;
 import com.hrodberaht.inject.extensions.transaction.manager.internal.TransactionLogging;
 import org.hrodberaht.injection.InjectContainer;
+import org.hrodberaht.injection.core.internal.InjectionRegisterModule;
 import org.hrodberaht.injection.extensions.cdi.CDIContainerConfigBase;
 import org.hrodberaht.injection.extensions.junit.internal.JunitSQLContainerService;
 import org.hrodberaht.injection.extensions.junit.internal.ProxyResourceCreator;
-import org.hrodberaht.injection.core.internal.InjectionRegisterModule;
 
 import javax.sql.DataSource;
 

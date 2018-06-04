@@ -24,25 +24,17 @@ import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginAfterTes
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeClassTest;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeContainerCreation;
 import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeTest;
-import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProvider;
-import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProviderSupport;
 import org.hrodberaht.injection.plugin.junit.plugins.common.PluginLifeCycledResource;
 import org.hrodberaht.injection.plugin.junit.solr.SolrAssertions;
 import org.hrodberaht.injection.plugin.junit.solr.SolrTestRunner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Provider;
-import java.util.HashSet;
-import java.util.Set;
-
 public class SolrJPlugin implements Plugin {
-
-    private static final Logger LOG = LoggerFactory.getLogger(SolrJPlugin.class);
 
     public static final String DEFAULT_HOME = "classpath:solr";
     public static final String DEFAULT_RUNNER_HOME = "target/solr";
-
+    private static final Logger LOG = LoggerFactory.getLogger(SolrJPlugin.class);
     private SolrTestRunner solrTestRunner;
     private String solrHome = DEFAULT_HOME;
     private String sealRunnerHome = DEFAULT_RUNNER_HOME;
@@ -76,7 +68,7 @@ public class SolrJPlugin implements Plugin {
     }
 
     public SolrClient getClient() {
-        if(solrTestRunner == null){
+        if (solrTestRunner == null) {
             throw new IllegalStateException("Client can not be fetched before container creation");
         }
         return solrTestRunner.getClient();
@@ -150,7 +142,6 @@ public class SolrJPlugin implements Plugin {
         LOG.info("createSolrContainer");
         return new SolrTestRunner();
     }
-
 
 
 }

@@ -60,12 +60,12 @@ public class InjectionMetaData {
         this.scopeHandler = scopeHandler;
     }
 
-    public void setConstructor(Constructor constructor) {
-        this.constructor = constructor;
-    }
-
     public Constructor getConstructor() {
         return constructor;
+    }
+
+    public void setConstructor(Constructor constructor) {
+        this.constructor = constructor;
     }
 
     List<InjectionMetaData> getConstructorDependencies() {
@@ -76,12 +76,12 @@ public class InjectionMetaData {
         this.constructorDependencies = constructorDependencies;
     }
 
-    void setInjectionPoints(List<InjectionPoint> injectionPoints) {
-        this.injectionPoints = injectionPoints;
-    }
-
     public List<InjectionPoint> getInjectionPoints() {
         return injectionPoints;
+    }
+
+    void setInjectionPoints(List<InjectionPoint> injectionPoints) {
+        this.injectionPoints = injectionPoints;
     }
 
     boolean isPreDefined() {
@@ -92,12 +92,12 @@ public class InjectionMetaData {
         this.preDefined = preDefined;
     }
 
-    void setExtendedInjection(boolean extendedInjection) {
-        this.extendedInjection = extendedInjection;
-    }
-
     boolean isExtendedInjection() {
         return extendedInjection;
+    }
+
+    void setExtendedInjection(boolean extendedInjection) {
+        this.extendedInjection = extendedInjection;
     }
 
     public Class getServiceClass() {

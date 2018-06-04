@@ -44,6 +44,10 @@ public class TransactionHolder<T> {
         return childTransaction;
     }
 
+    public void setChildTransaction(TransactionHolder<T> childTransaction) {
+        this.childTransaction = childTransaction;
+    }
+
     public TransactionHolder<T> getParentTransaction() {
         return parentTransaction;
     }
@@ -52,16 +56,12 @@ public class TransactionHolder<T> {
         this.parentTransaction = parentTransaction;
     }
 
-    public void setChildTransaction(TransactionHolder<T> childTransaction) {
-        this.childTransaction = childTransaction;
+    public boolean isRollbackOnly() {
+        return rollbackOnly;
     }
 
     public void setRollbackOnly(boolean rollbackOnly) {
         this.rollbackOnly = rollbackOnly;
-    }
-
-    public boolean isRollbackOnly() {
-        return rollbackOnly;
     }
 
     public TransactionHolder<T> getCurrentActiveTransaction() {

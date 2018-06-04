@@ -34,17 +34,16 @@ public class JerseyTestBuilder {
     }
 
     public JerseyClientRestassuredResponse get(String path) {
-        return new JerseyClientRestassuredRequest((JerseyClient)jerseyTest.client(), url).get(path);
+        return new JerseyClientRestassuredRequest((JerseyClient) jerseyTest.client(), url).get(path);
     }
 
     public JerseyClientRestassuredResponse get(String path, Object... values) {
-        return new JerseyClientRestassuredRequest((JerseyClient)jerseyTest.client(), url).get(path, values);
+        return new JerseyClientRestassuredRequest((JerseyClient) jerseyTest.client(), url).get(path, values);
     }
 
     public JerseyClientRestassuredRequest given() {
-        return new JerseyClientRestassuredRequest((JerseyClient)jerseyTest.client(), url);
+        return new JerseyClientRestassuredRequest((JerseyClient) jerseyTest.client(), url);
     }
-
 
 
 }

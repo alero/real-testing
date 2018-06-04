@@ -40,7 +40,7 @@ public class SpringJUnit4Runner extends SpringJUnit4ClassRunner {
      */
     public SpringJUnit4Runner(Class<?> clazz) throws InitializationError {
         super(clazz);
-        jUnitContext = new JUnitContext(clazz){
+        jUnitContext = new JUnitContext(clazz) {
             @Override
             void runBeforeTest(boolean activateContainer, String testName) {
                 super.runBeforeTest(activateContainer, testName);

@@ -19,8 +19,6 @@ package org.hrodberaht.injection.plugin.datasource.embedded.vendors;
 import org.slf4j.LoggerFactory;
 
 import java.io.PrintWriter;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
@@ -67,13 +65,13 @@ public class DataSourceWrapper implements javax.sql.DataSource {
     }
 
     @Override
-    public void setLoginTimeout(int seconds) throws SQLException {
-
+    public int getLoginTimeout() throws SQLException {
+        return 0;
     }
 
     @Override
-    public int getLoginTimeout() throws SQLException {
-        return 0;
+    public void setLoginTimeout(int seconds) throws SQLException {
+
     }
 
     @Override
@@ -83,7 +81,7 @@ public class DataSourceWrapper implements javax.sql.DataSource {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName()+"@"+Integer.toHexString(System.identityHashCode(this));
+        return this.getClass().getSimpleName() + "@" + Integer.toHexString(System.identityHashCode(this));
     }
 }
 

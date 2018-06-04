@@ -22,6 +22,10 @@ public class JerseyTestRunner {
 
     private final JerseyTest jerseyTest;
 
+    public JerseyTestRunner(JerseyTest jerseyTest) {
+        this.jerseyTest = jerseyTest;
+    }
+
     public void initializeJersey() {
         try {
             jerseyTest.setUp();
@@ -36,10 +40,6 @@ public class JerseyTestRunner {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public JerseyTestRunner(JerseyTest jerseyTest) {
-        this.jerseyTest = jerseyTest;
     }
 
     public JerseyTest getJerseyTest() {

@@ -263,7 +263,7 @@ public class AnnotationInjection {
 
 
     private Object callConstructor(InjectionMetaData injectionMetaData, boolean enforceNew) {
-        if(injectionMetaData.isExtendedInjection()){
+        if (injectionMetaData.isExtendedInjection()) {
             return injectionMetaData.createInstance(null).getInstance();
         }
         List<InjectionMetaData> dependencies = injectionMetaData.getConstructorDependencies();

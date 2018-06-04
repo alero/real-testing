@@ -24,7 +24,8 @@ import java.util.Calendar;
 
 public class TestPreparedStatemenmt extends TestStatemenmt implements PreparedStatement {
     private final PreparedStatement preparedStatement;
-    public TestPreparedStatemenmt(TestConnection testConnection, PreparedStatement preparedStatement){
+
+    public TestPreparedStatemenmt(TestConnection testConnection, PreparedStatement preparedStatement) {
         super(testConnection, preparedStatement);
         this.preparedStatement = preparedStatement;
     }

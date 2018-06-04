@@ -16,11 +16,9 @@ import javax.inject.Inject;
 
 public class JUnitSolrEmbedded8 {
 
-    TestSolrEmbedded testSolrEmbedded = new TestSolrEmbedded();
-
     @Inject
     public SolrJPlugin solrJPlugin;
-
+    TestSolrEmbedded testSolrEmbedded = new TestSolrEmbedded();
 
     @PostConstruct
     public void init() {

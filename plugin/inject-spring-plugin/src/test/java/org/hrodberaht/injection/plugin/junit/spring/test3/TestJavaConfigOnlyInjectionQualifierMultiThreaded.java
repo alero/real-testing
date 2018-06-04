@@ -56,7 +56,7 @@ public class TestJavaConfigOnlyInjectionQualifierMultiThreaded {
         assertEquals(new Integer(0), springBean.getLoginCount("dude"));
 
         int callers = 10;
-        for(int i=0;i<callers;i++){
+        for (int i = 0; i < callers; i++) {
             executor.execute(() -> {
                 springBean.login("dude", "wrong pass");
                 callCounter.incrementAndGet();

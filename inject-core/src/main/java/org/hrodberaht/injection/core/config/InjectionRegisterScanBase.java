@@ -42,27 +42,26 @@ public abstract class InjectionRegisterScanBase<T extends InjectionRegisterScanB
     private static final Logger LOG = LoggerFactory.getLogger(InjectionRegisterScanBase.class);
 
     private InjectionRegister referedRegister;
+    private ClassScanner classScanner = new ClassScanner();
 
     protected InjectionRegisterScanBase() {
     }
+
 
     public InjectionRegisterScanBase(InjectionRegister register) {
         super(register);
         referedRegister = register;
     }
 
-
-    private ClassScanner classScanner = new ClassScanner();
-
     public abstract T copy();
-
-    public void setInjectContainer(InjectContainer injectContainer) {
-        super.container = (InjectionContainerManager) injectContainer;
-    }
 
     @Override
     public InjectContainer getInjectContainer() {
         return container;
+    }
+
+    public void setInjectContainer(InjectContainer injectContainer) {
+        super.container = (InjectionContainerManager) injectContainer;
     }
 
     public T scanPackage(String... packagenames) {

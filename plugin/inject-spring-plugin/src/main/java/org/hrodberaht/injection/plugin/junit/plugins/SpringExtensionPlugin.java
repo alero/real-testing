@@ -65,35 +65,35 @@ public class SpringExtensionPlugin implements Plugin {
         return lifeCycle;
     }
 
-    public SpringExtensionPlugin springConfig(String... config){
+    public SpringExtensionPlugin springConfig(String... config) {
         builder.springConfigFiles = config;
         return this;
     }
 
-    public SpringExtensionPlugin springConfig(Class... config){
+    public SpringExtensionPlugin springConfig(Class... config) {
         builder.springConfigsClasses = config;
         return this;
     }
 
-    public SpringExtensionPlugin lifeCycle(LifeCycle lifeCycle){
+    public SpringExtensionPlugin lifeCycle(LifeCycle lifeCycle) {
         this.lifeCycle = lifeCycle;
         return this;
     }
 
-    public SpringExtensionPlugin with(Plugin plugin){
-        if(plugin instanceof ResourceProviderSupport) {
-            for(ResourceProvider resourceProvider:((ResourceProviderSupport)plugin).resources()){
+    public SpringExtensionPlugin with(Plugin plugin) {
+        if (plugin instanceof ResourceProviderSupport) {
+            for (ResourceProvider resourceProvider : ((ResourceProviderSupport) plugin).resources()) {
                 LOG.info("Adding resource {} - {}", resourceProvider.getName(), resourceProvider.getType());
                 builder.resourceProviders.add(resourceProvider);
             }
-        }else{
+        } else {
             LOG.warn("Plugin {} does not implement ResourceProviderSupport to exponse resources", plugin.getClass().getName());
         }
         builder.hasJpaPlugin = hasJpaPLugin(plugin);
         return this;
     }
 
-    public SpringExtensionPlugin withResources(ResourceProviderSupport resourceProviderSupport){
+    public SpringExtensionPlugin withResources(ResourceProviderSupport resourceProviderSupport) {
         builder.resourceProviders.addAll(resourceProviderSupport.resources());
         return this;
     }
@@ -102,9 +102,31 @@ public class SpringExtensionPlugin implements Plugin {
         try {
             Class.forName("org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin");
             return plugin instanceof JpaPlugin;
-        }catch (ClassNotFoundException e){
+        } catch (ClassNotFoundException e) {
             return false;
         }
+    }
+
+    @RunnerPluginBeforeContainerCreation
+    protected void beforeContainerCreation(PluginContext pluginContext) {
+        LOG.info("beforeContainerCreation for {}", this);
+        springRunner = pluginLifeCycledResource.create(lifeCycle, pluginContext, () -> new SpringRunner(this));
+        injectionRegister.register(new RegistrationModuleAnnotation() {
+            @Override
+            public void registrations() {
+                register(ApplicationContext.class).withFactoryInstance(springRunner.context);
+            }
+        });
+    }
+
+    @InjectionPluginInjectionRegister
+    protected void setInjectionRegister(InjectionRegister injectionRegister) {
+        this.injectionRegister = injectionRegister;
+    }
+
+    @InjectionPluginInjectionFinder
+    protected DefaultInjectionPointFinder getInjectionFinder(ContainerConfigBuilder containerConfigBuilder) {
+        return new SpringInjectionPointFinder(this, containerConfigBuilder);
     }
 
     private static class SpringRunner {
@@ -122,16 +144,16 @@ public class SpringExtensionPlugin implements Plugin {
 
             resourcesAsSpringBeans();
 
-            if(builder.springConfigsClasses != null){
+            if (builder.springConfigsClasses != null) {
                 context = loadConfig(builder.springConfigsClasses);
-            }else if(builder.springConfigFiles != null){
+            } else if (builder.springConfigFiles != null) {
                 context = loadConfig(builder.springConfigFiles);
-            }else {
+            } else {
                 context = null;
             }
-            if(context != null) {
+            if (context != null) {
                 springBeanInjector = new SpringBeanInjector(context);
-            }else{
+            } else {
                 springBeanInjector = null;
             }
         }
@@ -140,13 +162,13 @@ public class SpringExtensionPlugin implements Plugin {
             LOG.info("resourcesAsSpringBeans for {}", this);
             springExtensionPlugin.builder.resourceProviders.forEach(pluginResource -> {
                 Object instance = getInstance(pluginResource);
-                if(pluginResource.getName() != null) {
+                if (pluginResource.getName() != null) {
                     LOG.info("spring registerSingleton for {} using instance {}", pluginResource.getName(), instance);
                     parentBeanFactory.registerSingleton(pluginResource.getName(), instance);
-                }else if(pluginResource.getType() != null){
+                } else if (pluginResource.getType() != null) {
                     LOG.info("spring registerResolvableDependency for {} using instance {}", pluginResource.getType(), instance);
                     parentBeanFactory.registerResolvableDependency(pluginResource.getType(), instance);
-                }else{
+                } else {
                     LOG.warn("No name or type was provided for {}", pluginResource);
                 }
             });
@@ -157,7 +179,7 @@ public class SpringExtensionPlugin implements Plugin {
         }
 
         private Class<?> getContainerSpringConfigClass() {
-            return  springExtensionPlugin.builder.hasJpaPlugin ? ContainerAllSpringConfig.class : ContainerSpringConfig.class;
+            return springExtensionPlugin.builder.hasJpaPlugin ? ContainerAllSpringConfig.class : ContainerSpringConfig.class;
         }
 
         private ClassPathXmlApplicationContext loadConfig(String... springConfigs) {
@@ -195,15 +217,13 @@ public class SpringExtensionPlugin implements Plugin {
 
     }
 
-
     private static class Builder {
         private String[] springConfigFiles = null;
         private Class[] springConfigsClasses = null;
         private List<ResourceProvider> resourceProviders = new ArrayList<>();
-        private boolean hasJpaPlugin= false;
+        private boolean hasJpaPlugin = false;
 
     }
-
 
     private static class SpringInjectionPointFinder extends DefaultInjectionPointFinder {
         private final SpringExtensionPlugin springExtensionPlugin;
@@ -216,7 +236,7 @@ public class SpringExtensionPlugin implements Plugin {
         @Override
         public Object extendedInjection(Object instance) {
             super.extendedInjection(instance);
-            if(springExtensionPlugin.springRunner.springBeanInjector != null) {
+            if (springExtensionPlugin.springRunner.springBeanInjector != null) {
                 springExtensionPlugin.springRunner.springBeanInjector.inject(instance, springExtensionPlugin.injectionRegister.getContainer());
             }
             return instance;
@@ -231,27 +251,5 @@ public class SpringExtensionPlugin implements Plugin {
         protected boolean hasInjectAnnotationOnMethod(Method method) {
             return method.isAnnotationPresent(SpringInject.class) || super.hasInjectAnnotationOnMethod(method);
         }
-    }
-
-    @RunnerPluginBeforeContainerCreation
-    protected void beforeContainerCreation(PluginContext pluginContext) {
-        LOG.info("beforeContainerCreation for {}", this);
-        springRunner = pluginLifeCycledResource.create(lifeCycle, pluginContext, () -> new SpringRunner(this));
-        injectionRegister.register(new RegistrationModuleAnnotation() {
-            @Override
-            public void registrations() {
-                register(ApplicationContext.class).withFactoryInstance(springRunner.context);
-            }
-        });
-    }
-
-    @InjectionPluginInjectionRegister
-    protected void setInjectionRegister(InjectionRegister injectionRegister) {
-        this.injectionRegister = injectionRegister;
-    }
-
-    @InjectionPluginInjectionFinder
-    protected DefaultInjectionPointFinder getInjectionFinder(ContainerConfigBuilder containerConfigBuilder) {
-        return new SpringInjectionPointFinder(this, containerConfigBuilder);
     }
 }

@@ -14,15 +14,17 @@
   ~ limitations under the License.
   -->
 
-<beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans-2.5.xsd"
 >
 
 
-    <bean name="springBean" class="org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanWithSpringBean"/>
-    <bean name="springBean2" class="org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanWithSpringBean"/>
+    <bean name="springBean"
+          class="org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanWithSpringBean"/>
+    <bean name="springBean2"
+          class="org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanWithSpringBean"/>
     <bean name="springBean3" class="org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanWithContext"/>
 
 </beans>

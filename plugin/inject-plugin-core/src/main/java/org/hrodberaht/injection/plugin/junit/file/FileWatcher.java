@@ -22,24 +22,22 @@ import java.time.format.DateTimeFormatter;
 
 public class FileWatcher {
 
+    private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
     private String fileName;
     private LocalDateTime timestamp;
-
-    private static DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ISO_DATE_TIME;
 
     public FileWatcher(String fileName, LocalDateTime timestamp) {
         this.fileName = fileName;
         this.timestamp = timestamp;
     }
 
-
-    public String writeString() {
-        return fileName + ";" + timestamp.format(dateTimeFormatter);
-    }
-
     public static FileWatcher readString(String line) {
         String[] strings = line.split(";");
         return new FileWatcher(strings[0], LocalDateTime.parse(strings[1], dateTimeFormatter));
+    }
+
+    public String writeString() {
+        return fileName + ";" + timestamp.format(dateTimeFormatter);
     }
 
     public File getFile() {

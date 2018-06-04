@@ -48,22 +48,17 @@ import static org.hrodberaht.injection.plugin.junit.plugins.SolrJPlugin.DEFAULT_
 public class SolrTestRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger(SolrTestRunner.class);
-    private static Map<String, SolrRunnerHolder> CORE_CACHE = new ConcurrentHashMap<>();
     private static final String classpathPrefix = "classpath:";
-
+    private static Map<String, SolrRunnerHolder> CORE_CACHE = new ConcurrentHashMap<>();
     private String base;
     private String home;
     private String coreName;
 
-
-    private class SolrRunnerHolder {
-        private final CoreContainer coreContainer;
-        private final EmbeddedSolrServer solr;
-
-        public SolrRunnerHolder(CoreContainer coreContainer, EmbeddedSolrServer solr) {
-            this.coreContainer = coreContainer;
-            this.solr = solr;
-        }
+    private static void copyFile(final String copyToDir, final String resourceStream, final String fileName) throws IOException {
+        LOG.info("copyFile from:{} toDir:{} toFile:{}", resourceStream, copyToDir, fileName);
+        final InputStream inputStream = SolrTestRunner.class.getClassLoader().getResourceAsStream(resourceStream);
+        new File(copyToDir).mkdirs();
+        Files.copy(inputStream, new File(copyToDir, fileName).toPath(), REPLACE_EXISTING);
     }
 
     public void setup() {
@@ -96,13 +91,6 @@ public class SolrTestRunner {
 
     private void setupSolr() throws IOException {
         perpareSolrHomeAndStart();
-    }
-
-    private static void copyFile(final String copyToDir, final String resourceStream, final String fileName) throws IOException {
-        LOG.info("copyFile from:{} toDir:{} toFile:{}", resourceStream, copyToDir, fileName);
-        final InputStream inputStream = SolrTestRunner.class.getClassLoader().getResourceAsStream(resourceStream);
-        new File(copyToDir).mkdirs();
-        Files.copy(inputStream, new File(copyToDir, fileName).toPath(), REPLACE_EXISTING);
     }
 
     private void perpareSolrHomeAndStart() throws IOException {
@@ -183,16 +171,15 @@ public class SolrTestRunner {
     }
 
     private void moveFiles(String solrHome, String path) throws IOException {
-        if(base.startsWith(classpathPrefix)) {
+        if (base.startsWith(classpathPrefix)) {
             String solrBase = base.substring(classpathPrefix.length(), base.length());
-            for (String fileName : getResourceListing(SolrTestRunner.class, solrBase+ "/" + path)) {
-                copyFile(solrHome + "/" + path, solrBase+"/" + path + "/" + fileName, fileName);
+            for (String fileName : getResourceListing(SolrTestRunner.class, solrBase + "/" + path)) {
+                copyFile(solrHome + "/" + path, solrBase + "/" + path + "/" + fileName, fileName);
             }
-        }else{
+        } else {
             throw new PluginRuntimeException("Only classpath resources supported at the moment");
         }
     }
-
 
     private List<String> getResourceListing(Class<?> clazz, String path) throws IOException {
         LOG.info("getResourceListing using path: {}", path);
@@ -260,12 +247,21 @@ public class SolrTestRunner {
         }
     }
 
-
     private void tearDown() throws IOException {
         File coreDir = new File(home, coreName);
         if (coreDir.exists()) {
             LOG.info("cleaning : " + coreDir.getAbsolutePath());
             FileUtils.cleanDirectory(coreDir);
+        }
+    }
+
+    private class SolrRunnerHolder {
+        private final CoreContainer coreContainer;
+        private final EmbeddedSolrServer solr;
+
+        public SolrRunnerHolder(CoreContainer coreContainer, EmbeddedSolrServer solr) {
+            this.coreContainer = coreContainer;
+            this.solr = solr;
         }
     }
 

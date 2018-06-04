@@ -33,11 +33,9 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(HsqlBDDataSourceConfigurationRestorable.class);
     private static final String JDBC_DRIVER = "org.hsqldb.jdbcDriver";
     private static final String JDBC_USERNAME = "sa";
-
-    private boolean exceptioOnWarnings = "throw".equals(System.getProperty("hrodberaht.datasource.errorhandling"));
-
     private final String dbName;
     private final ResourceWatcher resourceWatcher;
+    private boolean exceptioOnWarnings = "throw".equals(System.getProperty("hrodberaht.datasource.errorhandling"));
     private HSQLDriverManager driverManager = null;
 
     private DatasourceBackupRestore datasourceBackupRestore;
@@ -66,72 +64,6 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
         Class.forName(JDBC_DRIVER);
         driverManager = new HSQLBasicDriverManager();
         datasourceBackupRestore = new PlainHSqlBackupRestore(driverManager);
-
-    }
-
-    interface HSQLDriverManager extends VendorDriverManager{
-        PlainConnection getInnerConnection() throws SQLException;
-    }
-
-    class HSQLBasicDriverManager implements HSQLDriverManager {
-
-        private Map<String, TestConnection> borrowedTest = new HashMap<>();
-        private Map<String, TestConnection> borrowedPlain = new HashMap<>();
-
-        @Override
-        public TestConnection getConnection() throws SQLException {
-            return createConnection();
-        }
-
-        private TestConnection createConnection() throws SQLException {
-            checkForOpenChanges(borrowedPlain);
-            return borrowConnection(borrowedTest, () -> new TestConnection(createSQLConnextion()));
-        }
-
-        private void checkForOpenChanges(Map<String, TestConnection> connectionMap) {
-            if(!connectionMap.isEmpty()){
-                connectionMap.values().forEach(testConnection -> {
-                    if(testConnection.isOpenChanges()){
-                        if(exceptioOnWarnings) {
-                            throw new IllegalAccessError("Open changes in other connection type");
-                        }
-                        else{
-                            LOG.error("Open changes in other connection type, meaning that a commit/rollback was not performed as expected");
-                        }
-                    }
-                });
-            }
-        }
-
-        private <T extends TestConnection> T borrowConnection(Map<String, TestConnection> borrowed, CreateConnection<T> createConnection) throws SQLException {
-            if(!borrowed.isEmpty()){
-                if(exceptioOnWarnings) {
-                    throw new IllegalAccessError("Not allowed to borrow new connection until old one is closed");
-                }else{
-                    LOG.warn("Borrow new connection before old one is closed, usually means multi-threaded tests");
-                    return (T) borrowed.values().iterator().next();
-                }
-            }
-            T testConnection = createConnection.create();
-            testConnection.setBorrowed(borrowed);
-            borrowed.put(testConnection.getUuid(), testConnection);
-            return testConnection;
-        }
-
-        private Connection createSQLConnextion() {
-            try {
-                return DriverManager.getConnection(datasourceBackupRestore.jdbcUrl() + dbName, JDBC_USERNAME, "");
-            } catch (SQLException e) {
-                throw new DataSourceRuntimeException(e);
-            }
-        }
-
-        @Override
-        public PlainConnection getInnerConnection() throws SQLException {
-            checkForOpenChanges(borrowedTest);
-            return borrowConnection(borrowedPlain, () -> new PlainConnection(createSQLConnextion()));
-        }
-
 
     }
 
@@ -167,11 +99,76 @@ public class HsqlBDDataSourceConfigurationRestorable implements DataSourceConfig
             return returnBool;
         } catch (Exception e) {
             throw new DataSourceRuntimeException(e);
-        }finally {
-            if(connection != null){
+        } finally {
+            if (connection != null) {
                 connection.dontFailClose();
             }
         }
+    }
+
+    interface HSQLDriverManager extends VendorDriverManager {
+        PlainConnection getInnerConnection() throws SQLException;
+    }
+
+    class HSQLBasicDriverManager implements HSQLDriverManager {
+
+        private Map<String, TestConnection> borrowedTest = new HashMap<>();
+        private Map<String, TestConnection> borrowedPlain = new HashMap<>();
+
+        @Override
+        public TestConnection getConnection() throws SQLException {
+            return createConnection();
+        }
+
+        private TestConnection createConnection() throws SQLException {
+            checkForOpenChanges(borrowedPlain);
+            return borrowConnection(borrowedTest, () -> new TestConnection(createSQLConnextion()));
+        }
+
+        private void checkForOpenChanges(Map<String, TestConnection> connectionMap) {
+            if (!connectionMap.isEmpty()) {
+                connectionMap.values().forEach(testConnection -> {
+                    if (testConnection.isOpenChanges()) {
+                        if (exceptioOnWarnings) {
+                            throw new IllegalAccessError("Open changes in other connection type");
+                        } else {
+                            LOG.error("Open changes in other connection type, meaning that a commit/rollback was not performed as expected");
+                        }
+                    }
+                });
+            }
+        }
+
+        private <T extends TestConnection> T borrowConnection(Map<String, TestConnection> borrowed, CreateConnection<T> createConnection) throws SQLException {
+            if (!borrowed.isEmpty()) {
+                if (exceptioOnWarnings) {
+                    throw new IllegalAccessError("Not allowed to borrow new connection until old one is closed");
+                } else {
+                    LOG.warn("Borrow new connection before old one is closed, usually means multi-threaded tests");
+                    return (T) borrowed.values().iterator().next();
+                }
+            }
+            T testConnection = createConnection.create();
+            testConnection.setBorrowed(borrowed);
+            borrowed.put(testConnection.getUuid(), testConnection);
+            return testConnection;
+        }
+
+        private Connection createSQLConnextion() {
+            try {
+                return DriverManager.getConnection(datasourceBackupRestore.jdbcUrl() + dbName, JDBC_USERNAME, "");
+            } catch (SQLException e) {
+                throw new DataSourceRuntimeException(e);
+            }
+        }
+
+        @Override
+        public PlainConnection getInnerConnection() throws SQLException {
+            checkForOpenChanges(borrowedTest);
+            return borrowConnection(borrowedPlain, () -> new PlainConnection(createSQLConnextion()));
+        }
+
+
     }
 
 

@@ -20,7 +20,6 @@ import org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanWith
 import org.mockito.Mockito;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.ImportResource;
 import org.springframework.transaction.PlatformTransactionManager;
 
 @Configuration
@@ -32,12 +31,12 @@ public class SpringConfigJavaSampleSimple {
     }
 
     @Bean(name = "springBean")
-    public SpringBeanWithSpringBean springBeanWithSpringBean(){
+    public SpringBeanWithSpringBean springBeanWithSpringBean() {
         return new SpringBeanWithSpringBean();
     }
 
     @Bean(name = "springBean2")
-    public SpringBeanWithSpringBean springBeanWithSpringBean2(){
+    public SpringBeanWithSpringBean springBeanWithSpringBean2() {
         return new SpringBeanWithSpringBean();
     }
 

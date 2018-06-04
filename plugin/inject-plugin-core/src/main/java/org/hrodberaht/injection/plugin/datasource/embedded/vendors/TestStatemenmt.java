@@ -7,9 +7,10 @@ import java.sql.SQLWarning;
 import java.sql.Statement;
 
 public class TestStatemenmt implements Statement {
-    private final Statement statement;
     protected final TestConnection testConnection;
-    public TestStatemenmt(TestConnection testConnection, Statement statement){
+    private final Statement statement;
+
+    public TestStatemenmt(TestConnection testConnection, Statement statement) {
         this.statement = statement;
         this.testConnection = testConnection;
     }
@@ -107,23 +108,23 @@ public class TestStatemenmt implements Statement {
     }
 
     @Override
-    public void setFetchDirection(int direction) throws SQLException {
-        statement.setFetchDirection(direction);
-    }
-
-    @Override
     public int getFetchDirection() throws SQLException {
         return statement.getFetchDirection();
     }
 
     @Override
-    public void setFetchSize(int rows) throws SQLException {
-        statement.setFetchSize(rows);
+    public void setFetchDirection(int direction) throws SQLException {
+        statement.setFetchDirection(direction);
     }
 
     @Override
     public int getFetchSize() throws SQLException {
         return statement.getFetchSize();
+    }
+
+    @Override
+    public void setFetchSize(int rows) throws SQLException {
+        statement.setFetchSize(rows);
     }
 
     @Override
@@ -214,13 +215,13 @@ public class TestStatemenmt implements Statement {
     }
 
     @Override
-    public void setPoolable(boolean poolable) throws SQLException {
-        statement.setPoolable(poolable);
+    public boolean isPoolable() throws SQLException {
+        return statement.isPoolable();
     }
 
     @Override
-    public boolean isPoolable() throws SQLException {
-        return statement.isPoolable();
+    public void setPoolable(boolean poolable) throws SQLException {
+        statement.setPoolable(poolable);
     }
 
     @Override
@@ -239,13 +240,13 @@ public class TestStatemenmt implements Statement {
     }
 
     @Override
-    public void setLargeMaxRows(long max) throws SQLException {
-        statement.setLargeMaxRows(max);
+    public long getLargeMaxRows() throws SQLException {
+        return statement.getLargeMaxRows();
     }
 
     @Override
-    public long getLargeMaxRows() throws SQLException {
-        return statement.getLargeMaxRows();
+    public void setLargeMaxRows(long max) throws SQLException {
+        statement.setLargeMaxRows(max);
     }
 
     @Override

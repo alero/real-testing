@@ -34,18 +34,22 @@ public class FactoryScopeHandler implements ScopeHandler {
         this.injectionFactory = theFactory;
     }
 
+    @Override
     public Object getInstance() {
         return injectionFactory.getInstance();
     }
 
+    @Override
     public void addInstance(Object instance) {
         throw new IllegalAccessError("Factory can not have instance set");
     }
 
+    @Override
     public ScopeContainer.Scope getScope() {
         return ScopeContainer.Scope.NEW;
     }
 
+    @Override
     public boolean isInstanceCreated() {
         return injectionFactory.newObjectOnInstance();
     }

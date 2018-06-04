@@ -29,9 +29,9 @@ public class ActiveMQPlugin implements Plugin, ResourceProviderSupport {
         return lifeCycle;
     }
 
-    public ActiveMQPlugin lifeCycle(final LifeCycle lifeCycle){
+    public ActiveMQPlugin lifeCycle(final LifeCycle lifeCycle) {
         this.lifeCycle = lifeCycle;
-        if(LifeCycle.TEST_CONFIG == lifeCycle){
+        if (LifeCycle.TEST_CONFIG == lifeCycle) {
             throw new IllegalArgumentException("lifeCycle can not be set to TEST_CONFIG as EmbeddedActiveMQBroker does not support multiple instances in one test suite");
         }
         return this;
@@ -39,19 +39,20 @@ public class ActiveMQPlugin implements Plugin, ResourceProviderSupport {
 
     /**
      * To be able to give the resource a name
+     *
      * @param name of the Resource that is exposed for type ConnectionFactory
      * @return builder
      */
-    public ActiveMQPlugin name(final String name){
+    public ActiveMQPlugin name(final String name) {
         this.name = name;
         return this;
     }
 
     @RunnerPluginBeforeContainerCreation
-    public void beforeContainer(final PluginContext pluginContext){
+    public void beforeContainer(final PluginContext pluginContext) {
         embedded = pluginLifeCycledResource.create(getLifeCycle(), pluginContext, () -> {
             EmbeddedActiveMQBroker embeddedActiveMQBroker = new EmbeddedActiveMQBroker();
-            if(getLifeCycle() == LifeCycle.TEST_SUITE) {
+            if (getLifeCycle() == LifeCycle.TEST_SUITE) {
                 embeddedActiveMQBroker.start();
             }
             return embeddedActiveMQBroker;
@@ -59,29 +60,29 @@ public class ActiveMQPlugin implements Plugin, ResourceProviderSupport {
     }
 
     @RunnerPluginBeforeClassTest
-    public void beforeTestClass(){
-        if(getLifeCycle() == LifeCycle.TEST_CLASS){
+    public void beforeTestClass() {
+        if (getLifeCycle() == LifeCycle.TEST_CLASS) {
             embedded.start();
         }
     }
 
     @RunnerPluginAfterClassTest
-    public void afterTestClass(){
-        if(getLifeCycle() == LifeCycle.TEST_CLASS){
+    public void afterTestClass() {
+        if (getLifeCycle() == LifeCycle.TEST_CLASS) {
             embedded.stop();
         }
     }
 
     @RunnerPluginBeforeTest
-    public void beforeTest(){
-        if(getLifeCycle() == LifeCycle.TEST){
+    public void beforeTest() {
+        if (getLifeCycle() == LifeCycle.TEST) {
             embedded.start();
         }
     }
 
     @RunnerPluginAfterTest
-    public void afterTest(){
-        if(getLifeCycle() == LifeCycle.TEST){
+    public void afterTest() {
+        if (getLifeCycle() == LifeCycle.TEST) {
             embedded.stop();
         }
     }
@@ -92,7 +93,7 @@ public class ActiveMQPlugin implements Plugin, ResourceProviderSupport {
 
     @Override
     public Set<ResourceProvider> resources() {
-        if(getLifeCycle() == LifeCycle.TEST || getLifeCycle() == LifeCycle.TEST_CLASS){
+        if (getLifeCycle() == LifeCycle.TEST || getLifeCycle() == LifeCycle.TEST_CLASS) {
             throw new IllegalArgumentException("Lifecycle can not be TEST or TEST_CLASS when connecting resources, this is because the MQ has to be started before the Resource is used");
         }
         Set<ResourceProvider> resourceProviders = new HashSet<>();

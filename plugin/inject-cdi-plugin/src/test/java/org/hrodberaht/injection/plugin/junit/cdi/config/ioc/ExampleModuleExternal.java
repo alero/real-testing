@@ -17,8 +17,8 @@
 package org.hrodberaht.injection.plugin.junit.cdi.config.ioc;
 
 import org.hrodberaht.injection.core.Module;
-import org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin;
 import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
+import org.hrodberaht.injection.plugin.junit.plugins.JpaPlugin;
 
 import javax.sql.DataSource;
 

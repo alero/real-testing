@@ -51,6 +51,7 @@ public class DefaultInjectionPointFinder implements InjectionFinder {
      * @param service the class to analyze
      * @return found injection points
      */
+    @Override
     public List<InjectionPoint> findInjectionPoints(Class service, AnnotationInjection annotationInjection) {
         List<InjectionPoint> injectionPoints = new ArrayList<InjectionPoint>();
         if (service == null) {
@@ -78,6 +79,7 @@ public class DefaultInjectionPointFinder implements InjectionFinder {
         return injectionPoints;
     }
 
+    @Override
     public Method findPostConstruct(Class serviceClass) {
         List<Method> allMethods = ReflectionUtils.findMethods(serviceClass);
         Method foundMethod = null;
@@ -95,6 +97,7 @@ public class DefaultInjectionPointFinder implements InjectionFinder {
         return foundMethod;
     }
 
+    @Override
     public Object extendedInjection(Object service) {
         ContainerConfigBuilder builder = getContainerConfigBuilder();
         if (builder != null) {

@@ -15,7 +15,8 @@
   ~ limitations under the License.
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.hrodberaht.inject</groupId>
@@ -50,8 +51,8 @@
         <url>https://github.com/alero/injection</url>
         <connection>scm:git:git://github.com/alero/injection.git</connection>
         <developerConnection>scm:git:git@github.com/alero/injection.git</developerConnection>
-      <tag>2.2.1</tag>
-  </scm>
+        <tag>2.2.1</tag>
+    </scm>
 
     <developers>
         <developer>
@@ -65,7 +66,6 @@
     </developers>
 
     <modules>
-        <module>extension</module>
         <module>plugin</module>
         <module>inject-core</module>
     </modules>

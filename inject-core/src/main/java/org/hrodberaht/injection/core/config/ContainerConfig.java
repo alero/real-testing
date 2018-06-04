@@ -38,13 +38,11 @@ import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
  */
 public abstract class ContainerConfig<T extends InjectionRegister> implements ContainerConfigBuilder {
 
+    protected final InjectionRegistryBuilder injectionRegistryBuilder = new InjectionRegistryBuilder(this);
+    protected ResourceFactory resourceFactory = createResourceFactory();
+    protected ResourceInject resourceInjection = createResourceInject();
     private InjectionRegister originalRegister = null;
     private InjectionRegister activeRegister = null;
-    protected final InjectionRegistryBuilder injectionRegistryBuilder = new InjectionRegistryBuilder(this);
-
-    protected ResourceFactory resourceFactory = createResourceFactory();
-
-    protected ResourceInject resourceInjection = createResourceInject();
 
     protected abstract ResourceFactory createResourceFactory();
 
@@ -52,12 +50,14 @@ public abstract class ContainerConfig<T extends InjectionRegister> implements Co
 
     protected abstract void appendResources(InjectionRegister registerModule);
 
+    @Override
     public void buildConfig() {
         originalRegister = injectionRegistryBuilder.build();
         appendResources(originalRegister);
         activeRegister = originalRegister.copy();
     }
 
+    @Override
     public void initiateConfig() {
         register(injectionRegistryBuilder);
         injectionRegistryBuilder.register(
@@ -67,12 +67,15 @@ public abstract class ContainerConfig<T extends InjectionRegister> implements Co
         );
     }
 
+
     public abstract void register(InjectionRegistryBuilder registryBuilder);
 
+    @Override
     public T getActiveRegister() {
         return (T) activeRegister;
     }
 
+    @Override
     public void addSingletonActiveRegistry() {
         RegistrationModuleAnnotation injectionRegisterModuleConfig = prepareModuleSingletonForRegistry();
         activeRegister.register(injectionRegisterModuleConfig);
@@ -92,6 +95,7 @@ public abstract class ContainerConfig<T extends InjectionRegister> implements Co
         };
     }
 
+    @Override
     public void cleanActiveContainer() {
         activeRegister = originalRegister.copy();
     }

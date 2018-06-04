@@ -30,19 +30,22 @@ public class InheritableThreadScopeHandler implements ScopeHandler {
 
     private InheritableThreadLocal<Object> placeHolder = new InheritableThreadLocal<Object>();
 
-
+    @Override
     public Object getInstance() {
         return placeHolder.get();
     }
 
+    @Override
     public void addInstance(Object instance) {
         placeHolder.set(instance);
     }
 
+    @Override
     public InjectionContainerManager.Scope getScope() {
         return InjectionContainerManager.Scope.INHERITABLE_THREAD;
     }
 
+    @Override
     public boolean isInstanceCreated() {
         return false;
     }

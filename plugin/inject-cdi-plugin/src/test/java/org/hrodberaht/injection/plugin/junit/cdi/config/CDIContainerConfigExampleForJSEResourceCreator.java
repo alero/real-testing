@@ -16,8 +16,8 @@
 
 package org.hrodberaht.injection.plugin.junit.cdi.config;
 
-import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
+import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 
 /**
  * Unit Test JUnit (using @Inject)

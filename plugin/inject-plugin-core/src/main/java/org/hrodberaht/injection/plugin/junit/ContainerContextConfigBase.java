@@ -31,7 +31,6 @@ import org.hrodberaht.injection.plugin.junit.inner.AnnotatedResourcePlugin;
 import org.hrodberaht.injection.plugin.junit.inner.AnnotatedRunnerPlugin;
 import org.hrodberaht.injection.plugin.junit.inner.InjectionPlugin;
 import org.hrodberaht.injection.plugin.junit.inner.RunnerPlugins;
-import org.hrodberaht.injection.plugin.junit.plugins.common.PluginLifeCycle;
 import org.hrodberaht.injection.plugin.junit.resources.ChainableInjectionPointProvider;
 import org.hrodberaht.injection.plugin.junit.resources.PluggableResourceFactory;
 import org.hrodberaht.injection.plugin.junit.resources.ResourcePluginBase;
@@ -43,6 +42,7 @@ public abstract class ContainerContextConfigBase implements ContainerContextConf
     private static final Logger LOG = LoggerFactory.getLogger(ContainerContextConfigBase.class);
     private final RunnerPlugins runnerPlugins = new RunnerPlugins();
     private final ContainerConfigInner containerConfigInner = new ContainerConfigInner(this);
+
     public abstract void register(InjectionRegistryBuilder registryBuilder);
 
     protected <T extends Plugin> T activatePlugin(Class<T> pluginClass) {
@@ -82,6 +82,9 @@ public abstract class ContainerContextConfigBase implements ContainerContextConf
         containerConfigInner.buildConfig();
     }
 
+    private <T extends Plugin> void registerActivePlugin(Class<T> pluginClass, T plugin) {
+        runnerPlugins.addActivePlugin(pluginClass, plugin);
+    }
 
     private static class ContainerConfigInner extends ContainerConfig {
         private final ContainerContextConfigBase base;
@@ -231,10 +234,6 @@ public abstract class ContainerContextConfigBase implements ContainerContextConf
         }
 
 
-    }
-
-    private <T extends Plugin> void registerActivePlugin(Class<T> pluginClass, T plugin) {
-        runnerPlugins.addActivePlugin(pluginClass, plugin);
     }
 
 

@@ -15,11 +15,9 @@ import javax.inject.Inject;
 @RunWith(JUnit4Runner.class)
 public class JUnitSolrEmbedded {
 
-    TestSolrEmbedded testSolrEmbedded = new TestSolrEmbedded();
-
     @Inject
     public SolrJPlugin solrJPlugin;
-
+    TestSolrEmbedded testSolrEmbedded = new TestSolrEmbedded();
 
     @PostConstruct
     public void init() {

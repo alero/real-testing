@@ -29,9 +29,8 @@ import java.util.List;
  */
 public class ClassScanningUtil {
 
-    private static boolean detailedScanLogging = false;
-
     private static final Logger LOG = LoggerFactory.getLogger(ClassScanningUtil.class);
+    private static boolean detailedScanLogging = false;
 
     public static Class findServiceImplementation(Class theInterface, List<Class> listOfClasses) {
 

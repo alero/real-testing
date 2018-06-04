@@ -32,20 +32,15 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class InstanceCreatorDefault implements InstanceCreator {
 
+    @Override
     public Object createInstance(Constructor constructor, Object... parameters) {
         try {
             Statistics.addNewInstanceCount();
             return constructor.newInstance(parameters);
 
-        } catch (InstantiationException e) {
-            throw new InstanceCreationError(e);
-        } catch (IllegalAccessException e) {
-            throw new InstanceCreationError(e);
-        } catch (InvocationTargetException e) {
-            throw new InstanceCreationError(e);
-        } catch (IllegalArgumentException e) {
-            throw new InstanceCreationError(e);
-        } catch (NullPointerException e) {
+        } catch (InstantiationException | IllegalAccessException
+                | IllegalArgumentException | InvocationTargetException
+                | NullPointerException e) {
             throw new InstanceCreationError(e);
         }
     }

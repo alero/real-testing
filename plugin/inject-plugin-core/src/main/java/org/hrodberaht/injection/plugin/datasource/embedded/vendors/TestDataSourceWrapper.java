@@ -40,7 +40,7 @@ public class TestDataSourceWrapper implements javax.sql.DataSource {
 
     private void initConnection() {
         try {
-            if(connectionThread.get() == null) {
+            if (connectionThread.get() == null) {
                 this.connectionThread.set(vendorDriverManager.getConnection());
                 LOG.info("Creating connection {} - {}", this, connectionThread.get());
                 this.connectionThread.get().setAutoCommit(false);
@@ -51,9 +51,9 @@ public class TestDataSourceWrapper implements javax.sql.DataSource {
         }
     }
 
-    public void commitNativeConnection(){
+    public void commitNativeConnection() {
         try {
-            if(connectionThread.get() != null){
+            if (connectionThread.get() != null) {
                 connectionThread.get().commitIt();
             }
         } catch (SQLException e) {
@@ -64,13 +64,12 @@ public class TestDataSourceWrapper implements javax.sql.DataSource {
     public void clearDataSource() {
         LOG.info("clearDataSource {} - {}", this, connectionThread.get());
         TestConnection connection = connectionThread.get();
-        if(connection != null) {
+        if (connection != null) {
             connection.dontFailRollback();
             connection.dontFailClose();
             connectionThread.remove();
         }
     }
-
 
 
     @Override
@@ -106,13 +105,13 @@ public class TestDataSourceWrapper implements javax.sql.DataSource {
     }
 
     @Override
-    public void setLoginTimeout(int seconds) throws SQLException {
-
+    public int getLoginTimeout() throws SQLException {
+        return 0;
     }
 
     @Override
-    public int getLoginTimeout() throws SQLException {
-        return 0;
+    public void setLoginTimeout(int seconds) throws SQLException {
+
     }
 
     @Override
@@ -122,7 +121,7 @@ public class TestDataSourceWrapper implements javax.sql.DataSource {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName()+"@"+Integer.toHexString(System.identityHashCode(this)) + "("+name+")";
+        return this.getClass().getSimpleName() + "@" + Integer.toHexString(System.identityHashCode(this)) + "(" + name + ")";
     }
 
     public String getName() {

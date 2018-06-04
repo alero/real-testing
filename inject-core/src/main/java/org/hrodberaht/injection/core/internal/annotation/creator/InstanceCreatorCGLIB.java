@@ -36,18 +36,14 @@ public class InstanceCreatorCGLIB implements InstanceCreator {
 
     private static final Map<Constructor, net.sf.cglib.reflect.FastConstructor>
             CACHED_CONSTRUCTS = new HashMap<Constructor, net.sf.cglib.reflect.FastConstructor>();
-
-    public Object createInstance(Constructor constructor, Object... parameters) {
-        net.sf.cglib.reflect.FastConstructor
-                fastConstructor = findFastCreatorInstance(constructor);
-        try {
-            return fastConstructor.newInstance(parameters);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
+    // use fully-qualified names so imports don't need preprocessor statements
+    private static final net.sf.cglib.core.NamingPolicy NAMING_POLICY
+            = new net.sf.cglib.core.DefaultNamingPolicy() {
+        @Override
+        protected String getTag() {
+            return "CreatedBySimpleInjection";
         }
-
-
-    }
+    };
 
     private static net.sf.cglib.reflect.FastConstructor findFastCreatorInstance(Constructor constructor) {
         if (!CACHED_CONSTRUCTS.containsKey(constructor)) {
@@ -61,15 +57,6 @@ public class InstanceCreatorCGLIB implements InstanceCreator {
         return CACHED_CONSTRUCTS.get(constructor);
     }
 
-    // use fully-qualified names so imports don't need preprocessor statements
-    private static final net.sf.cglib.core.NamingPolicy NAMING_POLICY
-            = new net.sf.cglib.core.DefaultNamingPolicy() {
-        @Override
-        protected String getTag() {
-            return "CreatedBySimpleInjection";
-        }
-    };
-
     private static net.sf.cglib.reflect.FastClass newFastClass(Class type) {
         net.sf.cglib.reflect.FastClass.Generator generator
                 = new net.sf.cglib.reflect.FastClass.Generator();
@@ -81,6 +68,19 @@ public class InstanceCreatorCGLIB implements InstanceCreator {
 
     private static ClassLoader getClassLoader(Class<?> type) {
         return type.getClassLoader();
+    }
+
+    @Override
+    public Object createInstance(Constructor constructor, Object... parameters) {
+        net.sf.cglib.reflect.FastConstructor
+                fastConstructor = findFastCreatorInstance(constructor);
+        try {
+            return fastConstructor.newInstance(parameters);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
 }

@@ -14,12 +14,12 @@ public class MyConsumer {
     private CountDownLatch latch;
     private List<String> messages = new ArrayList<>();
 
-    public void setLatch(CountDownLatch latch) {
-        this.latch = latch;
-    }
-
     public CountDownLatch getLatch() {
         return latch;
+    }
+
+    public void setLatch(CountDownLatch latch) {
+        this.latch = latch;
     }
 
     @JmsListener(destination = "testqueue")

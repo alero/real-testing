@@ -47,26 +47,9 @@ public class JpaPlugin extends DataSourcePlugin {
     public EntityManager createEntityManager(DataSource dataSource, String name) {
         try {
             return entityManagerInjection.addPersistenceContext(name, entityManagerCreator.createEntityManager(name));
-        }finally {
-            SimpleDataSourceProxy testDataSourceWrapper = (SimpleDataSourceProxy)dataSource;
+        } finally {
+            SimpleDataSourceProxy testDataSourceWrapper = (SimpleDataSourceProxy) dataSource;
             testDataSourceWrapper.commitDataSource();
-        }
-    }
-
-    public static class JpaPluginBuilder extends DataSourcePluginBuilder {
-
-        public JpaPluginBuilder usingJavaContext() {
-            super.usingJavaContext();
-            return this;
-        }
-
-        public JpaPluginBuilder commitAfterContainerCreation() {
-            super.commitAfterContainerCreation();
-            return this;
-        }
-
-        public JpaPlugin build() {
-            return new JpaPlugin(usingJavaContext, lifeCycle, commitModeContainerLifeCycle);
         }
     }
 
@@ -92,5 +75,22 @@ public class JpaPlugin extends DataSourcePlugin {
     protected void afterTest() {
         entityManagerHolder.end();
         super.afterTest();
+    }
+
+    public static class JpaPluginBuilder extends DataSourcePluginBuilder {
+
+        public JpaPluginBuilder usingJavaContext() {
+            super.usingJavaContext();
+            return this;
+        }
+
+        public JpaPluginBuilder commitAfterContainerCreation() {
+            super.commitAfterContainerCreation();
+            return this;
+        }
+
+        public JpaPlugin build() {
+            return new JpaPlugin(usingJavaContext, lifeCycle, commitModeContainerLifeCycle);
+        }
     }
 }

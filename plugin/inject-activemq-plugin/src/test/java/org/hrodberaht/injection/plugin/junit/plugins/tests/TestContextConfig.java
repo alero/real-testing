@@ -5,8 +5,6 @@ import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.plugins.ActiveMQPlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.SpringExtensionPlugin;
-import org.hrodberaht.injection.plugin.junit.plugins.test.spring.ConsumerSimpleConfig;
-import org.hrodberaht.injection.plugin.junit.plugins.test.spring.ProducerSimpleConfig;
 import org.hrodberaht.injection.plugin.junit.plugins.tests.service.ConsumerConfig;
 import org.hrodberaht.injection.plugin.junit.plugins.tests.service.ProducerConfig;
 

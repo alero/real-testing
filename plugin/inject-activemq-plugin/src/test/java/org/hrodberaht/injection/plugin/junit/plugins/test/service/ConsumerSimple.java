@@ -12,14 +12,19 @@ public class ConsumerSimple {
     private static final Logger LOGGER = LoggerFactory.getLogger(ConsumerSimple.class);
 
     private CountDownLatch latch;
-    private List<String> messages = new ArrayList<>();
-
-    public void setLatch(CountDownLatch latch) {
-        this.latch = latch;
-    }
+    private List<String> messages;
 
     public CountDownLatch getLatch() {
         return latch;
+    }
+
+    public List<String> getMessages() {
+        return messages;
+    }
+
+    public void setLatch(CountDownLatch latch) {
+        this.latch = latch;
+        messages = new ArrayList<>();
     }
 
     @JmsListener(destination = "testqueue")

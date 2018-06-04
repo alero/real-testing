@@ -48,52 +48,52 @@ public class JsonObject {
         return aLong;
     }
 
-    public Integer getaInteger() {
-        return aInteger;
-    }
-
-    public String getaString() {
-        return aString;
-    }
-
-    public LocalDateTime getLocalDateTime() {
-        return localDateTime;
-    }
-
-    public LocalTime getLocalime() {
-        return localime;
-    }
-
-    public Boolean getaBoolean() {
-        return aBoolean;
-    }
-
-    public Double getaDouble() {
-        return aDouble;
-    }
-
     public void setaLong(Long aLong) {
         this.aLong = aLong;
+    }
+
+    public Integer getaInteger() {
+        return aInteger;
     }
 
     public void setaInteger(Integer aInteger) {
         this.aInteger = aInteger;
     }
 
+    public String getaString() {
+        return aString;
+    }
+
     public void setaString(String aString) {
         this.aString = aString;
+    }
+
+    public LocalDateTime getLocalDateTime() {
+        return localDateTime;
     }
 
     public void setLocalDateTime(LocalDateTime localDateTime) {
         this.localDateTime = localDateTime;
     }
 
+    public LocalTime getLocalime() {
+        return localime;
+    }
+
     public void setLocalime(LocalTime localime) {
         this.localime = localime;
     }
 
+    public Boolean getaBoolean() {
+        return aBoolean;
+    }
+
     public void setaBoolean(Boolean aBoolean) {
         this.aBoolean = aBoolean;
+    }
+
+    public Double getaDouble() {
+        return aDouble;
     }
 
     public void setaDouble(Double aDouble) {

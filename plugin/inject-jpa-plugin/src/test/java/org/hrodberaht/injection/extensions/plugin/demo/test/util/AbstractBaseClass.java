@@ -31,10 +31,9 @@ import static org.hrodberaht.injection.extensions.plugin.demo.test.config.Course
 @RunWith(JUnit4Runner.class)
 public abstract class AbstractBaseClass {
 
+    protected String init = null;
     @Resource(name = DATASOURCE_NAME)
     private DataSource dataSource;
-
-    protected String init = null;
 
     @PostConstruct
     protected void init() {

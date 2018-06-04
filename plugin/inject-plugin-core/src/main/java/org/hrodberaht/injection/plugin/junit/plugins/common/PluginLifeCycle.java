@@ -1,14 +1,13 @@
 package org.hrodberaht.injection.plugin.junit.plugins.common;
 
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
-import org.hrodberaht.injection.plugin.junit.api.PluginContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-public class PluginLifeCycle  {
+public class PluginLifeCycle {
 
 
     private static final Logger LOG = LoggerFactory.getLogger(PluginLifeCycle.class);
@@ -21,14 +20,6 @@ public class PluginLifeCycle  {
     public <T extends Plugin> PluginLifeCycle(Class<T> instanceClass) {
         this.instanceClass = instanceClass;
         stateHolder = classCache.computeIfAbsent(instanceClass, aClass -> new StateHolder());
-    }
-
-    private static class StateHolder<T> {
-        private InheritableThreadLocal<ThreadSafeState<T>> threadState = new InheritableThreadLocal<>();
-    }
-
-    public interface InstanceCreator<T> {
-        T create();
     }
 
     public <T extends Plugin> T create(Plugin.LifeCycle lifeCycle, Class configClass, InstanceCreator<T> instanceCreator) {
@@ -60,6 +51,14 @@ public class PluginLifeCycle  {
         T instance = instanceCreator.create();
         LOG.info("Created new resource {} using lifeCycle:{}", instance.getClass().getName(), lifeCycle);
         return instance;
+    }
+
+    public interface InstanceCreator<T> {
+        T create();
+    }
+
+    private static class StateHolder<T> {
+        private InheritableThreadLocal<ThreadSafeState<T>> threadState = new InheritableThreadLocal<>();
     }
 
     private static class ThreadSafeState<T> {

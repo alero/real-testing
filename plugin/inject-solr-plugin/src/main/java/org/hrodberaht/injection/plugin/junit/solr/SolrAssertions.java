@@ -36,16 +36,13 @@ public class SolrAssertions {
 
     private final SolrClient solr;
 
+    public SolrAssertions(SolrClient solr) {
+        this.solr = solr;
+    }
+
     public void cleanDataFromCollection() throws IOException, SolrServerException {
         solr.deleteByQuery("*:*");
         solr.commit(true, true, false);
-    }
-
-
-    public enum Status {OK, FAIL}
-
-    public SolrAssertions(SolrClient solr) {
-        this.solr = solr;
     }
 
     public void assertAddDocument(Status status, SolrInputDocument documents) throws IOException, SolrServerException {
@@ -72,7 +69,6 @@ public class SolrAssertions {
             assertTrue("Status not FAILED", updateResponse.getStatus() > 0);
         }
     }
-
 
     public QueryResponse find(String query, String filterQuery) throws IOException, SolrServerException {
         org.apache.solr.client.solrj.SolrQuery solrQuery = new org.apache.solr.client.solrj.SolrQuery()
@@ -138,6 +134,8 @@ public class SolrAssertions {
             assertTrue("Status not FAILED", queryResponse.getStatus() > 0);
         }
     }
+
+    public enum Status {OK, FAIL}
 
 
 }

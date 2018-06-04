@@ -29,7 +29,7 @@ public class GuiceUserServiceTest {
     private UserService userService;
 
     @Test
-    public void testForCreateUser(){
+    public void testForCreateUser() {
         assertNull(userService.getName("testing"));
         assertFalse(userService.existsInIndex("testing"));
         userService.createUser("testing", "password");

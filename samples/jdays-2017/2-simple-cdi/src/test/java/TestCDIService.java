@@ -14,14 +14,13 @@ import static org.junit.Assert.assertEquals;
 public class TestCDIService {
     @Inject
     private Service aService;
+    @Inject
+    private ServiceBean serviceBean;
 
     @Test
     public void testDoing() {
         assertEquals("done", aService.doIt());
     }
-
-    @Inject
-    private ServiceBean serviceBean;
 
     @Test
     public void testDoingOnBean() {

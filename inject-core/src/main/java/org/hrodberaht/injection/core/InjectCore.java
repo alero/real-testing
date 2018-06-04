@@ -22,7 +22,7 @@ public class InjectCore {
 
     private static List<Module> getModules(List<AbstractModule> abstractModules) {
         List<Module> moduleList = new ArrayList<>();
-        for(AbstractModule abstractModule:abstractModules){
+        for (AbstractModule abstractModule : abstractModules) {
             moduleList.add(Module.toModule(abstractModule));
         }
         return moduleList;

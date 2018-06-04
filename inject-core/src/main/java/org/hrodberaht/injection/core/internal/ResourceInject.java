@@ -58,7 +58,9 @@ public class ResourceInject {
         });
 
         foundFields.typedFields.forEach(field -> {
-            injectTypedResource(typedResources, serviceInstance, field);
+            if (!injectTypedResource(typedResources, serviceInstance, field)) {
+                throw new InjectRuntimeException("No resource found for " + field.getName());
+            }
         });
 
         foundFields.namedFields.forEach(resourceValue -> {
@@ -66,21 +68,6 @@ public class ResourceInject {
                 throw new InjectRuntimeException("No resource found for " + descriptive(resourceValue.field, resourceValue.resource));
             }
         });
-    }
-
-    private class ResourceFields{
-        List<ResourceValue> namedFields = new ArrayList<>();
-        List<Field> typedFields = new ArrayList<>();
-    }
-
-    private class ResourceValue{
-        private final Resource resource;
-        private final Field field;
-
-        private ResourceValue(Resource resource, Field field) {
-            this.resource = resource;
-            this.field = field;
-        }
     }
 
     private String descriptive(Field field, Resource resource) {
@@ -96,7 +83,6 @@ public class ResourceInject {
     private String getDescriptiveMappedName(Field field, Resource resource) {
         return hasMappedName(resource) ? "field:'" + field.getName() + "' mapped-name:'" + resource.mappedName() + "'" : "no name?";
     }
-
 
     private boolean hasNameOrMappedName(Resource resource) {
         return hasName(resource) || hasMappedName(resource);
@@ -150,12 +136,27 @@ public class ResourceInject {
                 }
                 field.set(serviceInstance, value);
             } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
+                throw new InjectRuntimeException(e);
             } finally {
                 if (!accessible) {
                     field.setAccessible(false);
                 }
             }
+        }
+    }
+
+    private class ResourceFields {
+        List<ResourceValue> namedFields = new ArrayList<>();
+        List<Field> typedFields = new ArrayList<>();
+    }
+
+    private class ResourceValue {
+        private final Resource resource;
+        private final Field field;
+
+        private ResourceValue(Resource resource, Field field) {
+            this.resource = resource;
+            this.field = field;
         }
     }
 

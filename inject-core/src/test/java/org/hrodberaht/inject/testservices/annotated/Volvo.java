@@ -54,27 +54,18 @@ public class Volvo implements Car {
 
     @Inject
     TestDriverManager driverManager;
-
-    private String information = null;
-
-    private String initText = null;
-    private String initTextSpecial = null;
-
     @Injected
     Tire specialInjectField;
     Tire specialInjectMethod;
-
     @SpecialResource
     String someInformation;
+    private String information = null;
+    private String initText = null;
+    private String initTextSpecial = null;
 
     @Inject
     public Volvo(@Spare Tire spareTire) {
         this.spareTire = spareTire;
-    }
-
-    @Injected
-    public void setSpecialInjectMethod(Tire specialInjectMethod) {
-        this.specialInjectMethod = specialInjectMethod;
     }
 
     public Volvo() {
@@ -153,5 +144,10 @@ public class Volvo implements Car {
 
     public Tire getSpecialInjectMethod() {
         return specialInjectMethod;
+    }
+
+    @Injected
+    public void setSpecialInjectMethod(Tire specialInjectMethod) {
+        this.specialInjectMethod = specialInjectMethod;
     }
 }

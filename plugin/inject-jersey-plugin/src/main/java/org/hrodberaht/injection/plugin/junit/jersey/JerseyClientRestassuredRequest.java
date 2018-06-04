@@ -18,7 +18,6 @@ package org.hrodberaht.injection.plugin.junit.jersey;
 
 import org.glassfish.jersey.client.JerseyClient;
 
-import javax.ws.rs.client.Client;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;

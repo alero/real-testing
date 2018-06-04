@@ -28,19 +28,22 @@ import org.hrodberaht.injection.core.internal.InjectionContainerManager;
  */
 public class DefaultScopeHandler implements ScopeHandler {
 
-
+    @Override
     public Object getInstance() {
         return null;
     }
 
+    @Override
     public void addInstance(Object instance) {
 
     }
 
+    @Override
     public InjectionContainerManager.Scope getScope() {
         return InjectionContainerManager.Scope.NEW;
     }
 
+    @Override
     public boolean isInstanceCreated() {
         return true;
     }

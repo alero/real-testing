@@ -17,11 +17,8 @@
 package org.hrodberaht.injection.plugin.datasource.embedded;
 
 
-import org.hrodberaht.injection.plugin.junit.datasource.DataSourceProxyInterface;
 import org.hrodberaht.injection.plugin.datasource.embedded.vendors.TestDataSourceWrapper;
-
-import java.sql.Connection;
-import java.sql.SQLException;
+import org.hrodberaht.injection.plugin.junit.datasource.DataSourceProxyInterface;
 
 public interface DataSourceConfiguration {
 

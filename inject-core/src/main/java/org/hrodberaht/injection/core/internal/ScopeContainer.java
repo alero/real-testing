@@ -28,10 +28,6 @@ import org.hrodberaht.injection.core.InjectContainer;
  */
 public interface ScopeContainer extends InjectContainer {
 
-    public enum Scope {
-        SINGLETON, NEW, THREAD, INHERITABLE_THREAD
-    }
-
     /**
      * Will force the registered service to have scope NEW when created. No matter how it was registered.
      *
@@ -51,4 +47,8 @@ public interface ScopeContainer extends InjectContainer {
      * sequential retrievals of the same service with forced singleton will give the same instance back.
      */
     <T> T getSingleton(Class<T> service);
+
+    public enum Scope {
+        SINGLETON, NEW, THREAD, INHERITABLE_THREAD
+    }
 }

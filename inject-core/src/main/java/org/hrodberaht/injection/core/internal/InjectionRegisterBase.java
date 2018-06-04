@@ -96,11 +96,13 @@ public abstract class InjectionRegisterBase<T extends InjectionRegister> impleme
         return this;
     }
 
+    @Override
     public InjectionRegister finalRegister(Class service) {
         finalRegister(service, service, InjectionContainerManager.Scope.NEW);
         return this;
     }
 
+    @Override
     public InjectContainer getContainer() {
         return container;
     }

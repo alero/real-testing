@@ -36,7 +36,7 @@ public class GuiceModule extends AbstractModule {
     }
 
     @Inject
-    public void init(AService aService){
+    public void init(AService aService) {
         aService.init();
     }
 }

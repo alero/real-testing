@@ -31,8 +31,6 @@ import java.util.List;
  */
 public interface InjectionFinder {
 
-    enum InjectionType {EXTENDED, OVERRIDDEN}
-
     List<InjectionPoint> findInjectionPoints(Class instanceClass, AnnotationInjection annotationInjection);
 
     Method findPostConstruct(Class instanceClass);
@@ -44,6 +42,8 @@ public interface InjectionFinder {
     default InjectionType getInjectionType() {
         return InjectionType.EXTENDED;
     }
+
+    enum InjectionType {EXTENDED, OVERRIDDEN}
 
 
 }

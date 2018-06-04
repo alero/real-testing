@@ -23,12 +23,12 @@ public class ApplicationContextService implements ApplicationContextAware {
 
     private ApplicationContext applicationContext;
 
+    public ApplicationContext getApplicationContext() {
+        return applicationContext;
+    }
+
     @Override
     public void setApplicationContext(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
-    }
-
-    public ApplicationContext getApplicationContext() {
-        return applicationContext;
     }
 }

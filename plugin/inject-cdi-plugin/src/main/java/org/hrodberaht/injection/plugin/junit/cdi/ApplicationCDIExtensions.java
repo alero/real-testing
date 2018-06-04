@@ -44,9 +44,6 @@ import java.util.jar.JarFile;
 public class ApplicationCDIExtensions implements CDIExtensions {
 
     private static final Logger LOG = LoggerFactory.getLogger(ApplicationCDIExtensions.class);
-
-    protected enum Phase {AFTER_BEAN_DISCOVERY, BEFORE_BEAN_DISCOVERY}
-
     protected Map<Phase, List<MethodClassHolder>> phaseMethods = new ConcurrentHashMap<Phase, List<MethodClassHolder>>();
 
     public ApplicationCDIExtensions() {
@@ -178,6 +175,8 @@ public class ApplicationCDIExtensions implements CDIExtensions {
             }
         }
     }
+
+    protected enum Phase {AFTER_BEAN_DISCOVERY, BEFORE_BEAN_DISCOVERY}
 
 
 }

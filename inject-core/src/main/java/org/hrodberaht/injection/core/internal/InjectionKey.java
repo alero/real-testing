@@ -57,6 +57,19 @@ public class InjectionKey {
         createHashCode();
     }
 
+    /**
+     * Makes a clone that is not marked as a Provider for implementation search
+     *
+     * @param key
+     * @return
+     */
+    public static InjectionKey purify(InjectionKey key) {
+        InjectionKey injectionKey = new InjectionKey(key.getServiceDefinition(), false);
+        injectionKey.annotation = key.annotation;
+        injectionKey.name = key.name;
+        return injectionKey;
+    }
+
     public Class<? extends Annotation> getAnnotation() {
         return annotation;
     }
@@ -123,18 +136,5 @@ public class InjectionKey {
 
     public boolean isProvider() {
         return provider;
-    }
-
-    /**
-     * Makes a clone that is not marked as a Provider for implementation search
-     *
-     * @param key
-     * @return
-     */
-    public static InjectionKey purify(InjectionKey key) {
-        InjectionKey injectionKey = new InjectionKey(key.getServiceDefinition(), false);
-        injectionKey.annotation = key.annotation;
-        injectionKey.name = key.name;
-        return injectionKey;
     }
 }

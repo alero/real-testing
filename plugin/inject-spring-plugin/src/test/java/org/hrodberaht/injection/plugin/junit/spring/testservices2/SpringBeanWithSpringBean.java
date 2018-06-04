@@ -24,7 +24,6 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import javax.sql.DataSource;
 
 @Repository
@@ -40,8 +39,8 @@ public class SpringBeanWithSpringBean {
     @PostConstruct
     public void init() {
         jdbcTemplate = new JdbcTemplate(dataSource);
-        synchronized (SpringBeanWithSpringBean.class){
-            if( getName("init") == null){
+        synchronized (SpringBeanWithSpringBean.class) {
+            if (getName("init") == null) {
                 createUser("init", "user");
             }
         }
@@ -55,7 +54,7 @@ public class SpringBeanWithSpringBean {
     public String getName(String name) {
         try {
             return jdbcTemplate.queryForObject("select username from theUser where username=?", String.class, name);
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
@@ -64,7 +63,7 @@ public class SpringBeanWithSpringBean {
     public Integer getLoginCount(String name) {
         try {
             return jdbcTemplate.queryForObject("select loginTries from theUser where username=?", Integer.class, name);
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }
@@ -73,10 +72,11 @@ public class SpringBeanWithSpringBean {
         try {
             jdbcTemplate.queryForObject("select username from theUser where username=? and password=?", String.class, username, password);
             return true;
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return false;
         }
     }
+
     @Transactional
     public void createUser(String username, String password) {
         jdbcTemplate.update("insert into theUser (username, password, loginTries) values (?, ?, ?)", username, password, 0);
@@ -85,7 +85,7 @@ public class SpringBeanWithSpringBean {
     @Transactional
     public boolean login(String username, String password) {
         jdbcTemplate.update("update theUser set loginTries = loginTries + 1");
-        if(checkPassword(username, password)){
+        if (checkPassword(username, password)) {
             jdbcTemplate.update("update theUser set loginTries = 0");
             return true;
         }

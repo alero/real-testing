@@ -20,8 +20,7 @@ import com.google.inject.AbstractModule;
 
 import javax.inject.Inject;
 
-public class GuiceConfig extends AbstractModule{
-
+public class GuiceConfig extends AbstractModule {
 
 
     @Override

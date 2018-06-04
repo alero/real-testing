@@ -35,16 +35,16 @@ public class InjectionMetaDataBase {
         this.serviceRegister = serviceRegister;
     }
 
-    public void setServiceRegister(ServiceRegister serviceRegister) {
-        this.serviceRegister = serviceRegister;
-    }
-
     public InjectionMetaData getInjectionMetaData() {
         return injectionMetaData;
     }
 
     public ServiceRegister getServiceRegister() {
         return serviceRegister;
+    }
+
+    public void setServiceRegister(ServiceRegister serviceRegister) {
+        this.serviceRegister = serviceRegister;
     }
 
     public InjectionMetaDataBase copy() {

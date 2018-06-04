@@ -28,16 +28,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.annotation.Annotation;
-import java.util.concurrent.ConcurrentHashMap;
 
 class JUnitContext {
 
     private static final Logger LOG = LoggerFactory.getLogger(JUnitContext.class);
+    private final Class<?> testClazz;
+    private final Class configClass;
     private InjectContainer activeContainer = null;
     private ContainerContextConfigBase containerConfig = null;
     private RunnerPlugins runnerPlugins = null;
-    private final Class<?> testClazz;
-    private final Class configClass;
 
     /**
      * Creates a BlockJUnit4ClassRunner to run
@@ -88,18 +87,6 @@ class JUnitContext {
         } else {
             return new RunnerPlugins();
         }
-    }
-
-    interface OperationsRunner {
-        void run();
-    }
-
-    interface OperationsErrorHandler {
-        void handleError(Exception e);
-    }
-
-    interface TestCreator {
-        Object create() throws Exception;
     }
 
     /**
@@ -181,6 +168,18 @@ class JUnitContext {
 
     void autoWireTestObject(Object testInstance) {
         activeContainer.autowireAndPostConstruct(testInstance);
+    }
+
+    interface OperationsRunner {
+        void run();
+    }
+
+    interface OperationsErrorHandler {
+        void handleError(Exception e);
+    }
+
+    interface TestCreator {
+        Object create() throws Exception;
     }
 
     private static class RunnerPluginContext implements PluginContext {

@@ -22,7 +22,6 @@ import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -35,9 +34,8 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore {
 
 
     private static final Logger LOG = LoggerFactory.getLogger(PlainHSqlBackupRestore.class);
-
-    private final HsqlBDDataSourceConfigurationRestorable.HSQLDriverManager driverManager;
     private static final String JDBC_BASEURL_NEW = "jdbc:hsqldb:mem:";
+    private final HsqlBDDataSourceConfigurationRestorable.HSQLDriverManager driverManager;
 
     public PlainHSqlBackupRestore(HsqlBDDataSourceConfigurationRestorable.HSQLDriverManager driverManager) {
         this.driverManager = driverManager;
@@ -56,7 +54,7 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore {
         LOG.info("PlainHSqlBackupRestore backup to : {}", fileName);
 
         PlainConnection connection = null;
-        try  {
+        try {
             connection = driverManager.getInnerConnection();
             JDBCService jdbcTemplate = createJdbcService(connection);
             String backup = "SCRIPT '" + fileName + "'";
@@ -64,8 +62,8 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore {
             connection.commit();
         } catch (SQLException e) {
             throw new DataSourceException(e);
-        }finally {
-            if(connection != null) {
+        } finally {
+            if (connection != null) {
                 connection.dontFailClose();
             }
         }

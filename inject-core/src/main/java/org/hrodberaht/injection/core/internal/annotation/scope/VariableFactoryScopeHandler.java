@@ -35,22 +35,27 @@ public class VariableFactoryScopeHandler implements VariableScopeHandler {
     }
 
     @SuppressWarnings(value = "unchecked")
+    @Override
     public Class getInstanceClass(Object variable) {
         return injectionFactory.getInstanceClass(variable);
     }
 
+    @Override
     public void addInstance(Object instance) {
         throw new IllegalAccessError("Factory can not have instance set");
     }
 
+    @Override
     public Object getInstance() {
         return null;
     }
 
+    @Override
     public ScopeContainer.Scope getScope() {
         return null;
     }
 
+    @Override
     public boolean isInstanceCreated() {
         return true;
     }

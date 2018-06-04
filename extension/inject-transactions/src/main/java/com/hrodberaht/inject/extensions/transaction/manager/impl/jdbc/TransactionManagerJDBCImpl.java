@@ -6,8 +6,8 @@ import com.hrodberaht.inject.extensions.transaction.manager.impl.TransactionMana
 import com.hrodberaht.inject.extensions.transaction.manager.impl.TransactionScopeHandler;
 import com.hrodberaht.inject.extensions.transaction.manager.impl.jpa.StatisticsJPA;
 import com.hrodberaht.inject.extensions.transaction.manager.internal.TransactionLogging;
-import org.hrodberaht.injection.plugin.junit.datasource.DataSourceProxy;
 import org.hrodberaht.injection.core.register.InjectionFactory;
+import org.hrodberaht.injection.plugin.junit.datasource.DataSourceProxy;
 
 import javax.sql.DataSource;
 import java.sql.Connection;

@@ -19,7 +19,6 @@ package org.hrodberaht.injection.plugin.junit.spring.config;
 import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
 import org.hrodberaht.injection.plugin.junit.spring.testservices2.SpringBeanWithSpringBean;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 
 public class LoadingTheTestWithDataAgain implements DataSourcePlugin.ResourceLoaderRunner {
 

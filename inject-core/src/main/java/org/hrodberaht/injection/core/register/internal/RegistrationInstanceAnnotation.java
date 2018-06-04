@@ -40,12 +40,11 @@ public class RegistrationInstanceAnnotation<T extends Registration> implements R
     // Producers
     protected Class theService;
     protected Object theInstance;
-    private InjectionFactory theFactory;
-    private VariableInjectionFactory theVariableFactory;
-
     protected String name;
     protected Class<? extends Annotation> annotation;
     protected InjectionContainerManager.Scope scope = null; // No default scope for registration
+    private InjectionFactory theFactory;
+    private VariableInjectionFactory theVariableFactory;
 
 
     public RegistrationInstanceAnnotation(Class theInterface) {

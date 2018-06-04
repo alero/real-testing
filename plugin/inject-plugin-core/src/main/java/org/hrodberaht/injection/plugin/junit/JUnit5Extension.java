@@ -39,6 +39,12 @@ public class JUnit5Extension implements BeforeAllCallback, AfterAllCallback, Tes
 
     private JUnitContext jUnitContext;
 
+    private static Class<?> getRequiredTestClass(ExtensionContext context) {
+        notNull(context, "ExtensionContext must not be null");
+        return context.getTestClass().orElseThrow(
+                () -> new IllegalStateException("JUnit failed to supply the test class in the ExtensionContext"));
+    }
+
     @Override
     public void beforeAll(ExtensionContext extensionContext) throws Exception {
         Class clazz = getRequiredTestClass(extensionContext);
@@ -83,12 +89,6 @@ public class JUnit5Extension implements BeforeAllCallback, AfterAllCallback, Tes
         //Class<?> testClass = getRequiredTestClass(extensionContext);
         //return jUnitContext.get(testClass);
         return null;
-    }
-
-    private static Class<?> getRequiredTestClass(ExtensionContext context) {
-        notNull(context, "ExtensionContext must not be null");
-        return context.getTestClass().orElseThrow(
-                () -> new IllegalStateException("JUnit failed to supply the test class in the ExtensionContext"));
     }
 
     @Override

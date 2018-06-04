@@ -20,7 +20,6 @@ import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCService;
 import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCServiceFactory;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
-import org.hrodberaht.injection.plugin.junit.config.ContainerConfigExample;
 import org.hrodberaht.injection.plugin.junit.config.ContainerConfigExample2;
 import org.junit.Test;
 import org.junit.runner.RunWith;

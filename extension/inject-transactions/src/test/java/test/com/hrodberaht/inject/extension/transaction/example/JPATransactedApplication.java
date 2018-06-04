@@ -27,12 +27,12 @@ import java.util.concurrent.atomic.AtomicLong;
 public class JPATransactedApplication implements TransactedApplication {
 
 
+    public static AtomicLong performanceCount = new AtomicLong(0L);
+    public static int performanceSleeptime = 2;
     @Inject
     private Provider<EntityManager> entityManager;
-
     @Inject
     private JDBCService jdbcService;
-
     @Inject
     @NotTransactionJoined
     private JDBCService standAloneJdbcService;
@@ -165,7 +165,6 @@ public class JPATransactedApplication implements TransactedApplication {
         return findPerson(person.getId());
     }
 
-
     @TransactionAttribute(value = TransactionAttributeType.REQUIRES_NEW)
     public Person complexTransactionsNewTx(Person person, Logging log) {
         // This only works for AspectJ, most AOP frameworks need "lookup" the service again.
@@ -184,10 +183,6 @@ public class JPATransactedApplication implements TransactedApplication {
         createPerson(person);
         return somethingNonTransactional(person.getId());
     }
-
-
-    public static AtomicLong performanceCount = new AtomicLong(0L);
-    public static int performanceSleeptime = 2;
 
     @TransactionAttribute
     public void fakeOperationForPerformanceTest() {

@@ -44,9 +44,6 @@ public class AnnotatedRunnerPlugin {
 
     private static final Logger LOG = LoggerFactory.getLogger(AnnotatedRunnerPlugin.class);
     private static Map<AnnotationKey, List<Method>> annotationKeyMethodsMap = new ConcurrentHashMap<>();
-
-    private final Plugin.LifeCycle lifeCycle;
-
     private static Set<Class> supportedAnnotations = new HashSet<>(Arrays.asList(
             RunnerPluginBeforeContainerCreation.class,
             RunnerPluginAfterContainerCreation.class,
@@ -55,7 +52,7 @@ public class AnnotatedRunnerPlugin {
             RunnerPluginBeforeTest.class,
             RunnerPluginAfterTest.class
     ));
-
+    private final Plugin.LifeCycle lifeCycle;
     private final Map<Class, Plugin> annotatedPlugin = new ConcurrentHashMap<>();
 
     public AnnotatedRunnerPlugin(Plugin.LifeCycle lifeCycle) {

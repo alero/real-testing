@@ -30,11 +30,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class EntityManagerInjection {
 
+    private static Map<Class, List<Field>> foundMembersMap = new ConcurrentHashMap<>();
     private boolean hasPersistenceContextInClassPath = true;
     private Map<String, EntityManager> entityManagers = null;
-
-    private static Map<Class, List<Field>> foundMembersMap = new ConcurrentHashMap<>();
-
 
     public void injectResources(Object serviceInstance) {
 

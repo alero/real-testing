@@ -36,8 +36,8 @@ public class SpringBeanWithContext {
     @PostConstruct
     public void init() {
         jdbcTemplate = new JdbcTemplate(dataSource);
-        synchronized (SpringBeanWithSpringBean.class){
-            if( getName("init") == null){
+        synchronized (SpringBeanWithSpringBean.class) {
+            if (getName("init") == null) {
                 createUser("init", "user");
             }
         }
@@ -50,7 +50,7 @@ public class SpringBeanWithContext {
     public String getName(String name) {
         try {
             return jdbcTemplate.queryForObject("select username from theUser where username=?", String.class, name);
-        }catch (EmptyResultDataAccessException e){
+        } catch (EmptyResultDataAccessException e) {
             return null;
         }
     }

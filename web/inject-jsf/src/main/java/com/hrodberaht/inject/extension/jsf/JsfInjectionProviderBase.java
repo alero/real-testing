@@ -14,22 +14,20 @@ import org.hrodberaht.injection.InjectContainer;
  * @since 1.0
  */
 public abstract class JsfInjectionProviderBase implements InjectionProvider {
+    /**
+     * default injector provided by the web container.
+     */
+    private static final WebContainerInjectionProvider con = new WebContainerInjectionProvider();
+    /**
+     * Custom injector that will load our module.
+     */
+    protected InjectContainer injector = null;
+
     public JsfInjectionProviderBase() {
         System.out.println("creating JsfInjectionProvider for com.sun.faces.spi.InjectionProvider ");
         injector = getContainer();
         System.out.println("customer Injector loaded ");
     }
-
-
-    /**
-     * default injector provided by the web container.
-     */
-    private static final WebContainerInjectionProvider con = new WebContainerInjectionProvider();
-
-    /**
-     * Custom injector that will load our module.
-     */
-    protected InjectContainer injector = null;
 
     public abstract InjectContainer getContainer();
 

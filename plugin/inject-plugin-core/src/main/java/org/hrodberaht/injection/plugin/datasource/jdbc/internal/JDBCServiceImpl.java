@@ -123,7 +123,7 @@ public class JDBCServiceImpl implements JDBCService {
     @Override
     public int execute(String sql, Object... args) {
         try (Connection connection = dataSource.getConnection();
-            PreparedStatement pstmt = prepareAndAppend(sql, connection, args);
+             PreparedStatement pstmt = prepareAndAppend(sql, connection, args);
         ) {
             return pstmt.executeUpdate();
         } catch (SQLException e) {

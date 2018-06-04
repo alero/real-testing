@@ -55,21 +55,6 @@ public class JerseyPlugin implements Plugin {
     private LifeCycle lifeCycle = LifeCycle.TEST_CLASS;
     private PluginLifeCycledResource<JerseyTestRunner> pluginLifeCycledResource = new PluginLifeCycledResource<>(JerseyTestRunner.class);
 
-    @FunctionalInterface
-    public interface ClientConfigInterface {
-        void config(ClientConfig config);
-    }
-
-    @FunctionalInterface
-    public interface ResourceConfigInterface {
-        ResourceConfig config();
-    }
-
-    @FunctionalInterface
-    public interface TestContainerFactoryInterface {
-        TestContainerFactory container();
-    }
-
     public Client getClient() {
         return jerseyTestRunner.getJerseyTest().client();
     }
@@ -78,7 +63,6 @@ public class JerseyPlugin implements Plugin {
         return pluginLifeCycledResource;
     }
 
-
     protected ResourceConfig jerseyConfig(ResourceConfig resourceConfig) {
         return resourceConfig;
     }
@@ -86,37 +70,6 @@ public class JerseyPlugin implements Plugin {
     public JerseyPluginBuilder builder() {
         return new JerseyPluginBuilder(this);
     }
-
-
-    public static class JerseyPluginBuilder {
-        private final JerseyPlugin jerseyPlugin;
-
-        protected JerseyPluginBuilder(JerseyPlugin jerseyPlugin) {
-            this.jerseyPlugin = jerseyPlugin;
-        }
-
-        public JerseyPluginBuilder lifeCycle(LifeCycle lifeCycle) {
-            jerseyPlugin.lifeCycle = lifeCycle;
-            return this;
-        }
-
-        public JerseyPluginBuilder clientConfig(ClientConfigInterface clientConfigInterface) {
-            jerseyPlugin.clientConfigInterface = clientConfigInterface;
-            return this;
-        }
-
-        public JerseyPluginBuilder resourceConfig(ResourceConfigInterface resourceConfigInterface) {
-            jerseyPlugin.resourceConfigInterface = resourceConfigInterface;
-            return this;
-        }
-
-        public JerseyPluginBuilder resourceConfig(TestContainerFactoryInterface testContainerFactoryInterface) {
-            jerseyPlugin.testContainerFactoryInterface = testContainerFactoryInterface;
-            return this;
-        }
-
-    }
-
 
     private JerseyTestRunner createJerseyContainer() {
 
@@ -167,7 +120,6 @@ public class JerseyPlugin implements Plugin {
             throw new PluginRuntimeException(e);
         }
     }
-
 
     @RunnerPluginAfterContainerCreation
     protected void beforeContainerCreation(PluginContext pluginContext) {
@@ -222,6 +174,49 @@ public class JerseyPlugin implements Plugin {
         return LifeCycle.TEST_SUITE;
     }
 
+    @FunctionalInterface
+    public interface ClientConfigInterface {
+        void config(ClientConfig config);
+    }
+
+    @FunctionalInterface
+    public interface ResourceConfigInterface {
+        ResourceConfig config();
+    }
+
+    @FunctionalInterface
+    public interface TestContainerFactoryInterface {
+        TestContainerFactory container();
+    }
+
+    public static class JerseyPluginBuilder {
+        private final JerseyPlugin jerseyPlugin;
+
+        protected JerseyPluginBuilder(JerseyPlugin jerseyPlugin) {
+            this.jerseyPlugin = jerseyPlugin;
+        }
+
+        public JerseyPluginBuilder lifeCycle(LifeCycle lifeCycle) {
+            jerseyPlugin.lifeCycle = lifeCycle;
+            return this;
+        }
+
+        public JerseyPluginBuilder clientConfig(ClientConfigInterface clientConfigInterface) {
+            jerseyPlugin.clientConfigInterface = clientConfigInterface;
+            return this;
+        }
+
+        public JerseyPluginBuilder resourceConfig(ResourceConfigInterface resourceConfigInterface) {
+            jerseyPlugin.resourceConfigInterface = resourceConfigInterface;
+            return this;
+        }
+
+        public JerseyPluginBuilder resourceConfig(TestContainerFactoryInterface testContainerFactoryInterface) {
+            jerseyPlugin.testContainerFactoryInterface = testContainerFactoryInterface;
+            return this;
+        }
+
+    }
 
     static class TestContainerWrapper implements TestContainer {
 

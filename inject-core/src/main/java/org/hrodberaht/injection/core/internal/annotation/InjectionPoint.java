@@ -31,14 +31,11 @@ import java.util.List;
 
 
 public class InjectionPoint {
-    public enum InjectionPointType {METHOD, FIELD}
-
     private List<InjectionMetaData> dependencies;
     private InjectionPointType type;
     private Field field;
     private Method method;
     private Boolean accessible = null;
-
     public InjectionPoint(Field field) {
         type = InjectionPointType.FIELD;
         this.field = field;
@@ -149,4 +146,6 @@ public class InjectionPoint {
             return annotationInjection.findInjectionData(serviceClass, qualifier);
         }
     }
+
+    public enum InjectionPointType {METHOD, FIELD}
 }

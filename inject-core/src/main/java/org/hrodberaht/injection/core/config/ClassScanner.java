@@ -36,6 +36,37 @@ import java.util.jar.JarFile;
 public class ClassScanner {
     private static final Logger LOG = LoggerFactory.getLogger(ClassScanner.class);
 
+    /**
+     * Recursive method used to find all classes in a given directory and subdirs.
+     *
+     * @param directory   The base directory
+     * @param packageName The package name for classes found inside the base directory
+     * @return The classes
+     * @throws ClassNotFoundException
+     */
+    private static List<Class> findClasses(File directory, String packageName) throws ClassNotFoundException {
+        List<Class> classes = new ArrayList<Class>();
+        if (!directory.exists()) {
+            return classes;
+        }
+        File[] files = directory.listFiles();
+        if (files == null) {
+            return Collections.emptyList();
+        }
+        for (File file : files) {
+            if (file.isDirectory()) {
+                if (!".".contains(file.getName())) {
+                    classes.addAll(findClasses(file, packageName + "." + file.getName()));
+                }
+            } else if (file.getName().endsWith(".class")) {
+                classes.add(
+                        Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6))
+                );
+            }
+        }
+        return classes;
+    }
+
     public List<Class> getClasses(String packageName) {
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         ArrayList<Class> classes = findClassesToLoad(
@@ -87,18 +118,12 @@ public class ClassScanner {
             String classPathName = classPath.substring(0, classPath.length() - 6);
             try {
                 Class aClass = Class.forName(classPathName);
-                LOG.debug("jar aClass: {} for {}",aClass,fileToLoad.getName());
+                LOG.debug("jar aClass: {} for {}", aClass, fileToLoad.getName());
                 classes.add(aClass);
             } catch (ClassNotFoundException e) {
                 LOG.info("jar error lookup: {}", classPathName);
                 throw e;
             }
-        }
-    }
-
-    private static class CustomClassLoader {
-        private enum ClassLoaderType {
-            JAR, THREAD
         }
     }
 
@@ -130,35 +155,10 @@ public class ClassScanner {
         return classes;
     }
 
-    /**
-     * Recursive method used to find all classes in a given directory and subdirs.
-     *
-     * @param directory   The base directory
-     * @param packageName The package name for classes found inside the base directory
-     * @return The classes
-     * @throws ClassNotFoundException
-     */
-    private static List<Class> findClasses(File directory, String packageName) throws ClassNotFoundException {
-        List<Class> classes = new ArrayList<Class>();
-        if (!directory.exists()) {
-            return classes;
+    private static class CustomClassLoader {
+        private enum ClassLoaderType {
+            JAR, THREAD
         }
-        File[] files = directory.listFiles();
-        if (files == null) {
-            return Collections.emptyList();
-        }
-        for (File file : files) {
-            if (file.isDirectory()) {
-                if (!".".contains(file.getName())) {
-                    classes.addAll(findClasses(file, packageName + "." + file.getName()));
-                }
-            } else if (file.getName().endsWith(".class")) {
-                classes.add(
-                        Class.forName(packageName + '.' + file.getName().substring(0, file.getName().length() - 6))
-                );
-            }
-        }
-        return classes;
     }
 
 }

@@ -36,6 +36,17 @@ import static org.junit.Assert.assertEquals;
 @RunWith(JUnit4Runner.class)
 public class TestSpringJPAPlugin {
 
+    @Autowired
+    private SpringBean springBean;
+
+    @Test
+    public void testForUserCreation() throws Exception {
+        springBean.createUser("dude", "hi");
+
+        assertEquals("hi", springBean.getUser("dude").getPassword());
+
+    }
+
     public static class Config extends ContainerContextConfigBase {
 
         @Override
@@ -52,16 +63,5 @@ public class TestSpringJPAPlugin {
                     .springConfig(SpringConfig.class, PersistenceJPAConfig.class);
 
         }
-    }
-
-    @Autowired
-    private SpringBean springBean;
-
-    @Test
-    public void testForUserCreation() throws Exception {
-        springBean.createUser("dude", "hi");
-
-        assertEquals("hi", springBean.getUser("dude").getPassword());
-
     }
 }

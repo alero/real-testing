@@ -39,7 +39,7 @@ public class SpringConfig {
     }
 
     @Bean
-    public UserService springBeanWithSpringBean(){
+    public UserService springBeanWithSpringBean() {
         return new UserService();
     }
 

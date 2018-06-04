@@ -24,7 +24,7 @@ public abstract class AbstractModule {
 
     protected abstract void bindings();
 
-    public void scan(String... packages){
+    public void scan(String... packages) {
         module.scanAndRegister(packages);
     }
 

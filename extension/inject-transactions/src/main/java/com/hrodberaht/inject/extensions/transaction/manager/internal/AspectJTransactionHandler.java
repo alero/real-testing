@@ -24,7 +24,8 @@ import javax.inject.Provider;
 public class AspectJTransactionHandler extends Aspects {
 
     private static AspectJTransactionHandler singleton = new AspectJTransactionHandler();
-
+    @Inject
+    private Provider<TransactionManager> transactionManagerProvider;
 
     public AspectJTransactionHandler() {
         singleton = this;
@@ -36,10 +37,6 @@ public class AspectJTransactionHandler extends Aspects {
         }
         return singleton;
     }
-
-    @Inject
-    private Provider<TransactionManager> transactionManagerProvider;
-
 
     @Pointcut("execution(@javax.ejb.TransactionAttribute * *(..)) && @annotation(transactionAttribute)")
     public void transactionalPointCut(TransactionAttribute transactionAttribute) {

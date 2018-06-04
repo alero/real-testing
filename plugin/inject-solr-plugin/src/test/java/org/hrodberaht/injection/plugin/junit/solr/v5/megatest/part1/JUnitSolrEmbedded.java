@@ -15,10 +15,9 @@ import javax.inject.Inject;
 @ExtendWith(JUnit5Extension.class)
 public class JUnitSolrEmbedded {
 
-    TestSolrEmbedded testSolrEmbedded = new TestSolrEmbedded();
-
     @Inject
     public SolrJPlugin solrJPlugin;
+    TestSolrEmbedded testSolrEmbedded = new TestSolrEmbedded();
 
     @PostConstruct
     public void init() {

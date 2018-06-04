@@ -35,25 +35,13 @@ import java.util.Map;
 public class ProxyResourceCreator implements DatasourceCreator {
 
     private static final Logger LOG = LoggerFactory.getLogger(ProxyResourceCreator.class);
-
-    public enum DataSourceProvider {
-        HSQLDB, H2
-    }
-
-    public enum DataSourcePersistence {
-        MEM, RESTORABLE
-    }
-
     final Map<String, DataSourceProxyInterface> dataSources = new HashMap<>();
-
     private final DataSourceProvider provider;
     private final DataSourcePersistence persistence;
     private final ResourceWatcher resourceWatcher;
-
     public ProxyResourceCreator(DataSourceProvider provider, DataSourcePersistence persistence) {
         this(provider, persistence, null);
     }
-
     public ProxyResourceCreator(DataSourceProvider provider, DataSourcePersistence persistence, ResourceWatcher resourceWatcher) {
         this.provider = provider;
         this.persistence = persistence;
@@ -79,13 +67,21 @@ public class ProxyResourceCreator implements DatasourceCreator {
         return dataSources.values();
     }
 
-
     private DataSourceProxyInterface createDataSourceProxy(String dataSourceName) {
         return new SimpleDataSourceProxy(dataSourceName, provider, persistence, resourceWatcher);
     }
 
     private boolean hasDataSource(String dataSourceName) {
         return dataSources.get(dataSourceName) != null;
+    }
+
+
+    public enum DataSourceProvider {
+        HSQLDB, H2
+    }
+
+    public enum DataSourcePersistence {
+        MEM, RESTORABLE
     }
 
 
