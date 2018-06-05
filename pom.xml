@@ -322,7 +322,6 @@
             <id>release-sign-artifacts-to-sonatype-nexus</id>
             <properties>
                 <gpg.executable>gpg</gpg.executable>
-                <gpg.passphrase>!B%ver2018</gpg.passphrase>
             </properties>
             <distributionManagement>
                 <snapshotRepository>
