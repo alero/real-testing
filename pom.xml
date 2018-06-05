@@ -232,20 +232,22 @@
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <compilerArgs>
                         <compilerArg>-Xep:WildcardImport:ERROR</compilerArg>
+                        <compilerArg>-Xep:RemoveUnusedImports:ERROR</compilerArg>
+                        <compilerArg>-Xep:DeadException:ERROR</compilerArg>
                     </compilerArgs>
                 </configuration>
                 <dependencies>
                     <dependency>
                         <groupId>org.codehaus.plexus</groupId>
                         <artifactId>plexus-compiler-javac-errorprone</artifactId>
-                        <version>2.8</version>
+                        <version>2.8.2</version>
                     </dependency>
                     <!-- override plexus-compiler-javac-errorprone's dependency on
                          Error Prone with the latest version -->
                     <dependency>
                         <groupId>com.google.errorprone</groupId>
                         <artifactId>error_prone_core</artifactId>
-                        <version>2.1.1</version>
+                        <version>2.2.0</version>
                     </dependency>
 
                 </dependencies>
@@ -254,12 +256,28 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>3.0.0-M1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>de.skuzzle.enforcer</groupId>
+                        <artifactId>restrict-imports-enforcer-rule</artifactId>
+                        <version>0.8.0</version>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
                         <id>enforce</id>
                         <configuration>
                             <rules>
                                 <dependencyConvergence/>
+                                <!-- FUTURE rules
+                                <banDuplicatePomDependencyVersions/>
+                                //-->
+                                <restrictImports implementation="de.skuzzle.enforcer.restrictimports.RestrictImports">
+                                    <!-- Since 0.8.0: Define an explanatory reason why these imports are prohibited -->
+                                    <reason>Do not use sun classes at all</reason>
+                                    <!-- Specify a single pattern to be banned -->
+                                    <bannedImport>sun.**</bannedImport>
+                                </restrictImports>
                             </rules>
                         </configuration>
                         <goals>
@@ -292,6 +310,7 @@
             <id>sonar-jacoco</id>
             <properties>
                 <!-- Sonar -->
+                <sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
                 <sonar.java.coveragePlugin>jacoco</sonar.java.coveragePlugin>
                 <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
                 <sonar.language>java</sonar.language>
@@ -301,19 +320,7 @@
                     <plugin>
                         <groupId>org.jacoco</groupId>
                         <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>0.7.8</version>
-                        <configuration>
-                            <destFile>${sonar.jacoco.reportPath}</destFile>
-                            <append>true</append>
-                        </configuration>
-                        <executions>
-                            <execution>
-                                <id>agent</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                            </execution>
-                        </executions>
+                        <version>0.8.0</version>
                     </plugin>
                 </plugins>
             </build>
