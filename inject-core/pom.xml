@@ -34,16 +34,6 @@
     <description>@Inject Inversion of Control Container, the Injection project for simpler java development
     </description>
 
-    <repositories>
-        <!-- Is NO LONGER needed for the javax.injectMethod-tck artifact
-        <repository>
-            <id>usikkert.repo</id>
-            <name>usikkert.net Repository</name>
-            <url>http://repo.usikkert.net/maven2</url>
-        </repository>
-        //-->
-    </repositories>
-
     <dependencies>
         <dependency>
             <groupId>javax.inject</groupId>
