@@ -43,9 +43,9 @@ public class JarUtil {
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
             String path = resource.getFile();
-            LOG.debug("evaluating jar-file = " + path);
+            LOG.debug("evaluating jar-file = {}", path);
             if (isJarFile(resource)) {
-                LOG.info("found valid jar-file = " + path);
+                LOG.info("found valid jar-file = {}", path);
                 jarFiles.add(new File(findJarFile(path)));
             }
         }

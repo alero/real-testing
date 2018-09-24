@@ -7,12 +7,12 @@
     <parent>
         <groupId>org.hrodberaht.inject.plugin</groupId>
         <artifactId>test-samples</artifactId>
-        <version>3.0.0-RC2</version>
+        <version>3.0.0-RC3-SNAPSHOT</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
     <artifactId>test-spring-jersey</artifactId>
-    <version>3.0.0-RC2</version>
+    <version>3.0.0-RC3-SNAPSHOT</version>
 
     <dependencies>
         <dependency>

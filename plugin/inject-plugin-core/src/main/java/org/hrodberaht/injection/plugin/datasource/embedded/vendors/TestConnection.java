@@ -1,5 +1,6 @@
 package org.hrodberaht.injection.plugin.datasource.embedded.vendors;
 
+import org.hrodberaht.injection.plugin.datasource.DataSourceException;
 import org.hrodberaht.injection.plugin.junit.datasource.DataSourceRuntimeException;
 import org.slf4j.LoggerFactory;
 
@@ -66,13 +67,17 @@ public class TestConnection implements Connection {
     @Override
     public Statement createStatement() throws SQLException {
         LOG.info("createStatement {}", this);
-        return new TestStatemenmt(this, connection.createStatement());
+        try {
+            return new TestStatement(this, connection.createStatement());
+        } catch (Throwable e) {
+            throw new DataSourceException(e);
+        }
     }
 
     @Override
     public PreparedStatement prepareStatement(String sql) throws SQLException {
         LOG.info("prepareStatement {} - {}", this, sql);
-        return new TestPreparedStatemenmt(this, connection.prepareStatement(sql));
+        return new TestPreparedStatement(this, connection.prepareStatement(sql));
     }
 
     @Override
@@ -381,6 +386,9 @@ public class TestConnection implements Connection {
 
     @Override
     public String toString() {
-        return this.getClass().getSimpleName() + "@" + Integer.toHexString(System.identityHashCode(this));
+        return
+                this.getClass().getSimpleName() + "@" + Integer.toHexString(System.identityHashCode(this)) +
+                        " - Connection@" + Integer.toHexString(System.identityHashCode(this.connection))
+                ;
     }
 }

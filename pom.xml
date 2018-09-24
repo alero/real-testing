@@ -21,7 +21,7 @@
 
     <groupId>org.hrodberaht.inject</groupId>
     <artifactId>injection-parent</artifactId>
-    <version>3.0.0-RC2</version>
+    <version>3.0.0-RC3-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Injection Parent POM</name>
     <description>A gathering of projects for simpler java development</description>

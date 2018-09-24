@@ -26,6 +26,8 @@ public interface UserService {
 
     void changePassword(String userName, String newPassword);
 
+    int loginCount(String userName);
+
     boolean loginCompare(String userName, String password);
 
     DataSource getTypedDataSource();
