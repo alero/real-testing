@@ -11,6 +11,8 @@ import org.hrodberaht.injection.plugin.junit.api.annotation.RunnerPluginBeforeTe
 import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProvider;
 import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProviderSupport;
 import org.hrodberaht.injection.plugin.junit.plugins.common.PluginLifeCycledResource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jms.ConnectionFactory;
 import java.util.HashSet;
@@ -18,23 +20,29 @@ import java.util.Set;
 
 public class ActiveMQPlugin implements Plugin, ResourceProviderSupport {
 
+    private static final Logger LOG = LoggerFactory.getLogger(ActiveMQPlugin.class);
+
     private PluginLifeCycledResource<EmbeddedActiveMQBroker> pluginLifeCycledResource = new PluginLifeCycledResource<>(EmbeddedActiveMQBroker.class);
 
     private EmbeddedActiveMQBroker embedded;
     private String name = null;
     private LifeCycle lifeCycle = LifeCycle.TEST_SUITE;
 
-    @Override
-    public LifeCycle getLifeCycle() {
-        return lifeCycle;
+
+    public ActiveMQPlugin(){
+
     }
 
-    public ActiveMQPlugin lifeCycle(final LifeCycle lifeCycle) {
-        this.lifeCycle = lifeCycle;
+    public ActiveMQPlugin(LifeCycle lifeCycle) {
         if (LifeCycle.TEST_CONFIG == lifeCycle) {
             throw new IllegalArgumentException("lifeCycle can not be set to TEST_CONFIG as EmbeddedActiveMQBroker does not support multiple instances in one test suite");
         }
-        return this;
+        this.lifeCycle = lifeCycle;
+    }
+
+    @Override
+    public LifeCycle getLifeCycle() {
+        return lifeCycle;
     }
 
     /**
@@ -50,6 +58,10 @@ public class ActiveMQPlugin implements Plugin, ResourceProviderSupport {
 
     @RunnerPluginBeforeContainerCreation
     public void beforeContainer(final PluginContext pluginContext) {
+        createEmbedded(pluginContext);
+    }
+
+    private void createEmbedded(PluginContext pluginContext) {
         embedded = pluginLifeCycledResource.create(getLifeCycle(), pluginContext, () -> {
             EmbeddedActiveMQBroker embeddedActiveMQBroker = new EmbeddedActiveMQBroker();
             if (getLifeCycle() == LifeCycle.TEST_SUITE) {
@@ -57,6 +69,7 @@ public class ActiveMQPlugin implements Plugin, ResourceProviderSupport {
             }
             return embeddedActiveMQBroker;
         });
+        LOG.info("Created embedded server: {}", embedded);
     }
 
     @RunnerPluginBeforeClassTest
@@ -97,7 +110,11 @@ public class ActiveMQPlugin implements Plugin, ResourceProviderSupport {
             throw new IllegalArgumentException("Lifecycle can not be TEST or TEST_CLASS when connecting resources, this is because the MQ has to be started before the Resource is used");
         }
         Set<ResourceProvider> resourceProviders = new HashSet<>();
-        resourceProviders.add(new ResourceProvider(name, ConnectionFactory.class, () -> embedded.createConnectionFactory()));
+        LOG.info("Adding embedded client factory provider: {}", embedded);
+        resourceProviders.add(new ResourceProvider(name, ConnectionFactory.class, () -> {
+            LOG.info("Creating embedded client factory: {}", embedded);
+            return embedded.createConnectionFactory();
+        }));
         return resourceProviders;
     }
 }

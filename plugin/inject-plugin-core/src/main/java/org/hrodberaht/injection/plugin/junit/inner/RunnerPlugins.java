@@ -34,11 +34,13 @@ public class RunnerPlugins {
 
     private final Map<Class<? extends Plugin>, Plugin> activePlugins = new ConcurrentHashMap<>();
     private final List<Plugin> sortedRunnerPlugins = new ArrayList<>();
-    private final TestConfigRunnerPlugins testConfigRunnerPlugins;
+    private final TestRunnerPlugins testRunnerPlugins;
     private final TestClassRunnerPlugins testClassRunnerPlugins;
+    private final TestConfigRunnerPlugins testConfigRunnerPlugins;
     private final TestSuiteRunnerPlugins testSuiteRunnerPlugins;
 
     public RunnerPlugins() {
+        testRunnerPlugins = new TestRunnerPlugins(activePlugins);
         testClassRunnerPlugins = new TestClassRunnerPlugins(activePlugins);
         testConfigRunnerPlugins = new TestConfigRunnerPlugins(activePlugins);
         testSuiteRunnerPlugins = new TestSuiteRunnerPlugins(activePlugins);
@@ -58,6 +60,8 @@ public class RunnerPlugins {
                 return testConfigRunnerPlugins;
             case TEST_SUITE:
                 return testSuiteRunnerPlugins;
+            case TEST:
+                return testRunnerPlugins;
             default:
                 throw new RuntimeException("Not supported plugin lifecycle selected");
         }
