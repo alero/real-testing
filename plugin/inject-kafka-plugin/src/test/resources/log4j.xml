@@ -32,12 +32,12 @@
     </logger>
 
     <logger name="org.hrodberaht.inject" additivity="false">
-        <level value="INFO"/>
+        <level value="ERROR"/>
         <appender-ref ref="CONSOLE"/>
     </logger>
 
     <logger name="org.apache.kafka" additivity="false">
-        <level value="INFO"/>
+        <level value="ERROR"/>
         <appender-ref ref="CONSOLE" />
     </logger>
 

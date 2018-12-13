@@ -17,7 +17,7 @@
 package org.hrodberaht.injection.plugin.junit.plugins;
 
 
-import com.salesforce.kafka.test.KafkaCluster;
+import com.salesforce.kafka.test.KafkaProvider;
 import com.salesforce.kafka.test.KafkaTestServer;
 import org.hrodberaht.injection.plugin.exception.PluginRuntimeException;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
@@ -33,6 +33,7 @@ import org.hrodberaht.injection.plugin.junit.plugins.common.PluginLifeCycledReso
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -40,6 +41,7 @@ import java.util.UUID;
 
 public class KafkaPlugin implements Plugin, ResourceProviderSupport {
 
+    public static final String CONNECTION_STRING = "kafka-broker-connection";
     private static final Logger LOG = LoggerFactory.getLogger(KafkaPlugin.class);
 
     private static final String LOG_DIR = "log.dir";
@@ -50,7 +52,8 @@ public class KafkaPlugin implements Plugin, ResourceProviderSupport {
     private String name = null;
     private boolean deleteTempDir = true;
     private Properties kafkaConfig = null;
-    private LifeCycle lifeCycle = LifeCycle.TEST_SUITE;
+    private LifeCycle lifeCycle = LifeCycle.TEST_CONFIG;
+
 
 
     public KafkaPlugin() {
@@ -138,6 +141,9 @@ public class KafkaPlugin implements Plugin, ResourceProviderSupport {
     private void initLogDir(Properties properties) {
         String logDir = "target/kafka_testing/" + UUID.randomUUID().toString().substring(29, 36);
         LOG.info("Kafka will log to dir: '{}'", logDir);
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+
+        }));
         properties.put(LOG_DIR, logDir);
     }
 
@@ -196,7 +202,8 @@ public class KafkaPlugin implements Plugin, ResourceProviderSupport {
             throw new IllegalArgumentException("Lifecycle can not be TEST or TEST_CLASS when connecting resources, this is because the MQ has to be started before the Resource is used");
         }
         Set<ResourceProvider> resourceProviders = new HashSet<>();
-        resourceProviders.add(new ResourceProvider(name, KafkaCluster.class, () -> embeddedKafka.getKafkaTestServer()));
+        resourceProviders.add(new ResourceProvider(CONNECTION_STRING, String.class, () -> embeddedKafka.getKafkaTestServer().getKafkaConnectString()));
+        resourceProviders.add(new ResourceProvider(name, KafkaProvider.class, () -> embeddedKafka.getKafkaTestServer()));
         return resourceProviders;
     }
 }
