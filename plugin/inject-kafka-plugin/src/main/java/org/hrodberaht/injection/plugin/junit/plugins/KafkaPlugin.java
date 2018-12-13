@@ -19,6 +19,7 @@ package org.hrodberaht.injection.plugin.junit.plugins;
 
 import com.salesforce.kafka.test.KafkaProvider;
 import com.salesforce.kafka.test.KafkaTestServer;
+import org.apache.commons.io.FileUtils;
 import org.hrodberaht.injection.plugin.exception.PluginRuntimeException;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.api.PluginContext;
@@ -34,6 +35,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.HashSet;
 import java.util.Properties;
 import java.util.Set;
@@ -53,6 +55,8 @@ public class KafkaPlugin implements Plugin, ResourceProviderSupport {
     private boolean deleteTempDir = true;
     private Properties kafkaConfig = null;
     private LifeCycle lifeCycle = LifeCycle.TEST_CONFIG;
+
+    private LifeCycle dataRetention = LifeCycle.TEST_CONFIG;
 
 
 
@@ -81,7 +85,19 @@ public class KafkaPlugin implements Plugin, ResourceProviderSupport {
         return this;
     }
 
-    public KafkaPlugin keepDataBetweenTests() {
+    /**
+     * LifeCycle.TEST means data will be removed between each test
+     * LifeCycle.TEST_CLASS means data will be removed between each test class
+     * LifeCycle.TEST_CONFIG/SUITE means data will be removed at the end of the suite
+     * @param dataRetention
+     * @return
+     */
+    public KafkaPlugin kafkaDataRetantion(LifeCycle dataRetention) {
+        this.dataRetention = dataRetention;
+        return this;
+    }
+
+    public KafkaPlugin keepDataAfterExit() {
         this.deleteTempDir = false;
         return this;
     }
@@ -89,12 +105,16 @@ public class KafkaPlugin implements Plugin, ResourceProviderSupport {
     /**
      * To be able to give the resource a name
      *
-     * @param kafkaConfig of the Properties sent to KafkaTestServer constructor
      * @return builder
      */
-    public KafkaPlugin name(final Properties kafkaConfig) {
-        this.kafkaConfig = kafkaConfig;
+    public KafkaPlugin kafkaConfigWriteMessages(int numberOfMessages) {
+        initProperties();
+        kafkaConfig.put("log.flush.interval.messages", String.valueOf(numberOfMessages));
         return this;
+    }
+
+    private void initProperties() {
+        this.kafkaConfig = kafkaConfig == null ? new Properties() : kafkaConfig;
     }
 
     @RunnerPluginBeforeContainerCreation
@@ -134,16 +154,22 @@ public class KafkaPlugin implements Plugin, ResourceProviderSupport {
         } else {
             initLogDir(properties);
         }
-
         return properties;
     }
 
     private void initLogDir(Properties properties) {
         String logDir = "target/kafka_testing/" + UUID.randomUUID().toString().substring(29, 36);
         LOG.info("Kafka will log to dir: '{}'", logDir);
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+        if(deleteTempDir) {
+            Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+                try {
+                    LOG.info("Deleting dir {}", logDir);
+                    FileUtils.deleteDirectory(new File(logDir));
+                } catch (IOException e) {
 
-        }));
+                }
+            }));
+        }
         properties.put(LOG_DIR, logDir);
     }
 
@@ -172,6 +198,10 @@ public class KafkaPlugin implements Plugin, ResourceProviderSupport {
     protected void afterTest() throws Exception {
         if (getLifeCycle() == LifeCycle.TEST) {
             stopAndCleanup();
+        }
+        if(dataRetention == LifeCycle.TEST){
+            KafkaAdminUtil kafkaAdminUtil = new KafkaAdminUtil(embeddedKafka.getKafkaTestServer());
+            kafkaAdminUtil.deleteAllData();
         }
     }
 

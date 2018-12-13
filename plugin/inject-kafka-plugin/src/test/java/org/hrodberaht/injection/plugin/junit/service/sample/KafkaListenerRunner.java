@@ -4,15 +4,13 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.salesforce.kafka.test.KafkaProvider;
-import org.apache.kafka.clients.admin.AdminClient;
-import org.apache.kafka.clients.admin.DescribeTopicsResult;
-import org.apache.kafka.clients.admin.KafkaAdminClient;
 import org.apache.kafka.clients.admin.TopicDescription;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
 import org.apache.kafka.common.TopicPartition;
 import org.apache.kafka.common.TopicPartitionInfo;
+import org.hrodberaht.injection.plugin.junit.plugins.KafkaAdminUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,20 +20,20 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.apache.kafka.clients.consumer.ConsumerConfig.AUTO_COMMIT_INTERVAL_MS_CONFIG;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.GROUP_ID_CONFIG;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG;
-import static org.apache.kafka.clients.consumer.ConsumerConfig.SESSION_TIMEOUT_MS_CONFIG;
+import static org.apache.kafka.clients.consumer.ConsumerConfig.MAX_POLL_RECORDS_CONFIG;
 import static org.apache.kafka.clients.consumer.ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.BOOTSTRAP_SERVERS_CONFIG;
+import static org.apache.kafka.clients.producer.ProducerConfig.CLIENT_ID_CONFIG;
 
 /**
  * Über Spring-Kafka kann Stand 1.2 kein RebalanceListener eingeklinkt werden!
@@ -53,17 +51,27 @@ public class KafkaListenerRunner implements Runnable {
     @Inject
     private KafkaProvider kafkaProvider;
 
+    @Inject
+    private KafkaAdminUtil adminUtil;
+
     private final Gson gson = new Gson();
     private final JsonParser parser = new JsonParser();
 
-    private Map<String, Object> config(String name) {
+
+    private Map<String, Object> config(boolean simpleSeek, String name) {
 
         Map<String, Object> props = new HashMap<>();
         props.put(BOOTSTRAP_SERVERS_CONFIG, kafkaProvider.getKafkaConnectString());
         props.put(GROUP_ID_CONFIG, name);
+        props.put(CLIENT_ID_CONFIG, UUID.randomUUID().toString());
         props.put(ENABLE_AUTO_COMMIT_CONFIG, "true");
-        props.put(AUTO_COMMIT_INTERVAL_MS_CONFIG, "1000");
-        props.put(SESSION_TIMEOUT_MS_CONFIG, "10000");
+
+        if(!simpleSeek){
+            props.put(MAX_POLL_RECORDS_CONFIG, 50);
+            props.put("auto.offset.reset", "earliest");
+        }
+        props.put(AUTO_COMMIT_INTERVAL_MS_CONFIG, "100");
+        //props.put(SESSION_TIMEOUT_MS_CONFIG, "10000");
         props.put(KEY_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
         props.put(VALUE_DESERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringDeserializer");
 
@@ -71,57 +79,52 @@ public class KafkaListenerRunner implements Runnable {
     }
 
     public void run() {
-        consumeForever("article_store");
+        consumeForever("article_store", "articles");
     }
 
-    public void runOnce(String name) {
-        try (KafkaConsumer<String, String> consumer = createConsumer(true, name)) {
+    public void runOnce(String groupName, String topicName) {
+        try (KafkaConsumerWrapper<String, String> consumer = createConsumer(true, groupName, topicName)) {
             consumeOnce(consumer);
         }
     }
 
-    public void runOnceWithSubscribe(String name) {
-        try (KafkaConsumer<String, String> consumer = createConsumer(false, name)) {
-            consumeOnce(consumer);
-        }
-    }
-
-    private void consumeForever(String name) {
-        try (KafkaConsumer<String, String> consumer = createConsumer(true, name)){
+    private void consumeForever(String groupName, String topicName) {
+        try (KafkaConsumerWrapper<String, String> consumer = createConsumer(true, groupName, topicName)){
             while (true) {
-                if (!consumeOnce(consumer)) continue;
+                consumeOnce(consumer);
             }
         } catch (Exception e) {
             LOG.error("bad code", e);
         }
     }
 
-    public KafkaConsumer<String, String> getConsumer(String name) {
-        return createConsumer(false, name);
+    public KafkaConsumerWrapper<String, String> getConsumer(String groupName, String topicName) {
+        return createConsumer(false, groupName, topicName);
     }
 
-    private KafkaConsumer<String, String> createConsumer(boolean simpleSeek, String name) {
-
-        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(config(name));
-
+    private KafkaConsumerWrapper<String, String> createConsumer(boolean simpleSeek, String groupName, String topicName) {
+        Map<String, Object> configMap = config(simpleSeek, groupName);
+        KafkaConsumer<String, String> consumer = new KafkaConsumer<>(configMap);
+        KafkaConsumerWrapper<String, String> kafkaConsumerWrapper = new KafkaConsumerWrapper<>(configMap, consumer);
         if(simpleSeek){
-            seekConsumerFromBeginning(consumer);
+            seekConsumerFromBeginning(consumer, topicName);
         }else {
-            consumer.subscribe(Arrays.asList(ArticlesService.TOPIC_NAME));
+            consumer.subscribe(Arrays.asList(topicName),
+                    new OffsetBeginningRebalanceListener(kafkaConsumerWrapper));
         }
 
-        return consumer;
+        return kafkaConsumerWrapper;
     }
 
-    private void seekConsumerFromBeginning(KafkaConsumer<String, String> consumer) {
-        TopicDescription topicDescription = this.describeTopic(ArticlesService.TOPIC_NAME);
+    private void seekConsumerFromBeginning(KafkaConsumer<String, String> consumer, String topicName) {
+        TopicDescription topicDescription = adminUtil.describeTopic(topicName);
         Collection<Integer> partitionIds = topicDescription.partitions().stream().map(TopicPartitionInfo::partition).collect(Collectors.toList());
 
 
         // Create topic Partitions
         final List<TopicPartition> topicPartitions = partitionIds
                 .stream()
-                .map((partitionId) -> new TopicPartition(ArticlesService.TOPIC_NAME, partitionId))
+                .map((partitionId) -> new TopicPartition(topicName, partitionId))
                 .collect(Collectors.toList());
 
 
@@ -132,15 +135,19 @@ public class KafkaListenerRunner implements Runnable {
     /**
      *
      * @param consumer
-     * @return true = consumed something
+     * @return -1 = consumed nothing, > 0 consume count
      */
-    public boolean consumeOnce(KafkaConsumer<String, String> consumer) {
+    public int consumeOnce(KafkaConsumerWrapper<String, String> consumer) {
         LOG.info("Starting poll");
-        ConsumerRecords<String, String> records = consumer.poll(Duration.of(10, ChronoUnit.SECONDS));
+        ConsumerRecords<String, String> records = consumer.consumer.poll(Duration.of(1, ChronoUnit.SECONDS));
 
         if (records.isEmpty()) {
             LOG.info("Found nothing on the topic");
-            return false;
+            return -1;
+        }
+
+        if (!records.isEmpty()) {
+            LOG.info("Found {} records on the topic", records.count());
         }
 
 
@@ -153,11 +160,12 @@ public class KafkaListenerRunner implements Runnable {
 
             JsonObject object = json.getAsJsonObject("object");
 
-            LOG.info("----------------------------------------------------------------------------------");
-            LOG.info("Offset: " + cr.offset());
-            LOG.info("Key: "+ cr.key());
-            LOG.info("Action: " + action);
-            LOG.info("Object: " + object);
+            //LOG.info("----------------------------------------------------------------------------------");
+            //LOG.info("Offset: " + cr.offset());
+            //LOG.info("ConsumerId: "+consumer.getClientId());
+            //LOG.info("Key: "+ cr.key());
+            //LOG.info("Action: " + action);
+            //LOG.info("Object: " + object);
 
             Article article = gson.fromJson(object, Article.class);
 
@@ -175,31 +183,40 @@ public class KafkaListenerRunner implements Runnable {
 
 
         }
-        return true;
+        return records.count();
     }
 
-    public TopicDescription describeTopic(final String topicName) {
-        // Create admin client
-        try (final AdminClient adminClient = getAdminClient()) {
-            // Make async call to describe the topic.
-            final DescribeTopicsResult describeTopicsResult = adminClient.describeTopics(Collections.singleton(topicName));
 
-            return describeTopicsResult.values().get(topicName).get();
-        } catch (final InterruptedException | ExecutionException e) {
-            throw new RuntimeException(e.getMessage(), e);
+    public static class KafkaConsumerWrapper<K,V> implements AutoCloseable{
+        private final String clientId;
+        private final String groupId;
+        private final KafkaConsumer<K,V> consumer;
+
+
+        public KafkaConsumerWrapper(Map<String, Object> objectMap, KafkaConsumer<K, V> consumer) {
+            this.clientId = objectMap.get(CLIENT_ID_CONFIG).toString();
+            this.groupId = objectMap.get(GROUP_ID_CONFIG).toString();
+            this.consumer = consumer;
+        }
+
+        public String getClientId() {
+            return clientId;
+        }
+
+        public String getGroupId() {
+            return groupId;
+        }
+
+        public KafkaConsumer<K, V> getConsumer() {
+            return consumer;
+        }
+
+        @Override
+        public void close() {
+            consumer.close();
         }
     }
 
-    private AdminClient getAdminClient() {
-        return KafkaAdminClient.create(buildDefaultClientConfig());
-    }
-
-    private Map<String, Object> buildDefaultClientConfig() {
-        final Map<String, Object> defaultClientConfig = new HashMap<>();
-        defaultClientConfig.put("bootstrap.servers", kafkaProvider.getKafkaConnectString());
-        defaultClientConfig.put("client.id", "admin-consumer-1");
-        return defaultClientConfig;
-    }
 }
 
 

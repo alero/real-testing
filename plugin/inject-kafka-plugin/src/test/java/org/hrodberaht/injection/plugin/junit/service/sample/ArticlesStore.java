@@ -30,4 +30,7 @@ public class ArticlesStore {
         articles.remove(key);
     }
 
+    public void clean() {
+        articles.clear();
+    }
 }

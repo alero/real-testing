@@ -6,6 +6,7 @@ import com.salesforce.kafka.test.KafkaProvider;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.clients.producer.RecordMetadata;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -15,13 +16,13 @@ import javax.inject.Singleton;
 import java.util.Collection;
 import java.util.Properties;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 import static org.apache.kafka.clients.producer.ProducerConfig.ACKS_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.BATCH_SIZE_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.BOOTSTRAP_SERVERS_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.BUFFER_MEMORY_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG;
-import static org.apache.kafka.clients.producer.ProducerConfig.LINGER_MS_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.RETRIES_CONFIG;
 import static org.apache.kafka.clients.producer.ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG;
 
@@ -30,13 +31,13 @@ public class ArticlesService {
 
     private static Logger LOG = LoggerFactory.getLogger(ArticlesService.class);
 
-    public static final String TOPIC_NAME = "articles";
-
     @Inject
     private KafkaProvider kafkaProvider;
 
     @Inject
     private ArticlesStore store;
+
+    private String topicName;
 
     private final Gson gson = new Gson();
 
@@ -47,6 +48,9 @@ public class ArticlesService {
         producer = producer(kafkaProvider);
     }
 
+    public void topicName(String topicName){
+        this.topicName = topicName;
+    }
 
     public Collection<Article> getArticles() {
         return store.getAll();
@@ -66,19 +70,25 @@ public class ArticlesService {
 
 
     public String save(Article article) {
-        String id = UUID.randomUUID().toString();
-        article.setId(id);
-        producer.send(new ProducerRecord<>(TOPIC_NAME, id, createWrapper( article)));
-        LOG.info("Sent message to topic {}", TOPIC_NAME);
-        return id;
+
+        try {
+            String id = UUID.randomUUID().toString();
+            article.setId(id);
+            RecordMetadata recordMetadata = producer.send(new ProducerRecord<>(topicName, id, createWrapper( article))).get();
+            LOG.info("Sent message to topic {}, offset:{}, partition:{}, size:{}", topicName, recordMetadata.offset(), recordMetadata.partition(), recordMetadata.serializedValueSize());
+            return id;
+        } catch (InterruptedException | ExecutionException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     public void delete(String id) {
-        producer.send(new ProducerRecord<>(TOPIC_NAME, id, deleteWrapper(id)));
+        producer.send(new ProducerRecord<>(topicName, id, deleteWrapper(id)));
     }
 
     public void update(String id, Article article) {
-        producer.send(new ProducerRecord<>(TOPIC_NAME, id, putWrapper(article)));
+        producer.send(new ProducerRecord<>(topicName, id, putWrapper(article)));
     }
 
     public void flush(){
@@ -115,11 +125,15 @@ public class ArticlesService {
         props.put(BOOTSTRAP_SERVERS_CONFIG, kafkaProvider.getKafkaConnectString());
         props.put(ACKS_CONFIG, "all");
         props.put(RETRIES_CONFIG, 1);
-        props.put(BATCH_SIZE_CONFIG, 32000);
-        props.put(LINGER_MS_CONFIG, 100);
+        props.put(BATCH_SIZE_CONFIG, 10);
+        // props.put(LINGER_MS_CONFIG, 100);
         props.put(BUFFER_MEMORY_CONFIG, 33554432);
         props.put(KEY_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         props.put(VALUE_SERIALIZER_CLASS_CONFIG, "org.apache.kafka.common.serialization.StringSerializer");
         return new KafkaProducer<>(props);
+    }
+
+    public void clean() {
+        store.clean();
     }
 }

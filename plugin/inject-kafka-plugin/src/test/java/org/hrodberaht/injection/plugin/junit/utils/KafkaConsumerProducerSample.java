@@ -28,7 +28,7 @@ public class KafkaConsumerProducerSample {
         final KafkaTestUtils kafkaTestUtils = new KafkaTestUtils(kafkaTestServer);
 
         // Create a topic.
-        kafkaTestUtils.createTopic(theTopic, 1, (short) 1);
+        // kafkaTestUtils.createTopic(theTopic, 1, (short) 1);
 
         // Define override properties.
         Properties config = new Properties();
