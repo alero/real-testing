@@ -148,7 +148,7 @@ public class TestJUnitKafkaService {
         private void addResourcesToModule(Module module, Set<ResourceProvider> resources) {
             for(ResourceProvider resourceProvider:resources){
 
-                module.register(resourceProvider.getType()).withFactory(new InjectionFactory() {
+                module.register(resourceProvider.getType()).withFactory(new InjectionFactory<Object>() {
                     @Override
                     public Object getInstance() {
                         return resourceProvider.getInstance();
@@ -159,7 +159,6 @@ public class TestJUnitKafkaService {
                         return resourceProvider.getType();
                     }
 
-                    @Override
                     public String name() {
                         return resourceProvider.getName();
                     }
