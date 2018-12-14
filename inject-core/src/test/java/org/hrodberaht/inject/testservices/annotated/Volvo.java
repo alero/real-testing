@@ -65,7 +65,6 @@ public class Volvo implements Car {
     private String initTextSpecial = null;
 
     @Inject
-    @SuppressWarnings("InjectOnMemberAndConstructor")
     public Volvo(@Spare Tire spareTire) {
         this.spareTire = spareTire;
     }

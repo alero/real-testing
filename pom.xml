@@ -234,6 +234,7 @@
                         <compilerArg>-Xep:WildcardImport:ERROR</compilerArg>
                         <compilerArg>-Xep:RemoveUnusedImports:ERROR</compilerArg>
                         <compilerArg>-Xep:DeadException:ERROR</compilerArg>
+                        <compilerArg>-Xep:InjectOnMemberAndConstructor:WARNING</compilerArg>
                     </compilerArgs>
                 </configuration>
                 <dependencies>
