@@ -95,12 +95,24 @@ All the Injection Container plugins support a "with" method that can take in typ
 * start/stop of the underlying server will honor the selected lifecycle, recommended usage is test_config lifecycle
 
 
-## Planded Resource Plugins, to come in a future not so far away
-* ActiveMQ
-* Kafka
-* Zookeeper
+## RELEASE NOTES
 
-## Planned development for lifecycle management
+The intended release if 3.0.0 will go through a few more RCs
+
+- RC1, mainly bugs from the beta releases 
+- RC2, probably did stuff
+- RC3, added kafka plugin support and noticed that activemq is designed strangely
+
+Beginning work on RC4, this is the last intended RC - 
+  - More glue code between plugins (activemq can be used with guice and spring and so on)
+  - Solve the bug with fork-join executor not working for default setup
+  - Add kafka cluster testing support (starting many servers that works as a cluster)
+  - Look at making 
+
+## Planded Resource Plugins, to come in a future not so far away
+* Zookeeper ?
+
+## Planned development for lifecycle management (Planned for next patch release 3.1.x)
 * Extend with more fine-grained control using JUnit5 as it has a lot more pre/post extensions built in.
 - Pre/Post test (method)
 - Pre/Post test class 
