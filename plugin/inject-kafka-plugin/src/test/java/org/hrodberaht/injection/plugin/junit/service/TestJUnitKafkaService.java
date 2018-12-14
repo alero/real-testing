@@ -1,6 +1,5 @@
 package org.hrodberaht.injection.plugin.junit.service;
 
-import com.salesforce.kafka.test.KafkaProvider;
 import com.salesforce.kafka.test.KafkaTestUtils;
 import org.hrodberaht.injection.core.Module;
 import org.hrodberaht.injection.core.register.InjectionFactory;
@@ -8,6 +7,7 @@ import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.JUnit5Extension;
+import org.hrodberaht.injection.plugin.junit.api.resource.ResourceProvider;
 import org.hrodberaht.injection.plugin.junit.plugins.KafkaPlugin;
 import org.hrodberaht.injection.plugin.junit.service.sample.Article;
 import org.hrodberaht.injection.plugin.junit.service.sample.ArticlesService;
@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.math.BigDecimal;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -136,15 +137,31 @@ public class TestJUnitKafkaService {
                 module.register(KafkaListenerRunner.class);
                 module.register(ArticlesStore.class);
                 module.register(KafkaListenerManager.class);
-                module.register(KafkaProvider.class).withFactory(new InjectionFactory<KafkaProvider>() {
+
+                addResourcesToModule(module, kafkaPlugin.resources());
+                return module;
+            });
+
+
+        }
+
+        private void addResourcesToModule(Module module, Set<ResourceProvider> resources) {
+            for(ResourceProvider resourceProvider:resources){
+
+                module.register(resourceProvider.getType()).withFactory(new InjectionFactory() {
                     @Override
-                    public KafkaProvider getInstance() {
-                        return kafkaPlugin.getEmbedded();
+                    public Object getInstance() {
+                        return resourceProvider.getInstance();
                     }
 
                     @Override
                     public Class getInstanceType() {
-                        return KafkaProvider.class;
+                        return resourceProvider.getType();
+                    }
+
+                    @Override
+                    public String name() {
+                        return resourceProvider.getName();
                     }
 
                     @Override
@@ -152,10 +169,7 @@ public class TestJUnitKafkaService {
                         return false;
                     }
                 });
-                return module;
-            });
-
-
+            }
         }
     }
 }

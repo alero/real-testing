@@ -24,6 +24,9 @@ package org.hrodberaht.injection.core.register;
  * To change this template use File | Settings | File Templates.
  */
 public interface InjectionFactory<T> {
+
+    default String name() { return null; }
+
     T getInstance();
 
     Class getInstanceType();

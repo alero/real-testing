@@ -77,23 +77,11 @@ public class KafkaPlugin implements Plugin, ResourceProviderSupport {
     /**
      * To be able to give the resource a name
      *
-     * @param name of the Resource that is exposed for type ConnectionFactory
+     * @param name of the Resource that is exposed for type KafkaProvider
      * @return builder
      */
     public KafkaPlugin name(final String name) {
         this.name = name;
-        return this;
-    }
-
-    /**
-     * LifeCycle.TEST means data will be removed between each test
-     * LifeCycle.TEST_CLASS means data will be removed between each test class
-     * LifeCycle.TEST_CONFIG/SUITE means data will be removed at the end of the suite
-     * @param dataRetention
-     * @return
-     */
-    public KafkaPlugin kafkaDataRetantion(LifeCycle dataRetention) {
-        this.dataRetention = dataRetention;
         return this;
     }
 

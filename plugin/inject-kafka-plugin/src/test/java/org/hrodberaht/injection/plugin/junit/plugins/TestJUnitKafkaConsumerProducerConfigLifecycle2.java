@@ -1,10 +1,7 @@
 package org.hrodberaht.injection.plugin.junit.plugins;
 
-import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
-import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.JUnit5Extension;
-import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.utils.KafkaConsumerProducerSample;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,11 +10,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
-@ContainerContext(TestJUnitKafkaConsumerProducer.InnerConfig.class)
+@ContainerContext(TestJUnitKafkaConsumerProducerConfigLifecycle.InnerConfig.class)
 @ExtendWith(JUnit5Extension.class)
-public class TestJUnitKafkaConsumerProducer {
+public class TestJUnitKafkaConsumerProducerConfigLifecycle2 {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TestJUnitKafkaConsumerProducer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TestJUnitKafkaConsumerProducerConfigLifecycle2.class);
 
     @Inject
     private KafkaPlugin kafkaPlugin;
@@ -37,10 +34,5 @@ public class TestJUnitKafkaConsumerProducer {
         LOG.info("after test -  testForKafkaSetup2");
     }
 
-    public static class InnerConfig extends ContainerContextConfigBase {
-        @Override
-        public void register(InjectionRegistryBuilder registryBuilder) {
-            activatePlugin(new KafkaPlugin(Plugin.LifeCycle.TEST_CLASS));
-        }
-    }
+
 }

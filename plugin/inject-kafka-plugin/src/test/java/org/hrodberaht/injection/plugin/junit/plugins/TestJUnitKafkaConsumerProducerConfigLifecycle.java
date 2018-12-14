@@ -13,11 +13,11 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 
-@ContainerContext(TestJUnitKafkaConsumerProducer.InnerConfig.class)
+@ContainerContext(TestJUnitKafkaConsumerProducerConfigLifecycle.InnerConfig.class)
 @ExtendWith(JUnit5Extension.class)
-public class TestJUnitKafkaConsumerProducer {
+public class TestJUnitKafkaConsumerProducerConfigLifecycle {
 
-    private static final Logger LOG = LoggerFactory.getLogger(TestJUnitKafkaConsumerProducer.class);
+    private static final Logger LOG = LoggerFactory.getLogger(TestJUnitKafkaConsumerProducerConfigLifecycle.class);
 
     @Inject
     private KafkaPlugin kafkaPlugin;
@@ -40,7 +40,7 @@ public class TestJUnitKafkaConsumerProducer {
     public static class InnerConfig extends ContainerContextConfigBase {
         @Override
         public void register(InjectionRegistryBuilder registryBuilder) {
-            activatePlugin(new KafkaPlugin(Plugin.LifeCycle.TEST_CLASS));
+            activatePlugin(new KafkaPlugin(Plugin.LifeCycle.TEST_CONFIG));
         }
     }
 }
