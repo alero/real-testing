@@ -27,7 +27,7 @@ import javax.inject.Inject;
  * @version 1.0
  * @since 1.0
  */
-@SuppressWarnings("InjectOnMemberAndConstructor")
+
 public class Volvo implements Car {
 
     @Inject
@@ -65,6 +65,7 @@ public class Volvo implements Car {
     private String initTextSpecial = null;
 
     @Inject
+    @SuppressWarnings("InjectOnMemberAndConstructor")
     public Volvo(@Spare Tire spareTire) {
         this.spareTire = spareTire;
     }
