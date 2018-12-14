@@ -27,6 +27,7 @@ import javax.inject.Inject;
  * @version 1.0
  * @since 1.0
  */
+@SuppressWarnings("InjectOnMemberAndConstructor")
 public class Volvo implements Car {
 
     @Inject
