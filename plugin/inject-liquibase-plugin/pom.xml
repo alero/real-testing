@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.hrodberaht.inject.plugin</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.0.0-RC3-SNAPSHOT</version>
+        <version>3.0.0-RC4-SNAPSHOT</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
     <artifactId>inject-liquibase-plugin</artifactId>
-    <version>3.0.0-RC3-SNAPSHOT</version>
+    <version>3.0.0-RC4-SNAPSHOT</version>
 
     <dependencies>
         <dependency>
