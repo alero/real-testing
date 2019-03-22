@@ -33,6 +33,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
@@ -52,7 +53,8 @@ public class SolrTestRunner {
     private static Map<String, SolrRunnerHolder> CORE_CACHE = new ConcurrentHashMap<>();
     private String base;
     private String home;
-    private String coreName;
+    private String defaultCoreName;
+    private List<String> coreNames;
 
     private static void copyFile(final String copyToDir, final String resourceStream, final String fileName) throws IOException {
         LOG.info("copyFile from:{} toDir:{} toFile:{}", resourceStream, copyToDir, fileName);
@@ -69,12 +71,17 @@ public class SolrTestRunner {
         setup(DEFAULT_HOME, solrHome, "collection1");
     }
 
-    public void setup(String solrHome, String solrRunnerHome, String coreName) {
+    public void setup(String solrHome, String solrRunnerHome, String defaultCore, String ...cores) {
+        coreNames = new ArrayList<>();
         try {
             this.base = solrHome;
             this.home = solrRunnerHome;
-            this.coreName = coreName;
-            LOG.info("setup {} - {} - {}", base, home, coreName);
+            this.defaultCoreName = defaultCore;
+            this.coreNames.add(defaultCore);
+            if (cores != null) {
+                coreNames.addAll(Arrays.asList(cores));
+            }
+            LOG.info("setup {} - {} - {} - {}", base, home, defaultCoreName, coreNames.stream().reduce("", String::concat));
             setupSolr();
         } catch (IOException e) {
             throw new PluginRuntimeException(e);
@@ -83,6 +90,10 @@ public class SolrTestRunner {
 
     public SolrAssertions solrAssertions() {
         return new SolrAssertions(getServer());
+    }
+
+    public SolrAssertions solrAssertions(String coreName) {
+        return new SolrAssertions(getServer(), coreName, null, null);
     }
 
     public SolrClient getClient() {
@@ -124,7 +135,7 @@ public class SolrTestRunner {
         CoreContainer coreContainer = new CoreContainer(home);
         coreContainer.load();
         LOG.info("Loading embedded container {}", runnerName);
-        EmbeddedSolrServer solr = new EmbeddedSolrServer(coreContainer, coreName);
+        EmbeddedSolrServer solr = new EmbeddedSolrServer(coreContainer, defaultCoreName);
         return new SolrRunnerHolder(coreContainer, solr);
     }
 
@@ -141,7 +152,7 @@ public class SolrTestRunner {
     }
 
     private String runnerName() {
-        return home + "/" + coreName;
+        return home + "/" + defaultCoreName;
     }
 
     public void cleanSolrInstance() {
@@ -155,14 +166,16 @@ public class SolrTestRunner {
     }
 
     private void moveConfigFiles() throws IOException {
-        moveSolrConfigFile(home, "solr/solr.xml", "solr.xml");
-        moveFiles(home, coreName);
-        moveFiles(home, coreName + "/conf");
+        for (String coreName : this.coreNames) {
+            moveSolrConfigFile(home, "solr/solr.xml", "solr.xml");
+            moveFiles(home, coreName);
+            moveFiles(home, coreName + "/conf");
 
-        try {
-            moveFiles(home, coreName + "/conf/lang");
-        } catch (UnsupportedOperationException e) {
-            LOG.warn("found no files to copy at : '" + coreName + "/conf/lang'");
+            try {
+                moveFiles(home, coreName + "/conf/lang");
+            } catch (UnsupportedOperationException e) {
+                LOG.warn("found no files to copy at : '" + coreName + "/conf/lang'");
+            }
         }
     }
 
@@ -248,10 +261,12 @@ public class SolrTestRunner {
     }
 
     private void tearDown() throws IOException {
-        File coreDir = new File(home, coreName);
-        if (coreDir.exists()) {
-            LOG.info("cleaning : " + coreDir.getAbsolutePath());
-            FileUtils.cleanDirectory(coreDir);
+        for (String coreName : this.coreNames) {
+            File coreDir = new File(home, coreName);
+            if (coreDir.exists()) {
+                LOG.info("cleaning : " + coreDir.getAbsolutePath());
+                FileUtils.cleanDirectory(coreDir);
+            }
         }
     }
 

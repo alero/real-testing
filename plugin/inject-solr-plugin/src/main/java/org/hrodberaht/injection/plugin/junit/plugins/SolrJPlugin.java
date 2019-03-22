@@ -38,7 +38,8 @@ public class SolrJPlugin implements Plugin {
     private SolrTestRunner solrTestRunner;
     private String solrHome = DEFAULT_HOME;
     private String sealRunnerHome = DEFAULT_RUNNER_HOME;
-    private String coreName;
+    private String defaultCoreName;
+    private String[] extraCores;
     private LifeCycle lifeCycle = LifeCycle.TEST_CONFIG;
     private PluginLifeCycledResource<SolrTestRunner> pluginLifeCycledResource = new PluginLifeCycledResource<>(SolrTestRunner.class);
 
@@ -48,8 +49,9 @@ public class SolrJPlugin implements Plugin {
         return this;
     }
 
-    public SolrJPlugin coreName(String coreName) {
-        this.coreName = coreName;
+    public SolrJPlugin coreName(String defaultCoreName, String ... extraCoreNames) {
+        this.defaultCoreName = defaultCoreName;
+        this.extraCores = extraCoreNames;
         return this;
     }
 
@@ -65,6 +67,10 @@ public class SolrJPlugin implements Plugin {
 
     public SolrAssertions getAssertions() {
         return solrTestRunner.solrAssertions();
+    }
+
+    public SolrAssertions getAssertions(String coreName) {
+        return solrTestRunner.solrAssertions(coreName);
     }
 
     public SolrClient getClient() {
@@ -124,7 +130,7 @@ public class SolrJPlugin implements Plugin {
 
 
     private void prepareSolr(PluginContext pluginContext) {
-        solrTestRunner.setup(solrHome, getSolrHome(pluginContext), coreName);
+        solrTestRunner.setup(solrHome, getSolrHome(pluginContext), defaultCoreName, extraCores);
     }
 
     private String getSolrHome(PluginContext pluginContext) {
