@@ -166,8 +166,8 @@ public class SolrTestRunner {
     }
 
     private void moveConfigFiles() throws IOException {
+        moveSolrConfigFile(home, "solr/solr.xml", "solr.xml");
         for (String coreName : this.coreNames) {
-            moveSolrConfigFile(home, "solr/solr.xml", "solr.xml");
             moveFiles(home, coreName);
             moveFiles(home, coreName + "/conf");
 
