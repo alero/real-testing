@@ -43,8 +43,8 @@ public class SolrAssertions {
     private final String collection;
 
     public void cleanDataFromCollection() throws IOException, SolrServerException {
-        solr.deleteByQuery("*:*");
-        solr.commit(true, true, false);
+        solr.deleteByQuery(collection, "*:*");
+        solr.commit(collection, true, true, false);
     }
 
     public void waitForAsyncCommit() {
@@ -73,7 +73,7 @@ public class SolrAssertions {
     }
 
     public void assertAddDocument(Status status, SolrInputDocument documents) throws IOException, SolrServerException {
-        UpdateResponse updateResponse = solr.add(documents);
+        UpdateResponse updateResponse = solr.add(collection, documents);
         if (status == OK) {
             assertResponse(updateResponse);
         } else {
@@ -82,14 +82,14 @@ public class SolrAssertions {
     }
 
     public SolrDocument assertExistsAndReturn(String id) throws IOException, SolrServerException {
-        SolrDocument solrDocument = solr.getById(id);
+        SolrDocument solrDocument = solr.getById(collection, id);
         assertNotNull(solrDocument);
         assertTrue("Document is empty", solrDocument.size() > 0);
         return solrDocument;
     }
 
     public void assertCommit(Status status) throws IOException, SolrServerException {
-        UpdateResponse updateResponse = solr.commit(true, true, false);
+        UpdateResponse updateResponse = solr.commit(collection, true, true, false);
         if (status == OK) {
             assertResponse(updateResponse);
         } else {
@@ -113,7 +113,7 @@ public class SolrAssertions {
             appendBasicAuth(request);
             return request.process(solr, collection);
         }
-        return solr.query(solrQuery);
+        return solr.query(collection, solrQuery);
     }
 
     private void appendBasicAuth(SolrRequest request) {
