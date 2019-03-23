@@ -22,10 +22,10 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Calendar;
 
-public class TestPreparedStatemenmt extends TestStatemenmt implements PreparedStatement {
+public class TestPreparedStatement extends TestStatement implements PreparedStatement {
     private final PreparedStatement preparedStatement;
 
-    public TestPreparedStatemenmt(TestConnection testConnection, PreparedStatement preparedStatement) {
+    public TestPreparedStatement(TestConnection testConnection, PreparedStatement preparedStatement) {
         super(testConnection, preparedStatement);
         this.preparedStatement = preparedStatement;
     }

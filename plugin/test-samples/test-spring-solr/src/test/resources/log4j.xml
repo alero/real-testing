@@ -36,10 +36,7 @@
         <appender-ref ref="CONSOLE"/>
     </logger>
 
-    <!--<logger name="com.tieto.injectMethod" additivity="true">
-        <level value="DEBUG"/>
-        <appender-ref ref="CONSOLE" />
-    </logger>  -->
+
 
 
     <root>

@@ -25,7 +25,9 @@ package org.hrodberaht.injection.core.register;
  */
 public interface VariableInjectionFactory<T, K> {
 
-    public static final String SERVICE_NAME = "VariableInjectionFactory";
+    String SERVICE_NAME = "VariableInjectionFactory";
+
+    default String name() { return SERVICE_NAME; }
 
     Class<? extends T> getInstanceClass(K variable);
 

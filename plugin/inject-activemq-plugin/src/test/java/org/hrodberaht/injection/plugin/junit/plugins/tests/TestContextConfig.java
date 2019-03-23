@@ -11,7 +11,7 @@ import org.hrodberaht.injection.plugin.junit.plugins.tests.service.ProducerConfi
 public class TestContextConfig extends ContainerContextConfigBase {
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
-        ActiveMQPlugin activatePlugin = activatePlugin(ActiveMQPlugin.class).lifeCycle(Plugin.LifeCycle.TEST_SUITE);
+        ActiveMQPlugin activatePlugin = activatePlugin(new ActiveMQPlugin().lifeCycle(Plugin.LifeCycle.TEST_SUITE));
 
         activatePlugin(SpringExtensionPlugin.class)
                 .with(activatePlugin)

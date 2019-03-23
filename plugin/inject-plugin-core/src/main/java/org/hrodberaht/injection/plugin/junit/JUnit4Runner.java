@@ -28,8 +28,11 @@ import org.slf4j.LoggerFactory;
 public class JUnit4Runner extends BlockJUnit4ClassRunner {
 
     private static final Logger LOG = LoggerFactory.getLogger(JUnit4Runner.class);
-
     private final JUnitContext jUnitContext;
+
+    static {
+        System.setProperty("java.util.concurrent.ForkJoinPool.common.threadFactory", "org.hrodberaht.injection.plugin.junit.jdk8.SafeForkJoinWorkerThreadFactory");
+    }
 
     /**
      * Creates a BlockJUnit4ClassRunner to run

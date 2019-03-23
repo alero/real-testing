@@ -59,6 +59,15 @@ public class UserServiceBean implements UserService {
         jdbcService.insertOrUpdate(insertOrUpdater);
     }
 
+    @Override
+    public int loginCount(String userName) {
+        jdbcService.execute("update user set loginCount = loginCount + 1");
+        return jdbcService.querySingle(
+                "select loginCount from user where username = ?",
+                (rs, iteration) -> rs.getInt("loginCount"),
+                userName);
+    }
+
     public boolean loginCompare(String userName, String password) {
         User user = find(userName);
         if (user == null) {

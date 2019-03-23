@@ -79,6 +79,7 @@ public class RegistrationInstanceAnnotation<T extends Registration> implements R
     public T withFactory(InjectionFactory aFactory) {
         this.theFactory = aFactory;
         this.theService = theFactory.getInstanceType();
+        this.name = theFactory.name();
         this.scope = ScopeContainer.Scope.NEW;
         return (T) this;
     }
@@ -92,7 +93,7 @@ public class RegistrationInstanceAnnotation<T extends Registration> implements R
 
     public T withVariableFactory(VariableInjectionFactory variableInjectionFactory) {
         this.theVariableFactory = variableInjectionFactory;
-        this.name = VariableInjectionFactory.SERVICE_NAME;
+        this.name = variableInjectionFactory.name();
         this.scope = ScopeContainer.Scope.NEW;
         return (T) this;
     }

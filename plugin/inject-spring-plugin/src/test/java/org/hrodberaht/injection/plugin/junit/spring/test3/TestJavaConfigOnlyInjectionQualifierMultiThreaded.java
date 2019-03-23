@@ -46,6 +46,11 @@ public class TestJavaConfigOnlyInjectionQualifierMultiThreaded {
     public void testWiredBeanResource() throws Exception {
 
 
+        runTheTestCode();
+
+    }
+
+    private void runTheTestCode() throws InterruptedException {
         ExecutorService executor = Executors.newFixedThreadPool(10);
         AtomicLong callCounter = new AtomicLong(0);
 
@@ -67,6 +72,21 @@ public class TestJavaConfigOnlyInjectionQualifierMultiThreaded {
         executor.awaitTermination(1, TimeUnit.MINUTES);
 
         assertEquals(new Integer(callCounter.intValue()), springBean.getLoginCount("dude"));
+    }
+
+    @Test
+    public void testWiredBeanResource2() throws Exception {
+
+
+        runTheTestCode();
+
+    }
+
+    @Test
+    public void testWiredBeanResource3() throws Exception {
+
+
+        runTheTestCode();
 
     }
 

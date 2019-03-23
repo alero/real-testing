@@ -22,10 +22,10 @@
     <parent>
         <groupId>org.hrodberaht.inject</groupId>
         <artifactId>injection-parent</artifactId>
-        <version>3.0.0-RC2</version>
+        <version>3.0.0-RC4-SNAPSHOT</version>
     </parent>
 
-    <version>3.0.0-RC2</version>
+    <version>3.0.0-RC4-SNAPSHOT</version>
     <groupId>org.hrodberaht.inject.core</groupId>
 
     <artifactId>inject-core</artifactId>

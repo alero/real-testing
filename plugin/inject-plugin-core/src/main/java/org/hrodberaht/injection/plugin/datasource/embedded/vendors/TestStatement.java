@@ -6,11 +6,11 @@ import java.sql.SQLException;
 import java.sql.SQLWarning;
 import java.sql.Statement;
 
-public class TestStatemenmt implements Statement {
+public class TestStatement implements Statement {
     protected final TestConnection testConnection;
     private final Statement statement;
 
-    public TestStatemenmt(TestConnection testConnection, Statement statement) {
+    public TestStatement(TestConnection testConnection, Statement statement) {
         this.statement = statement;
         this.testConnection = testConnection;
     }
