@@ -20,11 +20,11 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.hrodberaht.inject</groupId>
-    <artifactId>injection-parent</artifactId>
-    <version>3.0.0-RC4-SNAPSHOT</version>
+    <artifactId>real-testing-parent</artifactId>
+    <version>3.0.0-RC6-SNAPSHOT</version>
     <packaging>pom</packaging>
-    <name>Injection Parent POM</name>
-    <description>A gathering of projects for simpler java development</description>
+    <name>Real Testing Parent POM</name>
+    <description>A gathering of projects for testing code with real testing principles</description>
     <url>https://github.com/alero/injection</url>
 
     <licenses>

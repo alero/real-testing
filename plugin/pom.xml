@@ -22,13 +22,13 @@
 
     <parent>
         <groupId>org.hrodberaht.inject</groupId>
-        <artifactId>injection-parent</artifactId>
-        <version>3.0.0-RC4-SNAPSHOT</version>
+        <artifactId>real-testing-parent</artifactId>
+        <version>3.0.0-RC6-SNAPSHOT</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
     <artifactId>plugin</artifactId>
-    <version>3.0.0-RC4-SNAPSHOT</version>
+    <version>3.0.0-RC6-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>

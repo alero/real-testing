@@ -85,13 +85,13 @@ All the Injection Container plugins support a "with" method that can take in typ
 * Create Entity Managers (manages the lifecycle of JPA creation, easy to combine with Datasource)
 * Utility to help with "flush/clear cache" testing problems to actaully ensure testing is done on the underlying SQL store
  
-
 [SolrPlugin](plugin/inject-solr-plugin/README.md) 
 * Creates a SolrJPlugin that starts and collects a solr server with cores against the Lifecycle management
 * Uses a test "safe" copy of the solr config files depending on the lifecycle selected, starting cores against them
+* Multi collection contribution by @anderslindsgard  
 
 [JerseyPlugin](plugin/inject-jersey-plugin/README.md)
-* Creates a Jersey inmemory connectd test base and connects it to the Lifecycle management
+* Creates a Jersey (grizzly) in-memory connected test base and connects it to the Lifecycle management
 * start/stop of the underlying server will honor the selected lifecycle, recommended usage is test_config lifecycle
 
 
@@ -102,12 +102,19 @@ The intended release if 3.0.0 will go through a few more RCs
 - RC1, mainly bugs from the beta releases 
 - RC2, probably did stuff
 - RC3, added kafka plugin support and noticed that activemq is designed strangely
+- RC4, added solr multi collection support
 
-Beginning work on RC4, this is the last intended RC - 
+Beginning work on RC5, this is the last intended RC - 
   - More glue code between plugins (activemq can be used with guice and spring and so on)
   - Solve the bug with fork-join executor not working for default setup
   - Add kafka cluster testing support (starting many servers that works as a cluster)
-  - Look at making 
+  - Look at making JUnit 5 the default with better connectino to phases
+
+Release hand guide
+1. Internal release
+mvn -B versions:set -DnewVersion=$RELEASE_VERSION -DgenerateBackupPoms=false
+mvn clean install
+mvn deploy -Prelease-seal-nexus -Dmaven.test.skip=true
 
 ## Planded Resource Plugins, to come in a future not so far away
 * Zookeeper ?

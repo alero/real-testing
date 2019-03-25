@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.hrodberaht.inject.plugin</groupId>
         <artifactId>test-samples</artifactId>
-        <version>3.0.0-RC4-SNAPSHOT</version>
+        <version>3.0.0-RC6-SNAPSHOT</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
     <artifactId>test-spring-jpa</artifactId>
-    <version>3.0.0-RC4-SNAPSHOT</version>
+    <version>3.0.0-RC6-SNAPSHOT</version>
 
     <properties>
         <spring.version>5.0.0.RELEASE</spring.version>

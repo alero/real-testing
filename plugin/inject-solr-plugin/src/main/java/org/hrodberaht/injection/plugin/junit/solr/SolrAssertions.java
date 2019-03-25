@@ -21,6 +21,7 @@ import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrRequest;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.request.QueryRequest;
+import org.apache.solr.client.solrj.request.UpdateRequest;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.client.solrj.response.SolrResponseBase;
 import org.apache.solr.client.solrj.response.UpdateResponse;
@@ -42,20 +43,6 @@ public class SolrAssertions {
     private final String password;
     private final String collection;
 
-    public void cleanDataFromCollection() throws IOException, SolrServerException {
-        solr.deleteByQuery(collection, "*:*");
-        solr.commit(collection, true, true, false);
-    }
-
-    public void waitForAsyncCommit() {
-        // TODO: Async needs a callback solution
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
     public enum Status {OK, FAIL}
 
     public SolrAssertions(SolrClient solr) {
@@ -73,7 +60,7 @@ public class SolrAssertions {
     }
 
     public void assertAddDocument(Status status, SolrInputDocument documents) throws IOException, SolrServerException {
-        UpdateResponse updateResponse = solr.add(collection, documents);
+        UpdateResponse updateResponse = processUpdateRequest(collection, documents);
         if (status == OK) {
             assertResponse(updateResponse);
         } else {
@@ -81,15 +68,31 @@ public class SolrAssertions {
         }
     }
 
+    public void cleanDataFromCollection() throws IOException, SolrServerException {
+        processDelete("*:*");
+        processCommit();
+    }
+
+
+    public void waitForAsyncCommit() {
+        // TODO: Async needs a callback solution
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
     public SolrDocument assertExistsAndReturn(String id) throws IOException, SolrServerException {
-        SolrDocument solrDocument = solr.getById(collection, id);
+        SolrDocument solrDocument = processById(id);
         assertNotNull(solrDocument);
         assertTrue("Document is empty", solrDocument.size() > 0);
         return solrDocument;
     }
 
+
     public void assertCommit(Status status) throws IOException, SolrServerException {
-        UpdateResponse updateResponse = solr.commit(collection, true, true, false);
+        UpdateResponse updateResponse = processCommit();
         if (status == OK) {
             assertResponse(updateResponse);
         } else {
@@ -105,21 +108,6 @@ public class SolrAssertions {
                 .setStart(0)
                 .setRows(10);
         return processQuery(solrQuery);
-    }
-
-    private QueryResponse processQuery(SolrQuery solrQuery) throws SolrServerException, IOException {
-        if (username != null) {
-            QueryRequest request = new QueryRequest(solrQuery);
-            appendBasicAuth(request);
-            return request.process(solr, collection);
-        }
-        return solr.query(collection, solrQuery);
-    }
-
-    private void appendBasicAuth(SolrRequest request) {
-        if (username != null) {
-            request.setBasicAuthCredentials(username, password);
-        }
     }
 
     public QueryResponse find(String query) throws IOException, SolrServerException {
@@ -193,5 +181,63 @@ public class SolrAssertions {
         }
     }
 
+    private void processDelete(String query) throws IOException, SolrServerException {
+        if (username != null) {
+            UpdateRequest request = new UpdateRequest();
+            request.deleteByQuery(query);
+            appendBasicAuth(request);
+            request.process(solr, collection);
+        } else {
+            solr.deleteByQuery(collection, query);
+        }
+    }
+
+    private QueryResponse processQuery(SolrQuery solrQuery) throws SolrServerException, IOException {
+        if (username != null) {
+            QueryRequest request = new QueryRequest(solrQuery);
+            appendBasicAuth(request);
+            return request.process(solr, collection);
+        }
+        return solr.query(collection, solrQuery);
+    }
+
+    private UpdateResponse processCommit() throws SolrServerException, IOException {
+        if (username != null) {
+            UpdateRequest request = new UpdateRequest();
+            request.setAction(UpdateRequest.ACTION.COMMIT, true, true, false);
+            appendBasicAuth(request);
+            return request.process(solr, collection);
+        }
+        return solr.commit(collection, true, true, false);
+    }
+
+    private SolrDocument processById(String id) throws SolrServerException, IOException {
+        if (username != null) {
+            org.apache.solr.client.solrj.SolrQuery solrQuery = new org.apache.solr.client.solrj.SolrQuery()
+                    .setQuery("id:" + id)
+                    .setStart(0)
+                    .setRows(1);
+            QueryRequest request = new QueryRequest(solrQuery);
+            appendBasicAuth(request);
+            return request.process(solr, collection).getResults().get(0);
+        }
+        return solr.getById(collection, id);
+    }
+
+    private UpdateResponse processUpdateRequest(String collection, SolrInputDocument documents) throws IOException, SolrServerException {
+        if (username != null) {
+            UpdateRequest request = new UpdateRequest();
+            request.add(documents);
+            appendBasicAuth(request);
+            return request.process(solr, collection);
+        }
+        return solr.add(collection, documents);
+    }
+
+    private void appendBasicAuth(SolrRequest request) {
+        if (username != null) {
+            request.setBasicAuthCredentials(username, password);
+        }
+    }
 
 }
