@@ -17,10 +17,14 @@
 package org.hrodberaht.injection.plugin.junit.jersey;
 
 import org.glassfish.jersey.client.JerseyClient;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
+import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 
+import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -29,8 +33,10 @@ public class JerseyClientRestassuredRequest {
 
     private MultivaluedMap<String, Object> headers = new MultivaluedHashMap<>();
     private Map<String, String> queryParams = new HashMap<>();
+    private Map<String, String> formParams = new HashMap<>();
     private String jsonStringBody;
     private Object entityObject;
+    private FormDataMultiPart multipart;
 
     private JerseyClient client;
     private String uri;
@@ -50,6 +56,8 @@ public class JerseyClientRestassuredRequest {
         this.jerseyClientRestassured = new JerseyClientRestassured(client, uri, pathValue, httpMethod);
         return jerseyClientRestassured;
     }
+
+
 
     public JerseyClientRestassuredResponse patch(String path, Object... values) {
         String pathValue = JerseyClientRestassured.replaceVariables(path, values);
@@ -83,12 +91,12 @@ public class JerseyClientRestassuredRequest {
 
     void callHttpMethod(String pathValue, JerseyClientRestassured.HttpMethod httpMethod) {
         if (jsonStringBody != null) {
-            result = getJerseyClientRestassured(pathValue, httpMethod).call(headers, queryParams, jsonStringBody);
+            result = getJerseyClientRestassured(pathValue, httpMethod).call(headers, queryParams, jsonStringBody, formParams, multipart);
             if (expectedStatusCode != null) {
                 result.verifyStatusCode(expectedStatusCode);
             }
         } else {
-            objectResult = getJerseyClientRestassured(pathValue, httpMethod).call(headers, queryParams, entityObject);
+            objectResult = getJerseyClientRestassured(pathValue, httpMethod).call(headers, queryParams, entityObject, formParams, multipart);
             if (expectedStatusCode != null) {
                 objectResult.verifyStatusCode(expectedStatusCode);
             }
@@ -130,6 +138,11 @@ public class JerseyClientRestassuredRequest {
         return this;
     }
 
+    public JerseyClientRestassuredRequest formParam(String key, String value) {
+        formParams.put(key, value);
+        return this;
+    }
+
     public JerseyClientRestassuredRequest bodyEntity(Object entityObject) {
         if (jsonStringBody != null) {
             throw new IllegalAccessError("Can only be string or object body: jsonStringBody is " + jsonStringBody);
@@ -137,6 +150,15 @@ public class JerseyClientRestassuredRequest {
         this.entityObject = entityObject;
         return this;
     }
+
+    public JerseyClientRestassuredRequest multiPart(String name, File multipartFile) {
+        final FileDataBodyPart filePart = new FileDataBodyPart(name, multipartFile);
+        FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
+        multipart = (FormDataMultiPart) formDataMultiPart.bodyPart(filePart);
+        return this;
+    }
+
+
 
     public JerseyClientRestassuredRequest expect() {
         mode = Mode.EXPECT;

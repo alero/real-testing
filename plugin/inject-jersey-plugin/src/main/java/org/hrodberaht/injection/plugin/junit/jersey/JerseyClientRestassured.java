@@ -20,6 +20,7 @@ import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyInvocation;
 import org.glassfish.jersey.client.JerseyWebTarget;
 import org.glassfish.jersey.logging.LoggingFeature;
+import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.hamcrest.Matcher;
 
 import javax.json.Json;
@@ -75,16 +76,34 @@ class JerseyClientRestassured {
         return new JerseyClientRestassuredResult(builder.get());
     }
 
-    JerseyClientRestassuredResult call(final MultivaluedMap<String, Object> headers, Map<String, String> queryParams, final String jsonBody) {
+    JerseyClientRestassuredResult call(final MultivaluedMap<String, Object> headers, Map<String, String> queryParams, final String jsonBody, Map<String, String> formParams, FormDataMultiPart multipart) {
         addQueryParamsToTarget(queryParams);
+        if(multipart != null){
+            addFormParamsToMultipart(formParams, multipart);
+            if (executeCall(headers, multipart)) return new JerseyClientRestassuredResult(response);
+            throw new IllegalAccessError("not prepared for  call");
+        }
         Entity<Object> entity = getObjectEntity(jsonBody);
         if (executeCall(headers, entity)) return new JerseyClientRestassuredResult(response);
         throw new IllegalAccessError("not prepared for  call");
 
     }
 
-    JerseyClientRestassuredObjectResult call(final MultivaluedMap<String, Object> headers, Map<String, String> queryParams, final Object entityObject) {
+    private void addFormParamsToMultipart(Map<String, String> formParams, FormDataMultiPart multipart) {
+        for (String key : formParams.keySet()) {
+            String value = formParams.get(key);
+            multipart.field(key, value);
+        }
+    }
+
+    JerseyClientRestassuredObjectResult call(final MultivaluedMap<String, Object> headers, Map<String, String> queryParams, Object entityObject, Map<String, String> formParams, FormDataMultiPart multipart) {
         addQueryParamsToTarget(queryParams);
+
+        if(multipart != null){
+            addFormParamsToMultipart(formParams, multipart);
+            if (executeCall(headers, multipart)) return new JerseyClientRestassuredObjectResult(response);
+            throw new IllegalAccessError("not prepared for  call");
+        }
         Entity<Object> entity = getObjectEntity(entityObject);
         if (executeCall(headers, entity)) {
             return new JerseyClientRestassuredObjectResult(response);
@@ -104,6 +123,17 @@ class JerseyClientRestassured {
             String value = queryParams.get(key);
             this.webTarget = this.webTarget.queryParam(key, value);
         }
+    }
+
+    boolean executeCall(final MultivaluedMap<String, Object> headers, FormDataMultiPart multipart) {
+        if (httpMethod == HttpMethod.POST) {
+            response = webTarget.request(MediaType.APPLICATION_JSON_TYPE).headers(headers).post(Entity.entity(multipart, multipart.getMediaType()));
+            return true;
+        } else if (httpMethod == HttpMethod.PUT) {
+            response = webTarget.request(MediaType.APPLICATION_JSON_TYPE).headers(headers).put(Entity.entity(multipart, multipart.getMediaType()));
+            return true;
+        }
+        return false;
     }
 
     boolean executeCall(final MultivaluedMap<String, Object> headers, Entity<Object> entity) {
