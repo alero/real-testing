@@ -7,12 +7,12 @@
     <parent>
         <groupId>org.hrodberaht.inject.plugin</groupId>
         <artifactId>test-samples</artifactId>
-        <version>3.0.0-RC6-SNAPSHOT</version>
+        <version>3.0.0-RC7-SNAPSHOT</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
     <artifactId>test-guice-solr</artifactId>
-    <version>3.0.0-RC6-SNAPSHOT</version>
+    <version>3.0.0-RC7-SNAPSHOT</version>
 
     <dependencies>
         <dependency>

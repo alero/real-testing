@@ -20,7 +20,6 @@ import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 
-import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -56,8 +55,6 @@ public class JerseyClientRestassuredRequest {
         this.jerseyClientRestassured = new JerseyClientRestassured(client, uri, pathValue, httpMethod);
         return jerseyClientRestassured;
     }
-
-
 
     public JerseyClientRestassuredResponse patch(String path, Object... values) {
         String pathValue = JerseyClientRestassured.replaceVariables(path, values);
@@ -152,8 +149,8 @@ public class JerseyClientRestassuredRequest {
     }
 
     public JerseyClientRestassuredRequest multiPart(String name, File multipartFile) {
-        final FileDataBodyPart filePart = new FileDataBodyPart(name, multipartFile);
         FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
+        final FileDataBodyPart filePart = new FileDataBodyPart(name, multipartFile);
         multipart = (FormDataMultiPart) formDataMultiPart.bodyPart(filePart);
         return this;
     }

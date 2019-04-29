@@ -20,6 +20,7 @@ import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.client.JerseyInvocation;
 import org.glassfish.jersey.client.JerseyWebTarget;
 import org.glassfish.jersey.logging.LoggingFeature;
+import org.glassfish.jersey.media.multipart.Boundary;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.hamcrest.Matcher;
 
@@ -32,6 +33,7 @@ import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.Map;
 
@@ -126,12 +128,19 @@ class JerseyClientRestassured {
     }
 
     boolean executeCall(final MultivaluedMap<String, Object> headers, FormDataMultiPart multipart) {
-        if (httpMethod == HttpMethod.POST) {
-            response = webTarget.request(MediaType.APPLICATION_JSON_TYPE).headers(headers).post(Entity.entity(multipart, multipart.getMediaType()));
-            return true;
-        } else if (httpMethod == HttpMethod.PUT) {
-            response = webTarget.request(MediaType.APPLICATION_JSON_TYPE).headers(headers).put(Entity.entity(multipart, multipart.getMediaType()));
-            return true;
+        try {
+            if (httpMethod == HttpMethod.POST) {
+                response = webTarget.request(MediaType.MULTIPART_FORM_DATA).headers(headers).post(Entity.entity(multipart, Boundary.addBoundary(MediaType.MULTIPART_FORM_DATA_TYPE)));
+                return true;
+            } else if (httpMethod == HttpMethod.PUT) {
+                response = webTarget.request(MediaType.MULTIPART_FORM_DATA).headers(headers).put(Entity.entity(multipart, Boundary.addBoundary(MediaType.MULTIPART_FORM_DATA_TYPE)));
+                return true;
+            }
+        }finally {
+            try {
+                multipart.close();
+            } catch (IOException e) {
+            }
         }
         return false;
     }

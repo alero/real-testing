@@ -21,7 +21,7 @@
 
     <groupId>org.hrodberaht.inject</groupId>
     <artifactId>real-testing-parent</artifactId>
-    <version>3.0.0-RC6-SNAPSHOT</version>
+    <version>3.0.0-RC7-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Real Testing Parent POM</name>
     <description>A gathering of projects for testing code with real testing principles</description>
@@ -187,9 +187,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M2</version>
+                <version>3.0.0-M3</version>
                 <configuration>
-                    <skip>false</skip>
+<!--                    <skip>false</skip>-->
                 </configuration>
             </plugin>
             <plugin>
