@@ -1,0 +1,8 @@
+kind: pipeline
+name: default
+
+steps:
+  - name: frontend
+    image: openjdk:8u212-jdk-stretch
+    commands:
+      - mvn test
