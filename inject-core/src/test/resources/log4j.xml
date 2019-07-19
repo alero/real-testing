@@ -27,7 +27,7 @@
 
 
     <logger name="org.hrodberaht.injection" additivity="false">
-        <level value="INFO"/>
+        <level value="WARN"/>
         <appender-ref ref="CONSOLE"/>
     </logger>
 

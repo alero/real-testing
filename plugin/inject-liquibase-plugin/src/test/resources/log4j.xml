@@ -27,17 +27,14 @@
 
 
     <logger name="org.hrodberaht.injection" additivity="false">
-        <level value="INFO"/>
+        <level value="WARN"/>
         <appender-ref ref="CONSOLE"/>
     </logger>
 
     <logger name="org.hrodberaht.inject" additivity="false">
-        <level value="INFO"/>
+        <level value="WARN"/>
         <appender-ref ref="CONSOLE"/>
     </logger>
-
-
-
 
     <root>
         <priority value="ERROR"/>
