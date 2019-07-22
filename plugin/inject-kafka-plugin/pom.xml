@@ -15,8 +15,8 @@
     <version>3.0.0-RC7-SNAPSHOT</version>
 
     <properties>
-        <kafkaVersion>2.1.0</kafkaVersion>
-        <scalaVersion>2.12.7</scalaVersion>
+        <kafkaVersion>2.3.0</kafkaVersion>
+        <scalaVersion>2.12.8</scalaVersion>
     </properties>
 
     <dependencies>
@@ -40,6 +40,12 @@
             <artifactId>junit-platform-runner</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+            <version>2.9.9</version>
+        </dependency>
+
         <!-- Kafka -->
         <dependency>
             <groupId>org.apache.kafka</groupId>
@@ -47,6 +53,10 @@
             <version>${kafkaVersion}</version>
             <exclusions>
                 <!-- Don't bring in kafka's logging framework -->
+                <exclusion>
+                    <groupId>com.fasterxml.jackson.core</groupId>
+                    <artifactId>jackson-annotations</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>org.slf4j</groupId>
                     <artifactId>slf4j-log4j12</artifactId>
@@ -113,7 +123,7 @@
         <dependency>
             <groupId>com.salesforce.kafka.test</groupId>
             <artifactId>kafka-junit-core</artifactId>
-            <version>3.1.0</version>
+            <version>3.1.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.apache.zookeeper</groupId>
