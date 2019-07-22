@@ -4,14 +4,14 @@ sudo: false
 install: true
 addons:
   sonarcloud:
-    organization: default
+    organization: alero
     token:
-      secure: ofahSucioTqw8nQN53m9m6GVawFoNN/Zi43DydmekLpsr4bZAagIRyUt5RpKQa5MU0HhW287VxPNOY2hzpUcbsRwm3hkn67rAA8q+BKMcdnJOpd3c+UU8Ea7ld1sfE2ZzgMsJl44/6CRMC+gNb3jGY6PbzHMt2YG39dBWnCiQjcOk1oerz+cIqZyjvRLLtp8COJhpfTuy/H5s4c6j62zZGMLlzpZPrwFYkPFhHR5Lz8iJedBQrT08RR6P9Os+ZzS1XP+g5htxCEzp0LgKZD6+mRajOEbQ06c7yyMT7wyG6ZcbtSibh+PFvF2ErsNN2y/ry6SBQPXu6oJTkvzE44Ivx/2Sp7EUXaGUt0fwSaADlWlbYZPAiQZUBnEOoy3RAUJKR/zQdNpTkKk77mOuVuNjT7iBB+u32VAXImbW1c+gagPqjpr/28b+XG2jEyeDoBd6cTuZMIOuzglvJVZgUOeBtj9v7VCA071wpajpikrCLAVB+fwmStuask5Sk1AfRnxtS804yuPDcNHRHZ96i+g2aXP4+G9Bls1QSFbamYnb+nQZTgbWNCQ9vT7RV6PW9R/9OHmXTAdYR7lxjXI3pqP9CFQH0qVgchdSPAiwcrcYjq8HsUqiCl/o5iilhxMDokfs2bmgRo75me/X/SJUagglqy1pWHxE4OU7tjJC044u/g=
+      secure: "S7d6D76GhSm4GRAlGem8Y5kNGNfRIhmq3JfWWaugq5YeNUIUzAih1+O0NIUKiZ2IDURbABlGSD5ex0HtJioWXeI/0m775X3Kbkvd/+jrh4KYw6O6ctngx6/gslBc3HaP9neeaEN28W7S9q8ix16Vk0R/aB9q82PCzwF1uuidOManSqvCQ0L4P6kqjDsscB4fUJDHMfPxm5SPzU1tZescGRyWKPtB9AqbdgEse+mTkQ5NDxn1JJy+sKnk1uoP85JN3RXhVnEuxhknZjv4QscayXXrUrIuck/HUYJN0x8pFldGk1erK4kR7ymJc8PjH+ZTcqdKPfBNuJhTivYkg0G5zcYYj0n+zWwT0N6c5kh9HIwxvZ1aicGAH2US+jSo5zhLWeJ6cBAEG1L9/7kKlJAuGVXMn/DaMR2KcEb8z5LtUmnljWwAaJPgm3L8xTPheD7OvsYua6fPF1IeqSRzwKFIlfC1lZ3fVh2XedALC04MLyR6QEor89xxxnOrCvnHQpzTinBzVnaq56xTFOkrimxJE9WpHnZXLJ3uwsLNV6sEv+7wSbGX7e7YXXsbnSHmHgYT5NNFeI42tCUa+G1XnEmJardK/ABcF3g3P2jOiRuGSLhzOXUKmGMtk1rBbR0ex3vqnTfdi6LxplIQ9j8Hm3AY9t161yEG+T/lNbqThyoN/TM="
 jdk:
 - oraclejdk8
 script:
-- mvn -B -q org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
+- mvn -B -q org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar -Dsonar.projectKey=alero
 cache:
   directories:
-  - "$HOME/.m2/repository"
+  - "$HOME/.m2"
   - "$HOME/.sonar/cache"
