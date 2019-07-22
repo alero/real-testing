@@ -4,14 +4,14 @@ sudo: false
 install: true
 addons:
   sonarcloud:
-    organization: "default"
+    organization: default
     token:
-      secure: "aa007d4c1dde1260404a8b8eee3069843f69a036"
+      secure: ofahSucioTqw8nQN53m9m6GVawFoNN/Zi43DydmekLpsr4bZAagIRyUt5RpKQa5MU0HhW287VxPNOY2hzpUcbsRwm3hkn67rAA8q+BKMcdnJOpd3c+UU8Ea7ld1sfE2ZzgMsJl44/6CRMC+gNb3jGY6PbzHMt2YG39dBWnCiQjcOk1oerz+cIqZyjvRLLtp8COJhpfTuy/H5s4c6j62zZGMLlzpZPrwFYkPFhHR5Lz8iJedBQrT08RR6P9Os+ZzS1XP+g5htxCEzp0LgKZD6+mRajOEbQ06c7yyMT7wyG6ZcbtSibh+PFvF2ErsNN2y/ry6SBQPXu6oJTkvzE44Ivx/2Sp7EUXaGUt0fwSaADlWlbYZPAiQZUBnEOoy3RAUJKR/zQdNpTkKk77mOuVuNjT7iBB+u32VAXImbW1c+gagPqjpr/28b+XG2jEyeDoBd6cTuZMIOuzglvJVZgUOeBtj9v7VCA071wpajpikrCLAVB+fwmStuask5Sk1AfRnxtS804yuPDcNHRHZ96i+g2aXP4+G9Bls1QSFbamYnb+nQZTgbWNCQ9vT7RV6PW9R/9OHmXTAdYR7lxjXI3pqP9CFQH0qVgchdSPAiwcrcYjq8HsUqiCl/o5iilhxMDokfs2bmgRo75me/X/SJUagglqy1pWHxE4OU7tjJC044u/g=
 jdk:
-  - oraclejdk8
+- oraclejdk8
 script:
-  - mvn -B -q org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
+- mvn -B -q org.jacoco:jacoco-maven-plugin:prepare-agent package sonar:sonar
 cache:
   directories:
-    - '$HOME/.m2/repository'
-    - '$HOME/.sonar/cache'
+  - "$HOME/.m2/repository"
+  - "$HOME/.sonar/cache"
