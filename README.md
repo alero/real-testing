@@ -17,7 +17,7 @@ It is built to be extendable so that the developers can use the frameworks they 
 The main focus has been on CDI, Guice and Spring supported development.
 
 ## CI integration (Travis)
-[Travis CI for injection](https://travis-ci.org/alero/injection)
+[Travis CI link](https://travis-ci.org/alero/real-testing)
 
 ## JUnit support
 The support for JUnit has been extended to include JUnit5 (jupiter) as well as JUnit4
