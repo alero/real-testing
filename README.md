@@ -103,9 +103,15 @@ The intended release if 3.0.0 will go through a few more RCs
 - RC2, probably did stuff
 - RC3, added kafka plugin support and noticed that activemq is designed strangely
 - RC4, added solr multi collection support
+- RC5, Jersey assertions now also works for non-embedded usecases
+- RC6, build issues (travis and stuff changed)
+- RC7, activemq assertions util added
 
-Beginning work on RC5, this is the last intended RC - 
+Beginning work on RC8, this is the last intended RC - 
   - More glue code between plugins (activemq can be used with guice and spring and so on)
+  - Improve documentation (read-me files)
+  
+Moved to next release  
   - Solve the bug with fork-join executor not working for default setup
   - Add kafka cluster testing support (starting many servers that works as a cluster)
   - Look at making JUnit 5 the default with better connectino to phases

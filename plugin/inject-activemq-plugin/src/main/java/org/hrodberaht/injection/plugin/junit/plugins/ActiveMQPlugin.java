@@ -91,6 +91,10 @@ public class ActiveMQPlugin implements Plugin, ResourceProviderSupport {
         return embedded;
     }
 
+    public ActiveMQPluginQueueAssertions queueAssertions(String queueName){
+        return new ActiveMQPluginQueueAssertions(queueName, embedded);
+    }
+
     @Override
     public Set<ResourceProvider> resources() {
         if (getLifeCycle() == LifeCycle.TEST || getLifeCycle() == LifeCycle.TEST_CLASS) {

@@ -23,12 +23,12 @@
     <parent>
         <groupId>org.hrodberaht.inject.plugin</groupId>
         <artifactId>plugin</artifactId>
-        <version>3.0.0-RC7-SNAPSHOT</version>
+        <version>3.0.0-RC8-SNAPSHOT</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
     <artifactId>inject-cdi-plugin</artifactId>
-    <version>3.0.0-RC7-SNAPSHOT</version>
+    <version>3.0.0-RC8-SNAPSHOT</version>
 
     <build>
         <testResources>
