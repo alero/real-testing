@@ -106,8 +106,9 @@ The intended release if 3.0.0 will go through a few more RCs
 - RC5, Jersey assertions now also works for non-embedded usecases
 - RC6, build issues (travis and stuff changed)
 - RC7, activemq assertions util added
+- RC8, media-type supported in the call method 
 
-Beginning work on RC8, this is the last intended RC - 
+Work needed before release
   - More glue code between plugins (activemq can be used with guice and spring and so on)
   - Improve documentation (read-me files)
   

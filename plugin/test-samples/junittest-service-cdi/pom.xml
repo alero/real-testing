@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.hrodberaht.inject.plugin</groupId>
         <artifactId>test-samples</artifactId>
-        <version>3.0.0-RC8-SNAPSHOT</version>
+        <version>3.0.0-RC9-SNAPSHOT</version>
     </parent>
 
     <artifactId>junittest-service-cdi</artifactId>

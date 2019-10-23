@@ -78,15 +78,15 @@ class JerseyClientRestassured {
         return new JerseyClientRestassuredResult(builder.get());
     }
 
-    JerseyClientRestassuredResult call(final MultivaluedMap<String, Object> headers, Map<String, String> queryParams, final String jsonBody, Map<String, String> formParams, FormDataMultiPart multipart) {
+    JerseyClientRestassuredResult call(MediaType mediaType, final MultivaluedMap<String, Object> headers, Map<String, String> queryParams, final String stringBody, Map<String, String> formParams, FormDataMultiPart multipart) {
         addQueryParamsToTarget(queryParams);
         if(multipart != null){
             addFormParamsToMultipart(formParams, multipart);
             if (executeCall(headers, multipart)) return new JerseyClientRestassuredResult(response);
             throw new IllegalAccessError("not prepared for  call");
         }
-        Entity<Object> entity = getObjectEntity(jsonBody);
-        if (executeCall(headers, entity)) return new JerseyClientRestassuredResult(response);
+        Entity<Object> entity = getObjectEntity(mediaType, stringBody);
+        if (executeCall(mediaType, headers, entity)) return new JerseyClientRestassuredResult(response);
         throw new IllegalAccessError("not prepared for  call");
 
     }
@@ -98,7 +98,7 @@ class JerseyClientRestassured {
         }
     }
 
-    JerseyClientRestassuredObjectResult call(final MultivaluedMap<String, Object> headers, Map<String, String> queryParams, Object entityObject, Map<String, String> formParams, FormDataMultiPart multipart) {
+    JerseyClientRestassuredObjectResult call(MediaType mediaType, final MultivaluedMap<String, Object> headers, Map<String, String> queryParams, Object entityObject, Map<String, String> formParams, FormDataMultiPart multipart) {
         addQueryParamsToTarget(queryParams);
 
         if(multipart != null){
@@ -106,18 +106,21 @@ class JerseyClientRestassured {
             if (executeCall(headers, multipart)) return new JerseyClientRestassuredObjectResult(response);
             throw new IllegalAccessError("not prepared for  call");
         }
-        Entity<Object> entity = getObjectEntity(entityObject);
-        if (executeCall(headers, entity)) {
+        Entity<Object> entity = getObjectEntity(mediaType, entityObject);
+        if (executeCall(mediaType, headers, entity)) {
             return new JerseyClientRestassuredObjectResult(response);
         }
         throw new IllegalAccessError("not prepared for  call");
     }
 
-    private Entity<Object> getObjectEntity(Object entityObject) {
+    private Entity<Object> getObjectEntity(MediaType mediaType, Object entityObject) {
         if (entityObject instanceof Entity) {
             return (Entity<Object>) entityObject;
         }
-        return Entity.json(entityObject);
+        if(mediaType == MediaType.APPLICATION_JSON_TYPE ) {
+            return Entity.json(entityObject);
+        }
+        return Entity.entity(entityObject, mediaType);
     }
 
     private void addQueryParamsToTarget(Map<String, String> queryParams) {
@@ -145,21 +148,21 @@ class JerseyClientRestassured {
         return false;
     }
 
-    boolean executeCall(final MultivaluedMap<String, Object> headers, Entity<Object> entity) {
+    boolean executeCall(MediaType mediaType, final MultivaluedMap<String, Object> headers, Entity<Object> entity) {
         if (httpMethod == HttpMethod.PATCH) {
-            response = webTarget.request(MediaType.APPLICATION_JSON_TYPE).headers(headers).method("PATCH", entity);
+            response = webTarget.request(mediaType).headers(headers).method("PATCH", entity);
             return true;
         } else if (httpMethod == HttpMethod.POST) {
-            response = webTarget.request(MediaType.APPLICATION_JSON_TYPE).headers(headers).post(entity);
+            response = webTarget.request(mediaType).headers(headers).post(entity);
             return true;
         } else if (httpMethod == HttpMethod.GET) {
-            response = webTarget.request(MediaType.APPLICATION_JSON_TYPE).headers(headers).get();
+            response = webTarget.request(mediaType).headers(headers).get();
             return true;
         } else if (httpMethod == HttpMethod.PUT) {
-            response = webTarget.request(MediaType.APPLICATION_JSON_TYPE).headers(headers).put(entity);
+            response = webTarget.request(mediaType).headers(headers).put(entity);
             return true;
         } else if (httpMethod == HttpMethod.DELETE) {
-            response = webTarget.request(MediaType.APPLICATION_JSON_TYPE).headers(headers).delete();
+            response = webTarget.request(mediaType).headers(headers).delete();
             return true;
         }
         return false;

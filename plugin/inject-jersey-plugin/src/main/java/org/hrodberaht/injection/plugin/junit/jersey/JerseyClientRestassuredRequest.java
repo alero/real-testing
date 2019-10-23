@@ -20,6 +20,7 @@ import org.glassfish.jersey.client.JerseyClient;
 import org.glassfish.jersey.media.multipart.FormDataMultiPart;
 import org.glassfish.jersey.media.multipart.file.FileDataBodyPart;
 
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
@@ -57,43 +58,64 @@ public class JerseyClientRestassuredRequest {
     }
 
     public JerseyClientRestassuredResponse patch(String path, Object... values) {
+        return patch(path, MediaType.APPLICATION_JSON_TYPE, values);
+    }
+
+    public JerseyClientRestassuredResponse patch(String path, MediaType mediaType, Object... values) {
         String pathValue = JerseyClientRestassured.replaceVariables(path, values);
-        callHttpMethod(pathValue, JerseyClientRestassured.HttpMethod.PATCH);
+        callHttpMethod(pathValue, mediaType, JerseyClientRestassured.HttpMethod.PATCH);
         return new JerseyClientRestassuredResponse(this);
     }
 
     public JerseyClientRestassuredResponse post(String path, Object... values) {
+        return post(path, MediaType.APPLICATION_JSON_TYPE, values);
+    }
+
+    public JerseyClientRestassuredResponse post(String path, MediaType mediaType, Object... values) {
         String pathValue = JerseyClientRestassured.replaceVariables(path, values);
-        callHttpMethod(pathValue, JerseyClientRestassured.HttpMethod.POST);
+        callHttpMethod(pathValue, mediaType, JerseyClientRestassured.HttpMethod.POST);
         return new JerseyClientRestassuredResponse(this);
     }
 
     public JerseyClientRestassuredResponse put(String path, Object... values) {
+        return put(path, MediaType.APPLICATION_JSON_TYPE, values);
+    }
+
+    public JerseyClientRestassuredResponse put(String path, MediaType mediaType, Object... values) {
         String pathValue = JerseyClientRestassured.replaceVariables(path, values);
-        callHttpMethod(pathValue, JerseyClientRestassured.HttpMethod.PUT);
+        callHttpMethod(pathValue, mediaType, JerseyClientRestassured.HttpMethod.PUT);
         return new JerseyClientRestassuredResponse(this);
     }
 
     public JerseyClientRestassuredResponse get(String path, Object... values) {
+        return get(path, MediaType.APPLICATION_JSON_TYPE, values);
+    }
+
+    public JerseyClientRestassuredResponse get(String path, MediaType mediaType, Object... values) {
         String pathValue = JerseyClientRestassured.replaceVariables(path, values);
-        callHttpMethod(pathValue, JerseyClientRestassured.HttpMethod.GET);
+        callHttpMethod(pathValue, mediaType, JerseyClientRestassured.HttpMethod.GET);
         return new JerseyClientRestassuredResponse(this);
     }
 
     public JerseyClientRestassuredResponse delete(String path, Object... values) {
+        return delete(path, MediaType.APPLICATION_JSON_TYPE, values);
+    }
+
+
+    public JerseyClientRestassuredResponse delete(String path, MediaType mediaType, Object... values) {
         String pathValue = JerseyClientRestassured.replaceVariables(path, values);
-        callHttpMethod(pathValue, JerseyClientRestassured.HttpMethod.DELETE);
+        callHttpMethod(pathValue, mediaType, JerseyClientRestassured.HttpMethod.DELETE);
         return new JerseyClientRestassuredResponse(this);
     }
 
-    void callHttpMethod(String pathValue, JerseyClientRestassured.HttpMethod httpMethod) {
+    void callHttpMethod(String pathValue, MediaType mediaType, JerseyClientRestassured.HttpMethod httpMethod) {
         if (jsonStringBody != null) {
-            result = getJerseyClientRestassured(pathValue, httpMethod).call(headers, queryParams, jsonStringBody, formParams, multipart);
+            result = getJerseyClientRestassured(pathValue, httpMethod).call(mediaType, headers, queryParams, jsonStringBody, formParams, multipart);
             if (expectedStatusCode != null) {
                 result.verifyStatusCode(expectedStatusCode);
             }
         } else {
-            objectResult = getJerseyClientRestassured(pathValue, httpMethod).call(headers, queryParams, entityObject, formParams, multipart);
+            objectResult = getJerseyClientRestassured(pathValue, httpMethod).call(mediaType, headers, queryParams, entityObject, formParams, multipart);
             if (expectedStatusCode != null) {
                 objectResult.verifyStatusCode(expectedStatusCode);
             }
