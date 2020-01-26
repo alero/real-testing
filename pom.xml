@@ -20,7 +20,7 @@
 
     <groupId>org.hrodberaht.inject</groupId>
     <artifactId>real-testing-parent</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Real Testing Parent POM</name>
     <description>A gathering of projects for testing code with real testing principles</description>
@@ -48,8 +48,8 @@
 
     <scm>
         <url>https://github.com/alero/real-testing</url>
-        <connection>scm:git:git://github.com/alero/real-testing.git</connection>
-        <developerConnection>scm:git:git@github.com/alero/real-testing.git</developerConnection>
+        <connection>scm:git:https://github.com/alero/real-testing.git</connection>
+        <developerConnection>scm:git:https://github.com/alero/real-testing.git</developerConnection>
         <tag>v3.0.0</tag>
     </scm>
 

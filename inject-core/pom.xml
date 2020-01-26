@@ -21,10 +21,10 @@
     <parent>
         <groupId>org.hrodberaht.inject</groupId>
         <artifactId>real-testing-parent</artifactId>
-        <version>3.0.0</version>
+        <version>3.0.1-SNAPSHOT</version>
     </parent>
 
-    <version>3.0.0</version>
+    <version>3.0.1-SNAPSHOT</version>
     <groupId>org.hrodberaht.inject.core</groupId>
 
     <artifactId>inject-core</artifactId>
