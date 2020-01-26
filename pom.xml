@@ -47,9 +47,9 @@
     </issueManagement>
 
     <scm>
-        <url>https://github.com/alero/injection</url>
-        <connection>scm:git:git://github.com/alero/injection.git</connection>
-        <developerConnection>scm:git:git@github.com/alero/injection.git</developerConnection>
+        <url>https://github.com/alero/real-testing</url>
+        <connection>scm:git:git://github.com/alero/real-testing.git</connection>
+        <developerConnection>scm:git:git@github.com/alero/real-testing.git</developerConnection>
         <tag>v3.0.0</tag>
     </scm>
 
