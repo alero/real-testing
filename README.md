@@ -117,14 +117,45 @@ Moved to next release
   - Add kafka cluster testing support (starting many servers that works as a cluster)
   - Look at making JUnit 5 the default with better connectino to phases
 
-Release hand guide
-1. Internal release
+### Release quick guide
+###### Internal release
+
 mvn -B versions:set -DnewVersion=$RELEASE_VERSION -DgenerateBackupPoms=false
 mvn clean install
 mvn deploy -Prelease-seal-nexus -Dmaven.test.skip=true
 
-## Planded Resource Plugins, to come in a future not so far away
+
+###### External release
+
+* Install software to enable signing and publishing
+Mac: 
+```bash
+brew install pgp
+export GPG_TTY=$(tty)
+```
+Create a maven settings file with the following:
+```xml
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0
+                          https://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <servers>
+        <server>
+            <id>ossrh</id>
+            <username>${USERNAME}</username>
+            <password>${PASSWORD}</password>
+        </server>
+    </servers>
+</settings>
+
+```
+
+
+
+## Planned Resource Plugins, to come in a future not so far away
 * Zookeeper ?
+* h2sql fully supported (within datasource plugin)
+* Guice support moved to "fully supported by all plugins"
 
 ## Planned development for lifecycle management (Planned for next patch release 3.1.x)
 * Extend with more fine-grained control using JUnit5 as it has a lot more pre/post extensions built in.

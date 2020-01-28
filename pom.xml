@@ -15,13 +15,12 @@
   ~ limitations under the License.
   -->
 
-<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.hrodberaht.inject</groupId>
     <artifactId>real-testing-parent</artifactId>
-    <version>3.0.0-RC9-SNAPSHOT</version>
+    <version>3.0.0</version>
     <packaging>pom</packaging>
     <name>Real Testing Parent POM</name>
     <description>A gathering of projects for testing code with real testing principles</description>
@@ -49,10 +48,10 @@
     </issueManagement>
 
     <scm>
-        <url>https://github.com/alero/injection</url>
-        <connection>scm:git:git://github.com/alero/injection.git</connection>
-        <developerConnection>scm:git:git@github.com/alero/injection.git</developerConnection>
-        <tag>3.0.0</tag>
+        <url>https://github.com/alero/real-testing</url>
+        <connection>scm:git:git://github.com/alero/real-testing.git</connection>
+        <developerConnection>scm:git:git@github.com/alero/real-testing.git</developerConnection>
+        <tag>v3.0.0</tag>
     </scm>
 
     <developers>
@@ -275,9 +274,9 @@
                         <id>enforce</id>
                         <configuration>
                             <rules>
-                                <dependencyConvergence/>
+                                <dependencyConvergence />
                                 <!-- FUTURE rules
-                                <banDuplicatePomDependencyVersions/>
+                                <banDuplicatePomDependencyVersions />
                                 //-->
                                 <restrictImports implementation="de.skuzzle.enforcer.restrictimports.rule.RestrictImports">
                                     <!-- Since 0.8.0: Define an explanatory reason why these imports are prohibited -->
@@ -363,7 +362,7 @@
                     <plugin>
                         <groupId>org.sonatype.plugins</groupId>
                         <artifactId>nexus-staging-maven-plugin</artifactId>
-                        <version>1.6.7</version>
+                        <version>1.6.8</version>
                         <extensions>true</extensions>
                         <configuration>
                             <serverId>ossrh</serverId>
@@ -381,18 +380,6 @@
                                 <phase>verify</phase>
                                 <goals>
                                     <goal>sign</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-source-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>attach-sources</id>
-                                <goals>
-                                    <goal>jar</goal>
                                 </goals>
                             </execution>
                         </executions>
