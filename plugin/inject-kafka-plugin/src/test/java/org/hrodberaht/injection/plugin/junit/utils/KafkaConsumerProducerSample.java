@@ -70,8 +70,8 @@ public class KafkaConsumerProducerSample {
                 for (final ConsumerRecord<String, String> record : records) {
                     Assertions.assertEquals(theKey, record.key(), "Keys should match");
                     Assertions.assertEquals(theMsg, record.value(), "Values should match");
-                    consumer.commitSync();
                 }
+                consumer.commitSync();
 
             }
         }
