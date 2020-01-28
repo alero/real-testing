@@ -16,5 +16,8 @@
 
 package org.hrodberaht.injection.plugin.junit.plugins;
 
+import org.hrodberaht.injection.plugin.function.Experimental;
+
+@Experimental
 public class CDIExtensionPlugin {
 }

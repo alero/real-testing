@@ -16,6 +16,7 @@
 
 package org.hrodberaht.injection.plugin.junit.plugins;
 
+import org.hrodberaht.injection.plugin.function.Experimental;
 import org.hrodberaht.injection.plugin.junit.api.Plugin;
 
 /**
@@ -24,6 +25,7 @@ import org.hrodberaht.injection.plugin.junit.api.Plugin;
  *
  * @see org.hrodberaht.injection.core.internal.InjectionContainer
  */
+@Experimental
 public class SpringInjectionPlugin implements Plugin {
 
     public SpringInjectionPlugin() {
