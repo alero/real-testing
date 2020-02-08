@@ -18,7 +18,6 @@ package org.hrodberaht.injection.plugin.datasource.embedded.vendors;
 
 import org.slf4j.LoggerFactory;
 
-import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
