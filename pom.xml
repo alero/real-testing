@@ -38,6 +38,7 @@
         <jdk.version>1.8</jdk.version>
         <hibernate-core-version>5.4.5.Final</hibernate-core-version>
         <spring.version>5.1.10.RELEASE</spring.version>
+        <skipUnitTest>false</skipUnitTest>
     </properties>
 
 
@@ -188,7 +189,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.0.0-M3</version>
                 <configuration>
-<!--                    <skip>false</skip>-->
+                    <skip>${skipUnitTest}</skip>
                 </configuration>
             </plugin>
             <plugin>
@@ -295,7 +296,12 @@
     </build>
 
     <profiles>
-
+        <profile>
+            <id>skipTests</id>
+            <properties>
+                <skipUnitTest>true</skipUnitTest>
+            </properties>
+        </profile>
         <profile>
             <id>release-seal-nexus</id>
             <distributionManagement>

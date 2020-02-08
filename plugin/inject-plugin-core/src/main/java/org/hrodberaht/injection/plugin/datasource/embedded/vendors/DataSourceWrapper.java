@@ -18,29 +18,32 @@ package org.hrodberaht.injection.plugin.datasource.embedded.vendors;
 
 import org.slf4j.LoggerFactory;
 
+import javax.sql.DataSource;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 
-public class DataSourceWrapper implements javax.sql.DataSource {
+public class DataSourceWrapper<T extends Connection> implements javax.sql.DataSource, AutoCloseable {
 
     private static final org.slf4j.Logger LOG = LoggerFactory.getLogger(DataSourceWrapper.class);
 
-    private final Connection connection;
+    private final DataSourceInterface<T> dataSource;
+    private T connection;
 
-    public DataSourceWrapper(Connection connection) {
-        this.connection = connection;
+    public DataSourceWrapper(DataSourceInterface<T> dataSource) throws SQLException {
+        this.dataSource = dataSource;
+        this.connection = dataSource.getConnection();
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public T getConnection() throws SQLException {
         return connection;
     }
 
     @Override
-    public Connection getConnection(String username, String password) throws SQLException {
+    public T getConnection(String username, String password) throws SQLException {
         return connection;
     }
 
@@ -82,6 +85,32 @@ public class DataSourceWrapper implements javax.sql.DataSource {
     @Override
     public String toString() {
         return this.getClass().getSimpleName() + "@" + Integer.toHexString(System.identityHashCode(this));
+    }
+
+    public void finalizeConnection(T nativeTransaction) {
+
+    }
+
+    @Override
+    public void close() {
+        try{
+            this.connection.close();
+        }catch (Exception e){
+            LOG.info("Failed to close, will not report error");
+        }
+    }
+
+    public void forceCreateNewConnection() {
+        close();
+        try {
+            this.connection = dataSource.getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public interface DataSourceInterface<T extends Connection> {
+        T getConnection() throws SQLException;
     }
 }
 

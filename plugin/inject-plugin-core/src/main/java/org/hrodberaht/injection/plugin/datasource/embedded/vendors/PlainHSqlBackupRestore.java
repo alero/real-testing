@@ -22,6 +22,7 @@ import org.hrodberaht.injection.plugin.datasource.jdbc.JDBCServiceFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.sql.DataSource;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -53,24 +54,20 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore {
 
         LOG.info("PlainHSqlBackupRestore backup to : {}", fileName);
 
-        PlainConnection connection = null;
-        try {
-            connection = driverManager.getInnerConnection();
-            JDBCService jdbcTemplate = createJdbcService(connection);
+
+        try (DataSourceWrapper<PlainConnection> dataSourceWrapper = new DataSourceWrapper<>(driverManager::getInnerConnection)){
+
+            JDBCService jdbcTemplate = createJdbcService(dataSourceWrapper);
             String backup = "SCRIPT '" + fileName + "'";
             jdbcTemplate.execute(backup);
-            connection.commit();
-        } catch (SQLException e) {
+            dataSourceWrapper.getConnection().commit();
+        } catch (Exception e) {
             throw new DataSourceException(e);
-        } finally {
-            if (connection != null) {
-                connection.dontFailClose();
-            }
         }
     }
 
-    private JDBCService createJdbcService(Connection connection) {
-        return JDBCServiceFactory.of(new DataSourceWrapper(connection));
+    private JDBCService createJdbcService(DataSource dataSource) throws SQLException {
+        return JDBCServiceFactory.of(new DataSourceWrapper(dataSource::getConnection));
     }
 
     private String getFilename(String name) {
@@ -87,13 +84,13 @@ public class PlainHSqlBackupRestore implements DatasourceBackupRestore {
         final String fileName = getFilename(name);
         LOG.debug("PlainHSqlBackupRestore restore from : {}", fileName);
 
-        try (PlainConnection connection = driverManager.getInnerConnection()) {
+        try (DataSourceWrapper<PlainConnection> dataSourceWrapper = new DataSourceWrapper<>(driverManager::getInnerConnection)) {
 
-            JDBCService jdbcTemplate = createJdbcService(connection);
+            JDBCService jdbcTemplate = createJdbcService(dataSourceWrapper);
             readFile(new File(fileName), jdbcTemplate);
-            connection.commit();
-            connection.closeIt();
-        } catch (IOException | SQLException e) {
+            dataSourceWrapper.getConnection().commit();
+            dataSourceWrapper.getConnection().closeIt();
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }

@@ -229,30 +229,27 @@ class DataSourceExecution {
             DataSourceProxyInterface proxyInterface = (DataSourceProxyInterface) dataSource;
             try {
                 return proxyInterface.runWithConnectionAndCommit(
-                        con -> verifyScriptExistence(testPackageName, initiatedTableName, con));
+                        con -> verifyScriptExistence(testPackageName, initiatedTableName));
             } catch (Exception e) {
                 return false;
             }
         } else {
-            try {
-                return verifyScriptExistence(testPackageName, initiatedTableName, dataSource.getConnection());
-            } catch (SQLException e) {
-                throw new DataSourceException(e);
-            }
+            return verifyScriptExistence(testPackageName, initiatedTableName);
         }
     }
 
-    private boolean verifyScriptExistence(String testPackageName, String initiatedTableName, Connection con) {
+    private boolean verifyScriptExistence(String testPackageName, String initiatedTableName) {
         try {
+            DataSourceWrapper<Connection> dataSourceWrapper = new DataSourceWrapper<>(dataSource::getConnection);
             String queryName = cleanedName(initiatedTableName);
             String packageName = cleanedName(testPackageName);
             String tableName = getTableName(packageName, queryName);
             String selectQuery = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '" + tableName + "'";
-            JDBCService jdbcService = JDBCServiceFactory.of(new DataSourceWrapper(con));
+            JDBCService jdbcService = JDBCServiceFactory.of(dataSourceWrapper);
             String foundTableName = jdbcService.querySingle(selectQuery, (rs, iteration) -> rs.getString(1));
             if (foundTableName == null) {
                 final String query = createQuery(tableName);
-                try (PreparedStatement pstmt = con.prepareStatement(query)) {
+                try (PreparedStatement pstmt = dataSourceWrapper.getConnection().prepareStatement(query)) {
                     pstmt.execute();
                 }
                 return false;

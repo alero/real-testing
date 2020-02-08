@@ -45,6 +45,7 @@
         <module>inject-cdi-plugin</module>
         <module>inject-jersey-plugin</module>
         <module>inject-solr-plugin</module>
+        <module>inject-transaction</module>
         <module>test-samples</module>
     </modules>
 
