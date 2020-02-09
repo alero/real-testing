@@ -15,6 +15,10 @@ public class ResourceProviderBuilder implements ResourceProviderSupport {
         return new ResourceProviderBuilder();
     }
 
+    public static ResourceProviderBuilder of(Class type, Provider instance) {
+        return new ResourceProviderBuilder().resource(type, instance);
+    }
+
     public ResourceProviderBuilder resource(String name, Provider instance) {
         resourceProviders.add(new ResourceProvider(name, null, instance));
         return this;

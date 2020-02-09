@@ -63,7 +63,7 @@ public class GuiceUserServiceTest {
 
             activatePlugin(GuiceExtensionPlugin.class)
                     .with(dataSourcePlugin)
-                    .withResources(ResourceProviderBuilder.of().resource(SolrClient.class, solrJPlugin::getClient))
+                    .withResources(ResourceProviderBuilder.of(SolrClient.class, solrJPlugin::getClient))
                     .guiceModules(new GuiceConfig());
 
 

@@ -29,6 +29,22 @@
     <version>3.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
+    <properties>
+        <guice.version>4.2.2</guice.version>
+        <kafkaVersion>2.4.0</kafkaVersion>
+        <scalaVersion>2.13.1</scalaVersion>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>28.2-jre</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <modules>
         <module>junittest-service-solr</module>
         <module>junittest-service-cdi</module>
@@ -36,5 +52,6 @@
         <module>test-spring-solr</module>
         <module>test-spring-jersey</module>
         <module>test-guice-solr</module>
+        <module>test-guice-kafka</module>
     </modules>
 </project>

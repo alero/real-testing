@@ -227,7 +227,7 @@ public class TransactionManagerJPAImpl extends TransactionManagerBase<EntityMana
     }
 
     public void enableRequiresNew() {
-        requiresNewDisabled.set(null);
+        requiresNewDisabled.remove();
     }
 
     @Override

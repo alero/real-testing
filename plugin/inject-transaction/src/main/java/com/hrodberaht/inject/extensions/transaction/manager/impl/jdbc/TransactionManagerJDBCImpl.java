@@ -27,7 +27,7 @@ public class TransactionManagerJDBCImpl extends TransactionManagerBase<Connectio
         InjectionFactory<Connection> {
 
     protected static final TransactionScopeHandler entityManagerScope = new TransactionScopeHandler();
-    protected static final ThreadLocal<Boolean> requiresNewDisabled = new ThreadLocal<Boolean>();
+    protected static final ThreadLocal<Boolean> requiresNewDisabled = new ThreadLocal<>();
 
     private DataSource connectionFactory = null;
     private boolean isDataSourceProxy = false;
@@ -188,7 +188,7 @@ public class TransactionManagerJDBCImpl extends TransactionManagerBase<Connectio
     public void close() {
 
         ConnectionHolder holder = getConnectionHolder();
-        if (isActive()) {
+        if (isActive() && holder != null) {
             closeNative(holder.getNativeManager());
             TransactionLogging.log("TransactionManagerJDBCImpl: Tx Close for Connection {0}", holder.getNativeManager());
             StatisticsJDBC.addCloseCount();
@@ -229,7 +229,7 @@ public class TransactionManagerJDBCImpl extends TransactionManagerBase<Connectio
 
     @Override
     public void enableRequiresNew() {
-        requiresNewDisabled.set(null);
+        requiresNewDisabled.remove();
     }
 
     @Override

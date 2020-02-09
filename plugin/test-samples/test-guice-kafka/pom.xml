@@ -4,48 +4,31 @@
 
     <parent>
         <groupId>org.hrodberaht.inject.plugin</groupId>
-        <artifactId>plugin</artifactId>
+        <artifactId>test-samples</artifactId>
         <version>3.0.1-SNAPSHOT</version>
     </parent>
 
     <groupId>org.hrodberaht.inject.plugin</groupId>
-    <artifactId>inject-kafka-plugin</artifactId>
+    <artifactId>test-guice-kafka</artifactId>
     <version>3.0.1-SNAPSHOT</version>
 
-    <properties>
-        <kafkaVersion>2.4.0</kafkaVersion>
-        <scalaVersion>2.13.1</scalaVersion>
-    </properties>
-
     <dependencies>
-
         <dependency>
-            <groupId>org.hrodberaht.inject.plugin</groupId>
-            <artifactId>inject-plugin-core</artifactId>
-            <version>${project.version}</version>
+            <groupId>com.google.inject</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-jdbc</artifactId>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-api</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter-engine</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-runner</artifactId>
+            <groupId>org.hsqldb</groupId>
+            <artifactId>hsqldb</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>2.10.2</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- Kafka -->
         <dependency>
             <groupId>org.apache.kafka</groupId>
             <artifactId>kafka_2.13</artifactId>
@@ -115,58 +98,29 @@
         </dependency>
 
         <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>2.8.5</version>
+            <groupId>org.hrodberaht.inject.plugin</groupId>
+            <artifactId>inject-guice-plugin</artifactId>
+            <version>${project.version}</version>
             <scope>test</scope>
         </dependency>
-
-        <!-- https://mvnrepository.com/artifact/com.salesforce.kafka.test/kafka-junit4 -->
         <dependency>
-            <groupId>com.salesforce.kafka.test</groupId>
-            <artifactId>kafka-junit-core</artifactId>
-            <version>3.2.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.zookeeper</groupId>
-                    <artifactId>zookeeper</artifactId>
-                </exclusion>
-                <exclusion>
-                    <artifactId>curator-test</artifactId>
-                    <groupId>org.apache.curator</groupId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <artifactId>curator-test</artifactId>
-            <groupId>org.apache.curator</groupId>
-            <version>4.2.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.apache.zookeeper</groupId>
-                    <artifactId>zookeeper</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.zookeeper</groupId>
-            <artifactId>zookeeper</artifactId>
-            <version>3.5.6</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.hrodberaht.inject.plugin</groupId>
+            <artifactId>inject-kafka-plugin</artifactId>
+            <version>${project.version}</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
+            <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

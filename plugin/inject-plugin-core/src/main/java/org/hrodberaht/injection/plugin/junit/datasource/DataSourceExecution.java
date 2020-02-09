@@ -239,8 +239,7 @@ class DataSourceExecution {
     }
 
     private boolean verifyScriptExistence(String testPackageName, String initiatedTableName) {
-        try {
-            DataSourceWrapper<Connection> dataSourceWrapper = new DataSourceWrapper<>(dataSource::getConnection);
+        try (DataSourceWrapper<Connection> dataSourceWrapper = new DataSourceWrapper<>(dataSource::getConnection);){
             String queryName = cleanedName(initiatedTableName);
             String packageName = cleanedName(testPackageName);
             String tableName = getTableName(packageName, queryName);
