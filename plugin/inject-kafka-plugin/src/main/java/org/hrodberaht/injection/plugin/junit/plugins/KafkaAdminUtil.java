@@ -29,6 +29,7 @@ public class KafkaAdminUtil {
 
             return describeTopicsResult.values().get(topicName).get();
         } catch (final InterruptedException | ExecutionException e) {
+            Thread.currentThread().interrupt();
             throw new RuntimeException(e.getMessage(), e);
         }
     }

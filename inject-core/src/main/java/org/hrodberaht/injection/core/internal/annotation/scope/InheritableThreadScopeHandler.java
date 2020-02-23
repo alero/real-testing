@@ -41,6 +41,11 @@ public class InheritableThreadScopeHandler implements ScopeHandler {
     }
 
     @Override
+    public void removeInstance() {
+        placeHolder.remove();
+    }
+
+    @Override
     public InjectionContainerManager.Scope getScope() {
         return InjectionContainerManager.Scope.INHERITABLE_THREAD;
     }

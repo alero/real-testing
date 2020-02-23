@@ -31,6 +31,8 @@ public interface ScopeHandler {
 
     void addInstance(Object instance);
 
+    void removeInstance();
+
     InjectionContainerManager.Scope getScope();
 
     boolean isInstanceCreated();

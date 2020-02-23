@@ -19,6 +19,8 @@ The main focus has been on CDI, Guice and Spring supported development.
 ## CI integration (Travis)
 [Travis CI link](https://travis-ci.org/alero/real-testing)
 
+[Sonar Report link](https://sonarcloud.io/dashboard?id=alero)
+
 ## JUnit support
 The support for JUnit has been extended to include JUnit5 (jupiter) as well as JUnit4
 JUnit 5.0.1 and JUnit 4.12 are used to verify the compatibility

@@ -55,6 +55,7 @@ public class TransactionManager {
             }
             dataSource.clearDataSource();
         });
+        dataSourcesThreadLocal.remove();
     }
 
     public void endTransactionCommit() {
@@ -68,6 +69,7 @@ public class TransactionManager {
             }
             dataSource.commitDataSource();
         });
+        dataSourcesThreadLocal.remove();
     }
 
     public void beginTransaction() {

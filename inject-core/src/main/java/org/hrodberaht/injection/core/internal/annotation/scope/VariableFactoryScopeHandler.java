@@ -46,6 +46,11 @@ public class VariableFactoryScopeHandler implements VariableScopeHandler {
     }
 
     @Override
+    public void removeInstance() {
+
+    }
+
+    @Override
     public Object getInstance() {
         return null;
     }

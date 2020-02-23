@@ -92,9 +92,10 @@ public class ActiveMQPluginQueueAssertions implements AutoCloseable {
                 return;
             } else {
                 try {
-                    Thread.sleep(100 + (i * 100));
+                    Thread.sleep(100 + (long)(i * 100));
                     i++;
                 } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
                 }
             }
         }

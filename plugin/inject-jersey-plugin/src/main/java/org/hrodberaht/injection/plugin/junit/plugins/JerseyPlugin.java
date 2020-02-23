@@ -52,7 +52,7 @@ public class JerseyPlugin implements Plugin {
     private ClientConfigInterface clientConfigInterface;
     private ResourceConfigInterface resourceConfigInterface;
     private TestContainerFactoryInterface testContainerFactoryInterface;
-    private LifeCycle lifeCycle = LifeCycle.TEST_CLASS;
+    private LifeCycle lifeCycle = LifeCycle.TEST_SUITE;
     private PluginLifeCycledResource<JerseyTestRunner> pluginLifeCycledResource = new PluginLifeCycledResource<>(JerseyTestRunner.class);
 
     public Client getClient() {
@@ -171,7 +171,7 @@ public class JerseyPlugin implements Plugin {
 
     @Override
     public LifeCycle getLifeCycle() {
-        return LifeCycle.TEST_SUITE;
+        return lifeCycle;
     }
 
     @FunctionalInterface

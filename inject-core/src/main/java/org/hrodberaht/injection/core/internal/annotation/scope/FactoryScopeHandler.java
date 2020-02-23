@@ -45,6 +45,11 @@ public class FactoryScopeHandler implements ScopeHandler {
     }
 
     @Override
+    public void removeInstance() {
+
+    }
+
+    @Override
     public ScopeContainer.Scope getScope() {
         return ScopeContainer.Scope.NEW;
     }

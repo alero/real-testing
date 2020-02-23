@@ -25,7 +25,7 @@ import java.util.Collection;
 public class EntityManagerHolder {
 
     private static final Logger LOG = LoggerFactory.getLogger(EntityManagerHolder.class);
-    private static final ThreadLocal<EntityManagers> MANAGERS = new ThreadLocal<EntityManagers>();
+    private static final ThreadLocal<EntityManagers> MANAGERS = new ThreadLocal<>();
 
 
     public void begin(Collection<EntityManager> managers) {
@@ -53,6 +53,7 @@ public class EntityManagerHolder {
                 }
             }
         }
+        MANAGERS.remove();
     }
 
     public Collection<EntityManager> getEntityManagers() {

@@ -8,8 +8,9 @@ import org.hrodberaht.injection.plugin.junit.plugins.SolrJPlugin;
 public class SolrTestConfig extends ContainerContextConfigBase {
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
-        activatePlugin(SolrJPlugin.class)
+        activatePlugin(new SolrJPlugin()
                 .lifeCycle(Plugin.LifeCycle.TEST_CONFIG)
-                .coreName("collection1");
+                .coreName("collection1")
+        );
     }
 }

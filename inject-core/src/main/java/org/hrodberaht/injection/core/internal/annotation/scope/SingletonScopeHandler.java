@@ -41,6 +41,11 @@ public class SingletonScopeHandler implements ScopeHandler {
     }
 
     @Override
+    public void removeInstance() {
+        singleton = null;
+    }
+
+    @Override
     public InjectionContainerManager.Scope getScope() {
         return InjectionContainerManager.Scope.SINGLETON;
     }

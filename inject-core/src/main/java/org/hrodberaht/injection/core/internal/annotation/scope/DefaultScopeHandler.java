@@ -39,6 +39,11 @@ public class DefaultScopeHandler implements ScopeHandler {
     }
 
     @Override
+    public void removeInstance() {
+
+    }
+
+    @Override
     public InjectionContainerManager.Scope getScope() {
         return InjectionContainerManager.Scope.NEW;
     }

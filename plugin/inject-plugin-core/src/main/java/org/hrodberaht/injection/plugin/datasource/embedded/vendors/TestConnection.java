@@ -65,6 +65,7 @@ public class TestConnection implements Connection {
     }
 
     @Override
+    @SuppressWarnings("squid:S2095")
     public Statement createStatement() throws SQLException {
         LOG.info("createStatement {}", this);
         try {
@@ -75,6 +76,7 @@ public class TestConnection implements Connection {
     }
 
     @Override
+    @SuppressWarnings("squid:S2095")
     public PreparedStatement prepareStatement(String sql) throws SQLException {
         LOG.info("prepareStatement {} - {}", this, sql);
         return new TestPreparedStatement(this, connection.prepareStatement(sql));

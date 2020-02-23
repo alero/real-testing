@@ -40,7 +40,7 @@ public class SolrJPlugin implements Plugin {
     private String sealRunnerHome = DEFAULT_RUNNER_HOME;
     private String defaultCoreName;
     private String[] extraCores;
-    private LifeCycle lifeCycle = LifeCycle.TEST_CONFIG;
+    private LifeCycle lifeCycle = LifeCycle.TEST_SUITE;
     private PluginLifeCycledResource<SolrTestRunner> pluginLifeCycledResource = new PluginLifeCycledResource<>(SolrTestRunner.class);
 
 
@@ -121,7 +121,7 @@ public class SolrJPlugin implements Plugin {
 
     @Override
     public LifeCycle getLifeCycle() {
-        return LifeCycle.TEST_SUITE;
+        return lifeCycle;
     }
 
     private void shutdownSolr() {

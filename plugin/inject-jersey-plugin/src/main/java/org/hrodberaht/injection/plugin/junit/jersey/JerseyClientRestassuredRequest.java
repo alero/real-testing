@@ -25,6 +25,7 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +41,6 @@ public class JerseyClientRestassuredRequest {
 
     private JerseyClient client;
     private String uri;
-    private JerseyClientRestassured jerseyClientRestassured;
 
     private JerseyClientRestassured.JerseyClientRestassuredResult result;
     private JerseyClientRestassured.JerseyClientRestassuredObjectResult objectResult;
@@ -53,8 +53,7 @@ public class JerseyClientRestassuredRequest {
     }
 
     JerseyClientRestassured getJerseyClientRestassured(String pathValue, JerseyClientRestassured.HttpMethod httpMethod) {
-        this.jerseyClientRestassured = new JerseyClientRestassured(client, uri, pathValue, httpMethod);
-        return jerseyClientRestassured;
+        return new JerseyClientRestassured(client, uri, pathValue, httpMethod);
     }
 
     public JerseyClientRestassuredResponse patch(String path, Object... values) {
@@ -171,10 +170,13 @@ public class JerseyClientRestassuredRequest {
     }
 
     public JerseyClientRestassuredRequest multiPart(String name, File multipartFile) {
-        FormDataMultiPart formDataMultiPart = new FormDataMultiPart();
-        final FileDataBodyPart filePart = new FileDataBodyPart(name, multipartFile);
-        multipart = (FormDataMultiPart) formDataMultiPart.bodyPart(filePart);
-        return this;
+        try(FormDataMultiPart formDataMultiPart = new FormDataMultiPart()) {
+            final FileDataBodyPart filePart = new FileDataBodyPart(name, multipartFile);
+            multipart = (FormDataMultiPart) formDataMultiPart.bodyPart(filePart);
+            return this;
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 

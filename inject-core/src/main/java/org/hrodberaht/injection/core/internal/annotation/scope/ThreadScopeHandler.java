@@ -36,6 +36,11 @@ public class ThreadScopeHandler implements ScopeHandler {
     }
 
     @Override
+    public void removeInstance() {
+        placeHolder.remove();
+    }
+
+    @Override
     public void addInstance(Object instance) {
         placeHolder.set(instance);
     }
