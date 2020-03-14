@@ -39,6 +39,7 @@
 
     <properties>
         <hibernate-core-version>3.5.3-Final</hibernate-core-version>
+        <sonar.sources>src/main/java,pom.xml</sonar.sources>
     </properties>
 
     <developers>

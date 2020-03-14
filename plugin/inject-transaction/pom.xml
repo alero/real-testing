@@ -149,11 +149,17 @@
 
     <build>
         <plugins>
+            <!-- AspectJ configuration -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>${jdk.version}</source>
+                    <target>${jdk.version}</target>
+                    <!-- IMPORTANT -->
+                    <useIncrementalCompilation>false</useIncrementalCompilation>
+                </configuration>
             </plugin>
-            <!-- AspectJ configuration -->
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>aspectj-maven-plugin</artifactId>
@@ -164,6 +170,11 @@
                         <artifactId>aspectjtools</artifactId>
                         <version>${aspectj.version}</version>
                     </dependency>
+                    <dependency>
+                        <groupId>org.aspectj</groupId>
+                        <artifactId>aspectjweaver</artifactId>
+                        <version>${aspectj.version}</version>
+                    </dependency>
                 </dependencies>
                 <configuration>
                     <complianceLevel>1.8</complianceLevel>
@@ -172,13 +183,35 @@
                 </configuration>
                 <executions>
                     <execution>
+                        <!-- IMPORTANT -->
+                        <phase>process-sources</phase>
                         <goals>
                             <goal>compile</goal>
                             <goal>test-compile</goal>
                         </goals>
                     </execution>
                 </executions>
-
+            </plugin>
+            <plugin>
+                <groupId>org.openclover</groupId>
+                <artifactId>clover-maven-plugin</artifactId>
+                <version>4.4.1</version>
+                <executions>
+                    <execution>
+                        <id>clover</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>instrument</goal>
+                            <goal>clover</goal>
+                            <goal>log</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <excludes>
+                        <exclude>**/AspectJTransactionHandler*</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -191,7 +224,6 @@
                         <exclude>**/extension/transaction/example/*java</exclude>
                         <exclude>**/extension/transaction/*</exclude>
                     </excludes>
-
                 </configuration>
             </plugin>
         </plugins>
@@ -269,32 +301,6 @@
                     </testResource>
                 </testResources>
             </build>
-        </profile>
-        <profile>
-            <id>ext_serverbuild</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-deploy-plugin</artifactId>
-                        <configuration>
-                            <skip>false</skip>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-            <distributionManagement>
-                <repository>
-                    <id>ext-server-release</id>
-                    <name>CM server releases</name>
-                    <url>http://192.176.148.85/m2repo/ext-release-local</url>
-                </repository>
-                <snapshotRepository>
-                    <id>ext-server-snapshots</id>
-                    <name>CM server snapshots</name>
-                    <url>http://192.176.148.85/m2repo/ext-snapshot-local</url>
-                </snapshotRepository>
-            </distributionManagement>
         </profile>
     </profiles>
 </project>

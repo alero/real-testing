@@ -12,6 +12,11 @@
     <artifactId>test-spring-jersey</artifactId>
     <version>3.0.1-SNAPSHOT</version>
 
+    <properties>
+        <hibernate-core-version>3.5.3-Final</hibernate-core-version>
+        <sonar.sources>pom.xml</sonar.sources>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.hsqldb</groupId>

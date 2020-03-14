@@ -12,6 +12,10 @@
     <artifactId>test-spring-solr</artifactId>
     <version>3.0.1-SNAPSHOT</version>
 
+    <properties>
+        <sonar.sources>src/test/java,pom.xml</sonar.sources>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.hsqldb</groupId>

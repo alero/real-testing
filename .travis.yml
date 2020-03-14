@@ -10,7 +10,7 @@ addons:
 jdk:
 - oraclejdk8
 script:
-- mvn -B -q -Psonar-jacoco org.jacoco:jacoco-maven-plugin:prepare-agent clean package sonar:sonar -Dsonar.projectKey=alero
+- mvn -B -q clean clover:setup verify clover:aggregate clover:clover sonar:sonar -Psonar-reporting -Dsonar.projectKey=alero
 cache:
   directories:
   - "$HOME/.m2"

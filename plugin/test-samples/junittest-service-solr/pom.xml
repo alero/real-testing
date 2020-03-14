@@ -12,6 +12,11 @@
     <artifactId>junittest-service-solr</artifactId>
     <version>3.0.1-SNAPSHOT</version>
 
+    <properties>
+        <hibernate-core-version>3.5.3-Final</hibernate-core-version>
+        <sonar.sources>src/main/java,pom.xml</sonar.sources>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework</groupId>
