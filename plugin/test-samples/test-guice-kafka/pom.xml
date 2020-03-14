@@ -12,6 +12,10 @@
     <artifactId>test-guice-kafka</artifactId>
     <version>3.0.1-SNAPSHOT</version>
 
+    <properties>
+        <sonar.sources>pom.xml</sonar.sources>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>com.google.inject</groupId>
