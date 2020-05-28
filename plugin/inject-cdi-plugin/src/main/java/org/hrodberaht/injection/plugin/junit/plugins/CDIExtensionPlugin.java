@@ -16,5 +16,11 @@
 
 package org.hrodberaht.injection.plugin.junit.plugins;
 
+import org.hrodberaht.injection.plugin.function.Experimental;
+
+/**
+ * CDIExtensionPlugin extends to a real CDI implementation using hrodberaht inject support
+ */
+@Experimental
 public class CDIExtensionPlugin {
 }

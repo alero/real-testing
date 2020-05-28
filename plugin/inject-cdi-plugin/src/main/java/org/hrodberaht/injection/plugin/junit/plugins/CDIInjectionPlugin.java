@@ -30,6 +30,9 @@ import javax.ejb.EJB;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+/**
+ * CDIInjectionPlugin mimics CDI using hrodberaht inject support
+ */
 public class CDIInjectionPlugin implements Plugin {
 
     private final CDIExtensions cdiExtensions = new ApplicationCDIExtensions();

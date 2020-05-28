@@ -38,6 +38,8 @@ import org.hrodberaht.injection.plugin.junit.plugins.common.PluginLifeCycledReso
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -78,7 +80,7 @@ public class GuiceExtensionPlugin implements Plugin {
 
     @InjectionPluginInjectionFinder
     protected InjectionFinder getInjectionFinder(ContainerConfigBuilder containerConfigBuilder) {
-        return new DefaultInjectionPointFinder(containerConfigBuilder) {
+        return new GuiceInjectionPointFinder(containerConfigBuilder) {
 
             @Override
             public Object extendedInjection(InjectionKey injectionKey) {
@@ -156,5 +158,38 @@ public class GuiceExtensionPlugin implements Plugin {
     public GuiceExtensionPlugin guiceModules(List<Module> modules) {
         guiceModules.addAll(modules);
         return this;
+    }
+
+    private static class GuiceInjectionPointFinder extends DefaultInjectionPointFinder {
+        private boolean annotationForEJB = true;
+
+        private GuiceInjectionPointFinder(ContainerConfigBuilder containerConfigBuilder) {
+            super(containerConfigBuilder);
+        }
+
+        @Override
+        protected boolean hasInjectAnnotationOnMethod(Method method) {
+            try {
+
+                return (annotationForEJB && method.isAnnotationPresent(com.google.inject.Inject.class))
+                        || super.hasInjectAnnotationOnMethod(method);
+            } catch (NoClassDefFoundError error) {
+                annotationForEJB = false;
+                return super.hasInjectAnnotationOnMethod(method);
+            }
+        }
+
+
+        @Override
+        protected boolean hasInjectAnnotationOnField(Field field) {
+            try {
+                return (annotationForEJB && field.isAnnotationPresent(com.google.inject.Inject.class)) ||
+                        super.hasInjectAnnotationOnField(field);
+            } catch (NoClassDefFoundError error) {
+                annotationForEJB = false;
+                return super.hasInjectAnnotationOnField(field);
+            }
+        }
+
     }
 }
