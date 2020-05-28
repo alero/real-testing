@@ -55,12 +55,18 @@ public class JUnit5Extension implements BeforeAllCallback, AfterAllCallback, Tes
 
     @Override
     public void afterAll(ExtensionContext extensionContext) throws Exception {
-        jUnitContext.runAfterClass();
+        if (jUnitContext != null) {
+            // Can be null if it fails to create the context
+            jUnitContext.runAfterClass();
+        }
     }
 
     @Override
     public void afterEach(ExtensionContext extensionContext) throws Exception {
-        jUnitContext.runAfterTest(getName(extensionContext));
+        if (jUnitContext != null) {
+            // Can be null if it fails to create the context
+            jUnitContext.runAfterTest(getName(extensionContext));
+        }
     }
 
     private String getName(ExtensionContext extensionContext) {
