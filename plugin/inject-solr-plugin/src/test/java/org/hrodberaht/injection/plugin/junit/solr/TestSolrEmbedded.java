@@ -16,9 +16,11 @@
 
 package org.hrodberaht.injection.plugin.junit.solr;
 
+import org.apache.solr.api.ApiBag;
 import org.apache.solr.client.solrj.request.schema.SchemaRequest;
 import org.apache.solr.client.solrj.response.schema.SchemaResponse;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.common.util.NamedList;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
 import org.hrodberaht.injection.plugin.junit.plugins.SolrJPlugin;
@@ -148,7 +150,18 @@ public class TestSolrEmbedded {
         fieldAttributes.put("indexed", true);
         fieldAttributes.put("multiValued", true);
         SchemaRequest.AddField addFieldUpdateSchemaRequest = new SchemaRequest.AddField(fieldAttributes);
-        return addFieldUpdateSchemaRequest.process(solrJPlugin.getClient());
+        try {
+            return addFieldUpdateSchemaRequest.process(solrJPlugin.getClient());
+        }catch (ApiBag.ExceptionWithErrObject e){
+            if (e.toString().contains("already exists")) {
+                SchemaResponse.UpdateResponse updateResponse = new SchemaResponse.UpdateResponse();
+                NamedList<Object> namedList = new NamedList<>(new HashMap<>());
+                namedList.add("status", 0);
+                updateResponse.setResponse(namedList);
+                return updateResponse;
+            }
+            throw e;
+        }
     }
 
     private SolrInputDocument makeTestDocument(int i) {

@@ -132,7 +132,7 @@ public class SolrTestRunner {
 
     private SolrRunnerHolder createSolrContainer(String runnerName) {
         // TODO: figure out if its possible to create a reusable core/collection service cache
-        CoreContainer coreContainer = new CoreContainer(home);
+        CoreContainer coreContainer = SolrVersionManagement.createContainer(home);
         coreContainer.load();
         LOG.info("Loading embedded container {}", runnerName);
         EmbeddedSolrServer solr = new EmbeddedSolrServer(coreContainer, defaultCoreName);
