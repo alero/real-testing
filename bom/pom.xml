@@ -24,6 +24,11 @@
             </dependency>
             <dependency>
                 <groupId>org.hrodberaht.inject.plugin</groupId>
+                <artifactId>inject-plugin-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hrodberaht.inject.plugin</groupId>
                 <artifactId>inject-activemq-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
