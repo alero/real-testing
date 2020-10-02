@@ -74,6 +74,7 @@
     <modules>
         <module>plugin</module>
         <module>inject-core</module>
+        <module>bom</module>
     </modules>
 
     <dependencyManagement>
