@@ -14,7 +14,7 @@
 
     <properties>
         <kafkaVersion>2.4.0</kafkaVersion>
-        <scalaVersion>2.13.1</scalaVersion>
+        <scalaVersion>2.13.9</scalaVersion>
     </properties>
 
     <dependencies>
