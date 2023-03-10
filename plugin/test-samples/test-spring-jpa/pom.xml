@@ -30,7 +30,6 @@
 
     <properties>
         <spring.version>5.0.0.RELEASE</spring.version>
-        <sonar.sources>pom.xml</sonar.sources>
     </properties>
 
 

@@ -13,25 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hrodberaht.injection.core
 
-import org.hrodberaht.injection.core.register.RegistrationModuleAnnotationScanner
+package org.hrodberaht.injection.plugin.junit.datasource2.test;
 
-open class Module : RegistrationModuleAnnotationScanner {
-    private var injectionContainer: InjectContainer? = null
+import org.hrodberaht.injection.plugin.junit.datasource2.service.UserService;
+import org.hrodberaht.injection.plugin.junit.plugins.DataSourcePlugin;
 
-    constructor()
-    constructor(injectionContainer: InjectContainer?) {
-        this.injectionContainer = injectionContainer
+import javax.inject.Inject;
+
+public class LoadingTheTestWithData implements DataSourcePlugin.ResourceLoaderRunner {
+
+    @Inject
+    private UserService userService;
+
+    @Override
+    public void run() {
+        userService.createUser("dude", "wheremycar");
     }
 
-    override fun scan() {}
 
-    companion object {
-        @JvmStatic
-        fun toModule(abstractModule: AbstractModule): Module {
-            abstractModule.bindings()
-            return abstractModule.module
-        }
-    }
 }

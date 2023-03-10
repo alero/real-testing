@@ -13,25 +13,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hrodberaht.injection.core
 
-import org.hrodberaht.injection.core.register.RegistrationModuleAnnotationScanner
+package org.hrodberaht.injection.plugin.junit.demo2.service;
 
-open class Module : RegistrationModuleAnnotationScanner {
-    private var injectionContainer: InjectContainer? = null
+public class MyResource {
 
-    constructor()
-    constructor(injectionContainer: InjectContainer?) {
-        this.injectionContainer = injectionContainer
+    private final String value;
+
+    public MyResource(String value) {
+        this.value = value;
     }
 
-    override fun scan() {}
-
-    companion object {
-        @JvmStatic
-        fun toModule(abstractModule: AbstractModule): Module {
-            abstractModule.bindings()
-            return abstractModule.module
-        }
+    public String value() {
+        return value;
     }
 }

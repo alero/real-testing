@@ -6,7 +6,7 @@ import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
-import org.hrodberaht.injection.plugin.junit.plugins.SolrJPlugin;
+import org.hrodberaht.injection.plugin.junit.solr.config.SolrJTheThirdPlugin;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -20,7 +20,7 @@ import static org.hrodberaht.injection.plugin.junit.solr.SolrAssertions.Status.O
 public class TestSolrEmbeddedMultipleCores {
 
     @Inject
-    private SolrJPlugin solrJPlugin;
+    private SolrJTheThirdPlugin solrJPlugin;
 
     private SolrAssertions collection1Assertions;
     private SolrAssertions collection2Assertions;
@@ -83,7 +83,7 @@ public class TestSolrEmbeddedMultipleCores {
 
         @Override
         public void register(InjectionRegistryBuilder registryBuilder) {
-            activatePlugin(SolrJPlugin.class)
+            activatePlugin(SolrJTheThirdPlugin.class)
                     .solrRunnerHome("target/solr3")
                     .coreName("collection1", "collection2");
         }

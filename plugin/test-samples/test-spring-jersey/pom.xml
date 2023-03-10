@@ -14,7 +14,6 @@
 
     <properties>
         <hibernate-core-version>3.5.3-Final</hibernate-core-version>
-        <sonar.sources>pom.xml</sonar.sources>
     </properties>
 
     <dependencies>

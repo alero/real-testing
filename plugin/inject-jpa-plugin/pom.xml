@@ -29,6 +29,8 @@
     <version>3.1.0-SNAPSHOT</version>
 
     <dependencies>
+
+
         <dependency>
             <groupId>org.hrodberaht.inject.plugin</groupId>
             <artifactId>inject-plugin-core</artifactId>
@@ -63,6 +65,4 @@
             <artifactId>slf4j-log4j12</artifactId>
         </dependency>
     </dependencies>
-
-
 </project>

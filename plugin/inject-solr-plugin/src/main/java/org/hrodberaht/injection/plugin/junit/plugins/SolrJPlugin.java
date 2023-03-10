@@ -83,7 +83,7 @@ public class SolrJPlugin implements Plugin {
 
     @RunnerPluginBeforeContainerCreation
     protected void beforeContainerCreation(PluginContext pluginContext) {
-        solrTestRunner = pluginLifeCycledResource.create(lifeCycle, pluginContext, this::createSolrContainer);
+        solrTestRunner = pluginLifeCycledResource.create(lifeCycle, pluginContext, () -> createSolrContainer(pluginContext));
         if (lifeCycle == LifeCycle.TEST_SUITE || lifeCycle == LifeCycle.TEST_CONFIG) {
             prepareSolr(pluginContext);
         }
@@ -105,6 +105,7 @@ public class SolrJPlugin implements Plugin {
 
     @RunnerPluginBeforeTest
     protected void beforeTest(PluginContext pluginContext) {
+        LOG.info("before test with client : {}", solrTestRunner.getClient());
         if (lifeCycle == LifeCycle.TEST) {
             prepareSolr(pluginContext);
         } else {
@@ -144,8 +145,8 @@ public class SolrJPlugin implements Plugin {
     }
 
 
-    private SolrTestRunner createSolrContainer() {
-        LOG.info("createSolrContainer");
+    private SolrTestRunner createSolrContainer(PluginContext pluginContext) {
+        LOG.info("createSolrContainer for {}", pluginContext.getTestClass());
         return new SolrTestRunner();
     }
 

@@ -13,33 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.hrodberaht.injection.core
 
-package org.hrodberaht.injection.core;
-
-import org.hrodberaht.injection.core.config.InjectionStoreFactory;
-import org.hrodberaht.injection.core.register.InjectionRegister;
+import org.hrodberaht.injection.core.config.InjectionStoreFactory
 
 /**
  * Created by alexbrob on 2016-03-29.
  */
-public class InjectionRegistryPlain implements InjectionRegistry {
-
-    private InjectContainer injectionContainer;
-    private InjectionRegister injectionRegister = InjectionStoreFactory.getInjectionRegister();
-
-    public InjectionRegistryPlain register(Module module) {
-        injectionRegister.register(module);
-        injectionContainer = injectionRegister.getContainer();
-        return this;
+class InjectionRegistryPlain : InjectionRegistry<Module?> {
+    private var injectionContainer: InjectContainer? = null
+    private val injectionRegister = InjectionStoreFactory.getInjectionRegister()
+    fun register(module: Module?): InjectionRegistryPlain {
+        injectionRegister.register(module)
+        injectionContainer = injectionRegister.container
+        return this
     }
 
-    public InjectContainer getContainer() {
-        return injectionContainer;
+    override fun getContainer(): InjectContainer {
+        return injectionContainer!!
     }
 
-    public Module getModule() {
-        Module module = new Module(injectionContainer);
-        injectionRegister.fillModule(module);
-        return module;
+    override fun getModule(): Module {
+        val module = Module(this.injectionContainer)
+        injectionRegister.fillModule(module)
+        return module
     }
 }

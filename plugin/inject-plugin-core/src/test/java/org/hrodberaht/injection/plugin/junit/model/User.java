@@ -13,25 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.hrodberaht.injection.core
 
-import org.hrodberaht.injection.core.register.RegistrationModuleAnnotationScanner
+package org.hrodberaht.injection.plugin.junit.model;
 
-open class Module : RegistrationModuleAnnotationScanner {
-    private var injectionContainer: InjectContainer? = null
+/**
+ * Qmatic Booking Module
+ *
+ * @author Robert Alexandersson
+ * 2011-05-08 01:52
+ * @created 1.0
+ * @since 1.0
+ */
+public class User {
 
-    constructor()
-    constructor(injectionContainer: InjectContainer?) {
-        this.injectionContainer = injectionContainer
+    private String userName;
+    private String password;
+
+    public User(String userName, String password) {
+        this.userName = userName;
+        this.password = password;
     }
 
-    override fun scan() {}
+    public String getUserName() {
+        return userName;
+    }
 
-    companion object {
-        @JvmStatic
-        fun toModule(abstractModule: AbstractModule): Module {
-            abstractModule.bindings()
-            return abstractModule.module
-        }
+    public String getPassword() {
+        return password;
     }
 }

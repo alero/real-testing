@@ -23,7 +23,7 @@ import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.junit.ContainerContext;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
 import org.hrodberaht.injection.plugin.junit.JUnit4Runner;
-import org.hrodberaht.injection.plugin.junit.plugins.SolrJPlugin;
+import org.hrodberaht.injection.plugin.junit.solr.config.SolrJTheSecondPlugin;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -42,7 +42,7 @@ import static org.junit.Assert.assertTrue;
 public class TestSolrEmbeddedSimple {
 
     @Inject
-    private SolrJPlugin solrJPlugin;
+    private SolrJTheSecondPlugin solrJPlugin;
 
     private SolrAssertions assertions;
 
@@ -120,7 +120,7 @@ public class TestSolrEmbeddedSimple {
 
         @Override
         public void register(InjectionRegistryBuilder registryBuilder) {
-            activatePlugin(SolrJPlugin.class)
+            activatePlugin(SolrJTheSecondPlugin.class)
                     .solrRunnerHome("target/solr2")
                     .coreName("collection2");
         }
