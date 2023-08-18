@@ -8,7 +8,7 @@ import java.util.Properties;
 public class SolrVersionManagement {
 
     public static CoreContainer createContainer(String home){
-        return new CoreContainer(Paths.get(home), new Properties());
+        return new CoreContainer(Paths.get(home).toAbsolutePath(), new Properties());
     }
 
 }

@@ -20,7 +20,7 @@
 
     <groupId>org.hrodberaht.inject</groupId>
     <artifactId>real-testing-parent</artifactId>
-    <version>3.1.0-SNAPSHOT</version>
+    <version>3.2.0-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Real Testing Parent POM</name>
     <description>A gathering of projects for testing code with real testing principles</description>
@@ -35,13 +35,13 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jdk.version>1.8</jdk.version>
+        <jdk.version>11</jdk.version>
 
         <hibernate-core-version>5.4.10.Final</hibernate-core-version>
         <spring.version>5.2.3.RELEASE</spring.version>
-        <solr.version>8.6.2</solr.version>
+        <solr.version>9.3.0</solr.version>
         <jersey.version>2.29.1</jersey.version>
-        <jackson.version>2.10.2</jackson.version>
+        <jackson.version>2.15.2</jackson.version>
 
         <skip.unit.tests>false</skip.unit.tests>
 
@@ -208,6 +208,38 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
+            <!-- Solr overrides for 9.3.0 >> START -->
+            <dependency>
+                <groupId>org.eclipse.jetty</groupId>
+                <artifactId>jetty-bom</artifactId>
+                <version>11.0.15</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>1.15</version>
+            </dependency>
+            <dependency>
+                <groupId>jakarta.xml.bind</groupId>
+                <artifactId>jakarta.xml.bind-api</artifactId>
+                <version>2.3.3</version>
+            </dependency>
+            <dependency>
+                <groupId>org.javassist</groupId>
+                <artifactId>javassist</artifactId>
+                <version>3.24.0-GA</version>
+            </dependency>
+            <!-- Solr overrides for 9.3.0 >> END -->
+
+            <dependency>
+                <groupId>javax.annotation</groupId>
+                <artifactId>javax.annotation-api</artifactId>
+                <version>1.3.1</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 
@@ -218,9 +250,18 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M4</version>
+                <version>3.0.0-M5</version>
                 <configuration>
+                    <systemProperties>
+                        <java.awt.headless>true</java.awt.headless>
+                    </systemProperties>
+
+                    <!-- Skips unit tests if the value of skip.unit.tests property is true -->
                     <skipTests>${skip.unit.tests}</skipTests>
+                    <!-- Excludes integration tests when unit tests are run. ß-->
+                    <excludes>
+                        <exclude>**/*IT.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
             <plugin>
@@ -253,37 +294,24 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.8.1</version>
                 <configuration>
-                    <compilerId>javac-with-errorprone</compilerId>
-                    <forceJavacCompilerUse>true</forceJavacCompilerUse>
-                    <fork>true</fork>
-                    <source>${jdk.version}</source>
-                    <target>${jdk.version}</target>
+                    <release>${jdk.version}</release>
                     <showWarnings>true</showWarnings>
                     <showDeprecation>true</showDeprecation>
                     <encoding>${project.build.sourceEncoding}</encoding>
                     <compilerArgs>
-                        <compilerArg>-XepExcludedPaths:.*/target/clover/.*</compilerArg>
-                        <compilerArg>-Xep:WildcardImport:ERROR</compilerArg>
-                        <compilerArg>-Xep:RemoveUnusedImports:ERROR</compilerArg>
-                        <compilerArg>-Xep:DeadException:ERROR</compilerArg>
-                        <compilerArg>-Xep:InjectOnMemberAndConstructor:WARN</compilerArg>
+                        <arg>-XDcompilePolicy=simple</arg>
+                        <arg>-Xplugin:ErrorProne -XepDisableWarningsInGeneratedCode -XepExcludedPaths:.*/target/.*
+                            -Xep:WildcardImport:ERROR -Xep:RemoveUnusedImports:ERROR -Xep:DeadException:ERROR -Xep:InjectOnMemberAndConstructor:OFF
+                        </arg>
                     </compilerArgs>
+                    <annotationProcessorPaths>
+                        <path>
+                            <groupId>com.google.errorprone</groupId>
+                            <artifactId>error_prone_core</artifactId>
+                            <version>2.4.0</version>
+                        </path>
+                    </annotationProcessorPaths>
                 </configuration>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.codehaus.plexus</groupId>
-                        <artifactId>plexus-compiler-javac-errorprone</artifactId>
-                        <version>2.8.6</version>
-                    </dependency>
-                    <!-- override plexus-compiler-javac-errorprone's dependency on
-                         Error Prone with the latest version -->
-                    <dependency>
-                        <groupId>com.google.errorprone</groupId>
-                        <artifactId>error_prone_core</artifactId>
-                        <version>2.3.4</version>
-                    </dependency>
-
-                </dependencies>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
