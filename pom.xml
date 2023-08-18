@@ -357,11 +357,11 @@
                 <repository>
                     <id>seal-releases</id>
                     <name>Internal Releases</name>
-                    <url>http://nexus.seal-software.net/content/repositories/releases/</url>
+                    <url>https://nexus.seal-software.net/content/repositories/releases/</url>
                 </repository>
                 <snapshotRepository>
                     <id>seal-snapshots</id>
-                    <url>http://nexus.seal-software.net/content/repositories/snapshots/</url>
+                    <url>https://nexus.seal-software.net/content/repositories/snapshots/</url>
                 </snapshotRepository>
             </distributionManagement>
         </profile>
