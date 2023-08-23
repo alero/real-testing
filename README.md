@@ -99,6 +99,12 @@ All the Injection Container plugins support a "with" method that can take in typ
 
 ## RELEASE NOTES
 
+3.0.0 Reworked the entire framework to become plugin based
+3.1.0 Upgraded all dependencies against Seal
+3.2.0 Upgraded to JDK11 and Solr9
+
+## RELEASE intentions
+
 The intended release if 3.0.0 will go through a few more RCs
 
 - RC1, mainly bugs from the beta releases 
