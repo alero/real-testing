@@ -18,7 +18,6 @@ package org.hrodberaht.injection.plugin.junit.plugins.jakarta.megatest;
 
 import org.hrodberaht.injection.core.stream.InjectionRegistryBuilder;
 import org.hrodberaht.injection.plugin.junit.ContainerContextConfigBase;
-import org.hrodberaht.injection.plugin.junit.api.Plugin;
 import org.hrodberaht.injection.plugin.junit.plugins.JerseyJakartaPlugin;
 import org.hrodberaht.injection.plugin.junit.plugins.jakarta.service.JerseyApplication;
 import org.hrodberaht.injection.plugin.junit.plugins.jakarta.service.ObjectMapperResolver;
@@ -27,8 +26,7 @@ public class ContainerConfigMega extends ContainerContextConfigBase {
 
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
-        activatePlugin(JerseyJakartaPlugin.class).builder()
-                .lifeCycle(Plugin.LifeCycle.TEST_SUITE)
+        activatePlugin(new JerseyJakartaPlugin()).builder()
                 .clientConfig(config -> config.register(ObjectMapperResolver.class))
                 .resourceConfig(JerseyApplication::new);
     }

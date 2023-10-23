@@ -27,8 +27,7 @@ public class ContainerConfigMega extends ContainerContextConfigBase {
 
     @Override
     public void register(InjectionRegistryBuilder registryBuilder) {
-        activatePlugin(JerseyPlugin.class).builder()
-                .lifeCycle(Plugin.LifeCycle.TEST_SUITE)
+        activatePlugin(new JerseyPlugin(Plugin.LifeCycle.TEST_CONFIG)).builder()
                 .clientConfig(config -> config.register(ObjectMapperResolver.class))
                 .resourceConfig(JerseyApplication::new);
     }

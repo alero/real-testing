@@ -52,8 +52,18 @@ public class JerseyJakartaPlugin implements Plugin {
     private ClientConfigInterface clientConfigInterface;
     private ResourceConfigInterface resourceConfigInterface;
     private TestContainerFactoryInterface testContainerFactoryInterface;
-    private LifeCycle lifeCycle = LifeCycle.TEST_SUITE;
+    private LifeCycle lifeCycle = LifeCycle.TEST_CONFIG;
     private PluginLifeCycledResource<JerseyTestRunner> pluginLifeCycledResource = new PluginLifeCycledResource<>(JerseyTestRunner.class);
+
+    public JerseyJakartaPlugin() {
+    }
+
+    public JerseyJakartaPlugin(LifeCycle lifeCycle) {
+        if(LifeCycle.TEST_SUITE == lifeCycle){
+            throw new RuntimeException("LifeCycle.TEST_SUITE not supported");
+        }
+        this.lifeCycle = lifeCycle;
+    }
 
     public Client getClient() {
         return jerseyTestRunner.getJerseyTest().client();
@@ -194,11 +204,6 @@ public class JerseyJakartaPlugin implements Plugin {
 
         protected JerseyPluginBuilder(JerseyJakartaPlugin jerseyPlugin) {
             this.jerseyPlugin = jerseyPlugin;
-        }
-
-        public JerseyPluginBuilder lifeCycle(LifeCycle lifeCycle) {
-            jerseyPlugin.lifeCycle = lifeCycle;
-            return this;
         }
 
         public JerseyPluginBuilder clientConfig(ClientConfigInterface clientConfigInterface) {
