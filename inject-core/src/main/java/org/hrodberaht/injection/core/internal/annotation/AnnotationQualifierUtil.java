@@ -36,6 +36,7 @@ import java.util.List;
 public class AnnotationQualifierUtil {
 
     private static final Class<Qualifier> QUALIFIER = Qualifier.class;
+    private static final Class<jakarta.inject.Qualifier> JAKARTA_QUALIFIER = jakarta.inject.Qualifier.class;
 
     private AnnotationQualifierUtil() {
     }
@@ -46,6 +47,9 @@ public class AnnotationQualifierUtil {
         for (final Annotation annotation : annotations) {
             if (annotation.annotationType().isAnnotationPresent(QUALIFIER)) {
                 qualifierAnnotations.add(getQualifier(owner, annotation, provider));
+            }
+            if (annotation.annotationType().isAnnotationPresent(JAKARTA_QUALIFIER)) {
+                qualifierAnnotations.add(getJakartaQualifier(owner, annotation, provider));
             }
         }
         if (qualifierAnnotations.size() == 0) {
@@ -67,6 +71,20 @@ public class AnnotationQualifierUtil {
             }
             return new InjectionKey(value, owner, provider);
         } else {
+            return new InjectionKey(annotation.annotationType(), owner, provider);
+        }
+    }
+
+    private static InjectionKey getJakartaQualifier(Class owner, Annotation annotation, boolean provider) {
+        if (annotation instanceof jakarta.inject.Named) {
+            jakarta.inject.Named named = (jakarta.inject.Named) annotation;
+            String value = named.value();
+            if (isEmpty(value)) {
+                throw new InjectRuntimeException("Named qualifier annotation used without a value " + owner);
+            }
+            return new InjectionKey(value, owner, provider);
+        }
+        else {
             return new InjectionKey(annotation.annotationType(), owner, provider);
         }
     }

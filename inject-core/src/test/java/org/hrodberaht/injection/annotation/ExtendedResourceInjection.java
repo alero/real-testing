@@ -25,7 +25,7 @@ import java.lang.reflect.Member;
 import java.util.List;
 
 /**
- * Qmatic Booking Module
+ * Automated documentation
  *
  * @author Robert Alexandersson
  * 2011-04-04 21:23

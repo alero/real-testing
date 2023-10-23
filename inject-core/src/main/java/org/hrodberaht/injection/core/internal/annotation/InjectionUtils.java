@@ -149,7 +149,7 @@ class InjectionUtils {
 
     private static boolean isSingleton(Class beanClass) {
         Annotation scope = getScope(beanClass);
-        return scope instanceof Singleton;
+        return scope instanceof Singleton || scope instanceof jakarta.inject.Singleton;
     }
 
     private static boolean isThread(Class beanClass) {
@@ -170,6 +170,9 @@ class InjectionUtils {
         Annotation[] annotations = beanClass.getAnnotations();
         for (Annotation annotation : annotations) {
             if (annotation.annotationType().isAnnotationPresent(Scope.class)) {
+                scopeAnnotations.add(annotation);
+            }
+            if (annotation.annotationType().isAnnotationPresent(jakarta.inject.Scope.class)) {
                 scopeAnnotations.add(annotation);
             }
         }

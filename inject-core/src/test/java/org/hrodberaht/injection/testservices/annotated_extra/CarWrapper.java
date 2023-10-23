@@ -19,7 +19,7 @@ package org.hrodberaht.injection.testservices.annotated_extra;
 import org.hrodberaht.injection.testservices.annotated.Car;
 import org.hrodberaht.injection.core.annotation.VariableProvider;
 
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 
 /**
  * Injection Extension JUnit

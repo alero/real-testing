@@ -20,7 +20,7 @@ import javax.inject.Singleton;
 import java.util.Date;
 
 /**
- * Qmatic Booking Module
+ * Automated documentation
  *
  * @author Robert Alexandersson
  * 2011-04-04 22:18

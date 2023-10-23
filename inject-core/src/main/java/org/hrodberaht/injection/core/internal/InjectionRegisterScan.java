@@ -63,7 +63,9 @@ public class InjectionRegisterScan extends InjectionRegisterScanBase<InjectionRe
     public ScopeContainer.Scope getScope(Class serviceClass) {
         if (serviceClass.isAnnotationPresent(Singleton.class)) {
             return ScopeContainer.Scope.SINGLETON;
-        } else if (serviceClass.isAnnotationPresent(ThreadScope.class)) {
+        }else if (serviceClass.isAnnotationPresent(jakarta.inject.Singleton.class)) {
+            return ScopeContainer.Scope.SINGLETON;
+        }else if (serviceClass.isAnnotationPresent(ThreadScope.class)) {
             return ScopeContainer.Scope.THREAD;
         } else if (serviceClass.isAnnotationPresent(InheritableThreadScope.class)) {
             return ScopeContainer.Scope.INHERITABLE_THREAD;

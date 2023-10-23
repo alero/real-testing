@@ -23,6 +23,7 @@ import org.hrodberaht.injection.annotation.CloneContainerRegistrationUnitT;
 import org.hrodberaht.injection.annotation.ContainerScanUnitT;
 import org.hrodberaht.injection.annotation.ExtendedModuleUnitT;
 import org.hrodberaht.injection.annotation.InjectionRegisterUnitT;
+import org.hrodberaht.injection.annotation.ScanContainerRegistrationUnitT;
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -44,6 +45,7 @@ import org.junit.runners.Suite;
         AnnotationVariableProviderUnitT.class,
         InstanceCreationUnitT.class,
         CloneContainerRegistrationUnitT.class,
+        ScanContainerRegistrationUnitT.class,
         InjectionRegisterUnitT.class,
         ExtendedModuleUnitT.class
 })

@@ -136,7 +136,7 @@ public class DefaultInjectionPointFinder implements InjectionFinder {
      * @return if the method should be injected
      */
     protected boolean hasInjectAnnotationOnMethod(Method method) {
-        return method.isAnnotationPresent(Inject.class);
+        return method.isAnnotationPresent(Inject.class) || method.isAnnotationPresent(jakarta.inject.Inject.class);
     }
 
     /**
@@ -147,7 +147,7 @@ public class DefaultInjectionPointFinder implements InjectionFinder {
      */
     @SuppressWarnings("squid:S2109")
     protected boolean hasInjectAnnotationOnField(Field field) {
-        return field.isAnnotationPresent(Inject.class);
+        return field.isAnnotationPresent(Inject.class) || field.isAnnotationPresent(jakarta.inject.Inject.class);
     }
 
     private boolean methodHasPostConstruct(Method method) {
