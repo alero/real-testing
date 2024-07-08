@@ -74,6 +74,12 @@ public class SolrAssertions {
     }
 
 
+    public void cleanDataFromCollection(String query) throws IOException, SolrServerException {
+        processDelete(query);
+        processCommit();
+    }
+
+
     public void waitForAsyncCommit() {
         // TODO: Async needs a callback solution
         try {
