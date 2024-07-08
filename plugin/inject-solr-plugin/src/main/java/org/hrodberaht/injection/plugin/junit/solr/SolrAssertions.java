@@ -181,7 +181,7 @@ public class SolrAssertions {
         }
     }
 
-    private void processDelete(String query) throws IOException, SolrServerException {
+    public void processDelete(String query) throws IOException, SolrServerException {
         if (username != null) {
             UpdateRequest request = new UpdateRequest();
             request.deleteByQuery(query);
